@@ -21,6 +21,9 @@ cp "$ROOT/source/custom_words.csv" "$OUT/"
 cp "$ROOT/source/corrections.txt" "$OUT/"
 cp "$ROOT/source/validation_rules.txt" "$OUT/"
 
+bash "$ROOT/scripts/report_pl.sh"
+cp "$OUT/report.json" "$OUT/"
+
 VERSION=$(date +%Y.%m.%d)
 
 cat > "$OUT/manifest.json" <<EOF
@@ -34,7 +37,8 @@ cat > "$OUT/manifest.json" <<EOF
     "word_frequency",
     "bigrams",
     "autocorrection",
-    "priorities"
+    "priorities",
+    "quality_report"
   ]
 }
 EOF
