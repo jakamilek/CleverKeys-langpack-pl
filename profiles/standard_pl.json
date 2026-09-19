@@ -1,0 +1,12 @@
+{
+  "name": "Polish Standard",
+  "base": null,
+  "modules": [
+    "core",
+    "phrases",
+    "abbreviations"
+  ],
+  "priority": {
+    "common_words": 1.0
+  }
+}
