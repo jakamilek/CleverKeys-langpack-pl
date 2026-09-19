@@ -19,6 +19,10 @@ jobs:
           chmod +x scripts/validate_pl.sh
           ./scripts/validate_pl.sh
 
+      - name: Quality analysis
+        run: |
+          python3 scripts/check_quality.py
+
       - name: Build package
         run: |
           chmod +x scripts/build_pl.sh
@@ -31,3 +35,4 @@ jobs:
           path: |
             cleverkeys-langpack-pl.zip
             cleverkeys-langpack-pl.sha256
+            build_quality.json
