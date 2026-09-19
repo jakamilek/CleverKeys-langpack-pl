@@ -22,7 +22,9 @@ cp "$ROOT/source/corrections.txt" "$OUT/"
 cp "$ROOT/source/validation_rules.txt" "$OUT/"
 
 bash "$ROOT/scripts/report_pl.sh"
-cp "$OUT/report.json" "$OUT/"
+python3 "$ROOT/scripts/check_quality.py"
+cp "$ROOT/report.json" "$OUT/" 2>/dev/null || true
+cp "$ROOT/build_quality.json" "$OUT/"
 
 VERSION=$(date +%Y.%m.%d)
 
