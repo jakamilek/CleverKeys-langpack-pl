@@ -1,0 +1,6 @@
+# CleverKeys Polish affix rules
+# Placeholder for Hunspell-compatible morphology rules
+
+SET UTF-8
+
+# Rules will be added after dictionary format verification.
