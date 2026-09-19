@@ -14,13 +14,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate source files
+      - name: Validate dictionary
         run: |
-          test -f source/pl_PL.aff
-          test -f source/core_words.dic
-          test -f source/colloquial.dic
-          test -f source/tech.dic
-          test -f source/corrections.txt
+          chmod +x scripts/validate_pl.sh
+          ./scripts/validate_pl.sh
 
       - name: Build package
         run: |
