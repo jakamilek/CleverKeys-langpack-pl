@@ -1,0 +1,10 @@
+# Common typing corrections
+# wrong -> correct
+
+ktury -> który
+rzeczywiscie -> rzeczywiście
+mozna -> można
+czesc -> cześć
+wogole -> w ogóle
+napewno -> na pewno
+
