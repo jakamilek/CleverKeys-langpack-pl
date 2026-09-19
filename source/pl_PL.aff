@@ -1,6 +1,10 @@
 # CleverKeys Polish affix rules
-# Placeholder for Hunspell-compatible morphology rules
+# Hunspell-compatible morphology foundation
 
 SET UTF-8
+TRY ąćęłńóśźż
 
-# Rules will be added after dictionary format verification.
+# Basic Polish morphology preparation
+# Full suffix rules will be added after dictionary normalization.
+
+# Keep dictionary quality focused on mobile keyboard suggestions.
