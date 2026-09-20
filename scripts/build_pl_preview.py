@@ -254,6 +254,16 @@ def main() -> int:
     ]
     typo = typo_matches(at_risk, known_good, zipf)
 
+    # Hard regression blocklist for foreign/proper-name surfaces observed in real Polish swipe tests.
+    # These are blocked at source-generation time so the CKDT artifact cannot reintroduce them.
+    regression_blocklist = {
+        "chopin", "chopina", "goebbels", "goebbelsa",
+        "catherine", "catalina", "cameron", "carli", "carlo",
+        "castillo", "cali", "celli", "casino", "calli",
+        "carrillo", "caroli", "cassino", "compos", "gourami",
+        "celastial",
+    }
+
     foreign_langs = ("en", "cs", "sk", "ru", "uk", "de", "es", "it", "fr", "pt", "nl")
     foreign: dict[str, tuple[str, float]] = {}
     for word in ranked:
@@ -286,6 +296,9 @@ def main() -> int:
     for rank, word in enumerate(ranked):
         if word in blocked_errors:
             drop[word] = "reviewed-typo-blocklist"
+            continue
+        if word in regression_blocklist:
+            drop[word] = "swipe-regression-blocklist"
             continue
         if word in guards:
             keep[word] = "guard"
