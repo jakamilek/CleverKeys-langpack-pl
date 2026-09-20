@@ -293,6 +293,13 @@ def main() -> int:
         if word in foreign and word not in spell:
             drop[word] = f"foreign:{foreign[word][0]}"
             continue
+        # Bare ASCII forms are especially prone to imported/proper-name noise.
+        # For non-guard vocabulary, require the Polish Hunspell oracle in addition to
+        # the broader AOSP evidence. This keeps AOSP useful for inflection coverage
+        # while preventing ASCII foreign names from entering the active swipe lexicon.
+        if word.isascii() and word not in spell:
+            drop[word] = "ascii-without-hunspell"
+            continue
         if word not in positive:
             if word in typo:
                 drop[word] = f"typo->{typo[word][0]}"
