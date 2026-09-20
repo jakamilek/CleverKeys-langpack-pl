@@ -290,7 +290,7 @@ def main() -> int:
         if word in guards:
             keep[word] = "guard"
             continue
-        if word in foreign and word not in spell:
+        if word in foreign and word not in guards:
             drop[word] = f"foreign:{foreign[word][0]}"
             continue
         # Bare ASCII forms are especially prone to imported/proper-name noise.
