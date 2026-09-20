@@ -4,7 +4,16 @@ on:
   push:
     branches:
       - "ops/baseline-sync-2026-09-20"
+    paths:
+      - "scripts/report_pl_sources.py"
+      - "scripts/requirements-pl-audit.txt"
+      - "sources/quarantine/PL_SOURCE_LOCK_2026-09-20.json"
+      - ".github/workflows/pl-source-audit.yml"
   workflow_dispatch:
+
+concurrency:
+  group: cleverkeys-pl-source-audit
+  cancel-in-progress: true
 
 permissions:
   contents: read
