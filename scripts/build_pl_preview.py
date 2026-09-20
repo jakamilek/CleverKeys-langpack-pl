@@ -270,6 +270,8 @@ def main() -> int:
 
     # Explicit project guards: high-value Polish forms and the known regression words.
     guards = {
+        # Polish function words, including one-letter words that keyboard corpora may omit.
+        "a", "i", "o", "u", "w", "z",
         "nie", "na", "się", "to", "jest", "że", "jak", "ale", "co",
         "tak", "może", "można", "który", "która", "które", "być",
         "mieć", "wziąć", "włączać", "rzeczywiście", "właśnie",
@@ -288,19 +290,15 @@ def main() -> int:
         if word in guards:
             keep[word] = "guard"
             continue
-        if rank < args.band:
-            if word in typo and word not in positive:
+        if word not in positive:
+            if word in typo:
                 drop[word] = f"typo->{typo[word][0]}"
-                continue
-            if word in foreign and word not in positive:
+            elif word in foreign:
                 drop[word] = f"foreign:{foreign[word][0]}"
-                continue
-            keep[word] = "band1"
-        else:
-            if word in positive or word in guards:
-                keep[word] = "band2-oracle" if word in positive else "guard"
             else:
-                drop[word] = "band2-no-evidence"
+                drop[word] = "no-positive-evidence"
+            continue
+        keep[word] = "spell-evidence"
 
     # Suppress bare-ASCII aliases when an accented canonical form is positively evidenced.
     normalized_groups: dict[str, list[str]] = {}
@@ -368,8 +366,7 @@ def main() -> int:
         "reviewed_error_forms_present_in_candidates": sorted(blocked_errors & set(ranked)),
         "kept": len(keep),
         "kept_reasons": {
-            "band1": sum(1 for r in keep.values() if r == "band1"),
-            "band2_oracle": sum(1 for r in keep.values() if r == "band2-oracle"),
+            "spell_evidence": sum(1 for r in keep.values() if r == "spell-evidence"),
             "guard": sum(1 for r in keep.values() if r == "guard"),
         },
         "dropped": len(drop),
