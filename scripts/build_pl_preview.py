@@ -186,7 +186,12 @@ def main() -> int:
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
 
-    from wordfreq import iter_wordlist, zipf_frequency, __version__ as wordfreq_version
+    from wordfreq import iter_wordlist, zipf_frequency
+    try:
+        from importlib.metadata import version as package_version
+        wordfreq_version = package_version("wordfreq")
+    except Exception:
+        wordfreq_version = "unknown"
 
     ranked: list[str] = []
     seen: set[str] = set()
@@ -246,7 +251,12 @@ def main() -> int:
     keep: dict[str, str] = {}
     drop: dict[str, str] = {}
 
+    rank_of = {word: rank for rank, word in enumerate(ranked)}
+
     for rank, word in enumerate(ranked):
+        if word in guards:
+            keep[word] = "guard"
+            continue
         if rank < args.band:
             if word in typo and word not in positive:
                 drop[word] = f"typo->{typo[word][0]}"
@@ -285,7 +295,7 @@ def main() -> int:
         protected = {w for w in keep if w in guards}
         rest = sorted(
             (w for w in keep if w not in protected),
-            key=lambda w: (ranked.index(w), -zipf[w], w),
+            key=lambda w: (rank_of[w], -zipf[w], w),
         )
         for word in rest[max(0, args.limit - len(protected)):]:
             del keep[word]
