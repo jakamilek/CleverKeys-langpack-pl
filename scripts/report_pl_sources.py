@@ -8,14 +8,15 @@ Hunspell evidence. The generated JSON is an audit artifact, not a production
 dictionary.
 
 Expected build-time dependencies:
-  pip install "git+https://github.com/rspeer/wordfreq@912caf64b657478d1dff1138efdc078947d54bb1"
+  pip install "git+https://github.com/rspeer/wordfreq@912caf64b657478d1dff1133ecf"
 
 Optional external oracle:
   hunspell with the pl_PL dictionary installed.
 
 Optional AOSP snapshot:
-  the controlled, transformed AOSP file recorded in CleverKeys provenance:
-  headword<TAB>flags, gzip-compressed or plain UTF-8.
+  the controlled AOSP pl_wordlist.combined.gz. The loader accepts either the
+  CleverKeys transformed headword<TAB>flags format or the upstream combined
+  format containing word=... records.
 """
 
 from __future__ import annotations
@@ -27,7 +28,6 @@ import json
 import re
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 POLISH_ALPHABET = set("aąbcćdeęfghijklłmnńoóprsśtuwyzźż")
@@ -68,9 +68,12 @@ def load_aosp(path: Path) -> set[str]:
             line = line.strip()
             if not line:
                 continue
-            head = line.split("\t", 1)[0].strip().lower()
-            if is_polish_candidate(head):
-                words.add(head)
+            head = line.split("\t", 1)[0].strip()
+            if head.startswith("word="):
+                head = head[5:]
+            word = head.lower()
+            if is_polish_candidate(word):
+                words.add(word)
     return words
 
 
@@ -116,12 +119,12 @@ def main() -> int:
     seen: set[str] = set()
     rejected_script = 0
     for word in iter_wordlist("pl"):
-        w = word.lower()
-        if w in seen:
+        candidate = word.lower()
+        if candidate in seen:
             continue
-        if is_polish_candidate(w):
-            seen.add(w)
-            ranked.append(w)
+        if is_polish_candidate(candidate):
+            seen.add(candidate)
+            ranked.append(candidate)
             if len(ranked) >= args.top:
                 break
         else:
@@ -136,15 +139,11 @@ def main() -> int:
         raise SystemExit("Required AOSP snapshot was not supplied.")
 
     diacritic_words = [w for w in ranked if any(c in "ąęćłńóśźż" for c in w)]
-    ascii_aliases = sum(
-        1
-        for w in diacritic_words
-        if all(ord(c) < 128 for c in w.translate(str.maketrans("ąęćłńóśźż", "a e c l n o s z z".replace(" ", ""))))
-    )
+    aosp_overlap = set(ranked) & aosp
 
     top_examples = [
-        {"word": w, "zipf": round(float(zipf_frequency(w, "pl")), 2)}
-        for w in ranked[:100]
+        {"word": word, "zipf": round(float(zipf_frequency(word, "pl")), 2)}
+        for word in ranked[:100]
     ]
 
     result = {
@@ -165,8 +164,8 @@ def main() -> int:
             "aosp": {
                 "supplied": bool(args.aosp),
                 "path": str(args.aosp) if args.aosp else None,
-                "overlap": len(set(ranked) & aosp),
-                "candidate_coverage": round(100 * len(set(ranked) & aosp) / len(ranked), 2)
+                "overlap": len(aosp_overlap),
+                "candidate_coverage": round(100 * len(aosp_overlap) / len(ranked), 2)
                 if ranked else 0.0,
             },
             "hunspell": {
