@@ -60,21 +60,31 @@ def is_polish_candidate(word: str) -> bool:
     return all(ch.lower() in POLISH_ALPHABET for ch in word)
 
 
-def load_aosp(path: Path) -> set[str]:
+def load_aosp(path: Path) -> tuple[set[str], dict[str, int]]:
     opener = gzip.open if path.suffix == ".gz" else open
     words: set[str] = set()
+    stats = {"lines": 0, "word_marked": 0, "plain_candidates": 0, "parsed": 0}
     with opener(path, "rt", encoding="utf-8") as fh:
         for line in fh:
+            stats["lines"] += 1
             line = line.strip()
             if not line:
                 continue
-            head = line.split("\t", 1)[0].strip()
-            if head.startswith("word="):
-                head = head[5:]
-            word = head.lower()
+
+            if "word=" in line:
+                stats["word_marked"] += 1
+                match = re.search(r"(?:^|[\\t ,])word=([^\\t ,]+)", line)
+                head = match.group(1) if match else ""
+            else:
+                head = line.split("\\t", 1)[0].strip()
+
+            word = head.strip().strip('"').lower()
             if is_polish_candidate(word):
+                if "word=" not in line:
+                    stats["plain_candidates"] += 1
                 words.add(word)
-    return words
+    stats["parsed"] = len(words)
+    return words, stats
 
 
 def hunspell_accepts(words: list[str]) -> tuple[set[str], dict[str, object]]:
@@ -130,7 +140,7 @@ def main() -> int:
         else:
             rejected_script += 1
 
-    aosp = load_aosp(args.aosp) if args.aosp else set()
+    aosp, aosp_stats = load_aosp(args.aosp) if args.aosp else (set(), {"lines": 0, "word_marked": 0, "plain_candidates": 0, "parsed": 0})
     hunspell, hunspell_meta = hunspell_accepts(ranked)
 
     if args.require_hunspell and hunspell_meta.get("status") != "ok":
@@ -165,6 +175,7 @@ def main() -> int:
                 "supplied": bool(args.aosp),
                 "path": str(args.aosp) if args.aosp else None,
                 "overlap": len(aosp_overlap),
+                "coverage_basis": aosp_stats,
                 "candidate_coverage": round(100 * len(aosp_overlap) / len(ranked), 2)
                 if ranked else 0.0,
             },
