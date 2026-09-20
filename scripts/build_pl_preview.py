@@ -176,12 +176,39 @@ def typo_matches(
     return result
 
 
+def load_blocked_errors(path: Path) -> tuple[set[str], list[dict[str, str]]]:
+    blocked: set[str] = set()
+    rows: list[dict[str, str]] = []
+    if not path.exists():
+        return blocked, rows
+    for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split("\t")
+        if len(parts) < 3:
+            raise SystemExit(f"Malformed autocorrect row {path}:{line_no}")
+        wrong, canonical, error_class = parts[:3]
+        blocked.add(wrong.strip().lower())
+        rows.append({
+            "wrong": wrong.strip().lower(),
+            "canonical": canonical.strip(),
+            "error_class": error_class.strip(),
+        })
+    return blocked, rows
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=100000)
     ap.add_argument("--band", type=int, default=50000)
     ap.add_argument("--limit", type=int, default=50000)
     ap.add_argument("--aosp", type=Path, required=True)
+    ap.add_argument(
+        "--errors",
+        type=Path,
+        default=Path("sources/staging/autocorrect_errors.tsv"),
+    )
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
@@ -211,6 +238,7 @@ def main() -> int:
     zipf = {word: float(zipf_frequency(word, "pl")) for word in ranked}
     aosp = load_aosp(args.aosp)
     spell = hunspell_accepts(ranked)
+    blocked_errors, error_rows = load_blocked_errors(args.errors)
     positive = spell | aosp
 
     # High-confidence known-good set for typo detection.
@@ -254,6 +282,9 @@ def main() -> int:
     rank_of = {word: rank for rank, word in enumerate(ranked)}
 
     for rank, word in enumerate(ranked):
+        if word in blocked_errors:
+            drop[word] = "reviewed-typo-blocklist"
+            continue
         if word in guards:
             keep[word] = "guard"
             continue
@@ -333,6 +364,8 @@ def main() -> int:
         ),
         "typo_candidates": len(typo),
         "foreign_candidates": len(foreign),
+        "reviewed_error_rows": len(error_rows),
+        "reviewed_error_forms_present_in_candidates": sorted(blocked_errors & set(ranked)),
         "kept": len(keep),
         "kept_reasons": {
             "band1": sum(1 for r in keep.values() if r == "band1"),
