@@ -79,6 +79,16 @@ jobs:
           report = json.loads(Path("build/pl-preview-report.json").read_text(encoding="utf-8"))
           expected = report["kept"]
 
+          # Regression guard: these surfaces were observed in real Polish swipe tests and
+          # must never be present in the Polish preview dictionary.
+          forbidden = {
+              "chopin", "chopina", "goebbels", "goebbelsa",
+              "catherine", "catalina", "cameron", "carli", "carlo",
+              "castillo", "cali", "celli", "casino", "calli",
+              "carrillo", "caroli", "cassino", "compos", "gourami",
+              "celastial",
+          }
+
           data = Path("build/dictionary.bin").read_bytes()
           magic, version = struct.unpack_from("<II", data, 0)
           assert magic == 0x54444B43 and version == 2
@@ -93,6 +103,19 @@ jobs:
               assert manifest["version"] == 2
               assert manifest["wordCount"] == expected
               assert manifest["hasPrefixBoost"] is False
+
+          # Read the canonical CKDT section directly so the guard checks the actual artifact,
+          # not only the text preview.
+          p = 48
+          found = set()
+          for _ in range(word_count):
+              n = struct.unpack_from("<H", data, p)[0]
+              p += 2
+              word = data[p:p+n].decode("utf-8").lower()
+              p += n + 1
+              if word in forbidden:
+                  found.add(word)
+          assert not found, "forbidden regression words in CKDT: " + ", ".join(sorted(found))
 
           print(json.dumps({
               "word_count": expected,
