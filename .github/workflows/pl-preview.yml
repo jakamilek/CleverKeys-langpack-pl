@@ -1,0 +1,105 @@
+name: Polish language pack preview
+
+on:
+  push:
+    branches:
+      - "ops/baseline-sync-2026-09-20"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout language project
+        uses: actions/checkout@v4
+
+      - name: Install Polish spelling oracle
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y hunspell hunspell-pl
+
+      - name: Install pinned wordfreq
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r scripts/requirements-pl-audit.txt
+
+      - name: Acquire current AOSP Polish dictionary
+        run: |
+          mkdir -p build/aosp
+          curl --fail --location             'https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/refs/heads/main/dictionaries/pl_wordlist.combined.gz?format=TEXT'             -o build/aosp/pl_wordlist.combined.gz.base64
+          base64 --decode             build/aosp/pl_wordlist.combined.gz.base64             > build/aosp/pl_wordlist.combined.gz
+          sha256sum build/aosp/pl_wordlist.combined.gz             | awk '{print $1}'             > build/aosp/pl_wordlist.combined.gz.sha256
+          test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
+          printf '%s\n'             'android.googlesource.com/platform/packages/inputmethods/LatinIME'             'refs/heads/main'             'dictionaries/pl_wordlist.combined.gz'             'sha256=75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45'             'directory-tree=2b550379fe38213f9b01dcb75478ef2133682685'             > build/aosp/source-ref.txt
+
+      - name: Preview Polish word list
+        run: |
+          python3 scripts/build_pl_preview.py             --top 100000             --band 50000             --limit 50000             --aosp build/aosp/pl_wordlist.combined.gz             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+
+      - name: Pin CleverKeys runtime
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/tribixbite/CleverKeys.git build/CleverKeys-runtime
+          git -C build/CleverKeys-runtime fetch --depth=1 origin 263bd0abc03dec420f60fa073a9d2c5e25a176b5
+          git -C build/CleverKeys-runtime checkout --detach 263bd0abc03dec420f60fa073a9d2c5e25a176b5
+          test "$(git -C build/CleverKeys-runtime rev-parse HEAD)" = "263bd0abc03dec420f60fa073a9d2c5e25a176b5"
+
+      - name: Build CKDT V2 dictionary with CleverKeys code
+        run: |
+          python3 build/CleverKeys-runtime/scripts/build_dictionary.py             --lang pl             --input build/pl_words_preview.txt             --output build/dictionary.bin             --use-wordfreq
+
+      - name: Generate unigrams with CleverKeys code
+        run: |
+          python3 build/CleverKeys-runtime/scripts/generate_unigrams.py             --lang pl             --output build/unigrams.txt             --top-n 5000
+
+      - name: Build deterministic CleverKeys pack
+        run: |
+          python3 build/CleverKeys-runtime/scripts/build_langpack.py             --lang pl             --name "Polish"             --dict build/dictionary.bin             --unigrams build/unigrams.txt             --version 2             --author "jakamilek/CleverKeys-langpack-pl"             --output build/cleverkeys-langpack-pl-preview.zip
+          sha256sum build/cleverkeys-langpack-pl-preview.zip             > build/cleverkeys-langpack-pl-preview.sha256
+
+      - name: Verify CKDT and pack contents
+        run: |
+          python3 - <<'PY'
+          import json, struct, zipfile
+          from pathlib import Path
+
+          report = json.loads(Path("build/pl-preview-report.json").read_text(encoding="utf-8"))
+          expected = report["kept"]
+
+          data = Path("build/dictionary.bin").read_bytes()
+          magic, version = struct.unpack_from("<II", data, 0)
+          assert magic == 0x54444B43 and version == 2
+          word_count = struct.unpack_from("<I", data, 12)[0]
+          assert word_count == expected, (word_count, expected)
+
+          with zipfile.ZipFile("build/cleverkeys-langpack-pl-preview.zip") as zf:
+              names = zf.namelist()
+              assert names == ["dictionary.bin", "manifest.json", "unigrams.txt"], names
+              manifest = json.loads(zf.read("manifest.json"))
+              assert manifest["code"] == "pl"
+              assert manifest["version"] == 2
+              assert manifest["wordCount"] == expected
+              assert manifest["hasPrefixBoost"] is False
+
+          print(json.dumps({
+              "word_count": expected,
+              "zip_entries": names,
+              "ckdt_version": version,
+              "has_prefix_boost": False,
+              "promotion": False,
+          }, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Publish preview artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleverkeys-pl-preview
+          path: |
+            build/cleverkeys-langpack-pl-preview.zip
+            build/cleverkeys-langpack-pl-preview.sha256
+            build/pl_words_preview.txt
+            build/pl-preview-report.json
+            build/aosp/pl_wordlist.combined.gz.sha256
+            build/aosp/source-ref.txt
