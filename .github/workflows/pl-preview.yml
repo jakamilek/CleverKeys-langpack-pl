@@ -4,7 +4,18 @@ on:
   push:
     branches:
       - "ops/baseline-sync-2026-09-20"
+    paths:
+      - "scripts/build_pl_preview.py"
+      - "scripts/requirements-pl-audit.txt"
+      - "sources/staging/autocorrect_errors.tsv"
+      - ".github/workflows/pl-preview.yml"
+      - "docs/PL_LANGUAGE_DATA_PLAN.md"
+      - "docs/PL_SOURCE_MATRIX_2026-09-20.md"
   workflow_dispatch:
+
+concurrency:
+  group: cleverkeys-pl-preview
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -102,4 +113,5 @@ jobs:
             build/pl_words_preview.txt
             build/pl-preview-report.json
             build/aosp/pl_wordlist.combined.gz.sha256
+            sources/staging/autocorrect_errors.tsv
             build/aosp/source-ref.txt
