@@ -1,0 +1,49 @@
+name: Polish source intake audit (report-only)
+
+on:
+  push:
+    branches:
+      - "ops/baseline-sync-2026-09-20"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system oracles
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y hunspell hunspell-pl
+
+      - name: Install pinned wordfreq
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r scripts/requirements-pl-audit.txt
+
+      - name: Acquire current AOSP Polish dictionary
+        run: |
+          mkdir -p build/aosp
+          curl --fail --location             'https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/refs/heads/main/dictionaries/pl_wordlist.combined.gz?format=TEXT'             -o build/aosp/pl_wordlist.combined.gz.base64
+          base64 --decode             build/aosp/pl_wordlist.combined.gz.base64             > build/aosp/pl_wordlist.combined.gz
+          sha256sum build/aosp/pl_wordlist.combined.gz             | awk '{print $1}'             > build/aosp/pl_wordlist.combined.gz.sha256
+          printf '%s\n'             'android.googlesource.com/platform/packages/inputmethods/LatinIME'             'refs/heads/main'             'dictionaries/pl_wordlist.combined.gz'             'directory-tree=2b550379fe38213f9b01dcb75478ef2133682685'             > build/aosp/source-ref.txt
+          cat build/aosp/pl_wordlist.combined.gz.sha256
+
+      - name: Run report-only Polish source audit
+        run: |
+          python3 scripts/report_pl_sources.py             --top 100000             --aosp build/aosp/pl_wordlist.combined.gz             --require-aosp             --require-hunspell             --out build/pl-source-audit.json
+
+      - name: Publish audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleverkeys-pl-source-audit
+          path: |
+            build/pl-source-audit.json
+            build/aosp/pl_wordlist.combined.gz.sha256
+            build/aosp/source-ref.txt
