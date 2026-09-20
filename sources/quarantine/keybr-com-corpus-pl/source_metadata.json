@@ -1,0 +1,26 @@
+{
+  "source_id": "keybr-com-corpus-pl",
+  "status": "QUARANTINE_LICENSE_REVIEW_REQUIRED",
+  "acquired_from": "GitHub",
+  "acquisition_date": "2026-09-20",
+  "source_repository": "aradzie/keybr.com-corpus",
+  "source_path": "lang-pl/dictionary-pl.csv",
+  "source_ref": "master",
+  "source_url": "https://github.com/aradzie/keybr.com-corpus/blob/master/lang-pl/dictionary-pl.csv",
+  "source_blob_sha": "828145dde425d36cbb26354124eec2e88134b06a",
+  "checksum_algorithm": "git-blob-sha1",
+  "checksum": "828145dde425d36cbb26354124eec2e88134b06a",
+  "byte_length_utf8": 157350,
+  "nonempty_line_count": 10100,
+  "format": "CSV word,frequency",
+  "intended_role": "frequency-ranked candidate source for Polish language pack",
+  "license_status": "UNVERIFIED",
+  "promotion_allowed": false,
+  "target_pipeline": "sources/quarantine -> metadata/license validation -> checksum validation -> quality audit -> manual approval -> sources/staging -> source/",
+  "notes": [
+    "The source repository README describes curated word-frequency dictionaries.",
+    "No explicit root LICENSE file was found in the inspected source repository tree.",
+    "A later SHA-256 must be computed from the acquired payload before promotion.",
+    "Do not promote or redistribute this data until licensing/provenance is manually verified."
+  ]
+}
