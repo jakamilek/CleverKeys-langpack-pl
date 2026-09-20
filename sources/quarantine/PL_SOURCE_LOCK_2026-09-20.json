@@ -30,7 +30,14 @@
       "dictionaries_tree_sha": "2b550379fe38213f9b01dcb75478ef2133682685",
       "path": "dictionaries/pl_wordlist.combined.gz",
       "status": "present_upstream; exact compressed bytes must be acquired by the controlled intake environment before promotion",
-      "licence": "Apache-2.0 as recorded by the current CleverKeys AOSP snapshot provenance."
+      "licence": "Apache-2.0 as recorded by the current CleverKeys AOSP snapshot provenance.",
+      "sha256": "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45",
+      "acquired_at": "2026-09-20T08:07:43Z",
+      "observed_lines": 195100,
+      "observed_word_marked": 195099,
+      "parsed_headwords": 143404,
+      "candidate_overlap_top100k": 59918,
+      "candidate_overlap_pct": 59.92
     },
     "libreoffice_hunspell_pl": {
       "role": "Polish spelling and morphology oracle",
@@ -60,5 +67,16 @@
     "Run wordfreq Polish candidate enumeration from the pinned 3.2 source.",
     "Run Polish Hunspell acceptance probes and measure coverage.",
     "Generate report-only overlap, rejection and morphology statistics before producing a production dictionary."
-  ]
+  ],
+  "audit_run": {
+    "workflow": "Polish source intake audit (report-only)",
+    "run_id": 35498684789,
+    "job_id": 106046365552,
+    "wordfreq_version": "3.2.0",
+    "wordfreq_candidate_count": 100000,
+    "hunspell_pl_accepted": 85111,
+    "hunspell_candidate_coverage_pct": 85.11,
+    "diacritic_forms": 38542,
+    "promotion_approved": false
+  }
 }
