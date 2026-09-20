@@ -254,10 +254,10 @@ def main() -> int:
     ]
     typo = typo_matches(at_risk, known_good, zipf)
 
-    foreign_langs = ("en", "cs", "sk", "ru", "uk", "de")
+    foreign_langs = ("en", "cs", "sk", "ru", "uk", "de", "es", "it", "fr", "pt", "nl")
     foreign: dict[str, tuple[str, float]] = {}
     for word in ranked:
-        if word in positive or zipf[word] >= 3.5:
+        if zipf[word] >= 3.5:
             continue
         best_lang = ""
         best_z = 0.0
@@ -290,11 +290,12 @@ def main() -> int:
         if word in guards:
             keep[word] = "guard"
             continue
+        if word in foreign and word not in spell:
+            drop[word] = f"foreign:{foreign[word][0]}"
+            continue
         if word not in positive:
             if word in typo:
                 drop[word] = f"typo->{typo[word][0]}"
-            elif word in foreign:
-                drop[word] = f"foreign:{foreign[word][0]}"
             else:
                 drop[word] = "no-positive-evidence"
             continue
