@@ -34,6 +34,8 @@ jobs:
           sha256sum build/aosp/pl_wordlist.combined.gz             | awk '{print $1}'             > build/aosp/pl_wordlist.combined.gz.sha256
           printf '%s\n'             'android.googlesource.com/platform/packages/inputmethods/LatinIME'             'refs/heads/main'             'dictionaries/pl_wordlist.combined.gz'             'directory-tree=2b550379fe38213f9b01dcb75478ef2133682685'             > build/aosp/source-ref.txt
           cat build/aosp/pl_wordlist.combined.gz.sha256
+          echo '--- AOSP decompressed structure sample ---'
+          gzip -cd build/aosp/pl_wordlist.combined.gz | head -n 25
 
       - name: Run report-only Polish source audit
         run: |
