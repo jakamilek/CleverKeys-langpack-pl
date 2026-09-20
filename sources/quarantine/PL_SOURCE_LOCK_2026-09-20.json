@@ -78,5 +78,15 @@
     "hunspell_candidate_coverage_pct": 85.11,
     "diacritic_forms": 38542,
     "promotion_approved": false
+  },
+  "preview_run": {
+    "workflow_run_id": 35498880429,
+    "head_sha": "40411f944be5f5967ae4b11e6d0129a40a10f3e2",
+    "artifact_id": 10601633704,
+    "zip_sha256": "6139d243f0137f24ca510103b163f1fffefa6f516991f481efa0cab8929025ea",
+    "dictionary_words": 50000,
+    "ckdt_version": 2,
+    "has_prefix_boost": false,
+    "promotion_approved": false
   }
 }
