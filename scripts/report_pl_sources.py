@@ -8,7 +8,7 @@ Hunspell evidence. The generated JSON is an audit artifact, not a production
 dictionary.
 
 Expected build-time dependencies:
-  pip install "git+https://github.com/rspeer/wordfreq@912caf64b657478d1dff1133ecf"
+  pip install "git+https://github.com/rspeer/wordfreq@912caf64b657478d1dff113eefdc078947d54bb1"
 
 Optional external oracle:
   hunspell with the pl_PL dictionary installed.
