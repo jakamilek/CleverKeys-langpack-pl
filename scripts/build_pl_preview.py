@@ -42,7 +42,7 @@ def normalize_accents(word: str) -> str:
 
 def is_candidate(word: str) -> bool:
     return (
-        2 <= len(word) <= 25
+        1 <= len(word) <= 25
         and word.isalpha()
         and WORD_RE.fullmatch(word) is not None
         and all(ch.lower() in POLISH_ALPHABET for ch in word)
