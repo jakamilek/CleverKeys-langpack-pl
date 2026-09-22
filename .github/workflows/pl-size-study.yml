@@ -14,6 +14,7 @@ on:
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/reviewed_morphology.tsv"
+      - "sources/staging/reviewed_proper_nouns.tsv"
 
 permissions:
   contents: read
@@ -55,7 +56,7 @@ jobs:
           set -euo pipefail
           for limit in 50000 75000 100000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --morphology sources/staging/reviewed_morphology.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --morphology sources/staging/reviewed_morphology.tsv               --proper-nouns sources/staging/reviewed_proper_nouns.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
           done
@@ -89,6 +90,11 @@ jobs:
               for forms in reports[50000]["reviewed_morphology"]["families"].values()
               for word in forms
           }
+          reviewed_proper_nouns = {
+              word
+              for forms in reports[50000]["reviewed_proper_nouns"]["families"].values()
+              for word in forms
+          }
 
           def read_ckdt(path, expected_count):
               data = path.read_bytes()
@@ -98,22 +104,41 @@ jobs:
               assert count == expected_count, (path, count, expected_count)
               p = 48
               out = set()
+              raw = set()
               for _ in range(count):
                   n = struct.unpack_from("<H", data, p)[0]
                   p += 2
-                  out.add(data[p:p+n].decode("utf-8").lower())
+                  word = data[p:p+n].decode("utf-8")
+                  raw.add(word)
+                  out.add(word.lower())
                   p += n + 1
               assert len(out) == count, f"duplicate CKDT entries in {path}"
-              return out
+              return raw, out
 
+          ckdt_raw = {}
           ckdt = {
-              size: read_ckdt(root / str(size) / "dictionary.bin", size)
+              size: read_ckdt(root / str(size) / "dictionary.bin", size)[1]
               for size in sizes
           }
+          for size in sizes:
+              ckdt_raw[size] = read_ckdt(root / str(size) / "dictionary.bin", size)[0]
 
           for size in sizes:
               missing = sorted(reviewed - ckdt[size])
               assert not missing, f"{size}: missing reviewed forms: {', '.join(missing)}"
+              missing_proper = sorted({w.lower() for w in reviewed_proper_nouns} - ckdt[size])
+              assert not missing_proper, (
+                  f"{size}: missing reviewed proper nouns: {', '.join(missing_proper)}"
+              )
+              expected_case = set(reviewed_proper_nouns)
+              actual_case = {
+                  w for w in ckdt_raw[size]
+                  if w.lower() in {x.lower() for x in reviewed_proper_nouns}
+              }
+              assert actual_case == expected_case, (
+                  f"{size}: proper noun casing mismatch: "
+                  f"expected={sorted(expected_case)}, actual={sorted(actual_case)}"
+              )
 
           forbidden = {
               "chopin", "chopina", "goebbels", "goebbelsa",
@@ -148,6 +173,7 @@ jobs:
                   "drop_reasons": report["drop_reasons"],
                   "dictionary_bytes": (root / str(size) / "dictionary.bin").stat().st_size,
                   "reviewed_forms_present": len(reviewed),
+                  "reviewed_proper_nouns_present": len(reviewed_proper_nouns),
                   "regression_hits": regression_hits[size],
               }
 
