@@ -121,6 +121,7 @@ jobs:
           # Read the canonical CKDT section directly so the guard checks the actual artifact,
           # not only the text preview.
           p = 48
+          ckdt_raw = set()
           ckdt_words = set()
           found = set()
           for _ in range(word_count):
@@ -128,6 +129,7 @@ jobs:
               p += 2
               word = data[p:p+n].decode("utf-8").lower()
               p += n + 1
+              ckdt_raw.add(word)
               ckdt_words.add(word)
               if word in forbidden:
                   found.add(word)
@@ -141,15 +143,25 @@ jobs:
               + ", ".join(missing_reviewed)
           )
 
-          missing_proper_nouns = sorted(reviewed_proper_nouns - ckdt_words)
+          missing_proper_nouns = sorted(
+              {word.lower() for word in reviewed_proper_nouns} - ckdt_words
+          )
           assert not missing_proper_nouns, (
               "reviewed proper nouns missing from CKDT: "
               + ", ".join(missing_proper_nouns)
           )
-          assert all(
-              word in ckdt_words
-              for word in reviewed_proper_nouns
-          ), "reviewed proper noun casing lost in CKDT"
+          expected_proper_case = {
+              word for word in reviewed_proper_nouns
+          }
+          actual_proper_case = {
+              word for word in ckdt_raw
+              if word.lower() in {w.lower() for w in reviewed_proper_nouns}
+          }
+          assert actual_proper_case == expected_proper_case, (
+              "reviewed proper noun casing mismatch: "
+              f"expected={sorted(expected_proper_case)}, "
+              f"actual={sorted(actual_proper_case)}"
+          )
 
           print(json.dumps({
               "word_count": expected,
