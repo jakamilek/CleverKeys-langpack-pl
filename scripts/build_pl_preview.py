@@ -235,6 +235,51 @@ def load_reviewed_morphology(
     return forms, families
 
 
+def load_reviewed_proper_nouns(
+    path: Path,
+) -> tuple[set[str], dict[str, list[str]], dict[str, str]]:
+    forms: set[str] = set()
+    families: dict[str, list[str]] = {}
+    lower_to_canonical: dict[str, str] = {}
+    if not path.exists():
+        return forms, families, lower_to_canonical
+    for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split("	")
+        if len(parts) != 4:
+            raise SystemExit(
+                f"Malformed proper-noun row {path}:{line_no}; expected 4 TSV columns"
+            )
+        family_id, raw_forms, basis, note = parts
+        if not family_id or not raw_forms or not basis or not note:
+            raise SystemExit(f"Malformed proper-noun row {path}:{line_no}")
+        family_forms = [w.strip() for w in raw_forms.split(";") if w.strip()]
+        if not family_forms:
+            raise SystemExit(f"Empty proper-noun family {path}:{line_no}")
+        invalid = [w for w in family_forms if not is_candidate(w)]
+        if invalid:
+            raise SystemExit(
+                f"Invalid proper-noun candidate(s) at {path}:{line_no}: "
+                + ", ".join(sorted(set(invalid)))
+            )
+        bucket = families.setdefault(family_id, [])
+        for word in family_forms:
+            lower = word.lower()
+            prior = lower_to_canonical.get(lower)
+            if prior is not None and prior != word:
+                raise SystemExit(
+                    f"Conflicting proper-noun casing at {path}:{line_no}: "
+                    f"{prior!r} vs {word!r}"
+                )
+            lower_to_canonical[lower] = word
+            if word not in bucket:
+                bucket.append(word)
+            forms.add(word)
+    return forms, families, lower_to_canonical
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=100000)
@@ -250,6 +295,11 @@ def main() -> int:
         "--morphology",
         type=Path,
         default=Path("sources/staging/reviewed_morphology.tsv"),
+    )
+    ap.add_argument(
+        "--proper-nouns",
+        type=Path,
+        default=Path("sources/staging/reviewed_proper_nouns.tsv"),
     )
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
@@ -282,12 +332,25 @@ def main() -> int:
     spell = hunspell_accepts(ranked)
     blocked_errors, error_rows = load_blocked_errors(args.errors)
     reviewed_morphology, morphology_families = load_reviewed_morphology(args.morphology)
+    reviewed_proper_nouns, proper_noun_families, proper_case_map = load_reviewed_proper_nouns(
+        args.proper_nouns
+    )
     base_ranked = set(ranked)
     supplemental_morphology = sorted(reviewed_morphology - base_ranked)
     for word in supplemental_morphology:
         ranked.append(word)
         seen.add(word)
-    zipf.update({word: float(zipf_frequency(word, "pl")) for word in supplemental_morphology})
+    supplemental_proper_nouns = sorted(
+        {word.lower() for word in reviewed_proper_nouns} - set(ranked)
+    )
+    for word in supplemental_proper_nouns:
+        ranked.append(word)
+        seen.add(word)
+    zipf.update({
+        word: float(zipf_frequency(word, "pl"))
+        for word in supplemental_morphology + supplemental_proper_nouns
+    })
+    reviewed_proper_nouns_lower = {word.lower() for word in reviewed_proper_nouns}
     positive = spell | aosp
 
     # High-confidence known-good set for typo detection.
@@ -355,6 +418,9 @@ def main() -> int:
         if word in reviewed_morphology:
             keep[word] = "reviewed-morphology"
             continue
+        if word in reviewed_proper_nouns_lower:
+            keep[word] = "reviewed-proper-noun"
+            continue
         if word in foreign and word not in guards:
             drop[word] = f"foreign:{foreign[word][0]}"
             continue
@@ -387,6 +453,8 @@ def main() -> int:
                 continue
             if word in positive or word in guards or word in reviewed_morphology:
                 continue
+            if word in reviewed_proper_nouns_lower:
+                continue
             best = max(accented, key=lambda w: zipf.get(w, 0.0))
             if best != word and best in positive:
                 del keep[word]
@@ -394,7 +462,10 @@ def main() -> int:
 
     # Enforce hard size cap by wordfreq rank while protecting guards and oracle-backed top words.
     if len(keep) > args.limit:
-        protected = {w for w in keep if w in guards or w in reviewed_morphology}
+        protected = {
+            w for w in keep
+            if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower
+        }
         rest = sorted(
             (w for w in keep if w not in protected),
             key=lambda w: (rank_of[w], -zipf[w], w),
@@ -407,7 +478,17 @@ def main() -> int:
     if missing_guards:
         raise SystemExit("Guard words lost: " + ", ".join(missing_guards))
 
-    words_sorted = sorted(keep)
+    missing_proper_nouns = sorted(reviewed_proper_nouns_lower - set(keep))
+    if missing_proper_nouns:
+        raise SystemExit(
+            "Reviewed proper nouns lost: " + ", ".join(missing_proper_nouns)
+        )
+
+    surface_keep = {
+        proper_case_map.get(word, word): reason
+        for word, reason in keep.items()
+    }
+    words_sorted = sorted(surface_keep)
     args.out_wordlist.parent.mkdir(parents=True, exist_ok=True)
     args.out_report.parent.mkdir(parents=True, exist_ok=True)
     args.out_wordlist.write_text(
@@ -442,6 +523,7 @@ def main() -> int:
             "spell_evidence": sum(1 for r in keep.values() if r == "spell-evidence"),
             "guard": sum(1 for r in keep.values() if r == "guard"),
             "reviewed_morphology": sum(1 for r in keep.values() if r == "reviewed-morphology"),
+            "reviewed_proper_noun": sum(1 for r in keep.values() if r == "reviewed-proper-noun"),
         },
         "reviewed_morphology": {
             "family_count": len(morphology_families),
@@ -450,6 +532,15 @@ def main() -> int:
             "families": {
                 family_id: sorted(forms)
                 for family_id, forms in sorted(morphology_families.items())
+            },
+        },
+        "reviewed_proper_nouns": {
+            "family_count": len(proper_noun_families),
+            "form_count": len(reviewed_proper_nouns),
+            "supplemental_form_count": len(supplemental_proper_nouns),
+            "families": {
+                family_id: sorted(forms)
+                for family_id, forms in sorted(proper_noun_families.items())
             },
         },
         "dropped": len(drop),
@@ -467,7 +558,7 @@ def main() -> int:
                 key=lambda x: (-x["foreign_zipf"], x["word"]),
             )[:100],
             "kept_tail": [
-                {"word": w, "zipf": round(zipf[w], 2), "reason": keep[w]}
+                {"word": w, "zipf": round(zipf[w], 2), "reason": surface_keep.get(proper_case_map.get(w, w), keep[w])}
                 for w in sorted(keep, key=lambda x: (-zipf[x], x))[:100]
             ],
         },
