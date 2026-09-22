@@ -30,7 +30,7 @@ NAMES_RES = {
     "female_first_names_2026_01_20": 1159670,
     "male_first_names_2026_01_20": 1159669,
 }
-DANE_API = "https://api.dane.gov.pl/resources/{resource_id}/download/"
+DANE_API = "https://api.dane.gov.pl/1.4/resources/{resource_id}/download/"
 PRNG_WFS = "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRNG/WFS/GeographicalNames"
 
 
