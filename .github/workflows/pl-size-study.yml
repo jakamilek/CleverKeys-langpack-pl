@@ -1,4 +1,6 @@
 # Study workflow intentionally rerun on source/workflow changes for reproducible 50k/75k/100k comparison.
+# The candidate depth is deliberately >100k because the current evidence filters
+# leave only 78,530 eligible candidates inside the first 100k wordfreq stream.
 name: Polish dictionary size study
 
 on:
@@ -48,12 +50,12 @@ jobs:
           git -C build/CleverKeys-runtime checkout --detach 263bd0abc03dec420f60fa073a9d2c5e25a176b5
           test "$(git -C build/CleverKeys-runtime rev-parse HEAD)" = "263bd0abc03dec420f60fa073a9d2c5e25a176b5"
 
-      - name: Build 50k, 75k and 100k variants
+      - name: Build 50k, 75k and 100k variants from a common 200k candidate window
         run: |
           set -euo pipefail
           for limit in 50000 75000 100000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 100000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --morphology sources/staging/reviewed_morphology.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --morphology sources/staging/reviewed_morphology.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
           done
@@ -79,9 +81,8 @@ jobs:
                   (root / str(size) / "pl-preview-report.json").read_text(encoding="utf-8")
               )
 
-          assert len(words[50000]) == 50000
-          assert len(words[75000]) == 75000
-          assert len(words[100000]) == 100000
+          for size in sizes:
+              assert len(words[size]) == size, (size, len(words[size]), reports[size]["candidate_count"])
 
           reviewed = {
               word
@@ -128,6 +129,7 @@ jobs:
           assert all(not hits for hits in regression_hits.values()), regression_hits
 
           result = {
+              "candidate_window": 200000,
               "variants": {},
               "comparisons": {
                   "added_75k_vs_50k": sorted(words[75000] - words[50000]),
