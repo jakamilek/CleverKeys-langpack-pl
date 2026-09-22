@@ -71,6 +71,19 @@ def download_dane_csv(resource_id: int, out_dir: Path) -> dict:
     url = DANE_API.format(resource_id=resource_id)
     resolved = url
 
+    def save_result(data: bytes, content_type: str) -> dict:
+        path = out_dir / f"resource-{resource_id}.csv"
+        path.write_bytes(data)
+        return {
+            "resource_id": resource_id,
+            "api_url": url,
+            "resolved_url": resolved,
+            "content_type": content_type,
+            "sha256": sha256(data),
+            "bytes": len(data),
+            "path": str(path),
+        }
+
     try:
         data, content_type = fetch_bytes(
             url, {"Accept": "application/json, text/csv, */*"}
@@ -83,47 +96,71 @@ def download_dane_csv(resource_id: int, out_dir: Path) -> dict:
                 raise RuntimeError(
                     f"data.gov.pl resource {resource_id}: no file/link in {metadata}"
                 )
-            data, content_type = fetch_bytes(resolved)
+            data, content_type = fetch_bytes(
+                resolved, {"Accept": "text/csv,application/octet-stream,*/*"}
+            )
+        return save_result(data, content_type)
     except HTTPError as exc:
         if exc.code != 404:
             raise
-        page_url = DANE_RESOURCE_PAGES.get(resource_id)
-        if not page_url:
-            raise
-        html, _ = fetch_bytes(
-            page_url, {"Accept": "text/html,application/xhtml+xml"}
-        )
-        text = html.decode("utf-8", errors="replace")
-        hrefs = re.findall(r'href=["\']([^"\']+)["\']', text, flags=re.IGNORECASE)
-        csv_candidates = []
-        for href in hrefs:
-            href = unquote(href.replace("&amp;", "&"))
-            candidate = urljoin(page_url, href)
-            low = candidate.lower()
-            if ".csv" in low or "format=csv" in low or ("csv" in low and "download" in low):
-                csv_candidates.append(candidate)
-        if not csv_candidates:
-            raise RuntimeError(
-                f"data.gov.pl resource {resource_id}: API download returned 404 and "
-                "the resource page exposed no CSV download URL"
+
+    # Some current data.gov.pl resource IDs return 404 on the historical
+    # /download/ route. The public API documentation uses a resource metadata
+    # endpoint, so try those variants before falling back to the web page.
+    metadata_candidates = [
+        f"https://api.dane.gov.pl/1.4/resources/{resource_id}/",
+        f"https://api.dane.gov.pl/resources/{resource_id}/",
+        f"https://api.dane.gov.pl/1.4/resources/{resource_id}",
+        f"https://api.dane.gov.pl/resources/{resource_id}",
+    ]
+    for metadata_url in metadata_candidates:
+        try:
+            metadata_bytes, metadata_type = fetch_bytes(
+                metadata_url, {"Accept": "application/json"}
             )
-        resolved = csv_candidates[0]
-        data, content_type = fetch_bytes(
-            resolved, {"Accept": "text/csv,application/octet-stream,*/*"}
+        except HTTPError as metadata_exc:
+            if metadata_exc.code == 404:
+                continue
+            raise
+        stripped = metadata_bytes.lstrip()
+        if metadata_type == "application/json" or stripped.startswith(b"{"):
+            metadata = json.loads(metadata_bytes.decode("utf-8"))
+            resolved_candidate = metadata.get("file") or metadata.get("link")
+            if resolved_candidate:
+                resolved = resolved_candidate
+                data, content_type = fetch_bytes(
+                    resolved, {"Accept": "text/csv,application/octet-stream,*/*"}
+                )
+                return save_result(data, content_type)
+
+    page_url = DANE_RESOURCE_PAGES.get(resource_id)
+    if not page_url:
+        raise RuntimeError(f"No public resource page configured for {resource_id}")
+
+    html, _ = fetch_bytes(
+        page_url, {"Accept": "text/html,application/xhtml+xml"}
+    )
+    text = html.decode("utf-8", errors="replace")
+    hrefs = re.findall(r"href=[\"']([^\"']+)[\"']", text, flags=re.IGNORECASE)
+    csv_candidates = []
+    for href in hrefs:
+        href = unquote(href.replace("&amp;", "&"))
+        candidate = urljoin(page_url, href)
+        low = candidate.lower()
+        if ".csv" in low or "format=csv" in low or ("csv" in low and "download" in low):
+            csv_candidates.append(candidate)
+
+    if not csv_candidates:
+        raise RuntimeError(
+            f"data.gov.pl resource {resource_id}: API download and metadata endpoints "
+            "returned 404, and the resource page exposed no CSV download URL"
         )
 
-    path = out_dir / f"resource-{resource_id}.csv"
-    path.write_bytes(data)
-    return {
-        "resource_id": resource_id,
-        "api_url": url,
-        "resolved_url": resolved,
-        "content_type": content_type,
-        "sha256": sha256(data),
-        "bytes": len(data),
-        "path": str(path),
-    }
-
+    resolved = csv_candidates[0]
+    data, content_type = fetch_bytes(
+        resolved, {"Accept": "text/csv,application/octet-stream,*/*"}
+    )
+    return save_result(data, content_type)
 
 def parse_name_csv(path: Path) -> set[str]:
     raw = path.read_bytes()
