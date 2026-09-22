@@ -15,6 +15,7 @@ on:
   workflow_dispatch:
 
 # CI checkpoint: reviewed morphology pilot is validated from a concrete Actions run.
+# Current checkpoint tree was restored from the verified 43d946b6 baseline.
 concurrency:
   group: cleverkeys-pl-preview
   cancel-in-progress: true
