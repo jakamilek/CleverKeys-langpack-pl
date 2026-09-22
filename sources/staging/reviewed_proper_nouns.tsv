@@ -1,0 +1,13 @@
+# Reviewed Polish proper nouns pilot.
+# Columns: family_id	forms(; separated)	basis	note
+# Canonical surface casing is intentional: CleverKeys CKDT can preserve the
+# reviewed capitalized form through its canonical/normalized mapping.
+# This is a project-owned reviewed source and does not automatically promote
+# arbitrary names from external corpora.
+
+place-bydgoszcz	Bydgoszcz;Bydgoszczy	Observed missing proper-name/place forms	Observed in Polish device testing; include the city name and a common inflected form.
+place-nicea	Nicea;Nicei	Observed missing proper-name/place forms	Observed in Polish device testing; include the city name and a common inflected form.
+name-andrzej	Andrzej;Andrzeju	Observed missing proper-name forms	Observed in Polish device testing; nominative + vocative.
+name-marzena	Marzena	Observed missing proper-name forms	Observed in Polish device testing.
+name-januszek	Januszek	Observed missing proper-name forms	Observed in Polish device testing; diminutive/proper-name surface.
+name-aska	Aśka	Observed missing proper-name forms	Observed in Polish device testing; colloquial diminutive used as a proper name.
