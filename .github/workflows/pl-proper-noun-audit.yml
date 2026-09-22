@@ -53,10 +53,50 @@ jobs:
         run: |
           python3 scripts/build_pl_preview.py             --top 200000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_100k.txt             --out-report build/pl-preview-report.json
 
+      - name: Pin CleverKeys runtime
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/tribixbite/CleverKeys.git build/CleverKeys-runtime
+          git -C build/CleverKeys-runtime fetch --depth=1 origin 263bd0abc03dec420f60fa073a9d2c5e25a176b5
+          git -C build/CleverKeys-runtime checkout --detach 263bd0abc03dec420f60fa073a9d2c5e25a176b5
+          test "$(git -C build/CleverKeys-runtime rev-parse HEAD)" = "263bd0abc03dec420f60fa073a9d2c5e25a176b5"
+
+      - name: Build pinned CKDT V2 dictionary
+        run: |
+          python3 build/CleverKeys-runtime/scripts/build_dictionary.py             --lang pl             --input build/pl_words_100k.txt             --output build/dictionary.bin             --use-wordfreq
+
+      - name: Extract canonical surfaces from CKDT
+        run: |
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+
+          data = Path("build/dictionary.bin").read_bytes()
+          magic, version = struct.unpack_from("<II", data, 0)
+          assert magic == 0x54444B43 and version == 2
+          count = struct.unpack_from("<I", data, 12)[0]
+
+          p = 48
+          words = []
+          for _ in range(count):
+              n = struct.unpack_from("<H", data, p)[0]
+              p += 2
+              words.append(data[p:p+n].decode("utf-8"))
+              p += n + 1
+
+          assert len(words) == count
+          Path("build/pl_words_100k.ckdt.txt").write_text(
+              "
+".join(words) + "
+",
+              encoding="utf-8",
+          )
+          print(f"extracted {count} canonical CKDT surfaces")
+          PY
+
       - name: Audit official Polish names and localities
         run: |
           set -euo pipefail
-          python3 scripts/audit_proper_nouns.py             --wordlist build/pl_words_100k.txt             --reviewed-proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-report build/proper-noun-audit-report.json             --out-tsv build/proper-noun-audit.tsv             --out-sources build/proper-noun-audit-sources.json             --workdir build/proper-noun-sources
+          python3 scripts/audit_proper_nouns.py             --wordlist build/pl_words_100k.ckdt.txt             --reviewed-proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-report build/proper-noun-audit-report.json             --out-tsv build/proper-noun-audit.tsv             --out-sources build/proper-noun-audit-sources.json             --workdir build/proper-noun-sources
 
       - name: Verify audit outputs
         run: |
@@ -104,6 +144,8 @@ jobs:
             build/proper-noun-audit-sources.json
             build/pl-preview-report.json
             build/pl_words_100k.txt
+            build/pl_words_100k.ckdt.txt
+            build/dictionary.bin
             build/aosp/pl_wordlist.combined.gz.sha256
             build/aosp/source-ref.txt
             sources/staging/reviewed_proper_nouns.tsv
