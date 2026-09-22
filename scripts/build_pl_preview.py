@@ -385,7 +385,7 @@ def main() -> int:
         for word in list(words):
             if any(ch in DIACRITICS for ch in word):
                 continue
-            if word in positive or word in guards:
+            if word in positive or word in guards or word in reviewed_morphology:
                 continue
             best = max(accented, key=lambda w: zipf.get(w, 0.0))
             if best != word and best in positive:
