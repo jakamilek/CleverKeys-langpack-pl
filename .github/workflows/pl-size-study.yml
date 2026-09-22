@@ -1,0 +1,189 @@
+name: Polish dictionary size study
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "ops/baseline-sync-2026-09-20"
+    paths:
+      - ".github/workflows/pl-size-study.yml"
+      - "scripts/build_pl_preview.py"
+      - "scripts/requirements-pl-audit.txt"
+      - "sources/staging/autocorrect_errors.tsv"
+      - "sources/staging/reviewed_morphology.tsv"
+
+permissions:
+  contents: read
+
+jobs:
+  size-study:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout language project
+        uses: actions/checkout@v4
+
+      - name: Install Polish spelling oracle
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y hunspell hunspell-pl
+
+      - name: Install pinned wordfreq
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r scripts/requirements-pl-audit.txt
+
+      - name: Acquire pinned AOSP Polish dictionary
+        run: |
+          mkdir -p build/aosp
+          curl --fail --location             'https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/refs/heads/main/dictionaries/pl_wordlist.combined.gz?format=TEXT'             -o build/aosp/pl_wordlist.combined.gz.base64
+          base64 --decode build/aosp/pl_wordlist.combined.gz.base64 > build/aosp/pl_wordlist.combined.gz
+          sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}' > build/aosp/pl_wordlist.combined.gz.sha256
+          test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
+
+      - name: Pin CleverKeys runtime
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/tribixbite/CleverKeys.git build/CleverKeys-runtime
+          git -C build/CleverKeys-runtime fetch --depth=1 origin 263bd0abc03dec420f60fa073a9d2c5e25a176b5
+          git -C build/CleverKeys-runtime checkout --detach 263bd0abc03dec420f60fa073a9d2c5e25a176b5
+          test "$(git -C build/CleverKeys-runtime rev-parse HEAD)" = "263bd0abc03dec420f60fa073a9d2c5e25a176b5"
+
+      - name: Build 50k, 75k and 100k variants
+        run: |
+          set -euo pipefail
+          for limit in 50000 75000 100000; do
+            mkdir -p "build/study/$limit"
+            python3 scripts/build_pl_preview.py               --top 100000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --morphology sources/staging/reviewed_morphology.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+
+            python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
+          done
+
+      - name: Compare coverage and audit CKDTs
+        run: |
+          python3 - <<'PY'
+          import json, struct
+          from pathlib import Path
+
+          root = Path("build/study")
+          sizes = [50000, 75000, 100000]
+          words = {}
+          reports = {}
+
+          for size in sizes:
+              words[size] = {
+                  line.strip()
+                  for line in (root / str(size) / "pl_words_preview.txt").read_text(encoding="utf-8").splitlines()
+                  if line.strip() and not line.startswith("#")
+              }
+              reports[size] = json.loads(
+                  (root / str(size) / "pl-preview-report.json").read_text(encoding="utf-8")
+              )
+
+          assert len(words[50000]) == 50000
+          assert len(words[75000]) == 75000
+          assert len(words[100000]) == 100000
+
+          reviewed = {
+              word
+              for forms in reports[50000]["reviewed_morphology"]["families"].values()
+              for word in forms
+          }
+
+          def read_ckdt(path, expected_count):
+              data = path.read_bytes()
+              magic, version = struct.unpack_from("<II", data, 0)
+              assert magic == 0x54444B43 and version == 2
+              count = struct.unpack_from("<I", data, 12)[0]
+              assert count == expected_count, (path, count, expected_count)
+              p = 48
+              out = set()
+              for _ in range(count):
+                  n = struct.unpack_from("<H", data, p)[0]
+                  p += 2
+                  out.add(data[p:p+n].decode("utf-8").lower())
+                  p += n + 1
+              assert len(out) == count, f"duplicate CKDT entries in {path}"
+              return out
+
+          ckdt = {
+              size: read_ckdt(root / str(size) / "dictionary.bin", size)
+              for size in sizes
+          }
+
+          for size in sizes:
+              missing = sorted(reviewed - ckdt[size])
+              assert not missing, f"{size}: missing reviewed forms: {', '.join(missing)}"
+
+          forbidden = {
+              "chopin", "chopina", "goebbels", "goebbelsa",
+              "catherine", "catalina", "cameron", "carli", "carlo",
+              "castillo", "cali", "celli", "casino", "calli",
+              "carrillo", "caroli", "cassino", "compos", "gourami",
+              "celastial",
+          }
+          regression_hits = {
+              size: sorted(ckdt[size] & forbidden)
+              for size in sizes
+          }
+          assert all(not hits for hits in regression_hits.values()), regression_hits
+
+          result = {
+              "variants": {},
+              "comparisons": {
+                  "added_75k_vs_50k": sorted(words[75000] - words[50000]),
+                  "added_100k_vs_75k": sorted(words[100000] - words[75000]),
+                  "added_100k_vs_50k": sorted(words[100000] - words[50000]),
+              },
+          }
+
+          for size in sizes:
+              report = reports[size]
+              result["variants"][str(size)] = {
+                  "kept": report["kept"],
+                  "candidate_count": report["candidate_count"],
+                  "reviewed_morphology_forms": report["reviewed_morphology"]["form_count"],
+                  "supplemental_morphology_forms": report["reviewed_morphology"]["supplemental_form_count"],
+                  "drop_reasons": report["drop_reasons"],
+                  "dictionary_bytes": (root / str(size) / "dictionary.bin").stat().st_size,
+                  "reviewed_forms_present": len(reviewed),
+                  "regression_hits": regression_hits[size],
+              }
+
+          result["marginal_gain"] = {
+              "50_to_75": {
+                  "new_words": len(words[75000] - words[50000]),
+                  "new_words_from_50k_to_75k_pct": round(
+                      100 * len(words[75000] - words[50000]) / 50000, 2
+                  ),
+              },
+              "75_to_100": {
+                  "new_words": len(words[100000] - words[75000]),
+                  "new_words_from_75k_to_100k_pct": round(
+                      100 * len(words[100000] - words[75000]) / 75000, 2
+                  ),
+              },
+          }
+
+          Path("build/study/size-study-report.json").write_text(
+              json.dumps(result, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(result["variants"], ensure_ascii=False, indent=2))
+          print(json.dumps(result["marginal_gain"], ensure_ascii=False, indent=2))
+          PY
+
+      - name: Publish size-study artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleverkeys-pl-size-study
+          path: |
+            build/study/size-study-report.json
+            build/study/50000/pl-preview-report.json
+            build/study/50000/pl_words_preview.txt
+            build/study/50000/dictionary.bin
+            build/study/75000/pl-preview-report.json
+            build/study/75000/pl_words_preview.txt
+            build/study/75000/dictionary.bin
+            build/study/100000/pl-preview-report.json
+            build/study/100000/pl_words_preview.txt
+            build/study/100000/dictionary.bin
+            build/aosp/pl_wordlist.combined.gz.sha256
