@@ -199,7 +199,23 @@ def download_dane_csv(resource_id: int, out_dir: Path) -> dict:
 
 def parse_name_csv(path: Path) -> set[str]:
     raw = path.read_bytes()
-    text = raw.decode("utf-8-sig")
+    text = None
+    encoding_used = None
+    for encoding in ("utf-8-sig", "utf-8", "cp1250", "iso-8859-2"):
+        try:
+            text = raw.decode(encoding)
+            encoding_used = encoding
+            break
+        except UnicodeDecodeError:
+            continue
+    if text is None:
+        raise UnicodeDecodeError(
+            "unknown",
+            raw,
+            0,
+            min(len(raw), 1),
+            f"cannot decode {path} using UTF-8, cp1250 or ISO-8859-2",
+        )
     try:
         dialect = csv.Sniffer().sniff(text[:4096], delimiters=";,\t,")
     except csv.Error:
