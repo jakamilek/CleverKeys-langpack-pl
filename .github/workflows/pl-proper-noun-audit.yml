@@ -42,16 +42,15 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p build/aosp
-          curl --fail --location             'https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/refs/heads/main/dictionaries/pl_wordlist.combined.gz?format=TEXT'             -o build/aosp/pl_wordlist.combined.gz.base64
+          curl --fail --location "https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/refs/heads/main/dictionaries/pl_wordlist.combined.gz?format=TEXT" -o build/aosp/pl_wordlist.combined.gz.base64
           base64 --decode build/aosp/pl_wordlist.combined.gz.base64 > build/aosp/pl_wordlist.combined.gz
           sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}' > build/aosp/pl_wordlist.combined.gz.sha256
           test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
-          printf '%s
-'             'android.googlesource.com/platform/packages/inputmethods/LatinIME'             'refs/heads/main'             'dictionaries/pl_wordlist.combined.gz'             'sha256=75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45'             'directory-tree=2b550379fe38213f9b01dcb75478ef2133682685'             > build/aosp/source-ref.txt
+          printf '%s\n' 'android.googlesource.com/platform/packages/inputmethods/LatinIME' 'refs/heads/main' 'dictionaries/pl_wordlist.combined.gz' 'sha256=75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45' 'directory-tree=2b550379fe38213f9b01dcb75478ef2133682685' > build/aosp/source-ref.txt
 
-      - name: Build audited 100k Polish candidate pack
+      - name: Build audited 100k Polish candidate list
         run: |
-          python3 scripts/build_pl_preview.py             --top 200000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_100k.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py --top 200000 --band 100000 --limit 100000 --aosp build/aosp/pl_wordlist.combined.gz --morphology sources/staging/reviewed_morphology.tsv --proper-nouns sources/staging/reviewed_proper_nouns.tsv --out-wordlist build/pl_words_100k.txt --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -62,7 +61,7 @@ jobs:
 
       - name: Build pinned CKDT V2 dictionary
         run: |
-          python3 build/CleverKeys-runtime/scripts/build_dictionary.py             --lang pl             --input build/pl_words_100k.txt             --output build/dictionary.bin             --use-wordfreq
+          python3 build/CleverKeys-runtime/scripts/build_dictionary.py --lang pl --input build/pl_words_100k.txt --output build/dictionary.bin --use-wordfreq
 
       - name: Extract canonical surfaces from CKDT
         run: |
@@ -84,19 +83,14 @@ jobs:
               p += n + 1
 
           assert len(words) == count
-          Path("build/pl_words_100k.ckdt.txt").write_text(
-              "
-".join(words) + "
-",
-              encoding="utf-8",
-          )
+          Path("build/pl_words_100k.ckdt.txt").write_text(chr(10).join(words) + chr(10), encoding="utf-8")
           print(f"extracted {count} canonical CKDT surfaces")
           PY
 
       - name: Audit official Polish names and localities
         run: |
           set -euo pipefail
-          python3 scripts/audit_proper_nouns.py             --wordlist build/pl_words_100k.ckdt.txt             --reviewed-proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-report build/proper-noun-audit-report.json             --out-tsv build/proper-noun-audit.tsv             --out-sources build/proper-noun-audit-sources.json             --workdir build/proper-noun-sources
+          python3 scripts/audit_proper_nouns.py --wordlist build/pl_words_100k.ckdt.txt --reviewed-proper-nouns sources/staging/reviewed_proper_nouns.tsv --out-report build/proper-noun-audit-report.json --out-tsv build/proper-noun-audit.tsv --out-sources build/proper-noun-audit-sources.json --workdir build/proper-noun-sources
 
       - name: Verify audit outputs
         run: |
@@ -104,9 +98,7 @@ jobs:
           import json
           from pathlib import Path
 
-          report = json.loads(
-              Path("build/proper-noun-audit-report.json").read_text(encoding="utf-8")
-          )
+          report = json.loads(Path("build/proper-noun-audit-report.json").read_text(encoding="utf-8"))
           assert report["mode"] == "audit-only"
           assert report["promotion"] is False
           assert report["pack_word_count"] == 100000
@@ -114,16 +106,11 @@ jobs:
           assert report["candidates"]["lowercase_only"] >= 0
           assert report["candidates"]["missing_from_pack"] >= 0
 
-          # The current hand-reviewed source remains a hard invariant:
-          # its canonical surfaces must exist in the generated 100k list.
           reviewed_missing = [
               row for row in Path("build/proper-noun-audit.tsv").read_text(encoding="utf-8").splitlines()[1:]
-              if row and row.split("\t")[4] == "True" and row.split("\t")[3] == "missing_from_pack"
+              if row and row.split(chr(9))[4] == "True" and row.split(chr(9))[3] == "missing_from_pack"
           ]
-          assert not reviewed_missing, (
-              "reviewed proper-noun source contains forms missing from the 100k pack: "
-              + "; ".join(reviewed_missing[:20])
-          )
+          assert not reviewed_missing, "reviewed proper-noun source contains forms missing from the 100k pack: " + "; ".join(reviewed_missing[:20])
 
           print(json.dumps({
               "pack_word_count": report["pack_word_count"],
