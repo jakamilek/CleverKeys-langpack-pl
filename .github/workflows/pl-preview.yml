@@ -9,6 +9,7 @@ on:
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/reviewed_morphology.tsv"
+      - "sources/staging/reviewed_proper_nouns.tsv"
       - ".github/workflows/pl-preview.yml"
       - "docs/PL_LANGUAGE_DATA_PLAN.md"
       - "docs/PL_SOURCE_MATRIX_2026-09-20.md"
@@ -51,7 +52,7 @@ jobs:
 
       - name: Preview Polish word list
         run: |
-          python3 scripts/build_pl_preview.py             --top 100000             --band 50000             --limit 50000             --aosp build/aosp/pl_wordlist.combined.gz             --morphology sources/staging/reviewed_morphology.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 100000             --band 50000             --limit 50000             --aosp build/aosp/pl_wordlist.combined.gz             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -84,6 +85,11 @@ jobs:
           reviewed = {
               word
               for forms in report["reviewed_morphology"]["families"].values()
+              for word in forms
+          }
+          reviewed_proper_nouns = {
+              word
+              for forms in report["reviewed_proper_nouns"]["families"].values()
               for word in forms
           }
 
@@ -135,6 +141,16 @@ jobs:
               + ", ".join(missing_reviewed)
           )
 
+          missing_proper_nouns = sorted(reviewed_proper_nouns - ckdt_words)
+          assert not missing_proper_nouns, (
+              "reviewed proper nouns missing from CKDT: "
+              + ", ".join(missing_proper_nouns)
+          )
+          assert all(
+              word in ckdt_words
+              for word in reviewed_proper_nouns
+          ), "reviewed proper noun casing lost in CKDT"
+
           print(json.dumps({
               "word_count": expected,
               "zip_entries": names,
@@ -142,6 +158,8 @@ jobs:
               "has_prefix_boost": False,
               "reviewed_morphology_forms": len(reviewed),
               "reviewed_morphology_present_in_ckdt": len(reviewed - set(missing_reviewed)),
+              "reviewed_proper_noun_forms": len(reviewed_proper_nouns),
+              "reviewed_proper_nouns_present_in_ckdt": len(reviewed_proper_nouns - set(missing_proper_nouns)),
               "regression_hits": len(found),
               "promotion": False,
           }, ensure_ascii=False, indent=2))
@@ -159,4 +177,5 @@ jobs:
             build/aosp/pl_wordlist.combined.gz.sha256
             sources/staging/autocorrect_errors.tsv
             sources/staging/reviewed_morphology.tsv
+            sources/staging/reviewed_proper_nouns.tsv
             build/aosp/source-ref.txt
