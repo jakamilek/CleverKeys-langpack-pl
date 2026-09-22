@@ -116,12 +116,11 @@ jobs:
               return raw, out
 
           ckdt_raw = {}
-          ckdt = {
-              size: read_ckdt(root / str(size) / "dictionary.bin", size)[1]
-              for size in sizes
-          }
+          ckdt = {}
           for size in sizes:
-              ckdt_raw[size] = read_ckdt(root / str(size) / "dictionary.bin", size)[0]
+              raw, normalized = read_ckdt(root / str(size) / "dictionary.bin", size)
+              ckdt_raw[size] = raw
+              ckdt[size] = normalized
 
           for size in sizes:
               missing = sorted(reviewed - ckdt[size])
