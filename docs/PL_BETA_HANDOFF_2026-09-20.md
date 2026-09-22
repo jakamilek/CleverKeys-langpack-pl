@@ -48,3 +48,23 @@ The pilot uses explicit reviewed forms. It does not relax the global foreign-lan
 
 ## Next review
 Inspect the morphology pilot build for supplemental forms, any 50k-cap displacement, regression-guard results, CKDT/ZIP, and real-device behavior.
+
+
+## Morphology pilot result — run #20 (2026-09-22)
+
+- Run ID: `35770028140`
+- Commit: `fd94429e49b1e4c968467d72089b577308be2f88`
+- Result: `SUCCESS`
+- Reviewed morphology families: `6`
+- Reviewed forms: `82`
+- Supplemental forms outside the original top-100k candidate stream: `38`
+- Reviewed morphology forms present in final preview word list: `82/82`
+- Final kept words: `50000`
+- Regression blocklist: `13` blocked forms
+- Inner importable ZIP SHA-256:
+  `04d40eb12025795b52baff08e3ed2549288880287dd88ba525c1ce2673a7f7d1`
+- Artifact ID: `10713961189`
+- Outer artifact SHA-256:
+  `a74220a7bc5eca2cc40439694ef373d1f1331f2c82331de77fc724ee8009bef9`
+
+A single pilot conflict was found in run #19: `kukurydze` was removed by the existing diacritic-alias suppression even though it was an explicitly reviewed morphology form. The fix was to exempt reviewed morphology forms from that suppression. Run #20 confirmed all 82 reviewed forms are retained.
