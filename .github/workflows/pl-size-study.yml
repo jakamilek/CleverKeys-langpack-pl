@@ -54,11 +54,16 @@ jobs:
       - name: Build 50k, 75k and 100k variants from a common 200k candidate window
         run: |
           set -euo pipefail
+          python3 build/CleverKeys-runtime/scripts/generate_unigrams.py             --lang pl             --output build/unigrams.txt             --top-n 5000
+
           for limit in 50000 75000 100000; do
             mkdir -p "build/study/$limit"
             python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --morphology sources/staging/reviewed_morphology.tsv               --proper-nouns sources/staging/reviewed_proper_nouns.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
+
+            python3 build/CleverKeys-runtime/scripts/build_langpack.py               --lang pl               --name "Polish $limit"               --dict "build/study/$limit/dictionary.bin"               --unigrams build/unigrams.txt               --version 2               --author "jakamilek/CleverKeys-langpack-pl"               --output "build/study/$limit/cleverkeys-langpack-pl-$limit.zip"
+            sha256sum "build/study/$limit/cleverkeys-langpack-pl-$limit.zip" > "build/study/$limit/cleverkeys-langpack-pl-$limit.sha256"
           done
 
       - name: Compare coverage and audit CKDTs
@@ -122,7 +127,19 @@ jobs:
               ckdt_raw[size] = raw
               ckdt[size] = normalized
 
+          import zipfile
+
           for size in sizes:
+              pack = root / str(size) / f"cleverkeys-langpack-pl-{size}.zip"
+              with zipfile.ZipFile(pack) as zf:
+                  assert zf.namelist() == ["dictionary.bin", "manifest.json", "unigrams.txt"], (
+                      size, zf.namelist()
+                  )
+                  manifest = json.loads(zf.read("manifest.json"))
+                  assert manifest["code"] == "pl", (size, manifest)
+                  assert manifest["version"] == 2, (size, manifest)
+                  assert manifest["wordCount"] == size, (size, manifest)
+                  assert manifest["hasPrefixBoost"] is False, (size, manifest)
               missing = sorted(reviewed - ckdt[size])
               assert not missing, f"{size}: missing reviewed forms: {', '.join(missing)}"
               missing_proper = sorted({w.lower() for w in reviewed_proper_nouns} - ckdt[size])
@@ -191,6 +208,15 @@ jobs:
               },
           }
 
+          result["importable_packs"] = {
+              str(size): {
+                  "zip": str(root / str(size) / f"cleverkeys-langpack-pl-{size}.zip"),
+                  "sha256": (root / str(size) / f"cleverkeys-langpack-pl-{size}.sha256")
+                  .read_text(encoding="utf-8").split()[0],
+              }
+              for size in sizes
+          }
+
           Path("build/study/size-study-report.json").write_text(
               json.dumps(result, ensure_ascii=False, indent=2) + "\n",
               encoding="utf-8",
@@ -214,4 +240,10 @@ jobs:
             build/study/100000/pl-preview-report.json
             build/study/100000/pl_words_preview.txt
             build/study/100000/dictionary.bin
+            build/study/50000/cleverkeys-langpack-pl-50000.zip
+            build/study/50000/cleverkeys-langpack-pl-50000.sha256
+            build/study/75000/cleverkeys-langpack-pl-75000.zip
+            build/study/75000/cleverkeys-langpack-pl-75000.sha256
+            build/study/100000/cleverkeys-langpack-pl-100000.zip
+            build/study/100000/cleverkeys-langpack-pl-100000.sha256
             build/aosp/pl_wordlist.combined.gz.sha256
