@@ -35,6 +35,7 @@ DANE_RESOURCE_PAGES = {
     1159670: "https://dane.gov.pl/pl/dataset/1667,lista-imion-wystepujacych-w-rejestrze-pesel-osoby-zyjace/resource/1159670/table?page=1&per_page=20&q=&sort=",
     1159669: "https://dane.gov.pl/pl/dataset/1667,lista-imion-wystepujacych-w-rejestrze-pesel-osoby-zyjace/resource/1159669/table?page=1&per_page=20&q=&sort=",
 }
+DANE_DATASET_RESOURCES = "https://api.dane.gov.pl/1.4/datasets/1667,lista-imion-wystepujacych-w-rejestrze-pesel-osoby-zyjace/resources?per_page=100"
 PRNG_WFS = "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRNG/WFS/GeographicalNames"
 
 
@@ -105,8 +106,42 @@ def download_dane_csv(resource_id: int, out_dir: Path) -> dict:
             raise
 
     # Some current data.gov.pl resource IDs return 404 on the historical
-    # /download/ route. The public API documentation uses a resource metadata
-    # endpoint, so try those variants before falling back to the web page.
+    # /download/ route. The public API exposes resources through the dataset
+    # relationship; use that relation to resolve the actual download URL.
+    try:
+        resources_bytes, resources_type = fetch_bytes(
+            DANE_DATASET_RESOURCES, {"Accept": "application/vnd.api+json, application/json"}
+        )
+        resources = json.loads(resources_bytes.decode("utf-8"))
+        for item in resources.get("data", []):
+            if str(item.get("id")) != str(resource_id):
+                continue
+            attrs = item.get("attributes") or {}
+            candidates = [
+                attrs.get("downloadUrl"),
+                attrs.get("download_url"),
+                attrs.get("url"),
+                attrs.get("file"),
+                attrs.get("link"),
+                (item.get("links") or {}).get("download"),
+                (item.get("links") or {}).get("related"),
+            ]
+            for candidate in candidates:
+                if not candidate or not isinstance(candidate, str):
+                    continue
+                try:
+                    resolved = candidate
+                    data, content_type = fetch_bytes(
+                        resolved, {"Accept": "text/csv,application/octet-stream,*/*"}
+                    )
+                    return save_result(data, content_type)
+                except HTTPError:
+                    continue
+            break
+    except HTTPError:
+        pass
+
+    # Try direct resource metadata endpoints as a secondary compatibility path.
     metadata_candidates = [
         f"https://api.dane.gov.pl/1.4/resources/{resource_id}/",
         f"https://api.dane.gov.pl/resources/{resource_id}/",
