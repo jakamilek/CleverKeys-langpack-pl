@@ -127,9 +127,10 @@ jobs:
           for _ in range(word_count):
               n = struct.unpack_from("<H", data, p)[0]
               p += 2
-              word = data[p:p+n].decode("utf-8").lower()
+              raw_word = data[p:p+n].decode("utf-8")
               p += n + 1
-              ckdt_raw.add(word)
+              word = raw_word.lower()
+              ckdt_raw.add(raw_word)
               ckdt_words.add(word)
               if word in forbidden:
                   found.add(word)
