@@ -8,11 +8,13 @@ on:
       - "scripts/build_pl_preview.py"
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
+      - "sources/staging/reviewed_morphology.tsv"
       - ".github/workflows/pl-preview.yml"
       - "docs/PL_LANGUAGE_DATA_PLAN.md"
       - "docs/PL_SOURCE_MATRIX_2026-09-20.md"
   workflow_dispatch:
 
+# CI checkpoint: reviewed morphology pilot is validated from a concrete Actions run.
 concurrency:
   group: cleverkeys-pl-preview
   cancel-in-progress: true
@@ -48,7 +50,7 @@ jobs:
 
       - name: Preview Polish word list
         run: |
-          python3 scripts/build_pl_preview.py             --top 100000             --band 50000             --limit 50000             --aosp build/aosp/pl_wordlist.combined.gz             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 100000             --band 50000             --limit 50000             --aosp build/aosp/pl_wordlist.combined.gz             --morphology sources/staging/reviewed_morphology.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -137,4 +139,5 @@ jobs:
             build/pl-preview-report.json
             build/aosp/pl_wordlist.combined.gz.sha256
             sources/staging/autocorrect_errors.tsv
+            sources/staging/reviewed_morphology.tsv
             build/aosp/source-ref.txt

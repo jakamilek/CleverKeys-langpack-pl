@@ -198,6 +198,43 @@ def load_blocked_errors(path: Path) -> tuple[set[str], list[dict[str, str]]]:
     return blocked, rows
 
 
+
+def load_reviewed_morphology(
+    path: Path,
+) -> tuple[set[str], dict[str, list[str]]]:
+    forms: set[str] = set()
+    families: dict[str, list[str]] = {}
+    if not path.exists():
+        return forms, families
+    for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split("\t")
+        if len(parts) != 5:
+            raise SystemExit(
+                f"Malformed morphology row {path}:{line_no}; expected 5 TSV columns"
+            )
+        family_id, lemma, raw_forms, basis, note = parts
+        if not family_id or not lemma or not raw_forms or not basis or not note:
+            raise SystemExit(f"Malformed morphology row {path}:{line_no}")
+        family_forms = [w.strip().lower() for w in raw_forms.split(";") if w.strip()]
+        if not family_forms:
+            raise SystemExit(f"Empty morphology family {path}:{line_no}")
+        invalid = [w for w in [lemma.lower(), *family_forms] if not is_candidate(w)]
+        if invalid:
+            raise SystemExit(
+                f"Invalid morphology candidate(s) at {path}:{line_no}: "
+                + ", ".join(sorted(set(invalid)))
+            )
+        bucket = families.setdefault(family_id, [])
+        for word in family_forms:
+            if word not in bucket:
+                bucket.append(word)
+            forms.add(word)
+    return forms, families
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=100000)
@@ -208,6 +245,11 @@ def main() -> int:
         "--errors",
         type=Path,
         default=Path("sources/staging/autocorrect_errors.tsv"),
+    )
+    ap.add_argument(
+        "--morphology",
+        type=Path,
+        default=Path("sources/staging/reviewed_morphology.tsv"),
     )
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
@@ -239,6 +281,13 @@ def main() -> int:
     aosp = load_aosp(args.aosp)
     spell = hunspell_accepts(ranked)
     blocked_errors, error_rows = load_blocked_errors(args.errors)
+    reviewed_morphology, morphology_families = load_reviewed_morphology(args.morphology)
+    base_ranked = set(ranked)
+    supplemental_morphology = sorted(reviewed_morphology - base_ranked)
+    for word in supplemental_morphology:
+        ranked.append(word)
+        seen.add(word)
+    zipf.update({word: float(zipf_frequency(word, "pl")) for word in supplemental_morphology})
     positive = spell | aosp
 
     # High-confidence known-good set for typo detection.
@@ -303,6 +352,9 @@ def main() -> int:
         if word in guards:
             keep[word] = "guard"
             continue
+        if word in reviewed_morphology:
+            keep[word] = "reviewed-morphology"
+            continue
         if word in foreign and word not in guards:
             drop[word] = f"foreign:{foreign[word][0]}"
             continue
@@ -342,7 +394,7 @@ def main() -> int:
 
     # Enforce hard size cap by wordfreq rank while protecting guards and oracle-backed top words.
     if len(keep) > args.limit:
-        protected = {w for w in keep if w in guards}
+        protected = {w for w in keep if w in guards or w in reviewed_morphology}
         rest = sorted(
             (w for w in keep if w not in protected),
             key=lambda w: (rank_of[w], -zipf[w], w),
@@ -389,6 +441,16 @@ def main() -> int:
         "kept_reasons": {
             "spell_evidence": sum(1 for r in keep.values() if r == "spell-evidence"),
             "guard": sum(1 for r in keep.values() if r == "guard"),
+            "reviewed_morphology": sum(1 for r in keep.values() if r == "reviewed-morphology"),
+        },
+        "reviewed_morphology": {
+            "family_count": len(morphology_families),
+            "form_count": len(reviewed_morphology),
+            "supplemental_form_count": len(supplemental_morphology),
+            "families": {
+                family_id: sorted(forms)
+                for family_id, forms in sorted(morphology_families.items())
+            },
         },
         "dropped": len(drop),
         "drop_reasons": {},
