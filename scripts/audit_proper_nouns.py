@@ -283,15 +283,14 @@ def audit_source(
     source_forms: set[str],
     pack_raw: set[str],
     reviewed_lower: set[str],
+    variants_by_lower: dict[str, set[str]],
 ) -> list[dict]:
-    normalized_pack = {word.lower() for word in pack_raw}
+    normalized_pack = set(variants_by_lower)
     rows: list[dict] = []
 
     for form in sorted(source_forms):
         lower = form.lower()
-        current_variants = sorted(
-            {word for word in pack_raw if word.lower() == lower}
-        )
+        current_variants = sorted(variants_by_lower.get(lower, set()))
         if form in pack_raw:
             status = "canonical_present"
         elif lower in normalized_pack:
@@ -323,7 +322,16 @@ def run_morphology(
     normalized_pack = {word.lower() for word in pack_raw}
     output: list[dict] = []
 
-    for lemma in sorted(forms):
+    # Inflection coverage is actionable only when the canonical lemma itself
+    # is represented by the pack. This keeps the full audit over packed proper
+    # nouns tractable while still checking every generated form for those
+    # lemmas.
+    scoped_forms = {
+        form for form in forms
+        if form.lower() in normalized_pack
+    }
+
+    for lemma in sorted(scoped_forms):
         generated: set[str] = set()
         try:
             interpretations = morfeusz.generate(lemma)
@@ -403,6 +411,9 @@ def main() -> int:
         if line.strip() and not line.lstrip().startswith("#")
     }
     reviewed_lower = load_reviewed(args.reviewed_proper_nouns)
+    variants_by_lower: dict[str, set[str]] = {}
+    for word in pack_raw:
+        variants_by_lower.setdefault(word.lower(), set()).add(word)
 
     source_manifest = []
     name_forms: set[str] = set()
@@ -423,14 +434,14 @@ def main() -> int:
     })
 
     name_rows = audit_source(
-        "given_name", name_forms, pack_raw, reviewed_lower
+        "given_name", name_forms, pack_raw, reviewed_lower, variants_by_lower
     )
     place_rows = audit_source(
-        "locality", place_forms, pack_raw, reviewed_lower
+        "locality", place_forms, pack_raw, reviewed_lower, variants_by_lower
     )
 
     place_genitive_rows = []
-    normalized_pack = {word.lower() for word in pack_raw}
+    normalized_pack = set(variants_by_lower)
     for lemma in sorted(place_genitives):
         for form in sorted(place_genitives[lemma]):
             if form in pack_raw:
@@ -491,6 +502,7 @@ def main() -> int:
     report = {
         "mode": "audit-only",
         "promotion": False,
+        "morphology_scope": "lemmas whose canonical lowercase form is present in the pack",
         "pack_word_count": len(pack_raw),
         "sources": source_manifest,
         "source_counts": {
