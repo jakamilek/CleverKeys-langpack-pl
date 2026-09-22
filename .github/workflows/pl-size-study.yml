@@ -1,3 +1,4 @@
+# Study workflow intentionally rerun on source/workflow changes for reproducible 50k/75k/100k comparison.
 name: Polish dictionary size study
 
 on:
