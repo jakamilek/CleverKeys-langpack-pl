@@ -20,8 +20,8 @@ import re
 import tempfile
 import unicodedata
 from pathlib import Path
-from urllib.parse import urlencode
-from urllib.request import Request, urlopen
+from urllib.parse import unquote, urlencode, urljoin
+from urllib.request import HTTPError, Request, urlopen
 import xml.etree.ElementTree as ET
 
 PL_ALPHABET = set("aąbcćdeęfghijklłmnńoóprsśtuwyzźż")
@@ -31,6 +31,10 @@ NAMES_RES = {
     "male_first_names_2026_01_20": 1159669,
 }
 DANE_API = "https://api.dane.gov.pl/1.4/resources/{resource_id}/download/"
+DANE_RESOURCE_PAGES = {
+    1159670: "https://dane.gov.pl/pl/dataset/1667,lista-imion-wystepujacych-w-rejestrze-pesel-osoby-zyjace/resource/1159670/table?page=1&per_page=20&q=&sort=",
+    1159669: "https://dane.gov.pl/pl/dataset/1667,lista-imion-wystepujacych-w-rejestrze-pesel-osoby-zyjace/resource/1159669/table?page=1&per_page=20&q=&sort=",
+}
 PRNG_WFS = "https://mapy.geoportal.gov.pl/wss/service/PZGiK/PRNG/WFS/GeographicalNames"
 
 
@@ -65,22 +69,50 @@ def sha256(data: bytes) -> str:
 
 def download_dane_csv(resource_id: int, out_dir: Path) -> dict:
     url = DANE_API.format(resource_id=resource_id)
-    data, content_type = fetch_bytes(
-        url, {"Accept": "application/json, text/csv, */*"}
-    )
     resolved = url
-    stripped = data.lstrip()
 
-    if content_type == "application/json" or stripped.startswith(b"{"):
-        metadata = json.loads(data.decode("utf-8"))
-        resolved = metadata.get("file") or metadata.get("link")
-        if not resolved:
+    try:
+        data, content_type = fetch_bytes(
+            url, {"Accept": "application/json, text/csv, */*"}
+        )
+        stripped = data.lstrip()
+        if content_type == "application/json" or stripped.startswith(b"{"):
+            metadata = json.loads(data.decode("utf-8"))
+            resolved = metadata.get("file") or metadata.get("link")
+            if not resolved:
+                raise RuntimeError(
+                    f"data.gov.pl resource {resource_id}: no file/link in {metadata}"
+                )
+            data, content_type = fetch_bytes(resolved)
+    except HTTPError as exc:
+        if exc.code != 404:
+            raise
+        page_url = DANE_RESOURCE_PAGES.get(resource_id)
+        if not page_url:
+            raise
+        html, _ = fetch_bytes(
+            page_url, {"Accept": "text/html,application/xhtml+xml"}
+        )
+        text = html.decode("utf-8", errors="replace")
+        hrefs = re.findall(r'href=["\']([^"\']+)["\']', text, flags=re.IGNORECASE)
+        csv_candidates = []
+        for href in hrefs:
+            href = unquote(href.replace("&amp;", "&"))
+            candidate = urljoin(page_url, href)
+            low = candidate.lower()
+            if ".csv" in low or "format=csv" in low or ("csv" in low and "download" in low):
+                csv_candidates.append(candidate)
+        if not csv_candidates:
             raise RuntimeError(
-                f"data.gov.pl resource {resource_id}: no file/link in {metadata}"
+                f"data.gov.pl resource {resource_id}: API download returned 404 and "
+                "the resource page exposed no CSV download URL"
             )
-        data, content_type = fetch_bytes(resolved)
+        resolved = csv_candidates[0]
+        data, content_type = fetch_bytes(
+            resolved, {"Accept": "text/csv,application/octet-stream,*/*"}
+        )
 
-    path = out_dir / f"resource-{resource_id}.bin"
+    path = out_dir / f"resource-{resource_id}.csv"
     path.write_bytes(data)
     return {
         "resource_id": resource_id,
