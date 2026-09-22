@@ -81,6 +81,11 @@ jobs:
 
           report = json.loads(Path("build/pl-preview-report.json").read_text(encoding="utf-8"))
           expected = report["kept"]
+          reviewed = {
+              word
+              for forms in report["reviewed_morphology"]["families"].values()
+              for word in forms
+          }
 
           # Regression guard: these surfaces were observed in real Polish swipe tests and
           # must never be present in the Polish preview dictionary.
@@ -110,21 +115,34 @@ jobs:
           # Read the canonical CKDT section directly so the guard checks the actual artifact,
           # not only the text preview.
           p = 48
+          ckdt_words = set()
           found = set()
           for _ in range(word_count):
               n = struct.unpack_from("<H", data, p)[0]
               p += 2
               word = data[p:p+n].decode("utf-8").lower()
               p += n + 1
+              ckdt_words.add(word)
               if word in forbidden:
                   found.add(word)
+
+          assert len(ckdt_words) == word_count, "duplicate words detected in CKDT"
           assert not found, "forbidden regression words in CKDT: " + ", ".join(sorted(found))
+
+          missing_reviewed = sorted(reviewed - ckdt_words)
+          assert not missing_reviewed, (
+              "reviewed morphology forms missing from CKDT: "
+              + ", ".join(missing_reviewed)
+          )
 
           print(json.dumps({
               "word_count": expected,
               "zip_entries": names,
               "ckdt_version": version,
               "has_prefix_boost": False,
+              "reviewed_morphology_forms": len(reviewed),
+              "reviewed_morphology_present_in_ckdt": len(reviewed - set(missing_reviewed)),
+              "regression_hits": len(found),
               "promotion": False,
           }, ensure_ascii=False, indent=2))
           PY
