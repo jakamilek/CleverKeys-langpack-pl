@@ -26,6 +26,7 @@ Use an evidence pipeline:
 | keybr lang-pl/dictionary-pl.csv | secondary frequency/corpus evidence | QUARANTINE ONLY | Useful as independent evidence, but root licence for the dataset was not established in the current audit. Do not promote or redistribute yet. |
 | wooorm/dictionaries pl | Hunspell packaging/source reference | NOT PRIMARY | index.aff exists, but the corresponding index.dic was not usable as a full source in the current audit. Keep only as a provenance/reference lead. |
 | curated project allowlist/blocklist | explicit human review boundary | PROJECT-OWNED | Must be committed with rationale/provenance for additions. |
+| Morfeusz 2 / SGJP | common-noun homonym audit oracle for selected first names | AUDIT ONLY | Used only to classify selected first-name forms as common-noun homonyms; no Morfeusz/SGJP data is copied into the distributable pack. Morfeusz/SGJP is distributed under the stated two-clause BSD terms. |
 
 ## Proposed build architecture
 
