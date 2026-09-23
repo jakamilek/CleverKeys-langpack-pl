@@ -278,6 +278,17 @@ def find_col(header: list[str], needles: tuple[str, ...], label: str) -> int:
     return hits[0]
 
 
+def find_count_col(header: list[str], label: str = "count") -> int:
+    hits = []
+    for i, value in enumerate(header):
+        norm = norm_header(value)
+        if any(token in norm for token in ("liczba", "wystap", "nadan")):
+            hits.append(i)
+    if len(hits) != 1:
+        raise RuntimeError(f"Expected one {label} column; got {hits} in {header}")
+    return hits[0]
+
+
 def parse_count(value: str) -> int:
     cleaned = (
         value.strip()
@@ -304,7 +315,7 @@ def parse_name_rows(
 
     count_idx = None
     try:
-        count_idx = find_col(header, ("liczba", "wystap"), "count")
+        count_idx = find_count_col(header, "count")
     except RuntimeError:
         pass
 
