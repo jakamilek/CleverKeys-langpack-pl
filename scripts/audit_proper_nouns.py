@@ -19,6 +19,7 @@ import json
 import re
 import tempfile
 import unicodedata
+import zipfile
 from pathlib import Path
 from urllib.parse import unquote, urlencode, urljoin
 from urllib.request import HTTPError, Request, urlopen
@@ -197,35 +198,10 @@ def download_dane_csv(resource_id: int, out_dir: Path) -> dict:
     )
     return save_result(data, content_type)
 
-def parse_name_csv(path: Path) -> set[str]:
-    raw = path.read_bytes()
-    text = None
-    encoding_used = None
-    for encoding in ("utf-8-sig", "utf-8", "cp1250", "iso-8859-2"):
-        try:
-            text = raw.decode(encoding)
-            encoding_used = encoding
-            break
-        except UnicodeDecodeError:
-            continue
-    if text is None:
-        raise UnicodeDecodeError(
-            "unknown",
-            raw,
-            0,
-            min(len(raw), 1),
-            f"cannot decode {path} using UTF-8, cp1250 or ISO-8859-2",
-        )
-    try:
-        dialect = csv.Sniffer().sniff(text[:4096], delimiters=";,\t,")
-    except csv.Error:
-        dialect = csv.excel
-        dialect.delimiter = ";"
-
-    rows = csv.reader(io.StringIO(text, newline=""), dialect)
-    header = next(rows, None)
+def _names_from_rows(rows: list[list[str]], path: Path) -> set[str]:
+    header = rows[0] if rows else None
     if not header:
-        raise RuntimeError(f"Empty CSV: {path}")
+        raise RuntimeError(f"Empty table: {path}")
 
     def normalized_header(value: str) -> str:
         return fold(value).replace("_", "").replace(" ", "")
@@ -242,13 +218,127 @@ def parse_name_csv(path: Path) -> set[str]:
 
     index = candidates[0]
     names: set[str] = set()
-    for row in rows:
+    for row in rows[1:]:
         if index >= len(row):
             continue
         canonical = canonical_name(row[index])
         if canonical:
             names.add(canonical)
     return names
+
+
+def _parse_name_xlsx(path: Path) -> set[str]:
+    with zipfile.ZipFile(path) as archive:
+        names = set(archive.namelist())
+        required = {"xl/workbook.xml", "xl/_rels/workbook.xml.rels"}
+        if not required.issubset(names):
+            raise RuntimeError(f"Unsupported XLSX structure: {path}")
+
+        workbook_ns = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+        rel_ns = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+        package_rel_ns = "http://schemas.openxmlformats.org/package/2006/relationships"
+
+        workbook = ET.fromstring(archive.read("xl/workbook.xml"))
+        sheets = workbook.find(f"{{{workbook_ns}}}sheets")
+        sheet = sheets.find(f"{{{workbook_ns}}}sheet") if sheets is not None else None
+        if sheet is None:
+            raise RuntimeError(f"XLSX has no worksheets: {path}")
+
+        relationship_id = sheet.attrib.get(f"{{{rel_ns}}}id")
+        if not relationship_id:
+            raise RuntimeError(f"XLSX sheet has no relationship id: {path}")
+
+        relationships = ET.fromstring(
+            archive.read("xl/_rels/workbook.xml.rels")
+        )
+        target = None
+        for relation in relationships:
+            if (
+                relation.tag == f"{{{package_rel_ns}}}Relationship"
+                and relation.attrib.get("Id") == relationship_id
+            ):
+                target = relation.attrib.get("Target")
+                break
+        if not target:
+            raise RuntimeError(f"XLSX sheet relationship not found: {path}")
+
+        sheet_path = str(Path("xl") / target).replace("\\", "/")
+        if sheet_path not in names:
+            sheet_path = "xl/" + target.lstrip("/")
+        if sheet_path not in names:
+            raise RuntimeError(f"XLSX worksheet target not found: {path}")
+
+        shared_strings: list[str] = []
+        if "xl/sharedStrings.xml" in names:
+            shared_root = ET.fromstring(archive.read("xl/sharedStrings.xml"))
+            for item in shared_root.findall(f"{{{workbook_ns}}}si"):
+                shared_strings.append("".join(item.itertext()))
+
+        sheet_root = ET.fromstring(archive.read(sheet_path))
+        rows: list[list[str]] = []
+        for row in sheet_root.findall(f".//{{{workbook_ns}}}row"):
+            values: dict[int, str] = {}
+            for cell in row.findall(f"{{{workbook_ns}}}c"):
+                ref = cell.attrib.get("r", "")
+                match = re.match(r"([A-Z]+)", ref.upper())
+                if not match:
+                    continue
+                column = 0
+                for char in match.group(1):
+                    column = column * 26 + (ord(char) - ord("A") + 1)
+                column -= 1
+
+                value = ""
+                cell_type = cell.attrib.get("t")
+                if cell_type == "s":
+                    raw_value = cell.find(f"{{{workbook_ns}}}v")
+                    if raw_value is not None and raw_value.text is not None:
+                        value = shared_strings[int(raw_value.text)]
+                elif cell_type == "inlineStr":
+                    inline = cell.find(f"{{{workbook_ns}}}is")
+                    if inline is not None:
+                        value = "".join(inline.itertext())
+                else:
+                    raw_value = cell.find(f"{{{workbook_ns}}}v")
+                    if raw_value is not None and raw_value.text is not None:
+                        value = raw_value.text
+                values[column] = value
+
+            if values:
+                width = max(values) + 1
+                rows.append([values.get(index, "") for index in range(width)])
+
+        return _names_from_rows(rows, path)
+
+
+def parse_name_csv(path: Path) -> set[str]:
+    raw = path.read_bytes()
+    if raw.startswith(b"PK\\x03\\x04"):
+        return _parse_name_xlsx(path)
+
+    text = None
+    for encoding in ("utf-8-sig", "utf-8", "cp1250", "iso-8859-2"):
+        try:
+            text = raw.decode(encoding)
+            break
+        except UnicodeDecodeError:
+            continue
+    if text is None:
+        raise UnicodeDecodeError(
+            "unknown",
+            raw,
+            0,
+            min(len(raw), 1),
+            f"cannot decode {path} using UTF-8, cp1250 or ISO-8859-2",
+        )
+    try:
+        dialect = csv.Sniffer().sniff(text[:4096], delimiters=";,\\t,")
+    except csv.Error:
+        dialect = csv.excel
+        dialect.delimiter = ";"
+
+    rows = list(csv.reader(io.StringIO(text, newline=""), dialect))
+    return _names_from_rows(rows, path)
 
 
 def local_tag(tag: str) -> str:
