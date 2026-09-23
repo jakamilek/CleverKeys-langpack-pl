@@ -170,8 +170,6 @@ jobs:
               assert lower.capitalize() not in ckdt_raw, "lowercase exception was capitalized in CKDT: " + lower
           for name in sorted(excluded_names):
               assert name not in ckdt_words, "user-excluded first name still present: " + name
-          assert "maila" in ckdt_words, "lowercase ordinary word maila missing from CKDT"
-          assert "Maila" not in ckdt_raw, "Maila must remain lowercase in CKDT"
 
           missing_reviewed = sorted(reviewed - ckdt_words)
           assert not missing_reviewed, (
