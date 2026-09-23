@@ -461,7 +461,7 @@ def parse_historical_aggregate(
 
 def download_resource(item: dict, out_dir: Path) -> tuple[bytes, dict]:
     resource_id = int(item["id"])
-    api_url = f"https://api.dane.gov.pl/1.4/resources/{resource_id}/download/"
+    api_url = f"https://api.dane.gov.pl/1.4/resources/{resource_id}/csv"
     resolved_url = api_url
 
     def save(data: bytes, content_type: str, resolved: str) -> tuple[bytes, dict]:
