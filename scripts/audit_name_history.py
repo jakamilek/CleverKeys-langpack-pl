@@ -361,40 +361,18 @@ def parse_name_rows(rows: list[list[str]], title: str) -> dict[str, dict]:
 
 
 def download_resource(item: dict, out_dir: Path) -> tuple[bytes, dict]:
-    resource_id = item["id"]
-    attempted = []
-    candidates = list(item.get("candidates") or [])
-    candidates.append(f"https://api.dane.gov.pl/1.4/resources/{resource_id}/download/")
+    # Reuse the downloader already exercised by the proper-noun audit. This
+    # preserves its official resource metadata/page fallback behavior.
+    from audit_proper_nouns import download_dane_csv
 
-    for url in candidates:
-        if url in attempted:
-            continue
-        attempted.append(url)
-        try:
-            data, content_type, resolved = fetch_bytes(
-                url,
-                {"Accept": "text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream,*/*"},
-            )
-            filename = Path(urlparse(resolved).path).name or f"resource-{resource_id}"
-            path = out_dir / f"resource-{resource_id}-{filename}"
-            path.write_bytes(data)
-            return data, {
-                "resource_id": resource_id,
-                "title": item["title"],
-                "requested_url": url,
-                "resolved_url": resolved,
-                "content_type": content_type,
-                "bytes": len(data),
-                "sha256": sha256(data),
-                "local_file": path.name,
-            }
-        except HTTPError:
-            continue
-
-    raise RuntimeError(
-        f"Could not download resource {resource_id} ({item['title']}); attempted {attempted}"
-    )
-
+    metadata = download_dane_csv(int(item["id"]), out_dir)
+    path = Path(metadata["path"])
+    data = path.read_bytes()
+    metadata = {
+        **metadata,
+        "title": item["title"],
+    }
+    return data, metadata
 
 def main() -> int:
     ap = argparse.ArgumentParser()
