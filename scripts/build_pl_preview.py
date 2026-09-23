@@ -301,6 +301,12 @@ def main() -> int:
         type=Path,
         default=Path("sources/staging/reviewed_proper_nouns.tsv"),
     )
+    ap.add_argument(
+        "--first-name-history",
+        type=Path,
+        default=None,
+        help="Official 2006-2025 name-history report; injects the audited top 215 names per gender as explicit candidates.",
+    )
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
@@ -326,6 +332,33 @@ def main() -> int:
                 break
         else:
             non_polish += 1
+
+    first_name_case_map: dict[str, str] = {}
+    reviewed_first_names: set[str] = set()
+    first_name_meta: list[dict] = []
+    if args.first_name_history:
+        history = json.loads(args.first_name_history.read_text(encoding="utf-8"))
+        for gender, key in (("F", "top_female"), ("M", "top_male")):
+            selected = history[key][:215]
+            if len(selected) != 215:
+                raise SystemExit(f"First-name history {key} must contain at least 215 rows")
+            for row in selected:
+                canonical = str(row["name"]).strip()
+                lower = canonical.lower()
+                reviewed_first_names.add(lower)
+                prior = first_name_case_map.get(lower)
+                if prior is not None and prior != canonical:
+                    raise SystemExit(f"Conflicting first-name casing: {prior!r} vs {canonical!r}")
+                first_name_case_map[lower] = canonical
+                first_name_meta.append({
+                    "gender": gender,
+                    "name": canonical,
+                    "rank_20y": row["cumulative_rank_20y"],
+                    "count_20y": row["cumulative_count_20y"],
+                })
+                if lower not in seen:
+                    ranked.append(lower)
+                    seen.add(lower)
 
     zipf = {word: float(zipf_frequency(word, "pl")) for word in ranked}
     aosp = load_aosp(args.aosp)
@@ -421,6 +454,18 @@ def main() -> int:
         if word in reviewed_proper_nouns_lower:
             keep[word] = "reviewed-proper-noun"
             continue
+        if word in reviewed_first_names:
+            if word in foreign:
+                drop[word] = f"foreign:{foreign[word][0]}"
+                continue
+            if word.isascii() and (word not in spell or word not in aosp):
+                drop[word] = "ascii-without-dual-evidence"
+                continue
+            if word not in positive:
+                drop[word] = "no-positive-evidence"
+                continue
+            keep[word] = "reviewed-first-name"
+            continue
         if word in foreign and word not in guards:
             drop[word] = f"foreign:{foreign[word][0]}"
             continue
@@ -485,7 +530,7 @@ def main() -> int:
         )
 
     surface_keep = {
-        proper_case_map.get(word, word): reason
+        proper_case_map.get(word, first_name_case_map.get(word, word)): reason
         for word, reason in keep.items()
     }
     words_sorted = sorted(surface_keep)
@@ -524,6 +569,15 @@ def main() -> int:
             "guard": sum(1 for r in keep.values() if r == "guard"),
             "reviewed_morphology": sum(1 for r in keep.values() if r == "reviewed-morphology"),
             "reviewed_proper_noun": sum(1 for r in keep.values() if r == "reviewed-proper-noun"),
+            "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
+        },
+        "reviewed_first_names": {
+            "enabled": args.first_name_history is not None,
+            "count": len(reviewed_first_names),
+            "selected_per_gender": 215 if args.first_name_history else 0,
+            "provenance": "official dane.gov.pl first-name statistics, 2006-2025" if args.first_name_history else None,
+            "selection": first_name_meta,
+            "missing_from_keep": sorted(reviewed_first_names - set(keep)),
         },
         "reviewed_morphology": {
             "family_count": len(morphology_families),
