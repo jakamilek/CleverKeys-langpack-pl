@@ -313,7 +313,7 @@ def _parse_name_xlsx(path: Path) -> set[str]:
 
 def parse_name_csv(path: Path) -> set[str]:
     raw = path.read_bytes()
-    if raw.startswith(b"PK\\x03\\x04"):
+    if raw.startswith(b"PK\x03\x04"):
         return _parse_name_xlsx(path)
 
     text = None
@@ -332,7 +332,7 @@ def parse_name_csv(path: Path) -> set[str]:
             f"cannot decode {path} using UTF-8, cp1250 or ISO-8859-2",
         )
     try:
-        dialect = csv.Sniffer().sniff(text[:4096], delimiters=";,\\t,")
+        dialect = csv.Sniffer().sniff(text[:4096], delimiters=";,\t,")
     except csv.Error:
         dialect = csv.excel
         dialect.delimiter = ";"
