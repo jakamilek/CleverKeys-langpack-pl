@@ -27,7 +27,7 @@ jobs:
       - name: Audit 20 full years of official first-name statistics
         run: |
           set -euo pipefail
-          python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-300-each-gender.txt             --workdir build/pl-name-history-sources             --core-per-gender 300
+          python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-215-each-gender.txt             --out-buffer build/pl-name-history-buffer-216-300.tsv             --workdir build/pl-name-history-sources             --core-per-gender 215             --buffer-end-rank 300
 
       - name: Verify history audit
         run: |
@@ -45,7 +45,11 @@ jobs:
           assert report["counts"]["resources"] == 13
           assert report["counts"]["female_names_seen"] > 0
           assert report["counts"]["male_names_seen"] > 0
-          assert len(report["core_advisory"]) <= 600
+          assert report["selection_policy"]["core_per_gender"] == 215
+          assert report["selection_policy"]["buffer_rank_start_per_gender"] == 216
+          assert report["selection_policy"]["buffer_rank_end_per_gender"] == 300
+          assert report["selection_policy"]["buffer_is_audit_only"] is True
+          assert len(report["core_advisory"]) == 430
 
           print(json.dumps({
               "scope": report["scope"],
@@ -62,5 +66,6 @@ jobs:
           path: |
             build/pl-name-history-report.json
             build/pl-name-history.tsv
-            build/pl-name-history-core-300-each-gender.txt
+            build/pl-name-history-core-215-each-gender.txt
+            build/pl-name-history-buffer-216-300.tsv
             build/pl-name-history-sources/
