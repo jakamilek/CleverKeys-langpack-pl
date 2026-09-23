@@ -509,7 +509,7 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower
+            if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower or w in reviewed_first_names
         }
         rest = sorted(
             (w for w in keep if w not in protected),
@@ -578,6 +578,11 @@ def main() -> int:
             "provenance": "official dane.gov.pl first-name statistics, 2006-2025" if args.first_name_history else None,
             "selection": first_name_meta,
             "missing_from_keep": sorted(reviewed_first_names - set(keep)),
+        },
+        "reviewed_first_name_evidence_gates": {
+            "requires_positive_source": True,
+            "ascii_requires_hunspell_and_aosp": True,
+            "foreign_dominant_is_not_overridden": True,
         },
         "reviewed_morphology": {
             "family_count": len(morphology_families),
