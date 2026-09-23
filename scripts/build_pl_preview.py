@@ -307,6 +307,12 @@ def main() -> int:
         default=None,
         help="Official 2006-2025 name-history report; injects the audited top 215 names per gender as explicit candidates.",
     )
+    ap.add_argument(
+        "--historical-first-names",
+        type=Path,
+        default=None,
+        help="Reviewed historical name staging TSV; injects 20 female + 20 male historical candidates.",
+    )
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
@@ -360,6 +366,35 @@ def main() -> int:
                     ranked.append(lower)
                     seen.add(lower)
 
+    historical_first_names: set[str] = set()
+    historical_first_name_meta: list[dict] = []
+    if args.historical_first_names:
+        with args.historical_first_names.open(encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle, delimiter="\t")
+            rows = list(reader)
+        if len(rows) != 40 or {row["gender"] for row in rows} != {"F", "M"}:
+            raise SystemExit("Historical first-name staging must contain exactly 40 rows (20 F + 20 M)")
+        if sum(row["gender"] == "F" for row in rows) != 20 or sum(row["gender"] == "M" for row in rows) != 20:
+            raise SystemExit("Historical first-name staging must contain 20 F + 20 M rows")
+        for row in rows:
+            canonical = row["name"].strip()
+            lower = canonical.lower()
+            historical_first_names.add(lower)
+            historical_first_name_meta.append({
+                "gender": row["gender"],
+                "name": canonical,
+                "basis": row["basis"],
+                "source": row["source"],
+                "status": row["status"],
+            })
+            prior = first_name_case_map.get(lower)
+            if prior is not None and prior != canonical:
+                raise SystemExit(f"Conflicting first-name casing: {prior!r} vs {canonical!r}")
+            first_name_case_map[lower] = canonical
+            if lower not in seen:
+                ranked.append(lower)
+                seen.add(lower)
+
     zipf = {word: float(zipf_frequency(word, "pl")) for word in ranked}
     aosp = load_aosp(args.aosp)
     spell = hunspell_accepts(ranked)
@@ -384,6 +419,7 @@ def main() -> int:
         for word in supplemental_morphology + supplemental_proper_nouns
     })
     reviewed_proper_nouns_lower = {word.lower() for word in reviewed_proper_nouns}
+    reviewed_first_names |= historical_first_names
     positive = spell | aosp
 
     # High-confidence known-good set for typo detection.
@@ -577,6 +613,8 @@ def main() -> int:
             "selected_per_gender": 215 if args.first_name_history else 0,
             "provenance": "official dane.gov.pl first-name statistics, 2006-2025" if args.first_name_history else None,
             "selection": first_name_meta,
+            "historical_count": len(historical_first_names),
+            "historical_selection": historical_first_name_meta,
             "missing_from_keep": sorted(reviewed_first_names - set(keep)),
         },
         "reviewed_first_name_evidence_gates": {
