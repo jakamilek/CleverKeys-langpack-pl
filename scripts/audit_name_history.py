@@ -40,8 +40,7 @@ from urllib.request import HTTPError, Request, urlopen
 import xml.etree.ElementTree as ET
 
 DANE_DATASET_RESOURCES = (
-    "https://api.dane.gov.pl/1.4/datasets/"
-    "219,imiona-nadawane-dzieciom-w-polsce/resources?per_page=1000"
+    "https://api.dane.gov.pl/1.4/datasets/219/resources?per_page=1000"
 )
 YEARS = tuple(range(2006, 2026))
 RECENT_YEARS = set(range(2021, 2026))
