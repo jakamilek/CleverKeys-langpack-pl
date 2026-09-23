@@ -554,9 +554,13 @@ def run_morphology(
             continue
 
         for interpretation in interpretations:
-            if interpretation.lemma.lower() != lemma.lower():
+            if isinstance(interpretation, (tuple, list)):
+                form, interpretation_lemma = interpretation[:2]
+            else:
+                form = interpretation.orth
+                interpretation_lemma = interpretation.lemma
+            if interpretation_lemma.lower() != lemma.lower():
                 continue
-            form = interpretation.orth
             if not is_single_token(form):
                 continue
             surface = form[0].upper() + form[1:].lower()
