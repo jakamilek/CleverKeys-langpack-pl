@@ -60,3 +60,7 @@ Current snapshot: see `docs/BASELINE_SYNC_2026-09-20.md`.
 
 
 9. First-name collision policy — if a selected first-name orthographic form is also analysed by Morfeusz/SGJP as a common noun (subst + `nazwa_pospolita`), the capitalized first-name representation is excluded from the pack. The ordinary lowercase word remains eligible through the normal vocabulary pipeline. This avoids forcing the swipe engine to distinguish person-name vs common-noun meaning from identical letters alone.
+
+
+### First-name homonym policy (2026-09-23)
+For the selected first-name set, common-noun homonym detection is an audit input, not an automatic rejection rule. User-reviewed surface decisions are explicit: `Jagoda`, `Lilia`, `Maila`, `Melisa`, and `Róża` are emitted only in lowercase as ordinary-word surfaces; the other 48 detected common-noun homonyms remain capitalized first-name surfaces; `Oleksandr` is excluded completely. The policy is committed in `sources/staging/first_name_surface_policy.tsv` and must be applied before proper-noun casing so no later pipeline path can re-capitalize a lowercase exception.
