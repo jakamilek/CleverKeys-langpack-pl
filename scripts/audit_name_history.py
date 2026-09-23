@@ -462,49 +462,87 @@ def parse_historical_aggregate(
 def download_resource(item: dict, out_dir: Path) -> tuple[bytes, dict]:
     resource_id = int(item["id"])
     api_url = f"https://api.dane.gov.pl/1.4/resources/{resource_id}/download/"
+    resolved_url = api_url
+
+    def save(data: bytes, content_type: str, resolved: str) -> tuple[bytes, dict]:
+        suffix = ".xlsx" if data.startswith(b"PK\x03\x04") else ".csv"
+        path = out_dir / f"resource-{resource_id}{suffix}"
+        path.write_bytes(data)
+        return data, {
+            "resource_id": resource_id,
+            "api_url": api_url,
+            "resolved_url": resolved,
+            "content_type": content_type,
+            "sha256": sha256(data),
+            "bytes": len(data),
+            "path": str(path),
+            "title": item["title"],
+        }
+
     try:
         data, content_type, resolved_url = fetch_bytes(
             api_url,
             {"Accept": "text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream,*/*"},
         )
+        return save(data, content_type, resolved_url)
     except HTTPError as exc:
         if exc.code != 404:
             raise
-        page_url = item["page"]
-        html, _content_type, _resolved_page = fetch_bytes(
-            page_url, {"Accept": "text/html,application/xhtml+xml"},
-        )
-        page_text = html.decode("utf-8", errors="replace")
-        hrefs = re.findall(r'href=["\']([^"\']+)["\']', page_text, flags=re.IGNORECASE)
-        candidates = []
-        for href in hrefs:
-            candidate = urljoin(page_url, href.replace("&amp;", "&"))
-            low = candidate.lower()
-            if ".csv" in low or ".xlsx" in low or "format=csv" in low:
-                candidates.append(candidate)
-        if not candidates:
-            raise RuntimeError(
-                f"data.gov.pl resource {resource_id}: direct download returned 404 and the official resource page exposed no CSV/XLSX download link"
+
+    # Compatibility path used by the proven proper-noun audit: resolve the
+    # current file through the resource metadata endpoint.
+    metadata_urls = [
+        f"https://api.dane.gov.pl/1.4/resources/{resource_id}/",
+        f"https://api.dane.gov.pl/1.4/resources/{resource_id}",
+        f"https://api.dane.gov.pl/resources/{resource_id}/",
+        f"https://api.dane.gov.pl/resources/{resource_id}",
+    ]
+    for metadata_url in metadata_urls:
+        try:
+            metadata_bytes, metadata_type, metadata_resolved = fetch_bytes(
+                metadata_url, {"Accept": "application/json"},
             )
-        resolved_url = candidates[0]
-        data, content_type, _ = fetch_bytes(
-            resolved_url,
+        except HTTPError as exc:
+            if exc.code == 404:
+                continue
+            raise
+        if metadata_type != "application/json" and not metadata_bytes.lstrip().startswith(b"{"):
+            continue
+        metadata = json.loads(metadata_bytes.decode("utf-8"))
+        resolved = metadata.get("file") or metadata.get("link")
+        if not resolved:
+            attrs = metadata.get("attributes") or {}
+            resolved = attrs.get("file") or attrs.get("link") or attrs.get("downloadUrl") or attrs.get("download_url")
+        if not resolved:
+            continue
+        data, content_type, final_url = fetch_bytes(
+            resolved,
             {"Accept": "text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream,*/*"},
         )
+        return save(data, content_type, final_url)
 
-    suffix = ".xlsx" if data.startswith(b"PK\x03\x04") else ".csv"
-    path = out_dir / f"resource-{resource_id}{suffix}"
-    path.write_bytes(data)
-    return data, {
-        "resource_id": resource_id,
-        "api_url": api_url,
-        "resolved_url": resolved_url,
-        "content_type": content_type,
-        "sha256": sha256(data),
-        "bytes": len(data),
-        "path": str(path),
-        "title": item["title"],
-    }
+    # Last-resort HTML fallback for resources whose API metadata is not exposed.
+    page_url = item["page"]
+    html, _content_type, _resolved_page = fetch_bytes(
+        page_url, {"Accept": "text/html,application/xhtml+xml"},
+    )
+    page_text = html.decode("utf-8", errors="replace")
+    hrefs = re.findall(r'href=["\']([^"\']+)["\']', page_text, flags=re.IGNORECASE)
+    candidates = []
+    for href in hrefs:
+        candidate = urljoin(page_url, href.replace("&amp;", "&"))
+        low = candidate.lower()
+        if ".csv" in low or ".xlsx" in low or "format=csv" in low:
+            candidates.append(candidate)
+    if not candidates:
+        raise RuntimeError(
+            f"data.gov.pl resource {resource_id}: direct download and metadata endpoints failed, and the official resource page exposed no CSV/XLSX download link"
+        )
+    data, content_type, final_url = fetch_bytes(
+        candidates[0],
+        {"Accept": "text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream,*/*"},
+    )
+    return save(data, content_type, final_url)
 
 def main() -> int:
     ap = argparse.ArgumentParser()
