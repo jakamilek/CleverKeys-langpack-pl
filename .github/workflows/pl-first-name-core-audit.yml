@@ -50,7 +50,7 @@ jobs:
 
       - name: Audit 470 selected first names
         run: |
-          python3 scripts/audit_first_name_core.py             --history-report build/pl-name-history-report.json             --preview-wordlist build/pl_words_preview.txt             --aosp build/aosp/pl_wordlist.combined.gz             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-core-audit.json             --out-tsv build/pl-first-name-core-audit.tsv
+          python3 scripts/audit_first_name_core.py             --history-report build/pl-name-history-report.json             --preview-wordlist build/pl_words_preview.txt             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-homonyms build/pl-first-name-common-noun-blocklist.txt             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-homonyms build/pl-first-name-common-noun-blocklist.txt             --out-json build/pl-first-name-core-audit.json             --out-tsv build/pl-first-name-core-audit.tsv
 
       - name: Verify core size and no regression blocklisted names
         run: |
@@ -81,3 +81,6 @@ jobs:
             build/pl-name-history-core-215-each-gender.txt
             build/pl-name-history-buffer-216-300.tsv
             build/pl-preview-report.json
+            build/pl-first-name-homonym-audit.json
+            build/pl-first-name-homonym-audit.tsv
+            build/pl-first-name-common-noun-blocklist.txt
