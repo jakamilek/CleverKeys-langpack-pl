@@ -506,6 +506,11 @@ def main() -> int:
         if word in regression_blocklist:
             drop[word] = "swipe-regression-blocklist"
             continue
+        # Common-noun homonyms are never emitted as capitalized first names,
+        # regardless of any later proper-noun/allowlist evidence for the same spelling.
+        if word in first_name_homonyms:
+            drop[word] = "first-name-common-noun-homonym"
+            continue
         if word in guards:
             keep[word] = "guard"
             continue
