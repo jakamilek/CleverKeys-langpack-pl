@@ -106,6 +106,14 @@ jobs:
 
           # Regression guard: these surfaces were observed in real Polish swipe tests and
           # must never be present in the Polish preview dictionary.
+          homonym_blocked = {
+              x.strip().lower()
+              for x in Path("build/pl-first-name-common-noun-blocklist.txt").read_text(encoding="utf-8").splitlines()
+              if x.strip()
+          }
+          assert report["reviewed_first_names"]["excluded_common_noun_homonym_count"] == len(homonym_blocked)
+          assert len(homonym_blocked) == len(set(homonym_blocked))
+
           forbidden = {
               "chopin", "chopina", "goebbels", "goebbelsa",
               "catherine", "catalina", "cameron", "carli", "carlo",
@@ -148,6 +156,14 @@ jobs:
 
           assert len(ckdt_words) == word_count, "duplicate words detected in CKDT"
           assert not found, "forbidden regression words in CKDT: " + ", ".join(sorted(found))
+          homonym_canonical_present = sorted(
+              w for w in homonym_blocked
+              if w.capitalize() in ckdt_raw
+          )
+          assert not homonym_canonical_present, (
+              "common-noun homonym still emitted as canonical first name: "
+              + ", ".join(homonym_canonical_present)
+          )
 
           missing_reviewed = sorted(reviewed - ckdt_words)
           assert not missing_reviewed, (
