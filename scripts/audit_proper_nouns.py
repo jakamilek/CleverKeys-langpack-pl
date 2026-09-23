@@ -222,7 +222,7 @@ def parse_name_csv(path: Path) -> set[str]:
         dialect = csv.excel
         dialect.delimiter = ";"
 
-    rows = csv.reader(io.StringIO(text), dialect)
+    rows = csv.reader(io.StringIO(text, newline=""), dialect)
     header = next(rows, None)
     if not header:
         raise RuntimeError(f"Empty CSV: {path}")
