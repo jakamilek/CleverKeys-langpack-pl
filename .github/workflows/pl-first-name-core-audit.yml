@@ -68,7 +68,9 @@ jobs:
           assert r["counts"]["historical_female"] == 20
           assert r["counts"]["historical_male"] == 20
           assert r["counts"]["regression_blocked"] == 0
-          assert r["counts"]["in_preview"] == 470
+          assert r["counts"]["active_selected_in_preview"] == 469
+          assert r["counts"]["excluded_selected"] == 1
+          assert r["counts"]["lowercase_surface_selected"] == 5
           assert r["counts"]["all_selected_in_preview"] is True
           print(json.dumps(r["counts"], ensure_ascii=False, indent=2))
           PY
@@ -81,7 +83,7 @@ jobs:
             build/pl-first-name-core-audit.json
             build/pl-first-name-core-audit.tsv
             sources/staging/historical_name_candidates.tsv
-      - "sources/staging/first_name_surface_policy.tsv"
+            build/pl-first-name-surface-policy.tsv
             build/pl-name-history-report.json
             build/pl-name-history-core-215-each-gender.txt
             build/pl-name-history-buffer-216-300.tsv
