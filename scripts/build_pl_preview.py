@@ -412,15 +412,14 @@ def main() -> int:
         for row in rows:
             canonical = row["name"].strip()
             lower = canonical.lower()
-            historical_first_names.add(lower)
-            excluded_common_noun = lower in first_name_homonyms
+            surface_policy = first_name_surface_policy.get(lower)
             historical_first_name_meta.append({
                 "gender": row["gender"],
                 "name": canonical,
                 "basis": row["basis"],
                 "source": row["source"],
                 "status": row["status"],
-                "excluded_common_noun_homonym": excluded_common_noun,
+                "surface_policy": surface_policy or "capitalized_name",
             })
             if surface_policy == "exclude":
                 continue
