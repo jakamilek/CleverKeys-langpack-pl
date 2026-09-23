@@ -315,10 +315,10 @@ def main() -> int:
         help="Reviewed historical name staging TSV; injects 20 female + 20 male historical candidates.",
     )
     ap.add_argument(
-        "--first-name-homonyms",
+        "--first-name-surface-policy",
         type=Path,
         default=None,
-        help="Lowercase first-name forms that collide with SGJP common nouns; these are excluded as names but may remain as ordinary lowercase words.",
+        help="Explicit user-reviewed surface policy for first names.",
     )
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
@@ -346,14 +346,27 @@ def main() -> int:
         else:
             non_polish += 1
 
-    first_name_homonyms: set[str] = set()
-    if args.first_name_homonyms:
-        for line in args.first_name_homonyms.read_text(encoding="utf-8").splitlines():
-            line = line.strip().lower()
-            if line:
-                if not is_candidate(line):
-                    raise SystemExit(f"Invalid first-name homonym blocklist entry: {line!r}")
-                first_name_homonyms.add(line)
+    first_name_surface_policy: dict[str, str] = {}
+    if args.first_name_surface_policy:
+        with args.first_name_surface_policy.open(encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle, delimiter="\t")
+            for row in reader:
+                name = row["name"].strip()
+                policy = row["policy"].strip()
+                if not is_candidate(name):
+                    raise SystemExit(f"Invalid first-name surface policy entry: {name!r}")
+                if policy not in {"lowercase_common_noun", "exclude"}:
+                    raise SystemExit(f"Invalid first-name surface policy for {name!r}: {policy!r}")
+                first_name_surface_policy[name.lower()] = policy
+
+    lowercase_first_name_exceptions = {
+        name for name, policy in first_name_surface_policy.items()
+        if policy == "lowercase_common_noun"
+    }
+    excluded_first_names = {
+        name for name, policy in first_name_surface_policy.items()
+        if policy == "exclude"
+    }
 
     first_name_case_map: dict[str, str] = {}
     reviewed_first_names: set[str] = set()
@@ -367,15 +380,15 @@ def main() -> int:
             for row in selected:
                 canonical = str(row["name"]).strip()
                 lower = canonical.lower()
-                excluded_common_noun = lower in first_name_homonyms
+                surface_policy = first_name_surface_policy.get(lower)
                 first_name_meta.append({
                     "gender": gender,
                     "name": canonical,
                     "rank_20y": row["cumulative_rank_20y"],
                     "count_20y": row["cumulative_count_20y"],
-                    "excluded_common_noun_homonym": excluded_common_noun,
+                    "surface_policy": surface_policy or "capitalized_name",
                 })
-                if excluded_common_noun:
+                if surface_policy == "exclude":
                     continue
                 reviewed_first_names.add(lower)
                 prior = first_name_case_map.get(lower)
@@ -409,7 +422,7 @@ def main() -> int:
                 "status": row["status"],
                 "excluded_common_noun_homonym": excluded_common_noun,
             })
-            if excluded_common_noun:
+            if surface_policy == "exclude":
                 continue
             historical_first_names.add(lower)
             prior = first_name_case_map.get(lower)
@@ -419,6 +432,11 @@ def main() -> int:
             if lower not in seen:
                 ranked.append(lower)
                 seen.add(lower)
+
+    for word in sorted(lowercase_first_name_exceptions):
+        if word not in seen:
+            ranked.append(word)
+            seen.add(word)
 
     zipf = {word: float(zipf_frequency(word, "pl")) for word in ranked}
     aosp = load_aosp(args.aosp)
@@ -639,8 +657,8 @@ def main() -> int:
         "reviewed_first_names": {
             "enabled": args.first_name_history is not None,
             "selected_total": len(first_name_meta) + len(historical_first_name_meta),
-            "excluded_common_noun_homonym_count": len(first_name_homonyms),
-            "excluded_common_noun_homonyms": sorted(first_name_homonyms),
+            "lowercase_common_noun_exceptions": sorted(lowercase_first_name_exceptions),
+            "excluded_first_names": sorted(excluded_first_names),
             "count": len(reviewed_first_names),
             "selected_per_gender": 215 if args.first_name_history else 0,
             "provenance": "official dane.gov.pl first-name statistics, 2006-2025" if args.first_name_history else None,
