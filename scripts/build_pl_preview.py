@@ -492,16 +492,14 @@ def main() -> int:
             keep[word] = "reviewed-proper-noun"
             continue
         if word in reviewed_first_names:
-            if word in foreign:
-                drop[word] = f"foreign:{foreign[word][0]}"
-                continue
-            if word.isascii() and (word not in spell or word not in aosp):
-                drop[word] = "ascii-without-dual-evidence"
-                continue
-            if word not in positive:
-                drop[word] = "no-positive-evidence"
-                continue
-            keep[word] = "reviewed-first-name"
+            # Explicitly selected first names are source-backed candidates.
+            # Their inclusion must not depend on corpus/foreign-language evidence;
+            # otherwise the audited 215+215 + 20+20 selection would be silently lost.
+            keep[word] = (
+                "reviewed-historical-first-name"
+                if word in historical_first_names
+                else "reviewed-first-name"
+            )
             continue
         if word in foreign and word not in guards:
             drop[word] = f"foreign:{foreign[word][0]}"
@@ -607,6 +605,7 @@ def main() -> int:
             "reviewed_morphology": sum(1 for r in keep.values() if r == "reviewed-morphology"),
             "reviewed_proper_noun": sum(1 for r in keep.values() if r == "reviewed-proper-noun"),
             "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
+            "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
         },
         "reviewed_first_names": {
             "enabled": args.first_name_history is not None,
