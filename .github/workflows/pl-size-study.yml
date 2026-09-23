@@ -15,6 +15,8 @@ on:
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/reviewed_morphology.tsv"
       - "sources/staging/reviewed_proper_nouns.tsv"
+      - "scripts/audit_name_history.py"
+      - "docs/PL_NAME_HISTORY_SOURCE_POLICY_2026-09-23.md"
 
 permissions:
   contents: read
@@ -58,7 +60,7 @@ jobs:
 
           for limit in 50000 75000 100000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --morphology sources/staging/reviewed_morphology.tsv               --proper-nouns sources/staging/reviewed_proper_nouns.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --morphology sources/staging/reviewed_morphology.tsv               --proper-nouns sources/staging/reviewed_proper_nouns.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
 
