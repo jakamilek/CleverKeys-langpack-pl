@@ -53,7 +53,7 @@ jobs:
 
       - name: Audit first-name common-noun homonyms
         run: |
-          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-common-noun-blocklist.txt
+          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --surface-policy sources/staging/first_name_surface_policy.tsv
 
       - name: Pin CleverKeys runtime
         run: |
@@ -69,7 +69,7 @@ jobs:
 
           for limit in 50000 75000 100000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-homonyms build/pl-first-name-common-noun-blocklist.txt               --morphology sources/staging/reviewed_morphology.tsv               --proper-nouns sources/staging/reviewed_proper_nouns.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-homonyms build/pl-first-name-capitalized-homonyms.txt               --morphology sources/staging/reviewed_morphology.tsv               --proper-nouns sources/staging/reviewed_proper_nouns.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
 
