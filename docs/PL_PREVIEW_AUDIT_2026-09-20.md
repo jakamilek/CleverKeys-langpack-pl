@@ -92,3 +92,9 @@ Note: multiword corrections such as `wogole -> w ogóle`, `napewno -> na pewno`,
 Not promoted to `source/`.
 
 Next human-controlled step: install this preview in CleverKeys and test prediction/autocorrect behaviour. After app validation, the approved word list can be promoted from staging through the controlled source pipeline.
+
+## Later size-study clarification (2026-09-23)
+
+The 50,000-word result above is the initial preview checkpoint. A later reproducible size study compared 50,000, 75,000 and 100,000-word variants from a common 200,000-candidate window using the pinned CleverKeys CKDT V2 runtime. The runtime did not impose a 50,000-word hard maximum. The 100,000-word variant was therefore retained as a valid importable candidate, while 50k/75k/100k remain comparison points for quality/size trade-offs.
+
+For the current project pipeline, **100,000 words is the working preview target** unless a later evidence-based decision changes it. This does not mean lower-quality candidates bypass filters: the same source, typo, foreign-language and regression gates remain active.
