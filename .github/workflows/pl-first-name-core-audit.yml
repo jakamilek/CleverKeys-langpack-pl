@@ -58,9 +58,11 @@ jobs:
           import json
           from pathlib import Path
           r=json.loads(Path("build/pl-first-name-core-audit.json").read_text(encoding="utf-8"))
-          assert r["counts"]["core_total"] == 430
-          assert r["counts"]["female"] == 215
-          assert r["counts"]["male"] == 215
+          assert r["counts"]["core_total"] == 470
+          assert r["counts"]["female"] == 235
+          assert r["counts"]["male"] == 235
+          assert r["counts"]["historical_female"] == 20
+          assert r["counts"]["historical_male"] == 20
           assert r["counts"]["regression_blocked"] == 0
           print(json.dumps(r["counts"], ensure_ascii=False, indent=2))
           PY
@@ -72,6 +74,7 @@ jobs:
           path: |
             build/pl-first-name-core-audit.json
             build/pl-first-name-core-audit.tsv
+            sources/staging/historical_name_candidates.tsv
             build/pl-name-history-report.json
             build/pl-name-history-core-215-each-gender.txt
             build/pl-name-history-buffer-216-300.tsv
