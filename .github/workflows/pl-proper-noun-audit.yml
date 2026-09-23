@@ -7,6 +7,7 @@ on:
       - "ops/baseline-sync-2026-09-20"
     paths:
       - "scripts/audit_proper_nouns.py"
+      - "scripts/analyze_proper_noun_candidates.py"
       - "scripts/build_pl_preview.py"
       - "scripts/requirements-pl-audit.txt"
       - "scripts/requirements-pl-proper-noun-audit.txt"
@@ -92,6 +93,11 @@ jobs:
           set -euo pipefail
           python3 scripts/audit_proper_nouns.py --wordlist build/pl_words_100k.ckdt.txt --reviewed-proper-nouns sources/staging/reviewed_proper_nouns.tsv --out-report build/proper-noun-audit-report.json --out-tsv build/proper-noun-audit.tsv --out-sources build/proper-noun-audit-sources.json --workdir build/proper-noun-sources
 
+      - name: Build report-only proper-noun candidate triage
+        run: |
+          set -euo pipefail
+          python3 scripts/analyze_proper_noun_candidates.py --audit-tsv build/proper-noun-audit.tsv --source-dir build/proper-noun-sources --wordlist build/pl_words_100k.ckdt.txt --out-json build/proper-noun-candidate-triage.json --out-tsv build/proper-noun-candidate-triage.tsv
+
       - name: Verify audit outputs
         run: |
           python3 - <<'PY'
@@ -99,12 +105,16 @@ jobs:
           from pathlib import Path
 
           report = json.loads(Path("build/proper-noun-audit-report.json").read_text(encoding="utf-8"))
+          triage = json.loads(Path("build/proper-noun-candidate-triage.json").read_text(encoding="utf-8"))
           assert report["mode"] == "audit-only"
           assert report["promotion"] is False
           assert report["pack_word_count"] == 100000
           assert report["candidates"]["already_canonical"] >= 0
           assert report["candidates"]["lowercase_only"] >= 0
           assert report["candidates"]["missing_from_pack"] >= 0
+          assert triage["mode"] == "audit-only"
+          assert triage["promotion"] is False
+          assert triage["counts"]["cross_kind_collisions"] >= 0
 
           reviewed_missing = [
               row for row in Path("build/proper-noun-audit.tsv").read_text(encoding="utf-8").splitlines()[1:]
@@ -118,6 +128,8 @@ jobs:
               "coverage": report["coverage"],
               "candidates": report["candidates"],
               "morphology_scope": report["morphology_scope"],
+              "triage_counts": triage["counts"],
+              "triage_source_manifests": triage["source_manifests"],
           }, ensure_ascii=False, indent=2))
           PY
 
@@ -129,6 +141,8 @@ jobs:
             build/proper-noun-audit-report.json
             build/proper-noun-audit.tsv
             build/proper-noun-audit-sources.json
+            build/proper-noun-candidate-triage.json
+            build/proper-noun-candidate-triage.tsv
             build/pl-preview-report.json
             build/pl_words_100k.txt
             build/pl_words_100k.ckdt.txt
