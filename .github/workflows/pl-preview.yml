@@ -59,7 +59,7 @@ jobs:
 
       - name: Audit first-name common-noun homonyms
         run: |
-          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-common-noun-blocklist.txt
+          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --surface-policy sources/staging/first_name_surface_policy.tsv
 
       - name: Preview Polish word list
         run: |
@@ -108,7 +108,7 @@ jobs:
           # must never be present in the Polish preview dictionary.
           homonym_blocked = {
               x.strip().lower()
-              for x in Path("build/pl-first-name-common-noun-blocklist.txt").read_text(encoding="utf-8").splitlines()
+              for x in Path("build/pl-first-name-capitalized-homonyms.txt").read_text(encoding="utf-8").splitlines()
               if x.strip()
           }
           assert report["reviewed_first_names"]["excluded_common_noun_homonym_count"] == len(homonym_blocked)
