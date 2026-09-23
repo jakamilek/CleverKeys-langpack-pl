@@ -2,3 +2,6 @@
 # The commit pin is intentional: PyPI currently exposes an older 3.1.1 package, while the
 # reviewed upstream repository contains the 3.2 data snapshot used by this project.
 git+https://github.com/rspeer/wordfreq@912caf64b657478d1dff1138efdc078947d54bb1
+
+# SGJP/Morfeusz audit oracle for common-noun homonym detection.
+morfeusz2==1.99.15
