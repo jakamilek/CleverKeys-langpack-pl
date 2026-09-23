@@ -111,8 +111,8 @@ jobs:
               for x in Path("build/pl-first-name-capitalized-homonyms.txt").read_text(encoding="utf-8").splitlines()
               if x.strip()
           }
-          assert report["reviewed_first_names"]["excluded_common_noun_homonym_count"] == len(homonym_blocked)
-          assert len(homonym_blocked) == len(set(homonym_blocked))
+          assert report["reviewed_first_names"]["excluded_first_names"] == ["oleksandr"]
+          assert len(set(report["reviewed_first_names"]["lowercase_common_noun_exceptions"])) == 5
 
           forbidden = {
               "chopin", "chopina", "goebbels", "goebbelsa",
@@ -171,10 +171,15 @@ jobs:
               + ", ".join(missing_reviewed)
           )
 
-          first_names = set(report["reviewed_first_names"]["selection"] and [x["name"].lower() for x in report["reviewed_first_names"]["selection"]])
-          historical_names = {x["name"].lower() for x in report["reviewed_first_names"]["historical_selection"]}
-          assert len(first_names | historical_names) == 470
-          missing_first_names = sorted((first_names | historical_names) - ckdt_words)
+          first_name_rows = report["reviewed_first_names"]["selection"]
+          historical_rows = report["reviewed_first_names"]["historical_selection"]
+          expected_first_names = {
+              (row.get("surface") or row["name"]).lower()
+              for row in first_name_rows + historical_rows
+              if row.get("surface_policy") != "exclude"
+          }
+          assert len(expected_first_names) == 469
+          missing_first_names = sorted(expected_first_names - {w.lower() for w in ckdt_raw})
           assert not missing_first_names, "selected first names missing from CKDT: " + ", ".join(missing_first_names)
 
           missing_proper_nouns = sorted(
