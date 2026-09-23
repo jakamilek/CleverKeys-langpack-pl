@@ -65,6 +65,7 @@ def main() -> int:
     ap.add_argument("--historical-first-names", type=Path, required=True)
     ap.add_argument("--out-json", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
+    ap.add_argument("--out-blocklist", type=Path, required=True)
     args = ap.parse_args()
 
     import morfeusz2
@@ -96,6 +97,7 @@ def main() -> int:
         "common_noun_homonym_female": sum(r["gender"] == "F" for r in homonyms),
         "common_noun_homonym_male": sum(r["gender"] == "M" for r in homonyms),
         "blocked_names": homonym_names,
+        "non_homonym_count": len(rows) - len(homonyms),
         "rows": rows,
     }
 
@@ -105,6 +107,9 @@ def main() -> int:
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    args.out_blocklist.parent.mkdir(parents=True, exist_ok=True)
+    args.out_blocklist.write_text("\n".join(homonym_names) + ("\n" if homonym_names else ""), encoding="utf-8")
+
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle, delimiter="\t")
         writer.writerow([
