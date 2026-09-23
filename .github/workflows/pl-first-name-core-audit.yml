@@ -71,7 +71,7 @@ jobs:
           assert r["counts"]["regression_blocked"] == 0
           assert r["counts"]["active_selected_in_preview"] == 469
           assert r["counts"]["excluded_selected"] == 1
-          assert r["counts"]["lowercase_surface_selected"] == 4
+          assert r["counts"]["lowercase_surface_selected"] == 5
           assert r["counts"]["all_selected_in_preview"] is True
           print(json.dumps(r["counts"], ensure_ascii=False, indent=2))
           PY
