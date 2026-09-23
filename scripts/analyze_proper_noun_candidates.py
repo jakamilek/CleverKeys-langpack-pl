@@ -255,6 +255,7 @@ def main() -> int:
         for line in args.wordlist.read_text(encoding="utf-8").splitlines()
         if line.strip() and not line.startswith("#")
     }
+    pack_lower = {word.lower() for word in pack_words}
 
     try:
         from wordfreq import zipf_frequency
@@ -280,7 +281,7 @@ def main() -> int:
             "pesel_population": pesel_counts.get(lower),
             "zipf_pl": zipf,
             "common_word_signal": zipf >= 4.0,
-            "already_in_ckdt": lower in {w.lower() for w in pack_words},
+            "already_in_ckdt": lower in pack_lower,
         }
         triage.append(triage_row)
 
