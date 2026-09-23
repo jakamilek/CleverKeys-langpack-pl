@@ -39,10 +39,39 @@ from urllib.parse import urljoin, urlparse
 from urllib.request import HTTPError, Request, urlopen
 import xml.etree.ElementTree as ET
 
-DANE_DATASET_RESOURCES = (
-    "https://api.dane.gov.pl/1.4/datasets/219/resources?per_page=1000"
-)
 YEARS = tuple(range(2006, 2026))
+HISTORICAL_RESOURCE_ID = 21458
+HISTORICAL_ITEM = {
+    "id": HISTORICAL_RESOURCE_ID,
+    "title": "Imiona nadane dzieciom w Polsce w latach 2000-2019 - imię pierwsze",
+    "page": "https://dane.gov.pl/pl/dataset/219,imiona-nadawane-dzieciom-w-polsce/resource/21458/table?page=1&per_page=20",
+}
+ANNUAL_RESOURCES = {
+    2020: [
+        {"id": 28021, "gender_hint": "F", "title": "Imiona żeńskie nadane dzieciom w Polsce w 2020 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/28021"},
+        {"id": 28020, "gender_hint": "M", "title": "Imiona męskie nadane dzieciom w Polsce w 2020 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/28020"},
+    ],
+    2021: [
+        {"id": 36393, "gender_hint": "F", "title": "Imiona żeńskie nadane dzieciom w Polsce w 2021 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/36393"},
+        {"id": 36394, "gender_hint": "M", "title": "Imiona męskie nadane dzieciom w Polsce w 2021 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/36394"},
+    ],
+    2022: [
+        {"id": 44824, "gender_hint": "F", "title": "Imiona żeńskie nadane dzieciom w Polsce w 2022 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/44824"},
+        {"id": 44825, "gender_hint": "M", "title": "Imiona męskie nadane dzieciom w Polsce w 2022 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/44825"},
+    ],
+    2023: [
+        {"id": 54100, "gender_hint": "F", "title": "Imiona żeńskie nadane dzieciom w Polsce w 2023 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/54100"},
+        {"id": 54099, "gender_hint": "M", "title": "Imiona męskie nadane dzieciom w Polsce w 2023 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/54099"},
+    ],
+    2024: [
+        {"id": 63899, "gender_hint": "F", "title": "Imiona żeńskie nadane dzieciom w Polsce w 2024 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/63899"},
+        {"id": 63900, "gender_hint": "M", "title": "Imiona męskie nadane dzieciom w Polsce w 2024 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/63900"},
+    ],
+    2025: [
+        {"id": 1159538, "gender_hint": "F", "title": "Imiona żeńskie nadane dzieciom w Polsce w 2025 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/1159538"},
+        {"id": 1159536, "gender_hint": "M", "title": "Imiona męskie nadane dzieciom w Polsce w 2025 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/1159536"},
+    ],
+}
 RECENT_YEARS = set(range(2021, 2026))
 NAME_RE = re.compile(r"^[A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż]+$")
 TITLE_YEAR_RE = re.compile(
@@ -126,51 +155,14 @@ def resource_candidates(item: dict) -> list[str]:
     return out
 
 
-def load_dataset_resources() -> list[dict]:
-    data, _, _ = fetch_bytes(
-        DANE_DATASET_RESOURCES,
-        {"Accept": "application/json, application/vnd.api+json"},
-    )
-    payload = json.loads(data.decode("utf-8"))
-    items = payload.get("data")
-    if not isinstance(items, list):
-        items = payload.get("results")
-    if not isinstance(items, list):
-        raise RuntimeError("dane.gov.pl dataset resources response has no data/results list")
-    return items
-
-
-def select_year_resources(items: list[dict]) -> dict[int, list[dict]]:
-    selected: dict[int, list[dict]] = defaultdict(list)
-    for item in items:
-        title = resource_title(item)
-        m = TITLE_YEAR_RE.search(title)
-        if not m:
-            continue
-        year = int(m.group(1))
-        if year not in YEARS:
-            continue
-        if not TITLE_FIRST_RE.search(title) or TITLE_SECOND_RE.search(title):
-            continue
-        if TITLE_HALF_RE.search(title) or TITLE_REGION_RE.search(title):
-            continue
-        resource_id = str(item.get("id") or (item.get("attributes") or {}).get("id") or "")
-        if not resource_id:
-            continue
-        selected[year].append({
-            "id": int(resource_id) if resource_id.isdigit() else resource_id,
-            "title": title,
-            "candidates": resource_candidates(item),
-        })
-
-    missing = [year for year in YEARS if not selected.get(year)]
-    if missing:
-        raise RuntimeError(
-            "Could not resolve official first-name resources for years: "
-            + ", ".join(map(str, missing))
-        )
-    return dict(selected)
-
+def validate_resource_config() -> None:
+    if set(ANNUAL_RESOURCES) != set(range(2020, 2026)):
+        raise RuntimeError("Configured annual name resources do not cover exactly 2020-2025")
+    for year, items in ANNUAL_RESOURCES.items():
+        if len(items) != 2 or {item["gender_hint"] for item in items} != {"F", "M"}:
+            raise RuntimeError(f"Configured resources for {year} must contain exactly female and male sources")
+    if HISTORICAL_ITEM["id"] != HISTORICAL_RESOURCE_ID:
+        raise RuntimeError("Historical resource id mismatch")
 
 def decode_rows_from_csv(data: bytes, path: Path) -> list[list[str]]:
     text = None
@@ -468,18 +460,51 @@ def parse_historical_aggregate(
     return out
 
 def download_resource(item: dict, out_dir: Path) -> tuple[bytes, dict]:
-    # Reuse the downloader already exercised by the proper-noun audit. This
-    # preserves its official resource metadata/page fallback behavior.
-    from audit_proper_nouns import download_dane_csv
+    resource_id = int(item["id"])
+    api_url = f"https://api.dane.gov.pl/1.4/resources/{resource_id}/download/"
+    try:
+        data, content_type, resolved_url = fetch_bytes(
+            api_url,
+            {"Accept": "text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream,*/*"},
+        )
+    except HTTPError as exc:
+        if exc.code != 404:
+            raise
+        page_url = item["page"]
+        html, _content_type, _resolved_page = fetch_bytes(
+            page_url, {"Accept": "text/html,application/xhtml+xml"},
+        )
+        page_text = html.decode("utf-8", errors="replace")
+        hrefs = re.findall(r'href=["\']([^"\']+)["\']', page_text, flags=re.IGNORECASE)
+        candidates = []
+        for href in hrefs:
+            candidate = urljoin(page_url, href.replace("&amp;", "&"))
+            low = candidate.lower()
+            if ".csv" in low or ".xlsx" in low or "format=csv" in low:
+                candidates.append(candidate)
+        if not candidates:
+            raise RuntimeError(
+                f"data.gov.pl resource {resource_id}: direct download returned 404 and the official resource page exposed no CSV/XLSX download link"
+            )
+        resolved_url = candidates[0]
+        data, content_type, _ = fetch_bytes(
+            resolved_url,
+            {"Accept": "text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream,*/*"},
+        )
 
-    metadata = download_dane_csv(int(item["id"]), out_dir)
-    path = Path(metadata["path"])
-    data = path.read_bytes()
-    metadata = {
-        **metadata,
+    suffix = ".xlsx" if data.startswith(b"PK\x03\x04") else ".csv"
+    path = out_dir / f"resource-{resource_id}{suffix}"
+    path.write_bytes(data)
+    return data, {
+        "resource_id": resource_id,
+        "api_url": api_url,
+        "resolved_url": resolved_url,
+        "content_type": content_type,
+        "sha256": sha256(data),
+        "bytes": len(data),
+        "path": str(path),
         "title": item["title"],
     }
-    return data, metadata
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -493,17 +518,16 @@ def main() -> int:
     workdir = args.workdir or Path(tempfile.mkdtemp(prefix="pl-name-history-"))
     workdir.mkdir(parents=True, exist_ok=True)
 
-    resources = select_year_resources(load_dataset_resources())
+    validate_resource_config()
     by_gender_year: dict[str, dict[int, dict[str, int]]] = {"F": {}, "M": {}}
     manifests = []
 
     # Download and parse the official 2000-2019 aggregate once, then retain
     # only the requested 2006-2019 slice.
-    historical_item = resources[2006][0]
-    historical_data, historical_manifest = download_resource(historical_item, workdir)
+    historical_data, historical_manifest = download_resource(HISTORICAL_ITEM, workdir)
     historical_rows = rows_from_data(
         historical_data,
-        historical_item["title"],
+        HISTORICAL_ITEM["title"],
     )
     historical = parse_historical_aggregate(
         historical_rows,
@@ -521,7 +545,7 @@ def main() -> int:
     # From 2020 onward, use exactly one national aggregate table for each
     # gender/year. Regional, half-year and second-name resources are excluded.
     for year in range(2020, 2026):
-        for item in resources[year]:
+        for item in ANNUAL_RESOURCES[year]:
             data, manifest = download_resource(item, workdir)
             parsed = parse_name_rows(
                 rows_from_data(data, item["title"]),
