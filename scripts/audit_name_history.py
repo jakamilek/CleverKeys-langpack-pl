@@ -570,7 +570,7 @@ def main() -> int:
     historical = parse_historical_aggregate(
         historical_rows,
         range(2006, 2020),
-        historical_item["title"],
+        HISTORICAL_ITEM["title"],
     )
     for gender in ("F", "M"):
         for year in range(2006, 2020):
