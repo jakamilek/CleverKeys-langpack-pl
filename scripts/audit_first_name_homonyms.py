@@ -66,11 +66,16 @@ def main() -> int:
     ap.add_argument("--out-json", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
     ap.add_argument("--out-blocklist", type=Path, required=True)
+    ap.add_argument("--surface-policy", type=Path, required=True)
     args = ap.parse_args()
 
     import morfeusz2
 
     morfeusz = morfeusz2.Morfeusz()
+    surface_policy: dict[str, str] = {}
+    with args.surface_policy.open(encoding="utf-8", newline="") as handle:
+        for row in csv.DictReader(handle, delimiter="\t"):
+            surface_policy[row["name"].strip().lower()] = row["policy"].strip()
     selected = selected_names(args.history_report, args.historical_first_names)
 
     rows: list[dict] = []
@@ -79,11 +84,24 @@ def main() -> int:
         rows.append({
             **item,
             "common_noun_homonym": bool(matches),
+            "surface_policy": surface_policy.get(item["name"].lower(), "capitalized_name"),
             "matches": matches,
         })
 
     homonyms = [r for r in rows if r["common_noun_homonym"]]
     homonym_names = sorted({r["name"].lower() for r in homonyms})
+    lowercase = sorted(
+        r["name"].lower() for r in homonyms
+        if r["surface_policy"] == "lowercase_common_noun"
+    )
+    capitalized = sorted(
+        r["name"].lower() for r in homonyms
+        if r["surface_policy"] == "capitalized_name"
+    )
+    excluded = sorted(
+        r["name"].lower() for r in selected
+        if r["name"].lower() in surface_policy and surface_policy[r["name"].lower()] == "exclude"
+    )
 
     summary = {
         "mode": "audit-and-gate",
@@ -96,7 +114,10 @@ def main() -> int:
         "common_noun_homonym_count": len(homonyms),
         "common_noun_homonym_female": sum(r["gender"] == "F" for r in homonyms),
         "common_noun_homonym_male": sum(r["gender"] == "M" for r in homonyms),
-        "blocked_names": homonym_names,
+        "homonym_names": homonym_names,
+        "lowercase_common_noun_names": lowercase,
+        "capitalized_homonym_names": capitalized,
+        "excluded_names": excluded,
         "non_homonym_count": len(rows) - len(homonyms),
         "rows": rows,
     }
@@ -108,7 +129,7 @@ def main() -> int:
         encoding="utf-8",
     )
     args.out_blocklist.parent.mkdir(parents=True, exist_ok=True)
-    args.out_blocklist.write_text("\n".join(homonym_names) + ("\n" if homonym_names else ""), encoding="utf-8")
+    args.out_blocklist.write_text("\n".join(capitalized) + ("\n" if capitalized else ""), encoding="utf-8")
 
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle, delimiter="\t")
