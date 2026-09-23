@@ -151,6 +151,12 @@ jobs:
               + ", ".join(missing_reviewed)
           )
 
+          first_names = set(report["reviewed_first_names"]["selection"] and [x["name"].lower() for x in report["reviewed_first_names"]["selection"]])
+          historical_names = {x["name"].lower() for x in report["reviewed_first_names"]["historical_selection"]}
+          assert len(first_names | historical_names) == 470
+          missing_first_names = sorted((first_names | historical_names) - ckdt_words)
+          assert not missing_first_names, "selected first names missing from CKDT: " + ", ".join(missing_first_names)
+
           missing_proper_nouns = sorted(
               {word.lower() for word in reviewed_proper_nouns} - ckdt_words
           )
