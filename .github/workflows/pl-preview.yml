@@ -111,7 +111,7 @@ jobs:
           capitalized_homonyms = set(homonym_audit["capitalized_homonym_names"])
           lowercase_homonyms = set(homonym_audit["lowercase_common_noun_names"])
           excluded_names = set(homonym_audit["excluded_names"])
-          assert len(capitalized_homonyms) == 48, sorted(capitalized_homonyms)
+          assert len(capitalized_homonyms) == 49, sorted(capitalized_homonyms)
           assert lowercase_homonyms == {"jagoda", "lilia", "melisa", "róża"}, sorted(lowercase_homonyms)
           assert excluded_names == {"oleksandr"}, sorted(excluded_names)
 
@@ -170,6 +170,8 @@ jobs:
               assert lower.capitalize() not in ckdt_raw, "lowercase exception was capitalized in CKDT: " + lower
           for name in sorted(excluded_names):
               assert name not in ckdt_words, "user-excluded first name still present: " + name
+          assert "maila" in ckdt_words, "lowercase ordinary word maila missing from CKDT"
+          assert "Maila" not in ckdt_raw, "Maila must remain lowercase in CKDT"
 
           missing_reviewed = sorted(reviewed - ckdt_words)
           assert not missing_reviewed, (
