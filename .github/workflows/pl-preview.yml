@@ -107,13 +107,13 @@ jobs:
 
           # Regression guard: these surfaces were observed in real Polish swipe tests and
           # must never be present in the Polish preview dictionary.
-          homonym_blocked = {
-              x.strip().lower()
-              for x in Path("build/pl-first-name-capitalized-homonyms.txt").read_text(encoding="utf-8").splitlines()
-              if x.strip()
-          }
-          assert report["reviewed_first_names"]["excluded_first_names"] == ["oleksandr"]
-          assert len(set(report["reviewed_first_names"]["lowercase_common_noun_exceptions"])) == 5
+          homonym_audit = json.loads(Path("build/pl-first-name-homonym-audit.json").read_text(encoding="utf-8"))
+          capitalized_homonyms = set(homonym_audit["capitalized_homonym_names"])
+          lowercase_homonyms = set(homonym_audit["lowercase_common_noun_names"])
+          excluded_names = set(homonym_audit["excluded_names"])
+          assert len(capitalized_homonyms) == 48, sorted(capitalized_homonyms)
+          assert lowercase_homonyms == {"jagoda", "lilia", "melisa", "róża"}, sorted(lowercase_homonyms)
+          assert excluded_names == {"oleksandr"}, sorted(excluded_names)
 
           forbidden = {
               "chopin", "chopina", "goebbels", "goebbelsa",
@@ -157,14 +157,19 @@ jobs:
 
           assert len(ckdt_words) == word_count, "duplicate words detected in CKDT"
           assert not found, "forbidden regression words in CKDT: " + ", ".join(sorted(found))
-          homonym_canonical_present = sorted(
-              w for w in homonym_blocked
-              if w.capitalize() in ckdt_raw
+          missing_capitalized_homonyms = sorted(
+              w for w in capitalized_homonyms
+              if w.capitalize() not in ckdt_raw
           )
-          assert not homonym_canonical_present, (
-              "common-noun homonym still emitted as canonical first name: "
-              + ", ".join(homonym_canonical_present)
+          assert not missing_capitalized_homonyms, (
+              "capitalized homonym names missing from CKDT: "
+              + ", ".join(missing_capitalized_homonyms)
           )
+          for lower in sorted(lowercase_homonyms):
+              assert lower in ckdt_words, "lowercase common noun missing from CKDT: " + lower
+              assert lower.capitalize() not in ckdt_raw, "lowercase exception was capitalized in CKDT: " + lower
+          for name in sorted(excluded_names):
+              assert name not in ckdt_words, "user-excluded first name still present: " + name
 
           missing_reviewed = sorted(reviewed - ckdt_words)
           assert not missing_reviewed, (
@@ -172,15 +177,35 @@ jobs:
               + ", ".join(missing_reviewed)
           )
 
-          first_name_rows = report["reviewed_first_names"]["selection"]
-          historical_rows = report["reviewed_first_names"]["historical_selection"]
-          expected_first_names = {
-              (row.get("surface") or row["name"]).lower()
-              for row in first_name_rows + historical_rows
-              if row.get("surface_policy") != "exclude"
-          }
-          assert len(expected_first_names) == 469
-          missing_first_names = sorted(expected_first_names - {w.lower() for w in ckdt_raw})
+          with Path("build/pl-name-history-report.json").open(encoding="utf-8") as handle:
+              history = json.load(handle)
+          import csv
+          with Path("sources/staging/historical_name_candidates.tsv").open(encoding="utf-8", newline="") as handle:
+              historical_rows_src = list(csv.DictReader(handle, delimiter="\t"))
+          with Path("sources/staging/first_name_surface_policy.tsv").open(encoding="utf-8", newline="") as handle:
+              surface_policy = {
+                  row["name"].strip().lower(): row["policy"].strip()
+                  for row in csv.DictReader(handle, delimiter="\t")
+              }
+          expected_surfaces = []
+          for key in ("top_female", "top_male"):
+              for row in history[key][:215]:
+                  canonical = row["name"].strip()
+                  lower = canonical.lower()
+                  policy = surface_policy.get(lower, "capitalized_name")
+                  if policy == "exclude":
+                      continue
+                  expected_surfaces.append(lower if policy == "lowercase_common_noun" else canonical)
+          for row in historical_rows_src:
+              canonical = row["name"].strip()
+              lower = canonical.lower()
+              policy = surface_policy.get(lower, "capitalized_name")
+              if policy == "exclude":
+                  continue
+              expected_surfaces.append(lower if policy == "lowercase_common_noun" else canonical)
+          assert len(expected_surfaces) == 469
+          assert len(set(expected_surfaces)) == 469
+          missing_first_names = sorted(set(expected_surfaces) - ckdt_raw)
           assert not missing_first_names, "selected first names missing from CKDT: " + ", ".join(missing_first_names)
 
           missing_proper_nouns = sorted(
