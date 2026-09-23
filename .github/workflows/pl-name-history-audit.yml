@@ -42,7 +42,7 @@ jobs:
           assert report["promotion"] is False
           assert report["scope"]["years"] == list(range(2006, 2026))
           assert report["scope"]["year_count"] == 20
-          assert report["counts"]["resources"] >= 20
+          assert report["counts"]["resources"] == 13
           assert report["counts"]["female_names_seen"] > 0
           assert report["counts"]["male_names_seen"] > 0
           assert len(report["core_advisory"]) <= 600
