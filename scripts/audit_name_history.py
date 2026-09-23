@@ -559,9 +559,11 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-report", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
-    ap.add_argument("--out-core", type=Path, required=True)
+     ap.add_argument("--out-core", type=Path, required=True)
+    ap.add_argument("--out-buffer", type=Path, required=True)
     ap.add_argument("--workdir", type=Path, default=None)
-    ap.add_argument("--core-per-gender", type=int, default=300)
+    ap.add_argument("--core-per-gender", type=int, default=215)
+    ap.add_argument("--buffer-end-rank", type=int, default=300)
     args = ap.parse_args()
 
     workdir = args.workdir or Path(tempfile.mkdtemp(prefix="pl-name-history-"))
@@ -672,13 +674,20 @@ def main() -> int:
             for n in (100, 250, 500, 750, 1000)
         }
 
+    if args.core_per_gender < 1:
+        raise ValueError("--core-per-gender must be >= 1")
+    if args.buffer_end_rank < args.core_per_gender:
+        raise ValueError("--buffer-end-rank must be >= --core-per-gender")
+
     core = []
+    buffer_rows = []
     for gender in ("F", "M"):
         ordered = sorted(
             aggregates[gender].values(),
             key=lambda row: row["cumulative_rank_20y"],
         )
         core.extend(ordered[: args.core_per_gender])
+        buffer_rows.extend(ordered[args.core_per_gender: args.buffer_end_rank])
 
     report = {
         "mode": "audit-only",
@@ -695,12 +704,21 @@ def main() -> int:
             manifests,
             key=lambda x: (x["resource_id"], x.get("gender", ""), x["title"]),
         ),
+        "selection_policy": {
+            "core_per_gender": args.core_per_gender,
+            "buffer_rank_start_per_gender": args.core_per_gender + 1,
+            "buffer_rank_end_per_gender": args.buffer_end_rank,
+            "buffer_is_audit_only": True,
+            "promotion": False,
+        },
         "counts": {
             "resources": len(manifests),
             "female_names_seen": len(aggregates["F"]),
             "male_names_seen": len(aggregates["M"]),
             "female_core_default": min(args.core_per_gender, len(aggregates["F"])),
             "male_core_default": min(args.core_per_gender, len(aggregates["M"])),
+            "female_buffer_rows": max(0, min(args.buffer_end_rank, len(aggregates["F"])) - args.core_per_gender),
+            "male_buffer_rows": max(0, min(args.buffer_end_rank, len(aggregates["M"])) - args.core_per_gender),
         },
         "thresholds": threshold_tables,
         "ranking_definition": {
@@ -754,6 +772,25 @@ def main() -> int:
         "\n".join(row["name"] for row in core) + "\n",
         encoding="utf-8",
     )
+
+    args.out_buffer.parent.mkdir(parents=True, exist_ok=True)
+    with args.out_buffer.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle, delimiter="\t")
+        writer.writerow([
+            "gender", "name", "cumulative_rank_20y", "cumulative_count_20y",
+            "years_present", "years_top50", "years_top100", "recent_5y_count",
+        ])
+        for row in buffer_rows:
+            writer.writerow([
+                row["gender"],
+                row["name"],
+                row["cumulative_rank_20y"],
+                row["cumulative_count_20y"],
+                row["years_present"],
+                row["years_top50"],
+                row["years_top100"],
+                row["recent_5y_count"],
+            ])
 
     print(json.dumps({
         "mode": report["mode"],
