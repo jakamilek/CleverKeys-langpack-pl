@@ -82,6 +82,6 @@ Every promoted historical name must retain:
 - reason for inclusion;
 - collision/review status.
 
-Audit staging currently includes a small candidate file at `sources/staging/historical_name_candidates.tsv`. It contains 40 names absent from the modern 2006–2025 core (20 female, 20 male) whose historical support is attested by the Swoboda 2013 comparison tables through 1981–1990 and 1901–1994/XX-century ranks. This is a review queue only. Before promotion, each candidate must be checked directly against the Rymut 1995 entry and retain the relevant period/frequency evidence, collision review, and inclusion reason.
+Audit staging currently includes a small candidate file at `sources/staging/historical_name_candidates.tsv`. It contains 40 names absent from the modern 2006–2025 core (20 female, 20 male). In the combined selection, these 40 are added to the 215+215 modern core, yielding 235 female + 235 male = 470 selected names. whose historical support is attested by the Swoboda 2013 comparison tables through 1981–1990 and 1901–1994/XX-century ranks. This is a review queue only. Before promotion, each candidate must be checked directly against the Rymut 1995 entry and retain the relevant period/frequency evidence, collision review, and inclusion reason.
 
 This document does not itself authorize promotion of any name.
