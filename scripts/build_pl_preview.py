@@ -283,8 +283,8 @@ def load_reviewed_proper_nouns(
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=100000)
-    ap.add_argument("--band", type=int, default=50000)
-    ap.add_argument("--limit", type=int, default=50000)
+    ap.add_argument("--band", type=int, default=100000)
+    ap.add_argument("--limit", type=int, default=100000)
     ap.add_argument("--aosp", type=Path, required=True)
     ap.add_argument(
         "--errors",
