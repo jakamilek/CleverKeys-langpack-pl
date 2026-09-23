@@ -156,7 +156,7 @@ def main() -> int:
             "common_noun_homonym_count",
             "common_noun_homonym_female",
             "common_noun_homonym_male",
-            "blocked_names",
+            "homonym_names",
         )
     }, ensure_ascii=False, indent=2))
     return 0
