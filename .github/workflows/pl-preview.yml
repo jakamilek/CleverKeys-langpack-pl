@@ -10,6 +10,8 @@ on:
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/reviewed_morphology.tsv"
       - "sources/staging/reviewed_proper_nouns.tsv"
+      - "scripts/audit_name_history.py"
+      - "docs/PL_NAME_HISTORY_SOURCE_POLICY_2026-09-23.md"
       - ".github/workflows/pl-preview.yml"
       - "docs/PL_LANGUAGE_DATA_PLAN.md"
       - "docs/PL_SOURCE_MATRIX_2026-09-20.md"
@@ -49,6 +51,10 @@ jobs:
           sha256sum build/aosp/pl_wordlist.combined.gz             | awk '{print $1}'             > build/aosp/pl_wordlist.combined.gz.sha256
           test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
           printf '%s\n'             'android.googlesource.com/platform/packages/inputmethods/LatinIME'             'refs/heads/main'             'dictionaries/pl_wordlist.combined.gz'             'sha256=75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45'             'directory-tree=2b550379fe38213f9b01dcb75478ef2133682685'             > build/aosp/source-ref.txt
+
+      - name: Audit official modern first-name core
+        run: |
+          python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-215-each-gender.txt             --out-buffer build/pl-name-history-buffer-216-300.tsv             --workdir build/pl-name-history-sources             --core-per-gender 215             --buffer-end-rank 300
 
       - name: Preview Polish word list
         run: |
@@ -192,3 +198,7 @@ jobs:
             sources/staging/reviewed_morphology.tsv
             sources/staging/reviewed_proper_nouns.tsv
             build/aosp/source-ref.txt
+            build/pl-name-history-report.json
+            build/pl-name-history.tsv
+            build/pl-name-history-core-215-each-gender.txt
+            build/pl-name-history-buffer-216-300.tsv
