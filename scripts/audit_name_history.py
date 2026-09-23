@@ -432,7 +432,7 @@ def parse_historical_aggregate(
         if norm_header(value) in {"rok", "year"}:
             year_idx = i
             break
-    count_idx = find_col(header, ("liczba", "wystap"), "count")
+    count_idx = find_count_col(header, "count")
     if year_idx is None:
         raise RuntimeError(
             f"Historical aggregate has neither year columns nor a ROK/YEAR column: {title!r}"
