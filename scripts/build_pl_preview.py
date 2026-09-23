@@ -411,6 +411,7 @@ def main() -> int:
             })
             if excluded_common_noun:
                 continue
+            historical_first_names.add(lower)
             prior = first_name_case_map.get(lower)
             if prior is not None and prior != canonical:
                 raise SystemExit(f"Conflicting first-name casing: {prior!r} vs {canonical!r}")
