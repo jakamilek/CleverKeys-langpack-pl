@@ -43,7 +43,7 @@ def main():
     ap.add_argument("--preview-wordlist",type=Path,required=True)
     ap.add_argument("--aosp",type=Path,required=True)
     ap.add_argument("--historical-first-names",type=Path,required=True)
-    ap.add_argument("--first-name-homonyms",type=Path,required=True)
+    ap.add_argument("--first-name-surface-policy",type=Path,required=True)
     ap.add_argument("--out-json",type=Path,required=True)
     ap.add_argument("--out-tsv",type=Path,required=True)
     args=ap.parse_args()
@@ -76,7 +76,10 @@ def main():
     preview_raw={x.strip() for x in args.preview_wordlist.read_text(encoding="utf-8").splitlines()
                  if x.strip() and not x.startswith("#")}
     preview={x.lower() for x in preview_raw}
-    homonyms={x.strip().lower() for x in args.first_name_homonyms.read_text(encoding="utf-8").splitlines() if x.strip()}
+    surface_policy={}
+    with args.first_name_surface_policy.open(encoding="utf-8", newline="") as handle:
+        for row in csv.DictReader(handle, delimiter="\t"):
+            surface_policy[row["name"].strip().lower()] = row["policy"].strip()
     aosp=parse_aosp(args.aosp)
 
     from wordfreq import zipf_frequency
@@ -99,8 +102,10 @@ def main():
             "years_present":r.get("years_present",""),
             "years_top100":r.get("years_top100",""),
             "recent_5y_count":r.get("recent_5y_count",""),
-            "in_preview":name in preview_raw,
-            "lowercase_in_preview":lower in preview,
+            "surface_policy": surface_policy.get(lower, "capitalized_name"),
+            "expected_surface": lower if surface_policy.get(lower) == "lowercase_common_noun" else ("" if surface_policy.get(lower) == "exclude" else name),
+            "in_preview": (lower if surface_policy.get(lower) == "lowercase_common_noun" else name) in preview_raw if surface_policy.get(lower) != "exclude" else False,
+            "lowercase_in_preview": lower in preview,
             "hunspell":lower in spell,
             "aosp":lower in aosp,
             "zipf_pl":round(z,3),
@@ -112,8 +117,10 @@ def main():
         }
         if row["regression_blocked"]:
             row["audit_status"]="BLOCKED_REGRESSION"
-        elif lower in homonyms:
-            row["audit_status"]="BLOCKED_COMMON_NOUN_HOMONYM"
+        elif row["surface_policy"] == "exclude":
+            row["audit_status"]="USER_EXCLUDED"
+        elif row["surface_policy"] == "lowercase_common_noun":
+            row["audit_status"]="LOWERCASE_COMMON_NOUN"
         elif not row["in_preview"]:
             row["audit_status"]="NOT_IN_PREVIEW"
         elif row["foreign_dominant_signal"]:
@@ -142,9 +149,11 @@ def main():
                   "common_word_signal":sum(r["common_word_signal"] for r in rows),
                   "foreign_dominant_signal":sum(r["foreign_dominant_signal"] for r in rows),
                   "regression_blocked":sum(r["regression_blocked"] for r in rows),
-                  "all_selected_in_preview":sum(r["in_preview"] for r in rows)==470,
-                  "common_noun_homonym_count":sum(1 for r in rows if r["name"].lower() in homonyms),
-                  "non_homonym_in_preview":sum(1 for r in rows if r["name"].lower() not in homonyms and r["in_preview"]),
+                  "all_selected_in_preview":sum(r["in_preview"] for r in rows if r["surface_policy"] != "exclude")==469,
+                  "excluded_selected":sum(1 for r in rows if r["surface_policy"] == "exclude"),
+                  "lowercase_surface_selected":sum(1 for r in rows if r["surface_policy"] == "lowercase_common_noun"),
+                  "active_selected_in_preview":sum(r["in_preview"] for r in rows if r["surface_policy"] != "exclude"),
+                  "common_noun_homonym_count":sum(1 for r in rows if r["common_word_signal"]),
                   "status_counts":status_counts},
         "exceptions":exceptions,
         "rows":rows,
