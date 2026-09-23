@@ -47,6 +47,10 @@ jobs:
           sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}' > build/aosp/pl_wordlist.combined.gz.sha256
           test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
 
+      - name: Audit official modern first-name core
+        run: |
+          python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-215-each-gender.txt             --out-buffer build/pl-name-history-buffer-216-300.tsv             --workdir build/pl-name-history-sources             --core-per-gender 215             --buffer-end-rank 300
+
       - name: Pin CleverKeys runtime
         run: |
           git clone --filter=blob:none --no-checkout https://github.com/tribixbite/CleverKeys.git build/CleverKeys-runtime
