@@ -57,3 +57,6 @@ At the start of every work session, record the current SHA of both repositories:
 Every data change should be committed in small atomic commits on a work branch. Before merge/promotion, refresh both SHAs and rebuild the package from the current approved inputs. Never merge an older local snapshot over a newer GitHub main.
 
 Current snapshot: see `docs/BASELINE_SYNC_2026-09-20.md`.
+
+
+9. First-name collision policy — if a selected first-name orthographic form is also analysed by Morfeusz/SGJP as a common noun (subst + `nazwa_pospolita`), the capitalized first-name representation is excluded from the pack. The ordinary lowercase word remains eligible through the normal vocabulary pipeline. This avoids forcing the swipe engine to distinguish person-name vs common-noun meaning from identical letters alone.
