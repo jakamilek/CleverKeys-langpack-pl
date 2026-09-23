@@ -302,18 +302,24 @@ def parse_count(value: str) -> int:
     return int(cleaned)
 
 
-def parse_name_rows(rows: list[list[str]], title: str) -> dict[str, dict]:
+def parse_name_rows(
+    rows: list[list[str]],
+    title: str,
+) -> dict[str, dict]:
     if not rows:
         raise RuntimeError(f"Empty source: {title}")
     header = rows[0]
-
     name_idx = find_col(header, ("imie",), "name")
-    count_idx = find_col(header, ("liczba", "wystap"), "count")
+
+    count_idx = None
+    try:
+        count_idx = find_col(header, ("liczba", "wystap"), "count")
+    except RuntimeError:
+        pass
 
     gender_idx = None
     for i, value in enumerate(header):
-        norm = norm_header(value)
-        if "plec" in norm:
+        if "plec" in norm_header(value):
             gender_idx = i
             break
 
@@ -326,7 +332,7 @@ def parse_name_rows(rows: list[list[str]], title: str) -> dict[str, dict]:
 
     out: dict[str, dict] = {}
     for row in rows[1:]:
-        if name_idx >= len(row) or count_idx >= len(row):
+        if name_idx >= len(row):
             continue
         name = canonical_name(row[name_idx])
         if not name:
@@ -344,8 +350,12 @@ def parse_name_rows(rows: list[list[str]], title: str) -> dict[str, dict]:
             raise RuntimeError(
                 f"Cannot determine gender for {name!r} in resource {title!r}"
             )
+        if count_idx is None:
+            raise RuntimeError(
+                f"Cannot identify annual count column in resource {title!r}"
+            )
 
-        count = parse_count(row[count_idx])
+        count = parse_count(row[count_idx]) if count_idx < len(row) else 0
         bucket = out.setdefault(name.lower(), {
             "name": name,
             "gender": gender,
@@ -359,6 +369,104 @@ def parse_name_rows(rows: list[list[str]], title: str) -> dict[str, dict]:
 
     return out
 
+
+def parse_historical_aggregate(
+    rows: list[list[str]],
+    years: range,
+    title: str,
+) -> dict[str, dict[int, dict[str, int]]]:
+    if not rows:
+        raise RuntimeError(f"Empty historical aggregate: {title}")
+    header = rows[0]
+    name_idx = find_col(header, ("imie",), "name")
+
+    gender_idx = None
+    for i, value in enumerate(header):
+        if "plec" in norm_header(value):
+            gender_idx = i
+            break
+
+    year_cols: dict[int, int] = {}
+    for i, value in enumerate(header):
+        raw = value.strip()
+        if raw.isdigit() and len(raw) == 4:
+            year = int(raw)
+            if year in years:
+                year_cols[year] = i
+
+    if set(years).issubset(year_cols):
+        out: dict[str, dict[int, dict[str, int]]] = {"F": {}, "M": {}}
+        for row in rows[1:]:
+            if name_idx >= len(row):
+                continue
+            name = canonical_name(row[name_idx])
+            if not name:
+                continue
+
+            gender = None
+            if gender_idx is not None and gender_idx < len(row):
+                raw_gender = fold(row[gender_idx])
+                if "kobiet" in raw_gender or "zensk" in raw_gender:
+                    gender = "F"
+                elif "mezczy" in raw_gender or "mesk" in raw_gender:
+                    gender = "M"
+            if gender not in {"F", "M"}:
+                raise RuntimeError(
+                    f"Cannot determine gender for {name!r} in aggregate {title!r}"
+                )
+
+            for year, col in year_cols.items():
+                count = parse_count(row[col]) if col < len(row) else 0
+                out[gender].setdefault(year, {})
+                lower = name.lower()
+                out[gender][year][lower] = (
+                    out[gender][year].get(lower, 0) + count
+                )
+        return out
+
+    # Fallback for a tall aggregate: one row per name/year.
+    year_idx = None
+    for i, value in enumerate(header):
+        if norm_header(value) in {"rok", "year"}:
+            year_idx = i
+            break
+    count_idx = find_col(header, ("liczba", "wystap"), "count")
+    if year_idx is None:
+        raise RuntimeError(
+            f"Historical aggregate has neither year columns nor a ROK/YEAR column: {title!r}"
+        )
+
+    out = {"F": {}, "M": {}}
+    for row in rows[1:]:
+        if max(name_idx, year_idx, count_idx) >= len(row):
+            continue
+        try:
+            year = int(row[year_idx].strip())
+        except ValueError:
+            continue
+        if year not in years:
+            continue
+        name = canonical_name(row[name_idx])
+        if not name:
+            continue
+
+        gender = None
+        if gender_idx is not None:
+            raw_gender = fold(row[gender_idx])
+            if "kobiet" in raw_gender or "zensk" in raw_gender:
+                gender = "F"
+            elif "mezczy" in raw_gender or "mesk" in raw_gender:
+                gender = "M"
+        if gender not in {"F", "M"}:
+            raise RuntimeError(
+                f"Cannot determine gender for {name!r} in aggregate {title!r}"
+            )
+
+        count = parse_count(row[count_idx])
+        lower = name.lower()
+        out[gender].setdefault(year, {})
+        out[gender][year][lower] = out[gender][year].get(lower, 0) + count
+    return out
 
 def download_resource(item: dict, out_dir: Path) -> tuple[bytes, dict]:
     # Reuse the downloader already exercised by the proper-noun audit. This
@@ -387,31 +495,49 @@ def main() -> int:
     workdir.mkdir(parents=True, exist_ok=True)
 
     resources = select_year_resources(load_dataset_resources())
-
     by_gender_year: dict[str, dict[int, dict[str, int]]] = {"F": {}, "M": {}}
     manifests = []
-    for year in YEARS:
-        entries = resources[year]
-        if len(entries) > 2:
-            raise RuntimeError(
-                f"Too many first-name resources for {year}: "
-                + json.dumps(entries, ensure_ascii=False)
-            )
-        for item in entries:
+
+    # Download and parse the official 2000-2019 aggregate once, then retain
+    # only the requested 2006-2019 slice.
+    historical_item = resources[2006][0]
+    historical_data, historical_manifest = download_resource(historical_item, workdir)
+    historical_rows = rows_from_data(
+        historical_data,
+        historical_item["title"],
+    )
+    historical = parse_historical_aggregate(
+        historical_rows,
+        range(2006, 2020),
+        historical_item["title"],
+    )
+    for gender in ("F", "M"):
+        for year in range(2006, 2020):
+            by_gender_year[gender][year] = historical[gender].get(year, {})
+    manifests.append({
+        **historical_manifest,
+        "scope_used": "2006-2019 from official 2000-2019 aggregate",
+    })
+
+    # From 2020 onward, use exactly one national aggregate table for each
+    # gender/year. Regional, half-year and second-name resources are excluded.
+    for year in range(2020, 2026):
+        for item in resources[year]:
             data, manifest = download_resource(item, workdir)
             parsed = parse_name_rows(
                 rows_from_data(data, item["title"]),
                 item["title"],
             )
-            # A combined resource contributes both genders; a gender-specific resource
-            # contributes one. Merge multiple resources for the same year/gender only if
-            # they are actually split gender files.
-            for key, value in parsed.items():
-                by_gender_year[value["gender"]].setdefault(year, {})
-                by_gender_year[value["gender"]][year][key] = (
-                    by_gender_year[value["gender"]][year].get(key, 0) + value["count"]
-                )
-            manifests.append(manifest)
+            gender = item["gender_hint"]
+            by_gender_year[gender][year] = {
+                key: value["count"]
+                for key, value in parsed.items()
+            }
+            manifests.append({
+                **manifest,
+                "scope_used": str(year),
+                "gender": gender,
+            })
 
     aggregates: dict[str, dict[str, dict]] = {"F": {}, "M": {}}
     for gender in ("F", "M"):
@@ -485,8 +611,12 @@ def main() -> int:
             "year_count": len(YEARS),
             "recent_years": sorted(RECENT_YEARS),
             "source_dataset": "219, imiona-nadawane-dzieciom-w-polsce",
+            "historical_aggregate_2000_2019": HISTORICAL_RESOURCE_ID,
         },
-        "source_manifest": sorted(manifests, key=lambda x: (x["resource_id"], x["title"])),
+        "source_manifest": sorted(
+            manifests,
+            key=lambda x: (x["resource_id"], x.get("gender", ""), x["title"]),
+        ),
         "counts": {
             "resources": len(manifests),
             "female_names_seen": len(aggregates["F"]),
