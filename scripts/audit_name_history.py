@@ -52,8 +52,8 @@ ANNUAL_RESOURCES = {
         {"id": 28020, "gender_hint": "M", "title": "Imiona męskie nadane dzieciom w Polsce w 2020 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/28020"},
     ],
     2021: [
-        {"id": 36393, "gender_hint": "F", "title": "Imiona żeńskie nadane dzieciom w Polsce w 2021 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/36393"},
-        {"id": 36394, "gender_hint": "M", "title": "Imiona męskie nadane dzieciom w Polsce w 2021 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/36394"},
+        {"id": 36394, "gender_hint": "F", "title": "Imiona żeńskie nadane dzieciom w Polsce w 2021 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/36394"},
+        {"id": 36393, "gender_hint": "M", "title": "Imiona męskie nadane dzieciom w Polsce w 2021 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/36393"},
     ],
     2022: [
         {"id": 44824, "gender_hint": "F", "title": "Imiona żeńskie nadane dzieciom w Polsce w 2022 r. - imię pierwsze", "page": "https://dane.gov.pl/pl/dataset/219/resource/44824"},
@@ -601,6 +601,12 @@ def main() -> int:
                 item["title"],
             )
             gender = item["gender_hint"]
+            observed_genders = {value["gender"] for value in parsed.values()}
+            if observed_genders != {gender}:
+                raise RuntimeError(
+                    f"Gender-source mismatch for {year}: expected {gender}, "
+                    f"resource {item['id']} exposed {sorted(observed_genders)}"
+                )
             by_gender_year[gender][year] = {
                 key: value["count"]
                 for key, value in parsed.items()
