@@ -58,7 +58,7 @@ jobs:
 
       - name: Preview Polish word list
         run: |
-          python3 scripts/build_pl_preview.py             --top 100000             --band 50000             --limit 50000             --aosp build/aosp/pl_wordlist.combined.gz             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 200000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
