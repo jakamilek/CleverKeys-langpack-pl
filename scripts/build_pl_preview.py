@@ -314,6 +314,12 @@ def main() -> int:
         default=None,
         help="Reviewed historical name staging TSV; injects 20 female + 20 male historical candidates.",
     )
+    ap.add_argument(
+        "--first-name-homonyms",
+        type=Path,
+        default=None,
+        help="Lowercase first-name forms that collide with SGJP common nouns; these are excluded as names but may remain as ordinary lowercase words.",
+    )
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
@@ -340,6 +346,15 @@ def main() -> int:
         else:
             non_polish += 1
 
+    first_name_homonyms: set[str] = set()
+    if args.first_name_homonyms:
+        for line in args.first_name_homonyms.read_text(encoding="utf-8").splitlines():
+            line = line.strip().lower()
+            if line:
+                if not is_candidate(line):
+                    raise SystemExit(f"Invalid first-name homonym blocklist entry: {line!r}")
+                first_name_homonyms.add(line)
+
     first_name_case_map: dict[str, str] = {}
     reviewed_first_names: set[str] = set()
     first_name_meta: list[dict] = []
@@ -352,17 +367,21 @@ def main() -> int:
             for row in selected:
                 canonical = str(row["name"]).strip()
                 lower = canonical.lower()
-                reviewed_first_names.add(lower)
-                prior = first_name_case_map.get(lower)
-                if prior is not None and prior != canonical:
-                    raise SystemExit(f"Conflicting first-name casing: {prior!r} vs {canonical!r}")
-                first_name_case_map[lower] = canonical
+                excluded_common_noun = lower in first_name_homonyms
                 first_name_meta.append({
                     "gender": gender,
                     "name": canonical,
                     "rank_20y": row["cumulative_rank_20y"],
                     "count_20y": row["cumulative_count_20y"],
+                    "excluded_common_noun_homonym": excluded_common_noun,
                 })
+                if excluded_common_noun:
+                    continue
+                reviewed_first_names.add(lower)
+                prior = first_name_case_map.get(lower)
+                if prior is not None and prior != canonical:
+                    raise SystemExit(f"Conflicting first-name casing: {prior!r} vs {canonical!r}")
+                first_name_case_map[lower] = canonical
                 if lower not in seen:
                     ranked.append(lower)
                     seen.add(lower)
@@ -381,13 +400,17 @@ def main() -> int:
             canonical = row["name"].strip()
             lower = canonical.lower()
             historical_first_names.add(lower)
+            excluded_common_noun = lower in first_name_homonyms
             historical_first_name_meta.append({
                 "gender": row["gender"],
                 "name": canonical,
                 "basis": row["basis"],
                 "source": row["source"],
                 "status": row["status"],
+                "excluded_common_noun_homonym": excluded_common_noun,
             })
+            if excluded_common_noun:
+                continue
             prior = first_name_case_map.get(lower)
             if prior is not None and prior != canonical:
                 raise SystemExit(f"Conflicting first-name casing: {prior!r} vs {canonical!r}")
@@ -609,6 +632,9 @@ def main() -> int:
         },
         "reviewed_first_names": {
             "enabled": args.first_name_history is not None,
+            "selected_total": len(first_name_meta) + len(historical_first_name_meta),
+            "excluded_common_noun_homonym_count": len(first_name_homonyms),
+            "excluded_common_noun_homonyms": sorted(first_name_homonyms),
             "count": len(reviewed_first_names),
             "selected_per_gender": 215 if args.first_name_history else 0,
             "provenance": "official dane.gov.pl first-name statistics, 2006-2025" if args.first_name_history else None,
