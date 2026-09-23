@@ -17,6 +17,7 @@ It does NOT modify source/ and does NOT promote any source.
 from __future__ import annotations
 
 import argparse
+import csv
 import gzip
 import json
 import re
