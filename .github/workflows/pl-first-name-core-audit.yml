@@ -45,7 +45,7 @@ jobs:
       - name: Build modern name history core and preview
         run: |
           python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-215-each-gender.txt             --out-buffer build/pl-name-history-buffer-216-300.tsv             --workdir build/pl-name-history-sources             --core-per-gender 215             --buffer-end-rank 300
-          python3 scripts/build_pl_preview.py             --top 200000 --band 100000 --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 200000 --band 100000 --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Audit 430 modern names
         run: |
