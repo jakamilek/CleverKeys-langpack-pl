@@ -50,6 +50,16 @@ Do not:
 
 The eventual historical core should be selected from names with strong long-period frequency evidence, preferably appearing as frequent names across more than one older period, with manual review for common-word collisions and unusual/foreign forms.
 
+## Modern 2006–2025 selection policy
+
+For the modern layer, the quantitative audit is retained in full, but the working candidate split is:
+
+- core: top 215 names per gender by the documented 20-year ranking;
+- safety buffer: ranks 216–300 per gender, retained for audit/review only;
+- the buffer is not an automatic promotion pool and does not enlarge the core.
+
+The split is a selection boundary for project review, not a claim that rank 216 is categorically unsafe or rank 215 categorically safe. Existing source-safety, collision, language-evidence, morphology and runtime review gates still apply to every candidate.
+
 ## Separation from the modern layer
 
 Modern layer:
