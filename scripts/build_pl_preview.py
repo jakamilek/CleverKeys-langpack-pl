@@ -611,10 +611,13 @@ def main() -> int:
             "Reviewed proper nouns lost: " + ", ".join(missing_proper_nouns)
         )
 
-    surface_keep = {
-        proper_case_map.get(word, first_name_case_map.get(word, word)): reason
-        for word, reason in keep.items()
-    }
+    surface_keep = {}
+    for word, reason in keep.items():
+        if word in lowercase_first_name_exceptions:
+            surface = word
+        else:
+            surface = proper_case_map.get(word, first_name_case_map.get(word, word))
+        surface_keep[surface] = reason
     words_sorted = sorted(surface_keep)
     args.out_wordlist.parent.mkdir(parents=True, exist_ok=True)
     args.out_report.parent.mkdir(parents=True, exist_ok=True)
