@@ -500,7 +500,7 @@ def download_resource(item: dict, out_dir: Path) -> tuple[bytes, dict]:
     for metadata_url in metadata_urls:
         try:
             metadata_bytes, metadata_type, metadata_resolved = fetch_bytes(
-                metadata_url, {"Accept": "application/json"},
+                metadata_url, {"Accept": "application/json", "X-API-VERSION": "1.4"},
             )
         except HTTPError as exc:
             if exc.code == 404:
