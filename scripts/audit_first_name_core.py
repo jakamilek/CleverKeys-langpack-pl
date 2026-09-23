@@ -125,7 +125,7 @@ def main():
     out={
         "mode":"audit-only","promotion":False,
         "runtime_test_target":"CleverKeys debug 2.0.0",
-        "scope":{"modern_core_per_gender":215,"historical_addition_per_gender":20,"selected_per_gender":235,"selected_total":470,"years":"2006-2025 modern layer + historical staging"}
+        "scope":{"modern_core_per_gender":215,"historical_addition_per_gender":20,"selected_per_gender":235,"selected_total":470,"years":"2006-2025 modern layer + historical staging"},
         "evidence":{"wordfreq_version":pkg_version("wordfreq"),
                     "aosp_source":"pinned AOSP Polish dictionary used by pl-preview workflow",
                     "hunspell_dictionary":"pl_PL"},
