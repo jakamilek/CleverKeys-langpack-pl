@@ -42,6 +42,7 @@ def main():
     ap.add_argument("--history-report",type=Path,required=True)
     ap.add_argument("--preview-wordlist",type=Path,required=True)
     ap.add_argument("--aosp",type=Path,required=True)
+    ap.add_argument("--historical-first-names",type=Path,required=True)
     ap.add_argument("--out-json",type=Path,required=True)
     ap.add_argument("--out-tsv",type=Path,required=True)
     args=ap.parse_args()
@@ -50,8 +51,26 @@ def main():
     core=[]
     for gender,key in (("F","top_female"),("M","top_male")):
         for row in report[key][:215]:
-            core.append({**row,"gender":gender})
-    assert len(core)==430
+            core.append({**row,"gender":gender,"layer":"modern"})
+    with args.historical_first_names.open(encoding="utf-8", newline="") as handle:
+        historical_rows=list(csv.DictReader(handle, delimiter="\t"))
+    if len(historical_rows)!=40 or sum(r["gender"]=="F" for r in historical_rows)!=20 or sum(r["gender"]=="M" for r in historical_rows)!=20:
+        raise SystemExit("Historical first-name staging must contain exactly 20 F + 20 M rows")
+    for row in historical_rows:
+        core.append({
+            "name":row["name"],
+            "gender":row["gender"],
+            "layer":"historical",
+            "cumulative_rank_20y":"",
+            "cumulative_count_20y":"",
+            "years_present":"",
+            "years_top100":"",
+            "recent_5y_count":"",
+            "historical_basis":row["basis"],
+            "historical_source":row["source"],
+            "historical_status":row["status"],
+        })
+    assert len(core)==470
 
     preview={x.strip().lower() for x in args.preview_wordlist.read_text(encoding="utf-8").splitlines()
              if x.strip() and not x.startswith("#")}
@@ -71,12 +90,12 @@ def main():
             if f>best_z: best_lang,best_z=lang,f
         foreign = best_z>=3.0 and best_z>z+1.0
         row={
-            "gender":r["gender"],"name":name,
-            "rank_20y":r["cumulative_rank_20y"],
-            "count_20y":r["cumulative_count_20y"],
-            "years_present":r["years_present"],
-            "years_top100":r["years_top100"],
-            "recent_5y_count":r["recent_5y_count"],
+            "gender":r["gender"],"name":name,"layer":r.get("layer","modern"),
+            "rank_20y":r.get("cumulative_rank_20y",""),
+            "count_20y":r.get("cumulative_count_20y",""),
+            "years_present":r.get("years_present",""),
+            "years_top100":r.get("years_top100",""),
+            "recent_5y_count":r.get("recent_5y_count",""),
             "in_preview":lower in preview,
             "hunspell":lower in spell,
             "aosp":lower in aosp,
@@ -106,11 +125,11 @@ def main():
     out={
         "mode":"audit-only","promotion":False,
         "runtime_test_target":"CleverKeys debug 2.0.0",
-        "scope":{"modern_core_per_gender":215,"modern_core_total":430,"years":"2006-2025"},
+        "scope":{"modern_core_per_gender":215,"historical_addition_per_gender":20,"selected_per_gender":235,"selected_total":470,"years":"2006-2025 modern layer + historical staging"}
         "evidence":{"wordfreq_version":pkg_version("wordfreq"),
                     "aosp_source":"pinned AOSP Polish dictionary used by pl-preview workflow",
                     "hunspell_dictionary":"pl_PL"},
-        "counts":{"core_total":430,"female":215,"male":215,
+        "counts":{"core_total":470,"female":235,"male":235,"modern_female":215,"modern_male":215,"historical_female":20,"historical_male":20,
                   "in_preview":sum(r["in_preview"] for r in rows),
                   "hunspell":sum(r["hunspell"] for r in rows),
                   "aosp":sum(r["aosp"] for r in rows),
