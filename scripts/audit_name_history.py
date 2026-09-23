@@ -343,9 +343,9 @@ def parse_name_rows(
         gender = gender_hint
         if gender_idx is not None and gender_idx < len(row):
             raw_gender = fold(row[gender_idx])
-            if "kobiet" in raw_gender or "zensk" in raw_gender:
+            if raw_gender in {"k", "f"} or "kobiet" in raw_gender or "zensk" in raw_gender:
                 gender = "F"
-            elif "mezczy" in raw_gender or "mesk" in raw_gender:
+            elif raw_gender in {"m"} or "mezczy" in raw_gender or "mesk" in raw_gender:
                 gender = "M"
 
         if gender not in {"F", "M"}:
@@ -408,9 +408,9 @@ def parse_historical_aggregate(
             gender = None
             if gender_idx is not None and gender_idx < len(row):
                 raw_gender = fold(row[gender_idx])
-                if "kobiet" in raw_gender or "zensk" in raw_gender:
+                if raw_gender in {"k", "f"} or "kobiet" in raw_gender or "zensk" in raw_gender:
                     gender = "F"
-                elif "mezczy" in raw_gender or "mesk" in raw_gender:
+                elif raw_gender in {"m"} or "mezczy" in raw_gender or "mesk" in raw_gender:
                     gender = "M"
             if gender not in {"F", "M"}:
                 raise RuntimeError(
@@ -455,9 +455,9 @@ def parse_historical_aggregate(
         gender = None
         if gender_idx is not None:
             raw_gender = fold(row[gender_idx])
-            if "kobiet" in raw_gender or "zensk" in raw_gender:
+            if raw_gender in {"k", "f"} or "kobiet" in raw_gender or "zensk" in raw_gender:
                 gender = "F"
-            elif "mezczy" in raw_gender or "mesk" in raw_gender:
+            elif raw_gender in {"m"} or "mezczy" in raw_gender or "mesk" in raw_gender:
                 gender = "M"
         if gender not in {"F", "M"}:
             raise RuntimeError(
