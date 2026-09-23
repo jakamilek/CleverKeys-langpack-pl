@@ -559,7 +559,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-report", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
-     ap.add_argument("--out-core", type=Path, required=True)
+    ap.add_argument("--out-core", type=Path, required=True)
     ap.add_argument("--out-buffer", type=Path, required=True)
     ap.add_argument("--workdir", type=Path, default=None)
     ap.add_argument("--core-per-gender", type=int, default=215)
