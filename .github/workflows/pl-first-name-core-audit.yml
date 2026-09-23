@@ -64,6 +64,8 @@ jobs:
           assert r["counts"]["historical_female"] == 20
           assert r["counts"]["historical_male"] == 20
           assert r["counts"]["regression_blocked"] == 0
+          assert r["counts"]["in_preview"] == 470
+          assert r["counts"]["all_selected_in_preview"] is True
           print(json.dumps(r["counts"], ensure_ascii=False, indent=2))
           PY
 
