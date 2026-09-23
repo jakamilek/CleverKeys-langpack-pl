@@ -136,6 +136,7 @@ def main():
                   "common_word_signal":sum(r["common_word_signal"] for r in rows),
                   "foreign_dominant_signal":sum(r["foreign_dominant_signal"] for r in rows),
                   "regression_blocked":sum(r["regression_blocked"] for r in rows),
+                  "all_selected_in_preview":sum(r["in_preview"] for r in rows)==470,
                   "status_counts":status_counts},
         "exceptions":exceptions,
         "rows":rows,
