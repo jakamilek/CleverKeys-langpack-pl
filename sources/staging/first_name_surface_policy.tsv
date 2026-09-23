@@ -1,0 +1,7 @@
+name	policy	note
+Jagoda	lowercase_common_noun	User decision: keep ordinary lowercase noun; do not emit capitalized first-name surface.
+Lilia	lowercase_common_noun	User decision: keep ordinary lowercase noun; do not emit capitalized first-name surface.
+Maila	lowercase_common_noun	User decision: lowercase ordinary word surface.
+Melisa	lowercase_common_noun	User decision: keep ordinary lowercase noun; do not emit capitalized first-name surface.
+Róża	lowercase_common_noun	User decision: keep ordinary lowercase noun; do not emit capitalized first-name surface.
+Oleksandr	exclude	User decision: remove completely from the Polish pack.
