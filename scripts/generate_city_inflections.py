@@ -81,20 +81,21 @@ def main() -> int:
         "voc": WOŁACZ,
     }
 
+    city_meta = {row["name"].lower(): row for row in cities}
     overrides: dict[tuple[str, str], dict[str, str]] = {}
     if args.overrides:
         override_rows = load_tsv(args.overrides)
         required = {"city", "case", "form", "source", "basis", "note"}
-        if not override_rows or set(override_rows[0]) != required:
-            raise SystemExit(f"Malformed city inflection override header: {args.overrides}")
         for line_no, row in enumerate(override_rows, 2):
+            if set(row) != required:
+                raise SystemExit(f"Malformed city inflection override row {args.overrides}:{line_no}")
             city = row["city"].strip().lower()
             case_tag = row["case"].strip()
             form = row["form"].strip()
             if case_tag not in CASES or not city or not form or not row["source"].strip() or not row["basis"].strip() or not row["note"].strip():
                 raise SystemExit(f"Malformed city inflection override row {args.overrides}:{line_no}")
             if city not in city_meta:
-                raise SystemExit(f"City override not present in TERYT source: {row["city"]}")
+                raise SystemExit(f"City override not present in TERYT source: {row['city']}")
             key = (city, case_tag)
             prior = overrides.get(key)
             if prior and prior["form"] != form:
@@ -110,7 +111,6 @@ def main() -> int:
         expand_underscore=True,
     )
 
-    city_meta = {row["name"].lower(): row for row in cities}
     out: list[dict[str, str]] = []
     missing_nom: list[str] = []
 
