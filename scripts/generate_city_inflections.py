@@ -75,7 +75,7 @@ def main() -> int:
         name = meta["name"]
         generated: set[tuple[str, str]] = set()
 
-        for orth, lemma, tag, _names, _labels in morfeusz.generate(name):
+        for orth, lemma, tag, _names, _labels in morfeusz.generate(lower_name):
             if str(lemma).lower() != lower_name:
                 continue
             if not tag.startswith("subst:sg:"):
