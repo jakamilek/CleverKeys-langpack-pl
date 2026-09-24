@@ -82,12 +82,6 @@ jobs:
             --surface-policy sources/staging/first_name_surface_policy.tsv \
             --out-tsv build/pl-first-name-inflections.tsv \
             --out-report build/pl-first-name-inflections-report.json
-          python3 scripts/generate_first_name_inflections.py \
-            --history-report build/pl-name-history-report.json \
-            --historical-first-names sources/staging/historical_name_candidates.tsv \
-            --surface-policy sources/staging/first_name_surface_policy.tsv \
-            --out-tsv build/pl-first-name-inflections.tsv \
-            --out-report build/pl-first-name-inflections-report.json
           python3 scripts/generate_city_inflections.py \
             --cities build/pl-city-source.tsv \
             --priorities sources/staging/reviewed_city_inflection_priority.tsv \
