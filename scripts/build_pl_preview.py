@@ -567,6 +567,11 @@ def main() -> int:
             ranked.append(word)
             seen.add(word)
 
+    # Capture the candidate universe before the explicit first-name/city layers are
+    # appended. This lets the final capacity audit identify words displaced specifically
+    # by those additions, rather than conflating them with the older morphology/proper-noun layers.
+    base_candidate_words = set(ranked[:args.top])
+
     zipf = {word: float(zipf_frequency(word, "pl")) for word in ranked}
     aosp = load_aosp(args.aosp)
     spell = hunspell_accepts(ranked)
@@ -726,6 +731,21 @@ def main() -> int:
                 del keep[word]
                 drop[word] = f"diacritic-alias->{best}"
 
+    # Explicit first-name/city additions are protected. Track only additions that were
+    # genuinely absent from the pre-augmentation candidate universe; a city/name that was
+    # already present in the base corpus does not consume an extra dictionary slot.
+    name_city_augmented_words = (
+        (reviewed_first_names - lowercase_first_name_exceptions)
+        | (first_name_inflection_forms - lowercase_first_name_exceptions)
+        | city_forms
+        | city_inflection_forms
+    )
+    new_name_city_words = {
+        w for w in name_city_augmented_words
+        if w not in base_candidate_words and w in keep
+    }
+    pre_limit_keep = set(keep)
+
     # Enforce hard size cap by wordfreq rank while protecting guards and oracle-backed top words.
     if len(keep) > args.limit:
         protected = {
@@ -744,6 +764,29 @@ def main() -> int:
         for word in rest[max(0, args.limit - len(protected)):]:
             del keep[word]
             drop[word] = "limit-cut"
+
+    # Reconstruct the counterfactual final dictionary without the genuinely new name/city
+    # layer. Existing morphology/proper-noun additions remain protected, so the comparison
+    # isolates capacity displacement caused by the new city/name entries.
+    baseline_without_new_name_city = pre_limit_keep - new_name_city_words
+    baseline_protected = {
+        w for w in baseline_without_new_name_city
+        if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower
+    }
+    if len(baseline_without_new_name_city) <= args.limit:
+        baseline_final_without_new_name_city = baseline_without_new_name_city
+    else:
+        baseline_rest = sorted(
+            (w for w in baseline_without_new_name_city if w not in baseline_protected),
+            key=lambda w: (rank_of[w], -zipf[w], w),
+        )
+        baseline_final_without_new_name_city = set(baseline_protected)
+        baseline_final_without_new_name_city.update(
+            baseline_rest[: max(0, args.limit - len(baseline_protected))]
+        )
+    capacity_displaced_by_name_city = sorted(
+        baseline_final_without_new_name_city - set(keep)
+    )
 
     missing_guards = sorted(guards - set(keep))
     if missing_guards:
@@ -851,7 +894,17 @@ def main() -> int:
         },
         "dropped": len(drop),
         "drop_reasons": {},
+        "name_city_capacity_audit": {
+            "new_name_city_words": len(new_name_city_words),
+            "pre_limit_keep": len(pre_limit_keep),
+            "baseline_without_new_name_city": len(baseline_without_new_name_city),
+            "baseline_final_without_new_name_city": len(baseline_final_without_new_name_city),
+            "final_keep": len(keep),
+            "capacity_displaced_count": len(capacity_displaced_by_name_city),
+            "capacity_displaced_words": capacity_displaced_by_name_city,
+        },
         "samples": {
+            "name_city_capacity_displaced": capacity_displaced_by_name_city,
             "typo": sorted(
                 [{"word": w, "target": v[0], "rule": v[1], "gap": round(v[2], 2)}
                  for w, v in typo.items()],
@@ -884,7 +937,12 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    print(json.dumps(report, ensure_ascii=False, indent=2))
+    print(json.dumps({
+        "kept": report["kept"],
+        "new_name_city_words": report["name_city_capacity_audit"]["new_name_city_words"],
+        "capacity_displaced_count": report["name_city_capacity_audit"]["capacity_displaced_count"],
+        "capacity_displaced_words": report["name_city_capacity_audit"]["capacity_displaced_words"],
+    }, ensure_ascii=False, indent=2))
     return 0
 
 
