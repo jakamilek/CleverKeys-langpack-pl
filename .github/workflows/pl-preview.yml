@@ -18,6 +18,7 @@ on:
       - "scripts/extract_teryt_cities.py"
       - "scripts/generate_city_inflections.py"
       - "sources/staging/reviewed_city_inflection_priority.tsv"
+      - "sources/staging/reviewed_city_inflection_overrides.tsv"
       - "docs/PL_CITY_SOURCE_POLICY_2026-09-24.md"
       - "docs/PL_NAME_HISTORY_SOURCE_POLICY_2026-09-23.md"
       - ".github/workflows/pl-preview.yml"
@@ -98,7 +99,8 @@ jobs:
             --priorities sources/staging/reviewed_city_inflection_priority.tsv \
             --top-n 300 \
             --out-tsv build/pl-city-inflections.tsv \
-            --out-report build/pl-city-inflections-report.json
+            --out-report build/pl-city-inflections-report.json \
+            --overrides sources/staging/reviewed_city_inflection_overrides.tsv
 
       - name: Preview Polish word list
         run: |
