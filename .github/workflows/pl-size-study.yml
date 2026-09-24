@@ -160,6 +160,13 @@ jobs:
                   delimiter="\t",
               )
           }
+          first_name_inflections = {
+              row["form"]
+              for row in __import__("csv").DictReader(
+                  (Path("build/pl-first-name-inflections.tsv").open(encoding="utf-8", newline="")),
+                  delimiter="\t",
+              )
+          }
 
           def read_ckdt(path, expected_count):
               data = path.read_bytes()
@@ -207,6 +214,13 @@ jobs:
               missing_city_inflections = sorted({w.lower() for w in city_inflections} - ckdt[size])
               assert not missing_city_inflections, (
                   f"{size}: missing selected city inflections: {', '.join(missing_city_inflections)}"
+              )
+              missing_first_name_inflections = sorted(
+                  {w.lower() for w in first_name_inflections} - ckdt[size]
+              )
+              assert not missing_first_name_inflections, (
+                  f"{size}: missing selected first-name inflections: "
+                  f"{', '.join(missing_first_name_inflections)}"
               )
               missing_proper = sorted({w.lower() for w in reviewed_proper_nouns} - ckdt[size])
               assert not missing_proper, (
