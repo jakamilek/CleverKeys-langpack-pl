@@ -95,7 +95,8 @@ def main() -> int:
         for case_tag, surface in sorted(generated, key=lambda item: (CASES.index(item[0]), item[1])):
             out.append({
                 "name": name,
-                "simc": meta["simc"],
+                "gender": "",
+                "layer": "city",
                 "case": case_tag,
                 "form": surface,
                 "source": "Morfeusz 2 / SGJP generated from GUS TERYT SIMC city lemma",
@@ -111,7 +112,7 @@ def main() -> int:
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
             handle,
-            fieldnames=["name", "simc", "case", "form", "source", "morfeusz_version"],
+            fieldnames=["name", "gender", "layer", "case", "form", "source", "morfeusz_version"],
             delimiter="\t",
             lineterminator="\n",
         )
