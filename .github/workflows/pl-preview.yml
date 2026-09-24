@@ -112,7 +112,7 @@ jobs:
           lowercase_homonyms = set(homonym_audit["lowercase_common_noun_names"])
           excluded_names = set(homonym_audit["excluded_names"])
           assert len(capitalized_homonyms) == 48, sorted(capitalized_homonyms)
-          assert lowercase_homonyms == {"jagoda", "lilia", "melisa", "róża"}, sorted(lowercase_homonyms)
+          assert lowercase_homonyms == {"jagoda", "lilia", "malina", "melisa", "róża"}, sorted(lowercase_homonyms)
           assert excluded_names == {"oleksandr"}, sorted(excluded_names)
 
           forbidden = {
