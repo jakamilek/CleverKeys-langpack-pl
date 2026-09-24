@@ -63,14 +63,14 @@ jobs:
       - name: Acquire current official TERYT SIMC catalog
         run: |
           mkdir -p build/teryt
-          python3 scripts/fetch_teryt_simc.py \\
-            --state-date 2026-09-24 \\
-            --out-zip build/teryt/SIMC_Urzedowy_2026-09-24.zip \\
-            --out-sha256 build/teryt/SIMC_Urzedowy_2026-09-24.sha256 \\
+          python3 scripts/fetch_teryt_simc.py \
+            --state-date 2026-09-24 \
+            --out-zip build/teryt/SIMC_Urzedowy_2026-09-24.zip \
+            --out-sha256 build/teryt/SIMC_Urzedowy_2026-09-24.sha256 \
             --out-provenance build/teryt/source-ref.json
-          python3 scripts/extract_teryt_cities.py \\
-            --zip build/teryt/SIMC_Urzedowy_2026-09-24.zip \\
-            --out-tsv build/pl-city-source.tsv \\
+          python3 scripts/extract_teryt_cities.py \
+            --zip build/teryt/SIMC_Urzedowy_2026-09-24.zip \
+            --out-tsv build/pl-city-source.tsv \
             --out-report build/pl-city-source-report.json
 
       - name: Audit official modern first-name core
@@ -83,20 +83,20 @@ jobs:
 
       - name: Generate selected first-name inflections
         run: |
-          python3 scripts/generate_first_name_inflections.py \\
-            --history-report build/pl-name-history-report.json \\
-            --historical-first-names sources/staging/historical_name_candidates.tsv \\
-            --surface-policy sources/staging/first_name_surface_policy.tsv \\
-            --out-tsv build/pl-first-name-inflections.tsv \\
+          python3 scripts/generate_first_name_inflections.py \
+            --history-report build/pl-name-history-report.json \
+            --historical-first-names sources/staging/historical_name_candidates.tsv \
+            --surface-policy sources/staging/first_name_surface_policy.tsv \
+            --out-tsv build/pl-first-name-inflections.tsv \
             --out-report build/pl-first-name-inflections-report.json
 
       - name: Generate selective city inflections
         run: |
-          python3 scripts/generate_city_inflections.py \\
-            --cities build/pl-city-source.tsv \\
-            --priorities sources/staging/reviewed_city_inflection_priority.tsv \\
-            --top-n 300 \\
-            --out-tsv build/pl-city-inflections.tsv \\
+          python3 scripts/generate_city_inflections.py \
+            --cities build/pl-city-source.tsv \
+            --priorities sources/staging/reviewed_city_inflection_priority.tsv \
+            --top-n 300 \
+            --out-tsv build/pl-city-inflections.tsv \
             --out-report build/pl-city-inflections-report.json
 
       - name: Preview Polish word list
