@@ -14,6 +14,11 @@ on:
       - "sources/staging/first_name_surface_policy.tsv"
       - "scripts/audit_name_history.py"
       - "scripts/generate_first_name_inflections.py"
+      - "scripts/fetch_teryt_simc.py"
+      - "scripts/extract_teryt_cities.py"
+      - "scripts/generate_city_inflections.py"
+      - "sources/staging/reviewed_city_inflection_priority.tsv"
+      - "docs/PL_CITY_SOURCE_POLICY_2026-09-24.md"
       - "docs/PL_NAME_HISTORY_SOURCE_POLICY_2026-09-23.md"
       - ".github/workflows/pl-preview.yml"
       - "docs/PL_LANGUAGE_DATA_PLAN.md"
@@ -55,6 +60,19 @@ jobs:
           test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
           printf '%s\n'             'android.googlesource.com/platform/packages/inputmethods/LatinIME'             'refs/heads/main'             'dictionaries/pl_wordlist.combined.gz'             'sha256=75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45'             'directory-tree=2b550379fe38213f9b01dcb75478ef2133682685'             > build/aosp/source-ref.txt
 
+      - name: Acquire current official TERYT SIMC catalog
+        run: |
+          mkdir -p build/teryt
+          python3 scripts/fetch_teryt_simc.py \\
+            --state-date 2026-09-24 \\
+            --out-zip build/teryt/SIMC_Urzedowy_2026-09-24.zip \\
+            --out-sha256 build/teryt/SIMC_Urzedowy_2026-09-24.sha256 \\
+            --out-provenance build/teryt/source-ref.json
+          python3 scripts/extract_teryt_cities.py \\
+            --zip build/teryt/SIMC_Urzedowy_2026-09-24.zip \\
+            --out-tsv build/pl-city-source.tsv \\
+            --out-report build/pl-city-source-report.json
+
       - name: Audit official modern first-name core
         run: |
           python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-215-each-gender.txt             --out-buffer build/pl-name-history-buffer-216-300.tsv             --workdir build/pl-name-history-sources             --core-per-gender 215             --buffer-end-rank 300
@@ -72,9 +90,18 @@ jobs:
             --out-tsv build/pl-first-name-inflections.tsv \\
             --out-report build/pl-first-name-inflections-report.json
 
+      - name: Generate selective city inflections
+        run: |
+          python3 scripts/generate_city_inflections.py \\
+            --cities build/pl-city-source.tsv \\
+            --priorities sources/staging/reviewed_city_inflection_priority.tsv \\
+            --top-n 300 \\
+            --out-tsv build/pl-city-inflections.tsv \\
+            --out-report build/pl-city-inflections-report.json
+
       - name: Preview Polish word list
         run: |
-          python3 scripts/build_pl_preview.py             --top 200000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 200000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -250,6 +277,41 @@ jobs:
           assert "Jakubie" in expected_inflection_surfaces
           assert {"Jakub", "Jakuba", "Jakubowi", "Jakubem", "Jakubie"} <= ckdt_raw
 
+          city_rows = []
+          with Path("build/pl-city-source.tsv").open(encoding="utf-8", newline="") as handle:
+              city_rows = list(csv.DictReader(handle, delimiter="\\t"))
+          city_names = {row["name"] for row in city_rows}
+          missing_city_names = sorted(city_names - ckdt_raw)
+          assert not missing_city_names, (
+              "official one-token city names missing from CKDT: "
+              + ", ".join(missing_city_names)
+          )
+          assert "Gdynia" in city_names
+          assert "Gdynia" in ckdt_raw
+
+          city_inflection_rows = []
+          with Path("build/pl-city-inflections.tsv").open(encoding="utf-8", newline="") as handle:
+              city_inflection_rows = list(csv.DictReader(handle, delimiter="\\t"))
+          priority_names = {
+              row["name"].strip()
+              for row in csv.DictReader(
+                  Path("sources/staging/reviewed_city_inflection_priority.tsv").open(
+                      encoding="utf-8", newline=""
+                  ),
+                  delimiter="\\t",
+              )
+          }
+          selected_city_names = {row["name"].strip() for row in city_inflection_rows}
+          assert priority_names <= selected_city_names
+          city_inflection_surfaces = {row["form"] for row in city_inflection_rows}
+          missing_city_inflections = sorted(city_inflection_surfaces - ckdt_raw)
+          assert not missing_city_inflections, (
+              "selected city inflection forms missing from CKDT: "
+              + ", ".join(missing_city_inflections)
+          )
+          for expected_city_form in ("Gdynia", "Gdyni", "Gdynię", "Gdynią"):
+              assert expected_city_form in ckdt_raw, expected_city_form
+
           missing_proper_nouns = sorted(
               {word.lower() for word in reviewed_proper_nouns} - ckdt_words
           )
@@ -281,6 +343,9 @@ jobs:
               "reviewed_proper_nouns_present_in_ckdt": len(reviewed_proper_nouns - set(missing_proper_nouns)),
               "first_name_inflection_forms": len(expected_inflection_surfaces),
               "first_name_inflection_forms_present_in_ckdt": len(expected_inflection_surfaces - set(missing_inflections)),
+              "city_names": len(city_names),
+              "city_inflection_forms": len(city_inflection_surfaces),
+              "city_inflection_forms_present_in_ckdt": len(city_inflection_surfaces - set(missing_city_inflections)),
               "regression_hits": len(found),
               "promotion": False,
           }, ensure_ascii=False, indent=2))
@@ -306,3 +371,10 @@ jobs:
             build/pl-name-history-buffer-216-300.tsv
             build/pl-first-name-inflections.tsv
             build/pl-first-name-inflections-report.json
+            build/teryt/SIMC_Urzedowy_2026-09-24.zip
+            build/teryt/SIMC_Urzedowy_2026-09-24.sha256
+            build/teryt/source-ref.json
+            build/pl-city-source.tsv
+            build/pl-city-source-report.json
+            build/pl-city-inflections.tsv
+            build/pl-city-inflections-report.json
