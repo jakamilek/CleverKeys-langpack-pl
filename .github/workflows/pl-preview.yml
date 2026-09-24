@@ -134,6 +134,17 @@ jobs:
 
           report = json.loads(Path("build/pl-preview-report.json").read_text(encoding="utf-8"))
           expected = report["kept"]
+
+          # Every retained surface must pass the capitalization gate before dictionary
+          # generation. The gate distinguishes ordinary lowercase vocabulary from
+          # explicitly audited proper-name/city surfaces.
+          capitalization = report["capitalization_audit"]
+          assert capitalization["checked"] == expected
+          assert capitalization["violations"] == []
+          assert (
+              capitalization["lowercase_surfaces"] + capitalization["capitalized_surfaces"]
+              == expected
+          )
           reviewed = {
               word
               for forms in report["reviewed_morphology"]["families"].values()
