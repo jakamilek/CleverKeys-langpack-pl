@@ -8,3 +8,6 @@ morfeusz2==1.99.15
 
 # Pinned HTTP client used only by the official GUS TERYT retrieval script.
 requests==2.34.2
+
+# SGJP data-only fallback for explicit selected first-name and city inflection.
+polish-inflection==0.7.3
