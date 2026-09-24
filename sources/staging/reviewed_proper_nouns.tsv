@@ -34,6 +34,8 @@ name-marzena	Marzena	Observed missing proper-name forms + PESEL name statistics	
 name-januszek	Januszek	Observed missing proper-name forms	Observed in Polish device testing; diminutive/proper-name surface.
 name-aska	Aśka	Observed missing proper-name forms	Observed in Polish device testing; colloquial diminutive used as a proper name.
 
+name-zoska	Zośka;Zośki;Zośce;Zośkę;Zośką;Zośko	SJP entry „Zośka”; declension and etymology	Diminutive of Zofia; canonical proper-name capitalization and singular case forms reviewed from the cited SJP entry.
+
 name-anna	Anna	PESEL name statistics + current Polish name usage	Common Polish female given-name anchor.
 name-katarzyna	Katarzyna	PESEL name statistics	Common Polish female given-name anchor.
 name-maria	Maria	PESEL name statistics + H1 2026 second-name statistics	Common Polish female given-name anchor.
