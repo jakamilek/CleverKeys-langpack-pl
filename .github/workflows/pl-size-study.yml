@@ -1,6 +1,7 @@
-# Study workflow intentionally rerun on source/workflow changes for reproducible 50k/75k/100k comparison.
-# The candidate depth is deliberately >100k because the current evidence filters
-# leave only 78,530 eligible candidates inside the first 100k wordfreq stream.
+# Study workflow intentionally rerun on source/workflow changes for reproducible
+# 50k/100k/125k/150k comparison.
+# The candidate depth is deliberately 300k so the 150k target is not constrained
+# by the raw wordfreq window after evidence filtering and category augmentation.
 name: Polish dictionary size study
 
 on:
@@ -98,12 +99,12 @@ jobs:
           git -C build/CleverKeys-runtime checkout --detach 263bd0abc03dec420f60fa073a9d2c5e25a176b5
           test "$(git -C build/CleverKeys-runtime rev-parse HEAD)" = "263bd0abc03dec420f60fa073a9d2c5e25a176b5"
 
-      - name: Build 50k, 75k and 100k variants from a common 200k candidate window
+      - name: Build 50k, 100k, 125k and 150k variants from a common 300k candidate window
         run: |
           set -euo pipefail
           python3 build/CleverKeys-runtime/scripts/generate_unigrams.py             --lang pl             --output build/unigrams.txt             --top-n 5000
 
-          for limit in 50000 75000 100000; do
+          for limit in 50000 100000 125000 150000; do
             mkdir -p "build/study/$limit"
             python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --morphology sources/staging/reviewed_morphology.tsv               --proper-nouns sources/staging/reviewed_proper_nouns.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
@@ -120,7 +121,7 @@ jobs:
           from pathlib import Path
 
           root = Path("build/study")
-          sizes = [50000, 75000, 100000]
+          sizes = [50000, 100000, 125000, 150000]
           words = {}
           reports = {}
 
@@ -252,12 +253,14 @@ jobs:
           assert all(not hits for hits in regression_hits.values()), regression_hits
 
           result = {
-              "candidate_window": 200000,
+              "candidate_window": 300000,
               "variants": {},
               "comparisons": {
-                  "added_75k_vs_50k": sorted(words[75000] - words[50000]),
-                  "added_100k_vs_75k": sorted(words[100000] - words[75000]),
                   "added_100k_vs_50k": sorted(words[100000] - words[50000]),
+                  "added_125k_vs_100k": sorted(words[125000] - words[100000]),
+                  "added_150k_vs_125k": sorted(words[150000] - words[125000]),
+                  "added_150k_vs_100k": sorted(words[150000] - words[100000]),
+                  "added_150k_vs_50k": sorted(words[150000] - words[50000]),
               },
           }
 
@@ -278,16 +281,22 @@ jobs:
               }
 
           result["marginal_gain"] = {
-              "50_to_75": {
-                  "new_words": len(words[75000] - words[50000]),
-                  "new_words_from_50k_to_75k_pct": round(
-                      100 * len(words[75000] - words[50000]) / 50000, 2
+              "50_to_100": {
+                  "new_words": len(words[100000] - words[50000]),
+                  "new_words_from_50k_to_100k_pct": round(
+                      100 * len(words[100000] - words[50000]) / 50000, 2
                   ),
               },
-              "75_to_100": {
-                  "new_words": len(words[100000] - words[75000]),
-                  "new_words_from_75k_to_100k_pct": round(
-                      100 * len(words[100000] - words[75000]) / 75000, 2
+              "100_to_125": {
+                  "new_words": len(words[125000] - words[100000]),
+                  "new_words_from_100k_to_125k_pct": round(
+                      100 * len(words[125000] - words[100000]) / 100000, 2
+                  ),
+              },
+              "125_to_150": {
+                  "new_words": len(words[150000] - words[125000]),
+                  "new_words_from_125k_to_150k_pct": round(
+                      100 * len(words[150000] - words[125000]) / 125000, 2
                   ),
               },
           }
