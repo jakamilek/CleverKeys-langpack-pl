@@ -314,6 +314,11 @@ jobs:
           )
           for expected_city_form in ("Gdynia", "Gdyni", "Gdynię", "Gdynią"):
               assert expected_city_form in ckdt_raw, expected_city_form
+          for expected_city_form in (
+              "Wrocław", "Wrocławia", "Wrocławiowi", "Wrocławiem", "Wrocławiu",
+              "Toruń", "Torunia", "Toruniowi", "Toruniem", "Toruniu",
+          ):
+              assert expected_city_form in ckdt_raw, expected_city_form
 
           missing_proper_nouns = sorted(
               {word.lower() for word in reviewed_proper_nouns} - ckdt_words
