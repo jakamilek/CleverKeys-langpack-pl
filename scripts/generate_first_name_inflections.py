@@ -96,8 +96,6 @@ def main() -> int:
         MIEJSCOWNIK,
         WOŁACZ,
         POJEDYNCZA,
-        MĘSKI,
-        ŻEŃSKI,
         odmien_warianty,
         podaj,
     )
@@ -124,8 +122,6 @@ def main() -> int:
         "loc": MIEJSCOWNIK,
         "voc": WOŁACZ,
     }
-    gender_constants = {"F": ŻEŃSKI, "M": MĘSKI}
-
     for item in active_names:
         name = item["name"]
         lower = name.lower()
@@ -157,8 +153,6 @@ def main() -> int:
         # finite set of SGJP form records and also supports reverse validation.
         # We only accept a generated form when the reverse analysis says that it
         # belongs to this exact lemma, singular number and requested case.
-        gender = item["gender"]
-        gender_const = gender_constants.get(gender)
         for case_tag, case_const in case_constants.items():
             if case_tag == "nom":
                 continue
@@ -178,11 +172,6 @@ def main() -> int:
                         str(analysis.lemat).lower() == lower
                         and str(analysis.przypadek) == case_tag
                         and str(analysis.liczba) == "sg"
-                        and (
-                            gender_const is None
-                            or str(analysis.rodzaj) == str(gender_const)
-                            or str(analysis.rodzaj) in {"m", "f"}
-                        )
                     ):
                         valid = True
                         break
