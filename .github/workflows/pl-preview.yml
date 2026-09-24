@@ -13,6 +13,7 @@ on:
       - "sources/staging/historical_name_candidates.tsv"
       - "sources/staging/first_name_surface_policy.tsv"
       - "scripts/audit_name_history.py"
+      - "scripts/generate_first_name_inflections.py"
       - "docs/PL_NAME_HISTORY_SOURCE_POLICY_2026-09-23.md"
       - ".github/workflows/pl-preview.yml"
       - "docs/PL_LANGUAGE_DATA_PLAN.md"
@@ -62,9 +63,18 @@ jobs:
         run: |
           python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --surface-policy sources/staging/first_name_surface_policy.tsv
 
+      - name: Generate selected first-name inflections
+        run: |
+          python3 scripts/generate_first_name_inflections.py \\
+            --history-report build/pl-name-history-report.json \\
+            --historical-first-names sources/staging/historical_name_candidates.tsv \\
+            --surface-policy sources/staging/first_name_surface_policy.tsv \\
+            --out-tsv build/pl-first-name-inflections.tsv \\
+            --out-report build/pl-first-name-inflections-report.json
+
       - name: Preview Polish word list
         run: |
-          python3 scripts/build_pl_preview.py             --top 200000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 200000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -208,6 +218,38 @@ jobs:
           missing_first_names = sorted(set(expected_surfaces) - ckdt_raw)
           assert not missing_first_names, "selected first names missing from CKDT: " + ", ".join(missing_first_names)
 
+          # First-name inflection gate: every generated singular surface for the
+          # selected, non-lowercase/non-excluded names must survive into CKDT exactly.
+          inflection_rows = []
+          with Path("build/pl-first-name-inflections.tsv").open(encoding="utf-8", newline="") as handle:
+              inflection_rows = list(csv.DictReader(handle, delimiter="\\t"))
+          policy_map = {
+              row["name"].strip().lower(): row["policy"].strip()
+              for row in csv.DictReader(
+                  Path("sources/staging/first_name_surface_policy.tsv").open(
+                      encoding="utf-8", newline=""
+                  ),
+                  delimiter="\\t",
+              )
+          }
+          expected_inflection_surfaces = {
+              row["form"]
+              for row in inflection_rows
+              if policy_map.get(row["name"].strip().lower(), "capitalized_name")
+              not in {"lowercase_common_noun", "exclude"}
+          }
+          missing_inflections = sorted(expected_inflection_surfaces - ckdt_raw)
+          assert not missing_inflections, (
+              "selected first-name inflection forms missing from CKDT: "
+              + ", ".join(missing_inflections)
+          )
+          assert "Jakub" in expected_inflection_surfaces
+          assert "Jakuba" in expected_inflection_surfaces
+          assert "Jakubowi" in expected_inflection_surfaces
+          assert "Jakubem" in expected_inflection_surfaces
+          assert "Jakubie" in expected_inflection_surfaces
+          assert {"Jakub", "Jakuba", "Jakubowi", "Jakubem", "Jakubie"} <= ckdt_raw
+
           missing_proper_nouns = sorted(
               {word.lower() for word in reviewed_proper_nouns} - ckdt_words
           )
@@ -237,6 +279,8 @@ jobs:
               "reviewed_morphology_present_in_ckdt": len(reviewed - set(missing_reviewed)),
               "reviewed_proper_noun_forms": len(reviewed_proper_nouns),
               "reviewed_proper_nouns_present_in_ckdt": len(reviewed_proper_nouns - set(missing_proper_nouns)),
+              "first_name_inflection_forms": len(expected_inflection_surfaces),
+              "first_name_inflection_forms_present_in_ckdt": len(expected_inflection_surfaces - set(missing_inflections)),
               "regression_hits": len(found),
               "promotion": False,
           }, ensure_ascii=False, indent=2))
@@ -260,3 +304,5 @@ jobs:
             build/pl-name-history.tsv
             build/pl-name-history-core-215-each-gender.txt
             build/pl-name-history-buffer-216-300.tsv
+            build/pl-first-name-inflections.tsv
+            build/pl-first-name-inflections-report.json
