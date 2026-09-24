@@ -57,6 +57,28 @@ def main() -> int:
     selected |= priorities
 
     import morfeusz2
+    from polish_inflection import (
+        MIANOWNIK,
+        DOPEŁNIACZ,
+        CELOWNIK,
+        BIERNIK,
+        NARZĘDNIK,
+        MIEJSCOWNIK,
+        WOŁACZ,
+        POJEDYNCZA,
+        odmien_warianty,
+        podaj,
+    )
+
+    case_constants = {
+        "nom": MIANOWNIK,
+        "gen": DOPEŁNIACZ,
+        "dat": CELOWNIK,
+        "acc": BIERNIK,
+        "inst": NARZĘDNIK,
+        "loc": MIEJSCOWNIK,
+        "voc": WOŁACZ,
+    }
 
     morfeusz = morfeusz2.Morfeusz(
         expand_tags=True,
@@ -75,8 +97,7 @@ def main() -> int:
         name = meta["name"]
         generated: set[tuple[str, str]] = set()
 
-        # Proper-name lemmas are conditionally case-sensitive in Morfeusz.
-        # Prefer the official TERYT surface and retry lowercase as a fallback.
+        # Primary oracle: Morfeusz 2 / SGJP.
         for lemma_query in (name, lower_name):
             for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
                 if str(lemma).lower() != lower_name:
@@ -89,8 +110,29 @@ def main() -> int:
                         continue
                     surface = surface[:1].upper() + surface[1:]
                     generated.add((case_tag, surface))
-            if generated:
-                break
+
+        # Secondary oracle: data-only SGJP index. Reverse-validation prevents a
+        # coincidental form from another lemma from entering the city layer.
+        for case_tag, case_const in case_constants.items():
+            if case_tag == "nom":
+                continue
+            try:
+                variants = list(odmien_warianty(lower_name, case_const, POJEDYNCZA))
+            except Exception:
+                variants = []
+            for variant in variants:
+                form = str(variant).strip()
+                if not form:
+                    continue
+                analyses = podaj(form, liczba=POJEDYNCZA)
+                valid = any(
+                    str(analysis.lemat).lower() == lower_name
+                    and str(analysis.przypadek) == case_tag
+                    and str(analysis.liczba) == "sg"
+                    for analysis in analyses
+                )
+                if valid:
+                    generated.add((case_tag, form[:1].upper() + form[1:]))
 
         present = {case for case, _ in generated}
         if "nom" not in present:
