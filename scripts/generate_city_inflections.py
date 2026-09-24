@@ -97,6 +97,10 @@ def main() -> int:
         name = meta["name"]
         generated: set[tuple[str, str]] = set()
 
+        # TERYT/SIMC is the authoritative source for the nominative city surface.
+        # Morfeusz/SGJP is used only to add attested non-nominative singular forms.
+        generated.add(("nom", name))
+
         # Primary oracle: Morfeusz 2 / SGJP.
         for lemma_query in (name, lower_name):
             for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
@@ -134,11 +138,6 @@ def main() -> int:
                 if valid:
                     generated.add((case_tag, form[:1].upper() + form[1:]))
 
-        present = {case for case, _ in generated}
-        if "nom" not in present:
-            missing_nom.append(name)
-            continue
-
         for case_tag, surface in sorted(generated, key=lambda item: (CASES.index(item[0]), item[1])):
             out.append({
                 "name": name,
@@ -150,11 +149,9 @@ def main() -> int:
                 "morfeusz_version": str(morfeusz2.__version__),
             })
 
-    if missing_nom:
-        raise SystemExit(
-            "Selected cities missing singular nominative in Morfeusz/SGJP: "
-            + ", ".join(missing_nom)
-        )
+    # Nominative forms come directly from TERYT; therefore a city is valid even when
+    # Morfeusz does not classify its proper-name lemma. Non-nominative forms remain
+    # oracle-backed and are simply absent when SGJP has no analyzed form.
 
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
