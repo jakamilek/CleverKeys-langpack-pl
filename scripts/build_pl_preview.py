@@ -307,6 +307,24 @@ def validate_capitalization(
     raise SystemExit(f"Unknown capitalization policy {expected!r} for {context}")
 
 
+def load_lowercase_inflection_surfaces(
+    path: Path,
+    lowercase_names: set[str],
+) -> set[str]:
+    """Return generated inflection surfaces belonging to lowercase name homonyms."""
+    if not path.exists() or not lowercase_names:
+        return set()
+    forms: set[str] = set()
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        for row in reader:
+            name = row.get("name", "").strip().lower()
+            form = row.get("form", "").strip()
+            if name in lowercase_names and form:
+                forms.add(form.lower())
+    return forms
+
+
 def load_first_name_inflections(
     path: Path,
 ) -> tuple[set[str], dict[str, str]]:
@@ -505,9 +523,14 @@ def main() -> int:
 
     first_name_inflection_forms: set[str] = set()
     first_name_inflection_surface_map: dict[str, str] = {}
+    lowercase_first_name_inflection_surfaces: set[str] = set()
     if args.first_name_inflections:
         first_name_inflection_forms, first_name_inflection_surface_map = load_first_name_inflections(
             args.first_name_inflections
+        )
+        lowercase_first_name_inflection_surfaces = load_lowercase_inflection_surfaces(
+            args.first_name_inflections,
+            lowercase_first_name_exceptions,
         )
 
     city_forms: set[str] = set()
@@ -853,6 +876,7 @@ def main() -> int:
         "checked": 0,
         "lowercase_surfaces": 0,
         "capitalized_surfaces": 0,
+        "lowercase_first_name_inflection_surfaces": len(lowercase_first_name_inflection_surfaces),
         "violations": [],
     }
     for word, reason in keep.items():
@@ -861,6 +885,9 @@ def main() -> int:
         context = f"{reason}:{word}"
 
         if word in lowercase_first_name_exceptions:
+            expected_surface = word
+            capitalization_policy = "lowercase"
+        elif word in lowercase_first_name_inflection_surfaces:
             expected_surface = word
             capitalization_policy = "lowercase"
         elif word in city_surface_map:
