@@ -75,17 +75,22 @@ def main() -> int:
         name = meta["name"]
         generated: set[tuple[str, str]] = set()
 
-        for orth, lemma, tag, _names, _labels in morfeusz.generate(lower_name):
-            if str(lemma).lower() != lower_name:
-                continue
-            if not tag.startswith("subst:sg:"):
-                continue
-            for case_tag in sorted(case_from_tag(tag)):
-                surface = str(orth).strip()
-                if not surface:
+        # Proper-name lemmas are conditionally case-sensitive in Morfeusz.
+        # Prefer the official TERYT surface and retry lowercase as a fallback.
+        for lemma_query in (name, lower_name):
+            for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
+                if str(lemma).lower() != lower_name:
                     continue
-                surface = surface[:1].upper() + surface[1:]
-                generated.add((case_tag, surface))
+                if not tag.startswith("subst:sg:"):
+                    continue
+                for case_tag in sorted(case_from_tag(tag)):
+                    surface = str(orth).strip()
+                    if not surface:
+                        continue
+                    surface = surface[:1].upper() + surface[1:]
+                    generated.add((case_tag, surface))
+            if generated:
+                break
 
         present = {case for case, _ in generated}
         if "nom" not in present:
