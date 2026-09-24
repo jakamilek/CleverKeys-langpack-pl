@@ -150,14 +150,14 @@ jobs:
               row["name"]
               for row in __import__("csv").DictReader(
                   (Path("build/pl-city-source.tsv").open(encoding="utf-8", newline="")),
-                  delimiter="\\t",
+                  delimiter="\t",
               )
           }
           city_inflections = {
               row["form"]
               for row in __import__("csv").DictReader(
                   (Path("build/pl-city-inflections.tsv").open(encoding="utf-8", newline="")),
-                  delimiter="\\t",
+                  delimiter="\t",
               )
           }
 
