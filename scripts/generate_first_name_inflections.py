@@ -87,6 +87,20 @@ def main() -> int:
     args = ap.parse_args()
 
     import morfeusz2
+    from polish_inflection import (
+        MIANOWNIK,
+        DOPEŁNIACZ,
+        CELOWNIK,
+        BIERNIK,
+        NARZĘDNIK,
+        MIEJSCOWNIK,
+        WOŁACZ,
+        POJEDYNCZA,
+        MĘSKI,
+        ŻEŃSKI,
+        odmien_warianty,
+        podaj,
+    )
 
     active_names, policy = load_selected_names(
         args.history_report, args.historical_first_names, args.surface_policy
@@ -101,13 +115,28 @@ def main() -> int:
     missing: list[dict[str, str]] = []
     by_name: dict[str, set[str]] = {}
 
+    case_constants = {
+        "nom": MIANOWNIK,
+        "gen": DOPEŁNIACZ,
+        "dat": CELOWNIK,
+        "acc": BIERNIK,
+        "inst": NARZĘDNIK,
+        "loc": MIEJSCOWNIK,
+        "voc": WOŁACZ,
+    }
+    gender_constants = {"F": ŻEŃSKI, "M": MĘSKI}
+
     for item in active_names:
         name = item["name"]
         lower = name.lower()
         generated: set[tuple[str, str]] = set()
 
-        # Morfeusz conditionally respects case for proper-name lemmas. Prefer the
-        # canonical selected surface, then retry lowercase as a fallback.
+        # The selected-name source is authoritative for the nominative surface.
+        # Morphology oracles are responsible for the additional cases.
+        canonical_nom = lower if policy.get(lower) == "lowercase_common_noun" else name
+        generated.add(("nom", canonical_nom))
+
+        # Primary oracle: Morfeusz 2 / SGJP.
         for lemma_query in (name, lower):
             for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
                 if str(lemma).lower() != lower:
@@ -123,21 +152,48 @@ def main() -> int:
                     else:
                         surface = surface[:1].upper() + surface[1:]
                     generated.add((case_tag, surface))
-            if generated:
-                break
+
+        # Secondary oracle: polish-inflection's pinned SGJP index. It contains the
+        # finite set of SGJP form records and also supports reverse validation.
+        # We only accept a generated form when the reverse analysis says that it
+        # belongs to this exact lemma, singular number and requested case.
+        gender = item["gender"]
+        gender_const = gender_constants.get(gender)
+        for case_tag, case_const in case_constants.items():
+            if case_tag == "nom":
+                continue
+            variants = []
+            try:
+                variants = list(odmien_warianty(lower, case_const, POJEDYNCZA))
+            except Exception:
+                variants = []
+            for variant in variants:
+                form = str(variant).strip()
+                if not form:
+                    continue
+                analyses = podaj(form, liczba=POJEDYNCZA)
+                valid = False
+                for analysis in analyses:
+                    if (
+                        str(analysis.lemat).lower() == lower
+                        and str(analysis.przypadek) == case_tag
+                        and str(analysis.liczba) == "sg"
+                        and (
+                            gender_const is None
+                            or str(analysis.rodzaj) == str(gender_const)
+                            or str(analysis.rodzaj) in {"m", "f"}
+                        )
+                    ):
+                        valid = True
+                        break
+                if not valid:
+                    continue
+                surface = form.lower() if policy.get(lower) == "lowercase_common_noun" else form[:1].upper() + form[1:]
+                generated.add((case_tag, surface))
 
         by_name[name] = {surface for _case, surface in generated}
 
-        present_cases = {case for case, _surface in generated}
-        if "nom" not in present_cases:
-            missing.append({
-                "name": name,
-                "gender": item["gender"],
-                "reason": "no-singular-nominative-generated",
-            })
-            continue
-
-        for case_tag, surface in sorted(generated):
+        for case_tag, surface in sorted(generated, key=lambda pair: (CASES.index(pair[0]), pair[1])):
             rows.append({
                 "name": name,
                 "gender": item["gender"],
@@ -198,6 +254,9 @@ def main() -> int:
         "names_with_nom_only": sorted(
             name for name, cases in coverage.items() if cases == ["nom"]
         ),
+        "names_with_non_nominative_count": sum(
+            1 for cases in coverage.values() if len(cases) > 1
+        ),
         "coverage_by_name": coverage,
         "surface_policy": {
             "lowercase_common_noun_names": sorted(
@@ -222,6 +281,7 @@ def main() -> int:
         "selected_total": report["selected_total"],
         "inflection_record_count": report["inflection_record_count"],
         "case_counts": report["case_counts"],
+        "names_with_non_nominative_count": report["names_with_non_nominative_count"],
         "names_with_nom_only": len(report["names_with_nom_only"]),
     }, ensure_ascii=False, indent=2))
     return 0
