@@ -288,14 +288,17 @@ def validate_capitalization(
     """Enforce the canonical capitalization policy before a surface enters the dictionary.
 
     expected="lowercase" is the default lexical-vocabulary policy.
+    expected="adjective" is the explicit lowercase policy for adjectives derived from
+    proper names or geographic/administrative names (e.g. "warszawski").
     expected="capitalized" is reserved for source-backed proper-name/city surfaces.
     The exact expected surface is supplied by the audited source mapping, so this is
     deliberately a gate rather than a heuristic capitalization guess.
     """
-    if expected == "lowercase":
+    if expected in {"lowercase", "adjective"}:
         if surface != surface.lower():
+            label = "adjective" if expected == "adjective" else "lowercase"
             raise SystemExit(
-                f"Capitalization gate rejected {context}: expected lowercase surface, got {surface!r}"
+                f"Capitalization gate rejected {context}: expected {label} surface, got {surface!r}"
             )
         return
     if expected == "capitalized":
@@ -875,6 +878,7 @@ def main() -> int:
     capitalization_audit = {
         "checked": 0,
         "lowercase_surfaces": 0,
+        "adjective_surfaces": 0,
         "capitalized_surfaces": 0,
         "lowercase_first_name_inflection_surfaces": len(lowercase_first_name_inflection_surfaces),
         "violations": [],
@@ -883,6 +887,11 @@ def main() -> int:
         expected_surface = word
         capitalization_policy = "lowercase"
         context = f"{reason}:{word}"
+
+        # Derived adjectives are ordinary lexical surfaces. The current pipeline does not
+        # generate them in the proper-name/city inflection maps, so they stay lowercase.
+        # Future category generators should tag their adjective outputs as "adjective"
+        # rather than routing them through proper-name capitalization.
 
         if word in lowercase_first_name_exceptions:
             expected_surface = word
@@ -914,6 +923,8 @@ def main() -> int:
             )
             if capitalization_policy == "lowercase":
                 capitalization_audit["lowercase_surfaces"] += 1
+            elif capitalization_policy == "adjective":
+                capitalization_audit["adjective_surfaces"] += 1
             else:
                 capitalization_audit["capitalized_surfaces"] += 1
         except SystemExit as exc:
