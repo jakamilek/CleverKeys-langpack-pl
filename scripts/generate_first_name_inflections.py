@@ -106,23 +106,25 @@ def main() -> int:
         lower = name.lower()
         generated: set[tuple[str, str]] = set()
 
-        for orth, lemma, tag, _names, _labels in morfeusz.generate(lower):
-            if str(lemma).lower() != lower:
-                continue
-            if not tag.startswith("subst:sg:"):
-                continue
-            for case_tag in sorted(normalise_case(tag)):
-                surface = str(orth).strip()
-                if not surface:
+        # Morfeusz conditionally respects case for proper-name lemmas. Prefer the
+        # canonical selected surface, then retry lowercase as a fallback.
+        for lemma_query in (name, lower):
+            for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
+                if str(lemma).lower() != lower:
                     continue
-                # Preserve project surface policy:
-                # lowercase exceptions remain lowercase; all other selected
-                # first-name forms use canonical initial capitalization.
-                if policy.get(lower) == "lowercase_common_noun":
-                    surface = surface.lower()
-                else:
-                    surface = surface[:1].upper() + surface[1:]
-                generated.add((case_tag, surface))
+                if not tag.startswith("subst:sg:"):
+                    continue
+                for case_tag in sorted(normalise_case(tag)):
+                    surface = str(orth).strip()
+                    if not surface:
+                        continue
+                    if policy.get(lower) == "lowercase_common_noun":
+                        surface = surface.lower()
+                    else:
+                        surface = surface[:1].upper() + surface[1:]
+                    generated.add((case_tag, surface))
+            if generated:
+                break
 
         by_name[name] = {surface for _case, surface in generated}
 
