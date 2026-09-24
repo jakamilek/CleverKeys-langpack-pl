@@ -236,6 +236,47 @@ def load_reviewed_morphology(
     return forms, families
 
 
+def load_first_name_inflections(
+    path: Path,
+) -> tuple[set[str], dict[str, str]]:
+    forms: set[str] = set()
+    surface_map: dict[str, str] = {}
+    if not path.exists():
+        return forms, surface_map
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\\t")
+        expected_fields = {"name", "gender", "layer", "case", "form", "source", "morfeusz_version"}
+        if set(reader.fieldnames or ()) != expected_fields:
+            raise SystemExit(
+                f"Malformed first-name inflection header {path}: expected {sorted(expected_fields)}"
+            )
+        for line_no, row in enumerate(reader, 2):
+            form = row["form"].strip()
+            case_tag = row["case"].strip()
+            if case_tag not in {"nom", "gen", "dat", "acc", "inst", "loc", "voc"} or not form:
+                raise SystemExit(f"Malformed first-name inflection row {path}:{line_no}")
+            if not is_candidate(form.lower()):
+                raise SystemExit(f"Invalid first-name inflection form {path}:{line_no}: {form!r}")
+            lower = form.lower()
+            prior = surface_map.get(lower)
+            if prior is not None and prior != form:
+                # One CKDT lowercase key can have only one canonical surface. Prefer the
+                # explicitly-capitalized proper-name surface when the same lowercase key
+                # is encountered through multiple name paradigms.
+                if prior[:1].isupper() and form[:1].islower():
+                    form = prior
+                elif form[:1].isupper() and prior[:1].islower():
+                    surface_map[lower] = form
+                elif prior != form:
+                    raise SystemExit(
+                        f"Conflicting first-name inflection surface {path}:{line_no}: {prior!r} vs {form!r}"
+                    )
+            else:
+                surface_map[lower] = form
+            forms.add(lower)
+    return forms, surface_map
+
+
 def load_reviewed_proper_nouns(
     path: Path,
 ) -> tuple[set[str], dict[str, list[str]], dict[str, str]]:
@@ -320,6 +361,12 @@ def main() -> int:
         default=None,
         help="Explicit user-reviewed surface policy for first names.",
     )
+    ap.add_argument(
+        "--first-name-inflections",
+        type=Path,
+        default=None,
+        help="Generated singular inflections for the already-selected first names.",
+    )
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
@@ -367,6 +414,13 @@ def main() -> int:
         name for name, policy in first_name_surface_policy.items()
         if policy == "exclude"
     }
+
+    first_name_inflection_forms: set[str] = set()
+    first_name_inflection_surface_map: dict[str, str] = {}
+    if args.first_name_inflections:
+        first_name_inflection_forms, first_name_inflection_surface_map = load_first_name_inflections(
+            args.first_name_inflections
+        )
 
     first_name_case_map: dict[str, str] = {}
     reviewed_first_names: set[str] = set()
@@ -433,6 +487,14 @@ def main() -> int:
                 seen.add(lower)
 
     for word in sorted(lowercase_first_name_exceptions):
+        if word not in seen:
+            ranked.append(word)
+            seen.add(word)
+
+    # Generated name inflections are explicit candidates. Lowercase homonym exceptions
+    # are intentionally excluded from this layer because they are ordinary-word surfaces
+    # and must remain governed by the normal Polish vocabulary/morphology pipeline.
+    for word in sorted(first_name_inflection_forms - lowercase_first_name_exceptions):
         if word not in seen:
             ranked.append(word)
             seen.add(word)
@@ -535,6 +597,9 @@ def main() -> int:
         if word in reviewed_morphology:
             keep[word] = "reviewed-morphology"
             continue
+        if word in first_name_inflection_forms and word not in lowercase_first_name_exceptions:
+            keep[word] = "reviewed-first-name-inflection"
+            continue
         if word in reviewed_proper_nouns_lower:
             keep[word] = "reviewed-proper-noun"
             continue
@@ -591,7 +656,7 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower or w in reviewed_first_names
+            if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower or w in reviewed_first_names or w in first_name_inflection_forms
         }
         rest = sorted(
             (w for w in keep if w not in protected),
@@ -615,6 +680,8 @@ def main() -> int:
     for word, reason in keep.items():
         if word in lowercase_first_name_exceptions:
             surface = word
+        elif word in first_name_inflection_surface_map:
+            surface = first_name_inflection_surface_map[word]
         else:
             surface = proper_case_map.get(word, first_name_case_map.get(word, word))
         surface_keep[surface] = reason
@@ -656,6 +723,7 @@ def main() -> int:
             "reviewed_proper_noun": sum(1 for r in keep.values() if r == "reviewed-proper-noun"),
             "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
             "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
+            "reviewed_first_name_inflection": sum(1 for r in keep.values() if r == "reviewed-first-name-inflection"),
         },
         "reviewed_first_names": {
             "enabled": args.first_name_history is not None,
@@ -669,6 +737,7 @@ def main() -> int:
             "historical_count": len(historical_first_names),
             "historical_selection": historical_first_name_meta,
             "missing_from_keep": sorted(reviewed_first_names - set(keep)),
+            "inflection_forms": len(first_name_inflection_forms),
         },
         "reviewed_first_name_evidence_gates": {
             "requires_positive_source": True,
