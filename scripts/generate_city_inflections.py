@@ -23,6 +23,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--cities", type=Path, required=True)
     ap.add_argument("--priorities", type=Path, required=True)
     ap.add_argument("--top-n", type=int, default=300)
+    ap.add_argument("--overrides", type=Path, default=None)
     ap.add_argument("--out-tsv", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     return ap.parse_args()
@@ -79,6 +80,29 @@ def main() -> int:
         "loc": MIEJSCOWNIK,
         "voc": WOŁACZ,
     }
+
+    overrides: dict[tuple[str, str], dict[str, str]] = {}
+    if args.overrides:
+        override_rows = load_tsv(args.overrides)
+        required = {"city", "case", "form", "source", "basis", "note"}
+        if not override_rows or set(override_rows[0]) != required:
+            raise SystemExit(f"Malformed city inflection override header: {args.overrides}")
+        for line_no, row in enumerate(override_rows, 2):
+            city = row["city"].strip().lower()
+            case_tag = row["case"].strip()
+            form = row["form"].strip()
+            if case_tag not in CASES or not city or not form or not row["source"].strip() or not row["basis"].strip() or not row["note"].strip():
+                raise SystemExit(f"Malformed city inflection override row {args.overrides}:{line_no}")
+            if city not in city_meta:
+                raise SystemExit(f"City override not present in TERYT source: {row["city"]}")
+            key = (city, case_tag)
+            prior = overrides.get(key)
+            if prior and prior["form"] != form:
+                raise SystemExit(
+                    f"Conflicting city inflection override {args.overrides}:{line_no}: "
+                    f"{prior['form']!r} vs {form!r}"
+                )
+            overrides[key] = dict(row)
 
     morfeusz = morfeusz2.Morfeusz(
         expand_tags=True,
@@ -138,14 +162,22 @@ def main() -> int:
                 if valid:
                     generated.add((case_tag, form[:1].upper() + form[1:]))
 
+        # Reviewed overrides cover attested city forms missing from the proper-name
+        # oracle. They are source-backed and auditable; they never create a new city.
+        for (override_city, case_tag), row in overrides.items():
+            if override_city != lower_name:
+                continue
+            generated.add((case_tag, row["form"].strip()))
+
         for case_tag, surface in sorted(generated, key=lambda item: (CASES.index(item[0]), item[1])):
+            override = overrides.get((lower_name, case_tag))
             out.append({
                 "name": name,
                 "gender": "",
                 "layer": "city",
                 "case": case_tag,
                 "form": surface,
-                "source": "Morfeusz 2 / SGJP generated from GUS TERYT SIMC city lemma",
+                "source": override["source"] if override else "Morfeusz 2 / SGJP generated from GUS TERYT SIMC city lemma",
                 "morfeusz_version": str(morfeusz2.__version__),
             })
 
