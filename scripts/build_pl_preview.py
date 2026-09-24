@@ -244,7 +244,7 @@ def load_city_source(
     if not path.exists():
         return forms, surface_map
     with path.open(encoding="utf-8", newline="") as handle:
-        reader = csv.DictReader(handle, delimiter="\\t")
+        reader = csv.DictReader(handle, delimiter="\t")
         required = {"name", "simc", "rm", "stan_na", "source"}
         if set(reader.fieldnames or ()) != required:
             raise SystemExit(
@@ -277,7 +277,7 @@ def load_first_name_inflections(
     if not path.exists():
         return forms, surface_map
     with path.open(encoding="utf-8", newline="") as handle:
-        reader = csv.DictReader(handle, delimiter="\\t")
+        reader = csv.DictReader(handle, delimiter="\t")
         expected_fields = {"name", "gender", "layer", "case", "form", "source", "morfeusz_version"}
         if set(reader.fieldnames or ()) != expected_fields:
             raise SystemExit(
