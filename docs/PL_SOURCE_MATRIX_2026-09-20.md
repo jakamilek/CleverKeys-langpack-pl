@@ -26,7 +26,7 @@ Use an evidence pipeline:
 | keybr lang-pl/dictionary-pl.csv | secondary frequency/corpus evidence | QUARANTINE ONLY | Useful as independent evidence, but root licence for the dataset was not established in the current audit. Do not promote or redistribute yet. |
 | wooorm/dictionaries pl | Hunspell packaging/source reference | NOT PRIMARY | index.aff exists, but the corresponding index.dic was not usable as a full source in the current audit. Keep only as a provenance/reference lead. |
 | curated project allowlist/blocklist | explicit human review boundary | PROJECT-OWNED | Must be committed with rationale/provenance for additions. |
-| Morfeusz 2 / SGJP | common-noun homonym audit + selected first-name inflection oracle | PRIMARY CURATED ORACLE | Used to audit selected first-name/common-noun collisions and to generate explicit singular forms for the already-selected first names. The full SGJP database is not redistributed; generated forms and version/provenance metadata are retained. The official Morfeusz 2 licensing page states that the inflectional data needed for morphological analysis is under the 2-clause BSD terms. |
+| GUS TERYT / SIMC | official city/locality-name source | PRIMARY GEOGRAPHIC SOURCE | Current official SIMC catalog; city rows are selected with RM=96. One-token names are eligible for the flat CKDT layer. Preserve SIMC ID, catalog state and SHA256 in CI artifacts. |\n| Morfeusz 2 / SGJP | common-noun homonym audit + selected first-name inflection oracle | PRIMARY CURATED ORACLE | Used to audit selected first-name/common-noun collisions and to generate explicit singular forms for the already-selected first names. The full SGJP database is not redistributed; generated forms and version/provenance metadata are retained. The official Morfeusz 2 licensing page states that the inflectional data needed for morphological analysis is under the 2-clause BSD terms. |
 
 ## Proposed build architecture
 
@@ -104,3 +104,7 @@ Work branch:
 - current commit before this document: f132d0515036b88ca35af66893e996559b089f47
 
 These SHAs must be refreshed before promotion or release.
+
+### City coverage
+
+The project uses the official GUS TERYT/SIMC catalog for city names. Every eligible one-token city receives a canonical proper-name surface in the flat CKDT layer. Full singular inflection is limited to the top 300 one-token city names by Polish wordfreq frequency plus reviewed priority cities. Multiword/hyphenated city names are not truncated or altered; they remain candidates for the separate phrase layer.
