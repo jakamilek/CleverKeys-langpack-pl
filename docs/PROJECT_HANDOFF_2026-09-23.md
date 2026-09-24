@@ -7,8 +7,8 @@
 - Work only on branch: `ops/baseline-sync-2026-09-20`
 - Never auto-merge/promote to `main`; `main` must remain untouched.
 - GitHub is the only official baseline. Prior Codex/chat changes are migration material and must be audited before promotion.
-- Current language-project HEAD at time of this handoff: `2f05a6edf3d978cc36f9ba8a07a806213385b115`
-- Latest HEAD message: `Correct first-name surface policy documentation`
+- Current language-project HEAD at time of this update: `4cf8f8a163714c75408ec736a4ef6cdfb5e1133c`
+- Latest HEAD message: `Fix homonym audit count for five-name surface policy`
 
 ## Current product target
 
@@ -40,7 +40,7 @@ The Morfeusz/SGJP audit previously detected 53 selected-name forms that also hav
 
 Final user decision:
 - lowercase ordinary-word surfaces: **Jagoda, Lilia, Malina, Melisa, Róża**
-- the other **49** detected common-noun homonyms remain **capitalized as first names**
+- the other **48** detected common-noun homonyms remain **capitalized as first names**
 - **Oleksandr** is excluded completely
 - **Maila is NOT a special-case first-name exception**; it may remain normally as the inflected/common-word form of `mail`.
 
@@ -128,7 +128,7 @@ Earlier size-study evidence established:
 
 Several runs failed because CI was being rewired while the surface-policy design changed. Examples:
 - stale `Maila` assertion;
-- stale expectation of 48 capitalized homonyms;
+- stale expectation of 49 capitalized homonyms;
 - old `blocked_names` report key;
 - YAML/artifact-path wiring errors;
 - old blanket homonym exclusion checks.
@@ -179,7 +179,7 @@ Wait for the first fully fresh CI cycle after the final surface-policy correctio
 
 The desired final surface semantics are:
 - `jagoda`, `lilia`, `malina`, `melisa`, `róża` → lowercase ordinary words;
-- selected proper names including the 49 retained homonyms → capitalized;
+- selected proper names including the 48 retained detected homonyms → capitalized;
 - `Oleksandr` → absent;
 - `maila` → ordinary vocabulary/morphology path, not a first-name special case.
 
