@@ -735,7 +735,13 @@ def main() -> int:
         for word in list(words):
             if any(ch in DIACRITICS for ch in word):
                 continue
-            if word in positive or word in guards or word in reviewed_morphology:
+            if (
+                word in positive
+                or word in guards
+                or word in reviewed_morphology
+                or word in first_name_inflection_forms
+                or word in city_inflection_forms
+            ):
                 continue
             if word in reviewed_proper_nouns_lower:
                 continue
