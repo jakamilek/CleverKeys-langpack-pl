@@ -219,6 +219,21 @@ jobs:
           for lower in sorted(lowercase_homonyms):
               assert lower in ckdt_words, "lowercase common noun missing from CKDT: " + lower
               assert lower.capitalize() not in ckdt_raw, "lowercase exception was capitalized in CKDT: " + lower
+
+          # Orthographic regression: adjectives derived from geographic/proper names are
+          # ordinary lexical words and must remain lowercase. These examples exercise the
+          # rule without treating adjectives as proper-name surfaces.
+          derived_adjectives = {
+              "warszawski", "warszawska", "warszawskie",
+              "wrocławski", "wrocławska", "wrocławskie",
+              "toruński", "toruńska", "toruńskie",
+              "gdyński", "gdyńska", "gdyńskie",
+          }
+          for adjective in sorted(derived_adjectives):
+              assert adjective == adjective.lower()
+              assert adjective.capitalize() not in ckdt_raw, (
+                  "derived adjective was incorrectly capitalized in CKDT: " + adjective
+              )
           for name in sorted(excluded_names):
               assert name not in ckdt_words, "user-excluded first name still present: " + name
 
