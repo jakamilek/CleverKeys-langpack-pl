@@ -269,6 +269,16 @@ def load_city_source(
     return forms, surface_map
 
 
+def is_inflection_surface(word: str) -> bool:
+    """Validate explicit proper-name/city inflection surfaces.
+
+    The ordinary vocabulary gate is intentionally stricter and Polish-only. Explicitly
+    audited proper names may legitimately use additional basic Latin letters (e.g. Alex),
+    so this layer accepts ASCII A-Z plus Polish diacritics while still requiring one token.
+    """
+    return bool(re.fullmatch(r"^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$", word))
+
+
 def load_first_name_inflections(
     path: Path,
 ) -> tuple[set[str], dict[str, str]]:
@@ -288,7 +298,7 @@ def load_first_name_inflections(
             case_tag = row["case"].strip()
             if case_tag not in {"nom", "gen", "dat", "acc", "inst", "loc", "voc"} or not form:
                 raise SystemExit(f"Malformed first-name inflection row {path}:{line_no}")
-            if not is_candidate(form.lower()):
+            if not is_inflection_surface(form):
                 raise SystemExit(f"Invalid first-name inflection form {path}:{line_no}: {form!r}")
             lower = form.lower()
             prior = surface_map.get(lower)
@@ -438,6 +448,11 @@ def main() -> int:
         else:
             non_polish += 1
 
+    # Snapshot the original wordfreq candidate universe before any explicit first-name,
+    # city, morphology, or proper-noun additions are appended. This is the baseline for the
+    # later capacity-displacement audit.
+    base_candidate_words = set(ranked)
+
     first_name_surface_policy: dict[str, str] = {}
     if args.first_name_surface_policy:
         with args.first_name_surface_policy.open(encoding="utf-8", newline="") as handle:
@@ -570,8 +585,6 @@ def main() -> int:
     # Capture the candidate universe before the explicit first-name/city layers are
     # appended. This lets the final capacity audit identify words displaced specifically
     # by those additions, rather than conflating them with the older morphology/proper-noun layers.
-    base_candidate_words = set(ranked[:args.top])
-
     zipf = {word: float(zipf_frequency(word, "pl")) for word in ranked}
     aosp = load_aosp(args.aosp)
     spell = hunspell_accepts(ranked)
