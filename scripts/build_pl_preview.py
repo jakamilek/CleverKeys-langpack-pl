@@ -236,6 +236,39 @@ def load_reviewed_morphology(
     return forms, families
 
 
+def load_city_source(
+    path: Path,
+) -> tuple[set[str], dict[str, str]]:
+    forms: set[str] = set()
+    surface_map: dict[str, str] = {}
+    if not path.exists():
+        return forms, surface_map
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\\t")
+        required = {"name", "simc", "rm", "stan_na", "source"}
+        if set(reader.fieldnames or ()) != required:
+            raise SystemExit(
+                f"Malformed city source header {path}: expected {sorted(required)}"
+            )
+        for line_no, row in enumerate(reader, 2):
+            name = row["name"].strip()
+            if not name or row["rm"].strip() != "96":
+                raise SystemExit(f"Malformed city source row {path}:{line_no}")
+            if not is_candidate(name.lower()):
+                raise SystemExit(
+                    f"City source contains non-single-token form {path}:{line_no}: {name!r}"
+                )
+            lower = name.lower()
+            forms.add(lower)
+            prior = surface_map.get(lower)
+            if prior is not None and prior != name:
+                raise SystemExit(
+                    f"Conflicting city capitalization {path}:{line_no}: {prior!r} vs {name!r}"
+                )
+            surface_map[lower] = name
+    return forms, surface_map
+
+
 def load_first_name_inflections(
     path: Path,
 ) -> tuple[set[str], dict[str, str]]:
@@ -367,6 +400,18 @@ def main() -> int:
         default=None,
         help="Generated singular inflections for the already-selected first names.",
     )
+    ap.add_argument(
+        "--cities",
+        type=Path,
+        default=None,
+        help="Current official TERYT one-token city source.",
+    )
+    ap.add_argument(
+        "--city-inflections",
+        type=Path,
+        default=None,
+        help="Selected city inflections generated from the current TERYT source.",
+    )
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
@@ -421,6 +466,16 @@ def main() -> int:
         first_name_inflection_forms, first_name_inflection_surface_map = load_first_name_inflections(
             args.first_name_inflections
         )
+
+    city_forms: set[str] = set()
+    city_surface_map: dict[str, str] = {}
+    if args.cities:
+        city_forms, city_surface_map = load_city_source(args.cities)
+
+    city_inflection_forms: set[str] = set()
+    city_inflection_surface_map: dict[str, str] = {}
+    if args.city_inflections:
+        city_inflection_forms, city_inflection_surface_map = load_first_name_inflections(args.city_inflections)
 
     first_name_case_map: dict[str, str] = {}
     reviewed_first_names: set[str] = set()
@@ -487,6 +542,19 @@ def main() -> int:
                 seen.add(lower)
 
     for word in sorted(lowercase_first_name_exceptions):
+        if word not in seen:
+            ranked.append(word)
+            seen.add(word)
+
+    # Official TERYT city names are explicit candidates. Multiword/hyphenated names are
+    # intentionally kept out of this one-token CKDT layer and are tracked by the extractor.
+    for word in sorted(city_forms):
+        if word not in seen:
+            ranked.append(word)
+            seen.add(word)
+
+    # Generated city inflections are explicit candidates for the selected city subset.
+    for word in sorted(city_inflection_forms):
         if word not in seen:
             ranked.append(word)
             seen.add(word)
@@ -600,6 +668,12 @@ def main() -> int:
         if word in first_name_inflection_forms and word not in lowercase_first_name_exceptions:
             keep[word] = "reviewed-first-name-inflection"
             continue
+        if word in city_inflection_forms:
+            keep[word] = "reviewed-city-inflection"
+            continue
+        if word in city_forms:
+            keep[word] = "reviewed-city"
+            continue
         if word in reviewed_proper_nouns_lower:
             keep[word] = "reviewed-proper-noun"
             continue
@@ -656,8 +730,13 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower or w in reviewed_first_names or w in first_name_inflection_forms
+            if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms
         }
+        if len(protected) > args.limit:
+            raise SystemExit(
+                "Protected first-name/city morphology layers exceed dictionary limit: "
+                + f"{len(protected)} > {args.limit}"
+            )
         rest = sorted(
             (w for w in keep if w not in protected),
             key=lambda w: (rank_of[w], -zipf[w], w),
@@ -680,6 +759,10 @@ def main() -> int:
     for word, reason in keep.items():
         if word in lowercase_first_name_exceptions:
             surface = word
+        elif word in city_surface_map:
+            surface = city_surface_map[word]
+        elif word in city_inflection_surface_map:
+            surface = city_inflection_surface_map[word]
         elif word in first_name_inflection_surface_map:
             surface = first_name_inflection_surface_map[word]
         else:
@@ -724,6 +807,8 @@ def main() -> int:
             "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
             "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
             "reviewed_first_name_inflection": sum(1 for r in keep.values() if r == "reviewed-first-name-inflection"),
+            "reviewed_city": sum(1 for r in keep.values() if r == "reviewed-city"),
+            "reviewed_city_inflection": sum(1 for r in keep.values() if r == "reviewed-city-inflection"),
         },
         "reviewed_first_names": {
             "enabled": args.first_name_history is not None,
@@ -738,6 +823,8 @@ def main() -> int:
             "historical_selection": historical_first_name_meta,
             "missing_from_keep": sorted(reviewed_first_names - set(keep)),
             "inflection_forms": len(first_name_inflection_forms),
+            "city_names": len(city_forms),
+            "city_inflection_forms": len(city_inflection_forms),
         },
         "reviewed_first_name_evidence_gates": {
             "requires_positive_source": True,
