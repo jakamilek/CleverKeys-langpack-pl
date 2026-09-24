@@ -250,14 +250,14 @@ jobs:
           # selected, non-lowercase/non-excluded names must survive into CKDT exactly.
           inflection_rows = []
           with Path("build/pl-first-name-inflections.tsv").open(encoding="utf-8", newline="") as handle:
-              inflection_rows = list(csv.DictReader(handle, delimiter="\\t"))
+              inflection_rows = list(csv.DictReader(handle, delimiter="\t"))
           policy_map = {
               row["name"].strip().lower(): row["policy"].strip()
               for row in csv.DictReader(
                   Path("sources/staging/first_name_surface_policy.tsv").open(
                       encoding="utf-8", newline=""
                   ),
-                  delimiter="\\t",
+                  delimiter="\t",
               )
           }
           expected_inflection_surfaces = {
@@ -280,7 +280,7 @@ jobs:
 
           city_rows = []
           with Path("build/pl-city-source.tsv").open(encoding="utf-8", newline="") as handle:
-              city_rows = list(csv.DictReader(handle, delimiter="\\t"))
+              city_rows = list(csv.DictReader(handle, delimiter="\t"))
           city_names = {row["name"] for row in city_rows}
           missing_city_names = sorted(city_names - ckdt_raw)
           assert not missing_city_names, (
@@ -292,14 +292,14 @@ jobs:
 
           city_inflection_rows = []
           with Path("build/pl-city-inflections.tsv").open(encoding="utf-8", newline="") as handle:
-              city_inflection_rows = list(csv.DictReader(handle, delimiter="\\t"))
+              city_inflection_rows = list(csv.DictReader(handle, delimiter="\t"))
           priority_names = {
               row["name"].strip()
               for row in csv.DictReader(
                   Path("sources/staging/reviewed_city_inflection_priority.tsv").open(
                       encoding="utf-8", newline=""
                   ),
-                  delimiter="\\t",
+                  delimiter="\t",
               )
           }
           selected_city_names = {row["name"].strip() for row in city_inflection_rows}
