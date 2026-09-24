@@ -29,3 +29,7 @@ CI records the exact Morfeusz package version used for each generated inflection
 Witold Kieraś, Marcin Woliński. Morfeusz 2 – analizator i generator fleksyjny dla języka polskiego. Język Polski, XCVII(1):75–83, 2017.
 
 This attribution file is documentation for the language-pack project and does not grant permission to redistribute any other SGJP material beyond the licensed material actually used.
+
+## SGJP index fallback
+
+The build also pins `polish-inflection==0.7.3` as a data-only fallback. Its documentation states that its inflection indexes are derived from SGJP, cover 7 cases × 2 numbers and use reverse analysis for validation; the SGJP data is distributed under 2-clause BSD with attribution requirements. The project uses it only at build time to recover explicit forms for already-selected names/cities that Morfeusz synthesis does not expose, and records the package version in the build dependency set. citeturn381260search0turn782674view1
