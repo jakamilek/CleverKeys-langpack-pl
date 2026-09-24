@@ -26,7 +26,7 @@ Use an evidence pipeline:
 | keybr lang-pl/dictionary-pl.csv | secondary frequency/corpus evidence | QUARANTINE ONLY | Useful as independent evidence, but root licence for the dataset was not established in the current audit. Do not promote or redistribute yet. |
 | wooorm/dictionaries pl | Hunspell packaging/source reference | NOT PRIMARY | index.aff exists, but the corresponding index.dic was not usable as a full source in the current audit. Keep only as a provenance/reference lead. |
 | curated project allowlist/blocklist | explicit human review boundary | PROJECT-OWNED | Must be committed with rationale/provenance for additions. |
-| Morfeusz 2 / SGJP | common-noun homonym audit oracle for selected first names | AUDIT ONLY | Used only to classify selected first-name forms as common-noun homonyms; no Morfeusz/SGJP data is copied into the distributable pack. Morfeusz/SGJP is distributed under the stated two-clause BSD terms. |
+| Morfeusz 2 / SGJP | common-noun homonym audit + selected first-name inflection oracle | PRIMARY CURATED ORACLE | Used to audit selected first-name/common-noun collisions and to generate explicit singular forms for the already-selected first names. The full SGJP database is not redistributed; generated forms and version/provenance metadata are retained. The official Morfeusz 2 licensing page states that the inflectional data needed for morphological analysis is under the 2-clause BSD terms. |
 
 ## Proposed build architecture
 
@@ -58,7 +58,7 @@ Reject or review candidates showing:
 
 The runtime does not perform Polish morphology from pl_PL.aff. Valid Polish inflected forms therefore need to survive as explicit entries in the generated CKDT V2 word list.
 
-Hunspell is an oracle/validation source, not a runtime dependency.
+For general vocabulary, Hunspell remains a spelling/inflection validation oracle. For the already-selected first-name set, Morfeusz 2 / SGJP is used as a curated morphology oracle to generate explicit singular substantive forms; those generated forms are audited and then inserted into CKDT as explicit surfaces.
 
 ### E. Separate corpora
 
