@@ -279,6 +279,34 @@ def is_inflection_surface(word: str) -> bool:
     return bool(re.fullmatch(r"^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$", word))
 
 
+def validate_capitalization(
+    surface: str,
+    *,
+    expected: str,
+    context: str,
+) -> None:
+    """Enforce the canonical capitalization policy before a surface enters the dictionary.
+
+    expected="lowercase" is the default lexical-vocabulary policy.
+    expected="capitalized" is reserved for source-backed proper-name/city surfaces.
+    The exact expected surface is supplied by the audited source mapping, so this is
+    deliberately a gate rather than a heuristic capitalization guess.
+    """
+    if expected == "lowercase":
+        if surface != surface.lower():
+            raise SystemExit(
+                f"Capitalization gate rejected {context}: expected lowercase surface, got {surface!r}"
+            )
+        return
+    if expected == "capitalized":
+        if not surface or not surface[0].isupper():
+            raise SystemExit(
+                f"Capitalization gate rejected {context}: expected capitalized surface, got {surface!r}"
+            )
+        return
+    raise SystemExit(f"Unknown capitalization policy {expected!r} for {context}")
+
+
 def load_first_name_inflections(
     path: Path,
 ) -> tuple[set[str], dict[str, str]]:
@@ -817,19 +845,67 @@ def main() -> int:
             "Reviewed proper nouns lost: " + ", ".join(missing_proper_nouns)
         )
 
+    # Final capitalization gate: every retained word is checked immediately before it
+    # becomes a dictionary surface. Ordinary vocabulary stays lowercase; only audited
+    # proper-name/city mappings may intentionally restore an initial capital.
     surface_keep = {}
+    capitalization_audit = {
+        "checked": 0,
+        "lowercase_surfaces": 0,
+        "capitalized_surfaces": 0,
+        "violations": [],
+    }
     for word, reason in keep.items():
+        expected_surface = word
+        capitalization_policy = "lowercase"
+        context = f"{reason}:{word}"
+
         if word in lowercase_first_name_exceptions:
-            surface = word
+            expected_surface = word
+            capitalization_policy = "lowercase"
         elif word in city_surface_map:
-            surface = city_surface_map[word]
+            expected_surface = city_surface_map[word]
+            capitalization_policy = "capitalized"
         elif word in city_inflection_surface_map:
-            surface = city_inflection_surface_map[word]
+            expected_surface = city_inflection_surface_map[word]
+            capitalization_policy = "capitalized"
         elif word in first_name_inflection_surface_map:
-            surface = first_name_inflection_surface_map[word]
-        else:
-            surface = proper_case_map.get(word, first_name_case_map.get(word, word))
-        surface_keep[surface] = reason
+            expected_surface = first_name_inflection_surface_map[word]
+            capitalization_policy = "capitalized"
+        elif word in proper_case_map:
+            expected_surface = proper_case_map[word]
+            capitalization_policy = "capitalized"
+        elif word in first_name_case_map:
+            expected_surface = first_name_case_map[word]
+            capitalization_policy = "capitalized"
+
+        try:
+            validate_capitalization(
+                expected_surface,
+                expected=capitalization_policy,
+                context=context,
+            )
+            if capitalization_policy == "lowercase":
+                capitalization_audit["lowercase_surfaces"] += 1
+            else:
+                capitalization_audit["capitalized_surfaces"] += 1
+        except SystemExit as exc:
+            capitalization_audit["violations"].append(str(exc))
+            raise
+        capitalization_audit["checked"] += 1
+
+        surface_keep[expected_surface] = reason
+
+    if capitalization_audit["checked"] != len(keep):
+        raise SystemExit(
+            "Capitalization gate did not inspect every retained dictionary word"
+        )
+    if capitalization_audit["violations"]:
+        raise SystemExit(
+            "Capitalization gate violations: "
+            + "; ".join(capitalization_audit["violations"])
+        )
+
     words_sorted = sorted(surface_keep)
     args.out_wordlist.parent.mkdir(parents=True, exist_ok=True)
     args.out_report.parent.mkdir(parents=True, exist_ok=True)
@@ -861,6 +937,7 @@ def main() -> int:
         "reviewed_error_rows": len(error_rows),
         "reviewed_error_forms_present_in_candidates": sorted(blocked_errors & set(ranked)),
         "kept": len(keep),
+        "capitalization_audit": capitalization_audit,
         "kept_reasons": {
             "spell_evidence": sum(1 for r in keep.values() if r == "spell-evidence"),
             "guard": sum(1 for r in keep.values() if r == "guard"),
