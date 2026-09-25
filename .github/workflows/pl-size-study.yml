@@ -24,6 +24,9 @@ on:
       - "scripts/fetch_teryt_terc.py"
       - "scripts/extract_teryt_terc.py"
       - "scripts/generate_terc_inflections.py"
+      - "scripts/fetch_ksng_countries_capitals.py"
+      - "scripts/extract_ksng_countries_capitals.py"
+      - "scripts/generate_ksng_inflections.py"
       - "scripts/extract_teryt_cities.py"
       - "scripts/generate_first_name_inflections.py"
       - "scripts/generate_city_inflections.py"
@@ -83,6 +86,16 @@ jobs:
             --out-tsv build/pl-city-source.tsv \
             --out-report build/pl-city-source-report.json
 
+      - name: Acquire official KSNG country/capital list
+        run: |
+          mkdir -p build/ksng
+          python3 scripts/fetch_ksng_countries_capitals.py             --out-main build/ksng/ksng-2025.pdf             --out-main-sha256 build/ksng/ksng-2025.sha256             --out-update build/ksng/ksng-update-1-2026.pdf             --out-update-sha256 build/ksng/ksng-update-1-2026.sha256             --out-provenance build/ksng/source-ref.json
+          python3 scripts/extract_ksng_countries_capitals.py             --main-pdf build/ksng/ksng-2025.pdf             --update-pdf build/ksng/ksng-update-1-2026.pdf             --out-countries build/pl-country-source.tsv             --out-countries-flat build/pl-country-flat.tsv             --out-capitals build/pl-capital-source.tsv             --out-capitals-flat build/pl-capital-flat.tsv             --out-report build/pl-country-capital-source-report.json
+
+      - name: Generate country and capital inflections
+        run: |
+          python3 scripts/generate_ksng_inflections.py             --countries build/pl-country-flat.tsv             --capitals build/pl-capital-flat.tsv             --out-countries build/pl-country-inflections.tsv             --out-capitals build/pl-capital-inflections.tsv             --out-report build/pl-country-capital-inflections-report.json
+
       - name: Audit official modern first-name core
         run: |
           python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-215-each-gender.txt             --out-buffer build/pl-name-history-buffer-216-300.tsv             --workdir build/pl-name-history-sources             --core-per-gender 215             --buffer-end-rank 300
@@ -125,7 +138,7 @@ jobs:
 
           for limit in 50000 100000 125000 150000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --terc build/pl-terc-flat.tsv               --terc-inflections build/pl-terc-inflections.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --terc build/pl-terc-flat.tsv               --terc-inflections build/pl-terc-inflections.tsv               --countries build/pl-country-flat.tsv               --country-inflections build/pl-country-inflections.tsv               --capitals build/pl-capital-flat.tsv               --capital-inflections build/pl-capital-inflections.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
 
@@ -139,11 +152,11 @@ jobs:
 
       - name: Measure net module cost over immutable 100k core
         run: |
-          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --module terc_names=build/pl-terc-flat.tsv:name             --module terc_inflections=build/pl-terc-inflections.tsv:form             --out build/study/module-study-report.json
+          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --module terc_names=build/pl-terc-flat.tsv:name             --module terc_inflections=build/pl-terc-inflections.tsv:form             --module countries=build/pl-country-flat.tsv:name             --module country_inflections=build/pl-country-inflections.tsv:form             --module capitals=build/pl-capital-flat.tsv:name             --module capital_inflections=build/pl-capital-inflections.tsv:form             --out build/study/module-study-report.json
 
       - name: Audit module frequency with NKJP primary and wordfreq secondary
         run: |
-          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --module terc_names=build/pl-terc-flat.tsv:name             --module terc_inflections=build/pl-terc-inflections.tsv:form             --out build/study/module-frequency-report.json
+          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --module terc_names=build/pl-terc-flat.tsv:name             --module terc_inflections=build/pl-terc-inflections.tsv:form             --module countries=build/pl-country-flat.tsv:name             --module country_inflections=build/pl-country-inflections.tsv:form             --module capitals=build/pl-capital-flat.tsv:name             --module capital_inflections=build/pl-capital-inflections.tsv:form             --out build/study/module-frequency-report.json
 
       - name: Compare coverage and audit CKDTs
         run: |
@@ -389,3 +402,16 @@ jobs:
             build/pl-terc-source-report.json
             build/pl-terc-inflections.tsv
             build/pl-terc-inflections-report.json
+            build/ksng/ksng-2025.pdf
+            build/ksng/ksng-2025.sha256
+            build/ksng/ksng-update-1-2026.pdf
+            build/ksng/ksng-update-1-2026.sha256
+            build/ksng/source-ref.json
+            build/pl-country-source.tsv
+            build/pl-country-flat.tsv
+            build/pl-capital-source.tsv
+            build/pl-capital-flat.tsv
+            build/pl-country-capital-source-report.json
+            build/pl-country-inflections.tsv
+            build/pl-capital-inflections.tsv
+            build/pl-country-capital-inflections-report.json
