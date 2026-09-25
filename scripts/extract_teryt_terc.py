@@ -117,7 +117,10 @@ def main() -> int:
         kind = text_of(elem, "NAZDOD").strip().lower()
         stan_na = text_of(elem, "STAN_NA")
         if not woj or not name or not kind:
-            raise SystemExit("TERC row missing WOJ/NAZWA/NAZDOD")
+            raw = ET.tostring(elem, encoding="unicode")[:6000]
+            raise SystemExit(
+                "TERC row missing WOJ/NAZWA/NAZDOD; raw_row=" + raw
+            )
 
         level = None
         if not pow_ and not gmi and not rodz and kind == "województwo":
