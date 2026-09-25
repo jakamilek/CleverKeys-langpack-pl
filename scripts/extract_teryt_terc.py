@@ -45,13 +45,30 @@ def strip_tag(tag: str) -> str:
 
 
 def text_of(elem: ET.Element, key: str) -> str:
-    """Read a named <col> field from the official TERC row structure."""
+    """Read a TERC field across the XML representations used by GUS."""
     wanted = key.upper()
+
+    # Current/legacy full-file XML: <col name="WOJ">02</col>
     for child in elem:
-        if strip_tag(child.tag) != "COL":
-            continue
         if str(child.attrib.get("name", "")).upper() == wanted:
+            value = child.attrib.get("value")
+            if value is not None:
+                return value.strip()
             return (child.text or "").strip()
+
+    # Some TERYT XML variants use direct child tags: <WOJ>02</WOJ>.
+    for child in elem:
+        if strip_tag(child.tag) == wanted:
+            value = child.attrib.get("value")
+            if value is not None:
+                return value.strip()
+            return (child.text or "").strip()
+
+    # Accept row-level attributes as a final compatibility path.
+    for attr_name, attr_value in elem.attrib.items():
+        if attr_name.upper() == wanted:
+            return str(attr_value).strip()
+
     return ""
 
 
@@ -76,7 +93,7 @@ def main() -> int:
         gmi = text_of(elem, "GMI")
         rodz = text_of(elem, "RODZ")
         name = text_of(elem, "NAZWA")
-        kind = text_of(elem, "NAZDOD")
+        kind = text_of(elem, "NAZDOD").strip().lower()
         stan_na = text_of(elem, "STAN_NA")
         if not woj or not name or not kind:
             raise SystemExit("TERC row missing WOJ/NAZWA/NAZDOD")
