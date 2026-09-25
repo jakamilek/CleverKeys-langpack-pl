@@ -170,7 +170,7 @@ jobs:
           )
           # Regression guard: these surfaces were observed in real Polish swipe tests and
           # must never be present in the Polish preview dictionary.
-          custom_rows = list(csv.DictReader(Path("sources/staging/custom_manual.tsv").open(encoding="utf-8", newline=""), delimiter="\t"))
+          custom_rows = list(csv.DictReader((line for line in Path("sources/staging/custom_manual.tsv").open(encoding="utf-8", newline="") if line.strip() and not line.lstrip().startswith("#")), delimiter="\t"))
           custom_forms = {row["surface"].strip() for row in custom_rows}
 
           country_rows = list(csv.DictReader(Path("build/pl-country-flat.tsv").open(encoding="utf-8", newline=""), delimiter="	"))
