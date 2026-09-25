@@ -573,7 +573,7 @@ def main() -> int:
     if args.terc:
         with args.terc.open(encoding="utf-8", newline="") as handle:
             reader = csv.DictReader(handle, delimiter="\t")
-            required = {"level", "terc", "woj", "pow", "gmi", "rodz", "name", "nazdod", "stan_na", "eligible_single_token", "source"}
+            required = {"level", "terc", "woj", "pow", "gmi", "rodz", "name", "nazdod", "stan_na", "eligible_single_token", "case_policy", "source_name", "source"}
             if set(reader.fieldnames or ()) != required:
                 raise SystemExit(f"Malformed TERC source header {args.terc}: expected {sorted(required)}")
             terc_surface_map = {}
