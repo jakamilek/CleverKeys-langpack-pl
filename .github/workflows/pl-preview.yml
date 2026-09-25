@@ -9,7 +9,6 @@ on:
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/reviewed_morphology.tsv"
-      - "sources/staging/reviewed_proper_nouns.tsv"
       - "sources/staging/historical_name_candidates.tsv"
       - "sources/staging/first_name_surface_policy.tsv"
       - "scripts/audit_name_history.py"
@@ -104,7 +103,7 @@ jobs:
 
       - name: Preview Polish word list
         run: |
-          python3 scripts/build_pl_preview.py             --top 300000             --band 150000             --limit 150000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 300000             --band 150000             --limit 150000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --morphology sources/staging/reviewed_morphology.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -150,12 +149,6 @@ jobs:
               for forms in report["reviewed_morphology"]["families"].values()
               for word in forms
           }
-          reviewed_proper_nouns = {
-              word
-              for forms in report["reviewed_proper_nouns"]["families"].values()
-              for word in forms
-          }
-
           # Regression guard: these surfaces were observed in real Polish swipe tests and
           # must never be present in the Polish preview dictionary.
           homonym_audit = json.loads(Path("build/pl-first-name-homonym-audit.json").read_text(encoding="utf-8"))
@@ -346,26 +339,6 @@ jobs:
           ):
               assert expected_city_form in ckdt_raw, expected_city_form
 
-          missing_proper_nouns = sorted(
-              {word.lower() for word in reviewed_proper_nouns} - ckdt_words
-          )
-          assert not missing_proper_nouns, (
-              "reviewed proper nouns missing from CKDT: "
-              + ", ".join(missing_proper_nouns)
-          )
-          expected_proper_case = {
-              word for word in reviewed_proper_nouns
-          }
-          actual_proper_case = {
-              word for word in ckdt_raw
-              if word.lower() in {w.lower() for w in reviewed_proper_nouns}
-          }
-          assert actual_proper_case == expected_proper_case, (
-              "reviewed proper noun casing mismatch: "
-              f"expected={sorted(expected_proper_case)}, "
-              f"actual={sorted(actual_proper_case)}"
-          )
-
           print(json.dumps({
               "word_count": expected,
               "zip_entries": names,
@@ -373,8 +346,6 @@ jobs:
               "has_prefix_boost": False,
               "reviewed_morphology_forms": len(reviewed),
               "reviewed_morphology_present_in_ckdt": len(reviewed - set(missing_reviewed)),
-              "reviewed_proper_noun_forms": len(reviewed_proper_nouns),
-              "reviewed_proper_nouns_present_in_ckdt": len(reviewed_proper_nouns - set(missing_proper_nouns)),
               "first_name_inflection_forms": len(expected_inflection_surfaces),
               "first_name_inflection_forms_present_in_ckdt": len(expected_inflection_surfaces - set(missing_inflections)),
               "city_names": len(city_names),
@@ -397,7 +368,6 @@ jobs:
             build/aosp/pl_wordlist.combined.gz.sha256
             sources/staging/autocorrect_errors.tsv
             sources/staging/reviewed_morphology.tsv
-            sources/staging/reviewed_proper_nouns.tsv
             build/aosp/source-ref.txt
             build/pl-name-history-report.json
             build/pl-name-history.tsv
