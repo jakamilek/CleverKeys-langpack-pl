@@ -81,6 +81,7 @@ def main() -> int:
     base_keys = {word.lower() for word in base_surface}
     if len(base_keys) != len(base_surface):
         raise SystemExit("Base dictionary contains case-insensitive duplicate keys")
+    base_surface_by_key = {word.lower(): word for word in base_surface}
 
     cumulative_keys = set(base_keys)
     rows = []
@@ -95,6 +96,11 @@ def main() -> int:
         new_vs_base = keys - base_keys
         cumulative_new = keys - cumulative_keys
         overlap_previous_modules = new_vs_base - cumulative_new
+        replacement_keys = {
+            key
+            for key in already_in_base
+            if any(surface != base_surface_by_key[key] for surface in raw if surface.lower() == key)
+        }
 
         rows.append({
             "order": index,
@@ -105,6 +111,15 @@ def main() -> int:
             "unique_keys": len(keys),
             "case_variants_collapsed": duplicate_case_variants,
             "already_in_100k_base": len(already_in_base),
+            "existing_keys_with_surface_replacement": len(replacement_keys),
+            "surface_replacements": sorted(
+                {
+                    "key": key,
+                    "base_surface": base_surface_by_key[key],
+                    "module_surfaces": sorted(surface for surface in raw if surface.lower() == key),
+                }
+                for key in replacement_keys
+            ),
             "new_unique_keys_vs_100k_base": len(new_vs_base),
             "new_unique_keys_after_previous_modules": len(cumulative_new),
             "overlap_with_previous_modules": len(overlap_previous_modules),
