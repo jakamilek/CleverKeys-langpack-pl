@@ -200,42 +200,6 @@ def load_blocked_errors(path: Path) -> tuple[set[str], list[dict[str, str]]]:
 
 
 
-def load_reviewed_morphology(
-    path: Path,
-) -> tuple[set[str], dict[str, list[str]]]:
-    forms: set[str] = set()
-    families: dict[str, list[str]] = {}
-    if not path.exists():
-        return forms, families
-    for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        parts = line.split("\t")
-        if len(parts) != 5:
-            raise SystemExit(
-                f"Malformed morphology row {path}:{line_no}; expected 5 TSV columns"
-            )
-        family_id, lemma, raw_forms, basis, note = parts
-        if not family_id or not lemma or not raw_forms or not basis or not note:
-            raise SystemExit(f"Malformed morphology row {path}:{line_no}")
-        family_forms = [w.strip().lower() for w in raw_forms.split(";") if w.strip()]
-        if not family_forms:
-            raise SystemExit(f"Empty morphology family {path}:{line_no}")
-        invalid = [w for w in [lemma.lower(), *family_forms] if not is_candidate(w)]
-        if invalid:
-            raise SystemExit(
-                f"Invalid morphology candidate(s) at {path}:{line_no}: "
-                + ", ".join(sorted(set(invalid)))
-            )
-        bucket = families.setdefault(family_id, [])
-        for word in family_forms:
-            if word not in bucket:
-                bucket.append(word)
-            forms.add(word)
-    return forms, families
-
-
 def load_city_source(
     path: Path,
 ) -> tuple[set[str], dict[str, str]]:
@@ -377,18 +341,13 @@ def main() -> int:
     ap.add_argument(
         "--base-only",
         action="store_true",
-        help="Build the 100k frequency core without names, cities, or morphology modules.",
+        help="Build the 100k frequency core without names or cities.",
     )
     ap.add_argument("--aosp", type=Path, required=True)
     ap.add_argument(
         "--errors",
         type=Path,
         default=Path("sources/staging/autocorrect_errors.tsv"),
-    )
-    ap.add_argument(
-        "--morphology",
-        type=Path,
-        default=Path("sources/staging/reviewed_morphology.tsv"),
     )
     ap.add_argument(
         "--first-name-history",
@@ -440,7 +399,6 @@ def main() -> int:
         args.first_name_inflections = None
         args.cities = None
         args.city_inflections = None
-        args.morphology = None
 
     from wordfreq import iter_wordlist, zipf_frequency
     try:
@@ -605,25 +563,11 @@ def main() -> int:
 
     # Capture the candidate universe before the explicit first-name/city layers are
     # appended. This lets the final capacity audit identify words displaced specifically
-    # by those additions, rather than conflating them with the older morphology layers.
+    # by those additions.
     zipf = {word: float(zipf_frequency(word, "pl")) for word in ranked}
     aosp = load_aosp(args.aosp)
     spell = hunspell_accepts(ranked)
     blocked_errors, error_rows = load_blocked_errors(args.errors)
-    reviewed_morphology, morphology_families = (
-        load_reviewed_morphology(args.morphology)
-        if args.morphology
-        else (set(), {})
-    )
-    base_ranked = set(ranked)
-    supplemental_morphology = sorted(reviewed_morphology - base_ranked)
-    for word in supplemental_morphology:
-        ranked.append(word)
-        seen.add(word)
-    zipf.update({
-        word: float(zipf_frequency(word, "pl"))
-        for word in supplemental_morphology
-    })
     reviewed_first_names |= historical_first_names
     positive = spell | aosp
 
@@ -695,9 +639,6 @@ def main() -> int:
         if word in guards:
             keep[word] = "guard"
             continue
-        if word in reviewed_morphology:
-            keep[word] = "reviewed-morphology"
-            continue
         if word in first_name_inflection_forms and word not in lowercase_first_name_exceptions:
             keep[word] = "reviewed-first-name-inflection"
             continue
@@ -750,7 +691,6 @@ def main() -> int:
             if (
                 word in positive
                 or word in guards
-                or word in reviewed_morphology
                 or word in first_name_inflection_forms
                 or word in city_inflection_forms
             ):
@@ -779,7 +719,7 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in reviewed_morphology or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms
+            if w in guards or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms
         }
         if len(protected) > args.limit:
             raise SystemExit(
@@ -794,13 +734,12 @@ def main() -> int:
             del keep[word]
             drop[word] = "limit-cut"
 
-    # Reconstruct the counterfactual final dictionary without the genuinely new name/city
-    # layer. Existing morphology additions remain protected, so the comparison
-    # isolates capacity displacement caused by the new city/name entries.
+    # Reconstruct the counterfactual final dictionary without the genuinely new
+    # name/city layer so capacity displacement caused by those additions can be measured.
     baseline_without_new_name_city = pre_limit_keep - new_name_city_words
     baseline_protected = {
         w for w in baseline_without_new_name_city
-        if w in guards or w in reviewed_morphology
+        if w in guards
     }
     if len(baseline_without_new_name_city) <= args.limit:
         baseline_final_without_new_name_city = baseline_without_new_name_city
@@ -926,7 +865,6 @@ def main() -> int:
         "kept_reasons": {
             "spell_evidence": sum(1 for r in keep.values() if r == "spell-evidence"),
             "guard": sum(1 for r in keep.values() if r == "guard"),
-            "reviewed_morphology": sum(1 for r in keep.values() if r == "reviewed-morphology"),
             "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
             "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
             "reviewed_first_name_inflection": sum(1 for r in keep.values() if r == "reviewed-first-name-inflection"),
@@ -953,15 +891,6 @@ def main() -> int:
             "requires_positive_source": True,
             "ascii_requires_hunspell_and_aosp": True,
             "foreign_dominant_is_not_overridden": True,
-        },
-        "reviewed_morphology": {
-            "family_count": len(morphology_families),
-            "form_count": len(reviewed_morphology),
-            "supplemental_form_count": len(supplemental_morphology),
-            "families": {
-                family_id: sorted(forms)
-                for family_id, forms in sorted(morphology_families.items())
-            },
         },
         "dropped": len(drop),
         "drop_reasons": {},
