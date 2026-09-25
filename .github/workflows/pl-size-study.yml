@@ -56,6 +56,13 @@ jobs:
           sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}' > build/aosp/pl_wordlist.combined.gz.sha256
           test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
 
+      - name: Acquire pinned NKJP1M frequency table
+        run: |
+          set -euo pipefail
+          mkdir -p build/nkjp
+          curl --fail --retry 6 --retry-delay 3 --retry-all-errors --location             'https://git.nlp.ipipan.waw.pl/wojciech.jaworski/ENIAM/-/raw/be02836cf3aa0286ad8961d2e4528cdc2f72d044/resources/NKJP1M/NKJP1M-tagged-frequency.tab'             -o build/nkjp/NKJP1M-tagged-frequency.tab
+          sha256sum build/nkjp/NKJP1M-tagged-frequency.tab > build/nkjp/NKJP1M-tagged-frequency.tab.sha256
+
       - name: Acquire current official TERYT SIMC catalog
         run: |
           mkdir -p build/teryt
@@ -121,7 +128,11 @@ jobs:
 
       - name: Measure net module cost over immutable 100k core
         run: |
-          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__lines__             --module reviewed_proper_nouns=sources/staging/reviewed_proper_nouns.tsv:__lines__             --out build/study/module-study-report.json
+          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__family_forms__             --module reviewed_proper_nouns=sources/staging/reviewed_proper_nouns.tsv:__family_forms__             --out build/study/module-study-report.json
+
+      - name: Audit module frequency with NKJP primary and wordfreq secondary
+        run: |
+          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__family_forms__             --module reviewed_proper_nouns=sources/staging/reviewed_proper_nouns.tsv:__family_forms__             --out build/study/module-frequency-report.json
 
       - name: Compare coverage and audit CKDTs
         run: |
@@ -359,6 +370,8 @@ jobs:
             build/base100k.txt
             build/base100k-report.json
             build/study/module-study-report.json
+            build/study/module-frequency-report.json
+            build/nkjp/NKJP1M-tagged-frequency.tab.sha256
             build/aosp/pl_wordlist.combined.gz.sha256
             build/teryt/SIMC_Urzedowy_2026-09-24.zip
             build/teryt/SIMC_Urzedowy_2026-09-24.sha256
