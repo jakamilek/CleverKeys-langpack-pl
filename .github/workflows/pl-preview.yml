@@ -8,7 +8,6 @@ on:
       - "scripts/build_pl_preview.py"
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
-      - "sources/staging/reviewed_morphology.tsv"
       - "sources/staging/historical_name_candidates.tsv"
       - "sources/staging/first_name_surface_policy.tsv"
       - "scripts/audit_name_history.py"
@@ -26,8 +25,6 @@ on:
       - "docs/PL_SOURCE_MATRIX_2026-09-20.md"
   workflow_dispatch:
 
-# CI checkpoint: reviewed morphology pilot is validated from a concrete Actions run.
-# Current checkpoint tree was restored from the verified 43d946b6 baseline.
 concurrency:
   group: cleverkeys-pl-preview
   cancel-in-progress: true
@@ -103,7 +100,7 @@ jobs:
 
       - name: Preview Polish word list
         run: |
-          python3 scripts/build_pl_preview.py             --top 300000             --band 150000             --limit 150000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --morphology sources/staging/reviewed_morphology.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 300000             --band 150000             --limit 150000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -144,11 +141,6 @@ jobs:
               capitalization["lowercase_surfaces"] + capitalization["capitalized_surfaces"]
               == expected
           )
-          reviewed = {
-              word
-              for forms in report["reviewed_morphology"]["families"].values()
-              for word in forms
-          }
           # Regression guard: these surfaces were observed in real Polish swipe tests and
           # must never be present in the Polish preview dictionary.
           homonym_audit = json.loads(Path("build/pl-first-name-homonym-audit.json").read_text(encoding="utf-8"))
@@ -229,12 +221,6 @@ jobs:
               )
           for name in sorted(excluded_names):
               assert name not in ckdt_words, "user-excluded first name still present: " + name
-
-          missing_reviewed = sorted(reviewed - ckdt_words)
-          assert not missing_reviewed, (
-              "reviewed morphology forms missing from CKDT: "
-              + ", ".join(missing_reviewed)
-          )
 
           with Path("build/pl-name-history-report.json").open(encoding="utf-8") as handle:
               history = json.load(handle)
@@ -343,10 +329,7 @@ jobs:
               "word_count": expected,
               "zip_entries": names,
               "ckdt_version": version,
-              "has_prefix_boost": False,
-              "reviewed_morphology_forms": len(reviewed),
-              "reviewed_morphology_present_in_ckdt": len(reviewed - set(missing_reviewed)),
-              "first_name_inflection_forms": len(expected_inflection_surfaces),
+              "has_prefix_boost": False,              "first_name_inflection_forms": len(expected_inflection_surfaces),
               "first_name_inflection_forms_present_in_ckdt": len(expected_inflection_surfaces - set(missing_inflections)),
               "city_names": len(city_names),
               "city_inflection_forms": len(city_inflection_surfaces),
@@ -366,9 +349,7 @@ jobs:
             build/pl_words_preview.txt
             build/pl-preview-report.json
             build/aosp/pl_wordlist.combined.gz.sha256
-            sources/staging/autocorrect_errors.tsv
-            sources/staging/reviewed_morphology.tsv
-            build/aosp/source-ref.txt
+            sources/staging/autocorrect_errors.tsv            build/aosp/source-ref.txt
             build/pl-name-history-report.json
             build/pl-name-history.tsv
             build/pl-name-history-core-215-each-gender.txt
