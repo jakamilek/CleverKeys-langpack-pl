@@ -185,20 +185,28 @@ jobs:
                   len(words[size]),
                   reports[size]["candidate_count"],
               )
-          terc_names = {
-              row["name"]
-              for row in __import__("csv").DictReader(
-                  Path("build/pl-terc-flat.tsv").open(encoding="utf-8", newline=""),
-                  delimiter="	",
-              )
-          }
-          terc_inflections = {
-              row["form"]
-              for row in __import__("csv").DictReader(
-                  Path("build/pl-terc-inflections-selected.tsv").open(encoding="utf-8", newline=""),
-                  delimiter="	",
-              )
-          }
+          terc_rows = list(__import__("csv").DictReader(
+              Path("build/pl-terc-flat.tsv").open(encoding="utf-8", newline=""),
+              delimiter="\t",
+          ))
+          terc_names = {row["name"] for row in terc_rows}
+          terc_full_rows = list(__import__("csv").DictReader(
+              Path("build/pl-terc-inflections.tsv").open(encoding="utf-8", newline=""),
+              delimiter="\t",
+          ))
+          terc_inflection_rows = list(__import__("csv").DictReader(
+              Path("build/pl-terc-inflections-selected.tsv").open(encoding="utf-8", newline=""),
+              delimiter="\t",
+          ))
+          terc_inflections = {row["form"] for row in terc_inflection_rows}
+          selected_terc_keys = {(row["level"], row["terc"], row["case"], row["form"]) for row in terc_inflection_rows}
+          for row in terc_full_rows:
+              key = (row["level"], row["terc"], row["case"], row["form"])
+              if row["level"] == "voivodeship":
+                  assert key in selected_terc_keys
+              elif row["level"] == "gmina" and row["case"] != "nom":
+                  assert key not in selected_terc_keys
+          assert all(row["case"] == "nom" or row["level"] != "gmina" for row in terc_inflection_rows)
           city_names = {
               row["name"]
               for row in __import__("csv").DictReader(
