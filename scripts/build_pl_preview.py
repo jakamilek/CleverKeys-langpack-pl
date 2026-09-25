@@ -217,7 +217,7 @@ def load_custom_words(
         )
         reader = csv.DictReader(rows, delimiter="\t")
         expected_fields = {"surface", "case_policy", "basis", "source"}
-        if set(reader.fieldnames or ()) != expected_fields:
+        if not expected_fields.issubset(set(reader.fieldnames or ())):
             raise SystemExit(
                 f"Malformed custom category header {path}: expected {sorted(expected_fields)}"
             )
