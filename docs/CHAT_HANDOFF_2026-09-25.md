@@ -539,3 +539,25 @@ The next chat SHOULD:
 - keep commits small and auditable;
 - rerun CI after each meaningful fix;
 - report exact results and artifacts.
+
+
+## 16. Stan potwierdzony tuż przed zmianą czatu — 2026-09-25
+
+Najnowszy stan workflowów sprawdzony na branchu:
+- preview #167 — uruchomiony na SHA `83bdbeeb2d3a63ee1e6e9c4e705528e74eb500ca`;
+- size-study #143 — uruchomiony na tym samym SHA.
+
+Wcześniejsze runy:
+- preview #166: zatrzymał się na walidacji `build/pl-terc-inflections-selected.tsv` z komunikatem o schema mismatch;
+- size-study #142: ten sam problem;
+- preview #165: chwilowy `FileNotFoundError` dla NKJP1M;
+- size-study #141: nieudane pobranie NKJP1M.
+
+Aktualna poprawka selektora TERC została zapisana w commitcie:
+`83bdbeeb2d3a63ee1e6e9c4e705528e74eb500ca`
+
+Dodatkowo utworzono osobny, gotowy do wklejenia prompt:
+`docs/NEXT_CHAT_PROMPT_2026-09-25.md`
+(commit `820816fee84173bb8e2ec14c0768866fd02f1a8d`).
+
+Ten handoff i powyższy prompt są trwałym źródłem kontekstu przy zmianie okna/instancji. Najpierw sprawdzać aktualny GitHub/CI, dopiero potem kontynuować pracę.
