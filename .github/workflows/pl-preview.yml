@@ -125,6 +125,7 @@ jobs:
       - name: Verify CKDT and pack contents
         run: |
           python3 - <<'PY'
+          import csv
           import json, struct, zipfile
           from pathlib import Path
 
@@ -233,7 +234,6 @@ jobs:
 
           with Path("build/pl-name-history-report.json").open(encoding="utf-8") as handle:
               history = json.load(handle)
-          import csv
           with Path("sources/staging/historical_name_candidates.tsv").open(encoding="utf-8", newline="") as handle:
               historical_rows_src = list(csv.DictReader(handle, delimiter="\t"))
           with Path("sources/staging/first_name_surface_policy.tsv").open(encoding="utf-8", newline="") as handle:
