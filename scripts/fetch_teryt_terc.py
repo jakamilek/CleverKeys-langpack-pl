@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""Fetch the current official GUS TERYT TERC archive without authentication."""
+"""Fetch the official GUS TERYT TERC full-file archive without authentication."""
 from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 import html
+import json
 import re
-from html import parser as html_parser
-from datetime import date
 from pathlib import Path
+from urllib.parse import urljoin
 
 import requests
 
@@ -20,10 +19,22 @@ DOWNLOAD_URL = (
 )
 
 MONTHS = {
-    1: "stycznia", 2: "lutego", 3: "marca", 4: "kwietnia",
-    5: "maja", 6: "czerwca", 7: "lipca", 8: "sierpnia",
-    9: "września", 10: "października", 11: "listopada", 12: "grudnia",
+    1: "stycznia",
+    2: "lutego",
+    3: "marca",
+    4: "kwietnia",
+    5: "maja",
+    6: "czerwca",
+    7: "lipca",
+    8: "sierpnia",
+    9: "września",
+    10: "października",
+    11: "listopada",
+    12: "grudnia",
 }
+
+TERC_CONTROL = "ctl00$body$BTERC"
+TERC_ARCHIVED_NAME = "TERC_Urzedowy"
 
 
 def parse_args() -> argparse.Namespace:
@@ -40,15 +51,24 @@ def pl_date(iso_date: str) -> str:
     return f"{d} {MONTHS[m]} {y}"
 
 
+def _postback(
+    session: requests.Session,
+    event_target: str,
+    state_date: str,
+    *,
+    archived_name: str | None = None,
+) -> requests.Response:
+    """Submit the same WebForms fields used by the public GUS download page."""
+    data = {
+        "__EVENTTARGET": event_target,
+        "ctl00$body$TBData": pl_date(state_date),
+    }
+    if archived_name is not None:
+        data["archived_name"] = archived_name
 
-def _postback(session: requests.Session, event_target: str, state_date: str) -> requests.Response:
-    """Use the documented GUS WebForms postback controls for the TERC full file."""
     response = session.post(
         DOWNLOAD_URL,
-        data={
-            "__EVENTTARGET": event_target,
-            "ctl00$body$TBData": pl_date(state_date),
-        },
+        data=data,
         timeout=180,
         headers={"Referer": DOWNLOAD_URL},
     )
@@ -56,34 +76,89 @@ def _postback(session: requests.Session, event_target: str, state_date: str) -> 
     return response
 
 
-def _extract_zip_link(session: requests.Session, response: requests.Response) -> bytes | None:
+def _response_zip(response: requests.Response) -> bytes | None:
+    """Return ZIP bytes from a direct response, if present."""
     body = response.content
     if body.startswith(b"PK"):
         return body
-    page = body.decode("utf-8", errors="replace")
-    hrefs = re.findall(r"""(?:href|src)=["']([^"']+\.zip(?:\?[^"']*)?)["']""", page, flags=re.IGNORECASE)
+    return None
+
+
+def _extract_zip_link(
+    session: requests.Session,
+    response: requests.Response,
+) -> bytes | None:
+    """Follow a ZIP link emitted by the GUS page, if the postback returns HTML."""
+    page = response.content.decode(response.encoding or "utf-8", errors="replace")
+    hrefs = re.findall(
+        r"""(?:href|src)=[\"']([^\"']+\.zip(?:\?[^\"']*)?)[\"']""",
+        page,
+        flags=re.IGNORECASE,
+    )
     for href in hrefs:
-        absolute = requests.compat.urljoin(DOWNLOAD_URL, html.unescape(href))
-        candidate = session.get(absolute, timeout=180, headers={"Referer": DOWNLOAD_URL})
+        absolute = urljoin(DOWNLOAD_URL, html.unescape(href))
+        candidate = session.get(
+            absolute,
+            timeout=180,
+            headers={"Referer": DOWNLOAD_URL},
+        )
         candidate.raise_for_status()
         if candidate.content.startswith(b"PK"):
             return candidate.content
     return None
 
 
-def download(session: requests.Session, state_date: str) -> tuple[bytes, dict[str, str]]:
+def _fetch_once(
+    session: requests.Session,
+    event_target: str,
+    state_date: str,
+    *,
+    archived_name: str | None = None,
+) -> bytes | None:
+    response = _postback(
+        session,
+        event_target,
+        state_date,
+        archived_name=archived_name,
+    )
+    return _response_zip(response) or _extract_zip_link(session, response)
+
+
+def download(
+    session: requests.Session,
+    state_date: str,
+) -> tuple[bytes, dict[str, str]]:
     attempts: list[str] = []
-    for event_target in ("ctl00$body$BTERCPobierz", "ctl00$body$BTERCGeneruj"):
-        attempts.append(event_target)
-        response = _postback(session, event_target, state_date)
-        data = _extract_zip_link(session, response)
-        if data is not None:
-            return data, {
-                "method": "documented-gus-webforms-postback",
-                "control": event_target,
-                "attempted_controls": ",".join(attempts),
-                "state_date": state_date,
-            }
+
+    # GUS first asks for the TERC file and, when it is not already generated,
+    # returns the Generuj control. The latter must carry archived_name=TERC_Urzedowy.
+    direct_control = f"{TERC_CONTROL}Pobierz"
+    generate_control = f"{TERC_CONTROL}Generuj"
+
+    attempts.append(direct_control)
+    data = _fetch_once(session, direct_control, state_date)
+    if data is not None:
+        return data, {
+            "method": "gus-webforms-postback",
+            "control": direct_control,
+            "state_date": state_date,
+        }
+
+    attempts.append(generate_control)
+    data = _fetch_once(
+        session,
+        generate_control,
+        state_date,
+        archived_name=TERC_ARCHIVED_NAME,
+    )
+    if data is not None:
+        return data, {
+            "method": "gus-webforms-postback",
+            "control": generate_control,
+            "archived_name": TERC_ARCHIVED_NAME,
+            "attempted_controls": ",".join(attempts),
+            "state_date": state_date,
+        }
 
     raise RuntimeError(
         "Official GUS TERC full-file postback did not return a ZIP archive. "
@@ -113,7 +188,10 @@ def main() -> int:
         "state_date_requested": args.state_date,
         "state_date_form": pl_date(args.state_date),
         "archive_sha256": digest,
-        "selection_rule": "three-level territorial division: voivodeships, powiats and gminas",
+        "selection_rule": (
+            "three-level territorial division: "
+            "voivodeships, powiats and gminas"
+        ),
         "acquisition": acquisition,
         "expected_current_state": {
             "voivodeships": 16,
