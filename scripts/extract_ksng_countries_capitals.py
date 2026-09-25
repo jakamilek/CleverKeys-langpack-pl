@@ -19,6 +19,31 @@ def parse_args() -> argparse.Namespace:
     return ap.parse_args()
 
 def pdf_text(path: Path) -> str:
+    """Extract the PDF text in visual/layout order.
+    
+    The KSNG PDF uses a complex embedded font/layout where pypdf's default
+    extraction can collapse most country-entry markers. Poppler's pdftotext
+    with -layout preserves the line structure needed by this parser.
+    """
+    import shutil
+    import subprocess
+
+    exe = shutil.which("pdftotext")
+    if exe:
+        result = subprocess.run(
+            [exe, "-layout", str(path), "-"],
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        text = result.stdout
+        if text.count("pol.") >= 150:
+            return text
+
+    # Keep a pypdf fallback so local runs fail with the parser's explicit
+    # 197-entry guard if Poppler is unavailable or unusable.
     return "\n".join((page.extract_text() or "") for page in PdfReader(str(path)).pages)
 
 def normalize(text: str) -> str:
