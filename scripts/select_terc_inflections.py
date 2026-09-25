@@ -56,7 +56,7 @@ def load_nkjp(path: Path) -> dict[str, int]:
 def load_full(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle, delimiter="\t"))
-    required = {"category", "name", "number", "case", "form", "case_policy", "source", "morfeusz_version"}
+    required = {"category", "name", "level", "terc", "number", "case", "form", "case_policy", "source", "morfeusz_version"}
     if set(rows[0].keys()) != required if rows else True:
         raise SystemExit(f"Malformed TERC inflection header {path}")
     for line_no, row in enumerate(rows, 2):
@@ -65,7 +65,7 @@ def load_full(path: Path) -> list[dict[str, str]]:
     return rows
 
 
-def select(rows: list[dict[str, str]], nkjp: dict[str, int], wordfreq_fn) -> tuple[list[dict[str, str]], dict]:
+def select(rows: list[dict[str, str]], nkjp: dict[str, int], wordfreq_fn, input_path: Path, nkjp_path: Path) -> tuple[list[dict[str, str]], dict]:
     groups: dict[tuple[str, str, str, str], list[dict[str, str]]] = defaultdict(list)
     for row in rows:
         key = (row["category"], row["level"], row["terc"] if "terc" in row else "", row["name"])
@@ -144,8 +144,8 @@ def select(rows: list[dict[str, str]], nkjp: dict[str, int], wordfreq_fn) -> tup
             "case_priority": CASE_PRIORITY,
         },
         "source": {
-            "full_inflections_sha256": sha256(Path(args.input)),
-            "nkjp_sha256": sha256(Path(args.nkjp)),
+            "full_inflections_sha256": sha256(input_path),
+            "nkjp_sha256": sha256(nkjp_path),
         },
         "full_records_by_level": dict(counts_full),
         "selected_records_by_level": dict(counts_selected),
@@ -169,7 +169,7 @@ def main() -> int:
     from wordfreq import zipf_frequency
 
     rows = load_full(args.input)
-    selected, report = select(rows, load_nkjp(args.nkjp), zipf_frequency)
+    selected, report = select(rows, load_nkjp(args.nkjp), zipf_frequency, args.input, args.nkjp)
 
     fields = list(rows[0].keys()) + ["retention"]
     with args.out.open("w", encoding="utf-8", newline="") as handle:
