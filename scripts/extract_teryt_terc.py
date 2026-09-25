@@ -13,6 +13,7 @@ from pathlib import Path
 POLISH_WORD_RE = re.compile(r"^[a-ząćęłńóśźż]+$", re.IGNORECASE)
 GMINA_RODZ = {"1", "2", "3"}
 TERC_COLUMN_ORDER = ["WOJ", "POW", "GMI", "RODZ", "NAZWA", "NAZDOD", "STAN_NA"]
+TERC_FIELD_ALIASES = {"NAZDOD": {"NAZDOD", "NAZWA_DOD"}}
 
 
 def canonical_surface(name: str, level: str, kind: str) -> tuple[str, str]:
@@ -48,13 +49,14 @@ def strip_tag(tag: str) -> str:
 def text_of(elem: ET.Element, key: str) -> str:
     """Read a TERC field across the XML representations used by GUS."""
     wanted = key.upper()
+    wanted_aliases = TERC_FIELD_ALIASES.get(wanted, {wanted})
 
     # Current/legacy full-file XML: <col name="WOJ">02</col>
     named_cols = []
     for child in elem:
         if str(child.attrib.get("name", "")).strip():
             named_cols.append(child)
-            if str(child.attrib.get("name", "")).upper() == wanted:
+            if str(child.attrib.get("name", "")).upper() in wanted_aliases:
                 value = child.attrib.get("value")
                 if value is not None:
                     return value.strip()
@@ -71,7 +73,7 @@ def text_of(elem: ET.Element, key: str) -> str:
         if len(unnamed_cols) != len(TERC_COLUMN_ORDER):
             return ""
         for index, child in enumerate(unnamed_cols):
-            if TERC_COLUMN_ORDER[index] == wanted:
+            if TERC_COLUMN_ORDER[index] in wanted_aliases:
                 value = child.attrib.get("value")
                 if value is not None:
                     return value.strip()
@@ -79,7 +81,7 @@ def text_of(elem: ET.Element, key: str) -> str:
 
     # Some TERYT XML variants use direct child tags: <WOJ>02</WOJ>.
     for child in elem:
-        if strip_tag(child.tag) == wanted:
+        if strip_tag(child.tag) in wanted_aliases:
             value = child.attrib.get("value")
             if value is not None:
                 return value.strip()
@@ -87,7 +89,7 @@ def text_of(elem: ET.Element, key: str) -> str:
 
     # Accept row-level attributes as a final compatibility path.
     for attr_name, attr_value in elem.attrib.items():
-        if attr_name.upper() == wanted:
+        if attr_name.upper() in wanted_aliases:
             return str(attr_value).strip()
 
     return ""
