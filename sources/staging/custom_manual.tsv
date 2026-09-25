@@ -1,0 +1,82 @@
+# Manual/custom Polish dictionary category.
+# These entries are hand-reviewed additions. The current rows were carried forward
+# from the retired reviewed-morphology pilot only after checking they were absent
+# from the 100k core and active first-name/city modules at the last complete measurement.
+# Future entries must be added deliberately with explicit case policy and provenance.
+
+surface	case_policy	basis	source
+bąbelka	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+bąbelkach	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+bąbelkiem	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+bąbelkom	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+bąbelkowi	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+bąbelku	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+czatami	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+czatem	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+czatom	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+czatowi	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasowali	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasowaliśmy	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasowaniem	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasowaniu	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasowała	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasowywałem	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasuj	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasujcie	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasuje	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasujesz	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasujmy	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+dopasuję	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+komendach	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+komendami	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+komendo	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+komendom	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+kukurydz	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+kukurydzach	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+kukurydzami	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+kukurydze	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+kukurydzie	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszek	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszka	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszkach	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszkami	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszki	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszkiem	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszkom	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszkowi	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszku	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+leniuszków	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+muzyczce	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+muzyczek	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+muzyczka	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+muzyczkach	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+muzyczkami	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+muzyczki	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+muzyczko	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+muzyczkom	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+muzyczką	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+przypominaj	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+przypominam	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+przypomni	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+przypomnieliśmy	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+przypomnieniu	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+przypomnij	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+przypomnijcie	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+przypomnisz	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+weryfikuję	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zobaczcie	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zobaczmy	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zobaczona	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zobaczone	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zobaczony	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zobaczysz	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikowali	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikowaliśmy	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikowanie	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikowała	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikuj	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikujcie	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikuje	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikujesz	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikujmy	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
+zweryfikuję	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
