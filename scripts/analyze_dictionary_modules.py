@@ -36,7 +36,7 @@ def load_column(path: Path, column: str) -> set[str]:
     import csv
 
     with path.open(encoding="utf-8", newline="") as handle:
-        reader = csv.DictReader(handle, delimiter="\\t")
+        reader = csv.DictReader(handle, delimiter="\t")
         if column not in (reader.fieldnames or []):
             raise SystemExit(
                 f"Module source {path} has no column {column!r}; "
