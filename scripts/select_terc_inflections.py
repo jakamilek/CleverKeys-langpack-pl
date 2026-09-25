@@ -56,7 +56,7 @@ def load_nkjp(path: Path) -> dict[str, int]:
 def load_full(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle, delimiter="\t"))
-    required = {"name", "level", "terc", "case", "form", "case_policy", "source", "morfeusz_version"}
+    required = {"category", "name", "level", "terc", "number", "case", "form", "case_policy", "source", "morfeusz_version"}
     if set(rows[0].keys()) != required if rows else True:
         raise SystemExit(f"Malformed TERC inflection header {path}")
     for line_no, row in enumerate(rows, 2):
