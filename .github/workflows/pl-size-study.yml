@@ -24,6 +24,7 @@ on:
       - "scripts/fetch_teryt_terc.py"
       - "scripts/extract_teryt_terc.py"
       - "scripts/generate_terc_inflections.py"
+      - "scripts/select_terc_inflections.py"
       - "scripts/fetch_ksng_countries_capitals.py"
       - "scripts/extract_ksng_countries_capitals.py"
       - "scripts/generate_ksng_inflections.py"
