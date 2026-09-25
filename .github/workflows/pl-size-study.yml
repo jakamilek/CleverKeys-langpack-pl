@@ -128,7 +128,7 @@ jobs:
 
       - name: Audit module frequency with NKJP primary and wordfreq secondary
         run: |
-          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__family_forms__             --out build/study/module-frequency-report.json
+          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --out build/study/module-frequency-report.json
 
       - name: Compare coverage and audit CKDTs
         run: |
