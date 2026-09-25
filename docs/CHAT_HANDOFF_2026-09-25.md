@@ -38,7 +38,7 @@ Current / planned modules:
 3. Polish administrative division (GUS TERYT / TERC): voivodeships, powiats, gminas
 4. Countries and capitals (official KSNG/GUGiK list)
 5. Controlled brands / trade names (planned; not a raw trademark dump)
-6. Other reviewed morphology / proper-noun pilot material as explicitly audited
+6. Other reviewed morphology only; the early proper-noun pilot is retired and excluded from active module accounting
 
 Case-insensitive capacity rule:
 - core 'warszawa' + module 'Warszawa' = one key, not two;
@@ -83,7 +83,7 @@ Important distinction:
 - NKJP is now the preferred primary frequency evidence for additive modules.
 - wordfreq remains as an independent cross-check and fallback signal for module forms not seen in NKJP.
 
-## 3. Frequency implementation status / current blocker
+## 3. Frequency implementation status
 
 New script:
 - scripts/audit_module_frequency.py
@@ -92,24 +92,17 @@ Purpose:
 - Records NKJP surface frequency, exact form+lemma frequency where available, wordfreq Zipf, source provenance and distribution statistics.
 - Explicitly records that retention thresholds are not yet set.
 
-Pinned NKJP source currently attempted:
+Pinned NKJP source:
 - ENIAM revision: be02836cf3aa0286ad8961d2e4528cdc2f72d044
-- Intended file: resources/NKJP1M/NKJP1M-tagged-frequency.tab
-- The source documentation says this file has 7 columns and defines:
-  1 word form
-  2 lemma
-  3 tag
-  4 frequency
-  plus validation/classification fields.
+- File: resources/NKJP1M/NKJP1M-tagged-frequency.tab
+- Successful reproducible acquisition: legacy GitLab repository archive endpoint restricted to resources/NKJP1M.
+- Verified file SHA-256: fee31b1d6a682970b4e8ca68b593aea8dadbc8541e875e2d287480d83601e79c
+- Verified size: 12,181,895 bytes
+- Verified data rows: 183,181
+- Verified column count: 8
 
-Current problem:
-- Size-study run #75 reached the NKJP audit step but failed with:
-  "No usable NKJP frequency rows found in build/nkjp/NKJP1M-tagged-frequency.tab"
-- The curl download returned only about 4953 bytes and was not a usable tabular frequency file.
-- Therefore #75 DOES NOT provide valid NKJP frequency results.
-- The NKJP-first policy is accepted, but its data acquisition/verification is not yet green.
-- Do not claim NKJP audit is complete.
-- Next task: fix NKJP acquisition using a reproducible, pinned, verifiable source (likely GitLab repository-file/API/archive access rather than the unusable raw endpoint), validate SHA-256 and file structure, then rerun the frequency audit.
+Size-study #79 (run 36175350217) is the first valid NKJP + wordfreq frequency measurement. Its results are historical measurements and include the early proper-noun pilot, which has now been retired from active module accounting.
+Do not treat the 76 pilot forms as an active production module or as a retention target.
 
 Relevant web verification:
 - ENIAM/NKJP1M directory exposes NKJP1M-frequency.tab, NKJP1M-tagged-frequency.tab and related files.
@@ -250,18 +243,14 @@ Wrocław:
 
 Sources are recorded in the TSV and include authoritative linguistic evidence such as WSJP PAN / NCK OJczysty.
 
-## 7. Reviewed proper-noun pilot
+## 7. Retired early proper-noun pilot
 
-File:
-- sources/staging/reviewed_proper_nouns.tsv
+The early `reviewed_proper_nouns` staging file was created for first-round runtime tests and anchor/provenance probing. It is no longer an active production module.
 
-Includes reviewed test/anchor families such as Bydgoszcz, Warszawa, Gdańsk, Kraków, Wrocław, Poznań, Łódź, Zamość, Tomaszów, Grażyna, Zofia, Andrzej, Marzena, Januszek, Aśka, Zośka, etc.
+Archived copy:
+- `sources/archive/reviewed_proper_nouns_pilot_2026-09-25.tsv`
 
-IMPORTANT AUDIT ITEM:
-- Nicea/Nicei is still present in inherited reviewed material, but Nicea was previously removed from the official current TERYT city priority because it is not a current Polish TERYT city. This inherited reviewed entry must be audited before future promotion; do not silently re-promote it.
-
-Zośka was added with:
-Zośka;Zośki;Zośce;Zośkę;Zośką;Zośko
+The original 76-form pilot must not be included in module-cost accounting, frequency retention calibration, or production CKDT generation. Any future reuse requires fresh assignment to the correct active category, fresh source audit, and explicit promotion.
 
 ## 8. Regression protection
 
@@ -431,6 +420,7 @@ Module coverage:
 - city inflections: NKJP seen 537/1,218; zero 681
 - reviewed morphology: NKJP seen 46/123; zero 77
 - reviewed proper nouns: NKJP seen 63/76; zero 13
+  Note: this 76-form figure belongs to historical run #79 only; the pilot is now retired and excluded from active production accounting.
 
 No retention thresholds have been chosen. The zero-count forms remain candidates
 for later analysis, not automatic exclusions.
@@ -485,7 +475,7 @@ and then verify the current branch/head and the newest size-study run before mak
 The next chat must NOT:
 - ask the user to repeat the project history;
 - assume #75 succeeded;
-- treat NKJP1M download as solved;
+- do not regress the verified NKJP1M acquisition/pin;
 - invent retention thresholds;
 - change the immutable 100k core to make room for modules;
 - auto-merge inherited material;
@@ -493,7 +483,7 @@ The next chat must NOT:
 
 The next chat SHOULD:
 - continue from the GitHub state on branch ops/baseline-sync-2026-09-20;
-- fix the NKJP acquisition blocker;
+- keep the verified NKJP acquisition pin and rerun the measurement after active-module cleanup;
 - keep commits small and auditable;
 - rerun CI after each meaningful fix;
 - report exact results and artifacts.
