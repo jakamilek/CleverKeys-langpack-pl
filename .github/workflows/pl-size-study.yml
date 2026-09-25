@@ -12,6 +12,7 @@ on:
     paths:
       - ".github/workflows/pl-size-study.yml"
       - "scripts/build_pl_preview.py"
+      - "scripts/analyze_dictionary_modules.py"
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/reviewed_morphology.tsv"
