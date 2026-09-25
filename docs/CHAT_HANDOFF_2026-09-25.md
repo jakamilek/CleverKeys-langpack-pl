@@ -400,50 +400,59 @@ Key accepted implementation commits:
 
 Current branch also contains a documentation update for NKJP frequency policy.
 
-## 13. What remains to do next
+## 13. Current NKJP acquisition and frequency-audit state
 
-Priority order:
+As of 2026-09-25, the former NKJP acquisition blocker is resolved and
+reproducibly pinned.
 
-A. Fix the NKJP source acquisition.
-- Verify a reproducible endpoint for the exact pinned NKJP1M revision.
-- Validate downloaded content before parsing:
-  * expected text/tabular structure;
-  * known column count / header documentation;
-  * minimum plausible file size;
-  * SHA-256;
-  * reject HTML/login/error pages even if HTTP 200.
-- Prefer official pinned source and GitLab repository-file/API/archive route if raw endpoint is unsuitable.
-- Do NOT silently substitute a different revision/source without documenting and pinning it.
+- size-study #79: run 36175350217
+- verified commit: 7633c863d162fff869ad37d5b2b09db2b749b102
+- NKJP1M pinned revision: be02836cf3aa0286ad8961d2e4528cdc2f72d044
+- successful acquisition method: legacy GitLab repository archive endpoint
+- verified file size: 12,181,895 bytes
+- verified data rows: 183,181
+- verified column count: 8
+- verified SHA-256: fee31b1d6a682970b4e8ca68b593aea8dadbc8541e875e2d287480d83601e79c
 
-B. Get a green NKJP module-frequency audit.
-- Generate module-frequency-report.json.
-- Inspect distributions for first names, cities, city inflections, reviewed morphology and proper nouns.
-- Compare NKJP vs wordfreq, especially for module forms absent from one source.
+The direct raw endpoint is not the successful route and must not be described as
+such. CI is now pinned to the verified SHA-256 and stores acquisition provenance
+with the size-study artifacts.
 
-C. Only after B, calibrate retention tiers.
-- Do not choose arbitrary thresholds first.
-- Based on observed distributions and grammatical usefulness, define explicit tiers such as:
-  * full paradigm,
-  * partial / high-utility cases,
-  * nominative only / no inflection.
-- Exact numeric boundaries must come from measured data and be documented.
+The first successful NKJP + wordfreq audit covered 4,020 unique surface/lemma
+pairs. Global distributions were:
 
-D. Implement frequency-aware retention in the actual module build.
-- Generators can continue to produce full paradigms;
-- retention selector decides what enters CKDT.
-- Keep full source/provenance records even for dropped forms.
+- NKJP nonzero P10/P25/P50/P75/P90/P95: 1 / 1 / 2 / 7 / 24 / 51
+- wordfreq nonzero P10/P25/P50/P75/P90/P95: 1.49 / 2.01 / 2.58 / 3.13 / 3.83 / 4.18
 
-E. Recalculate module net cost after retention.
-- 100k core remains untouched.
-- Produce explicit list of net-new keys.
-- Produce explicit list of casing/surface replacements.
-- If any core displacement occurs, report exact words and DO NOT restore them automatically.
+Module coverage:
 
-F. Then continue planned modules:
-- TERC administrative units
-- countries + capitals
-- controlled brands
-- later broader practical language additions.
+- first-name forms: NKJP seen 736/1,759; zero 1,023
+- city names: NKJP seen 292/844; zero 552
+- city inflections: NKJP seen 537/1,218; zero 681
+- reviewed morphology: NKJP seen 46/123; zero 77
+- reviewed proper nouns: NKJP seen 63/76; zero 13
+
+No retention thresholds have been chosen. The zero-count forms remain candidates
+for later analysis, not automatic exclusions.
+
+### What remains to do next
+
+A. Inspect the module distributions and NKJP/wordfreq disagreements by module
+   and individual form, especially forms absent from NKJP1M but supported by
+   wordfreq or category semantics.
+
+B. Only after that analysis, document explicit data-driven retention tiers:
+   full paradigm / partial high-utility cases / nominative only. Numeric
+   boundaries must come from measured data.
+
+C. Implement frequency-aware retention as a separate layer while retaining full
+   generated paradigms and provenance records.
+
+D. Recalculate net module cost over the protected 100k core after retention.
+
+E. Continue planned modules only after the above audit is stable:
+   TERC administrative units, countries + capitals, controlled brands, and
+   later broader practical language additions.
 
 ## 14. User's testing setup and practical goal
 

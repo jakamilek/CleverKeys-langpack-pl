@@ -185,7 +185,9 @@ def main() -> int:
         "source": {
             "type": "NKJP1M tagged frequency table",
             "pinned_revision": "be02836cf3aa0286ad8961d2e4528cdc2f72d044",
-            "retrieval_url": "https://git.nlp.ipipan.waw.pl/wojciech.jaworski/ENIAM/-/raw/be02836cf3aa0286ad8961d2e4528cdc2f72d044/resources/NKJP1M/NKJP1M-tagged-frequency.tab",
+            "retrieval_url": "https://git.nlp.ipipan.waw.pl/wojciech.jaworski/ENIAM/repository/archive.tar.gz?ref=be02836cf3aa0286ad8961d2e4528cdc2f72d044&path=resources%2FNKJP1M",
+            "pinned_file_path": "resources/NKJP1M/NKJP1M-tagged-frequency.tab",
+            "acquisition_method": "legacy GitLab repository archive",
             "sha256": sha256(args.nkjp),
             "scope": "manually annotated 1-million-word NKJP subcorpus",
             "note": "This is an NKJP-derived frequency snapshot, not the full 1.5B-word searchable corpus.",

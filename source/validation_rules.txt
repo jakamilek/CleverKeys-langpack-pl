@@ -1,9 +1,0 @@
-# CleverKeys Polish dictionary validation
-
-Rules:
-- UTF-8 encoding required
-- remove duplicate entries
-- reject empty words
-- keep Polish diacritics
-- avoid random generated tokens
-- preserve technical vocabulary

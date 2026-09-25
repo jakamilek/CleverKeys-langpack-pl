@@ -59,7 +59,7 @@ jobs:
 
       - name: Acquire and validate pinned NKJP1M frequency table
         run: |
-          python3 scripts/fetch_nkjp1m.py             --out build/nkjp/NKJP1M-tagged-frequency.tab             --out-sha256 build/nkjp/NKJP1M-tagged-frequency.tab.sha256             --out-provenance build/nkjp/NKJP1M-tagged-frequency.provenance.json
+          python3 scripts/fetch_nkjp1m.py             --out build/nkjp/NKJP1M-tagged-frequency.tab             --out-sha256 build/nkjp/NKJP1M-tagged-frequency.tab.sha256             --out-provenance build/nkjp/NKJP1M-tagged-frequency.provenance.json             --expected-sha256 fee31b1d6a682970b4e8ca68b593aea8dadbc8541e875e2d287480d83601e79c
 
       - name: Acquire current official TERYT SIMC catalog
         run: |
@@ -370,6 +370,7 @@ jobs:
             build/study/module-study-report.json
             build/study/module-frequency-report.json
             build/nkjp/NKJP1M-tagged-frequency.tab.sha256
+            build/nkjp/NKJP1M-tagged-frequency.provenance.json
             build/aosp/pl_wordlist.combined.gz.sha256
             build/teryt/SIMC_Urzedowy_2026-09-24.zip
             build/teryt/SIMC_Urzedowy_2026-09-24.sha256

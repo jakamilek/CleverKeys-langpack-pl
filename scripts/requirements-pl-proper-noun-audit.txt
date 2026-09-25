@@ -1,4 +1,0 @@
-# Dependencies for the audit-only proper-noun coverage workflow.
-# Morfeusz2 is used only to enumerate inflectional forms for already packed
-# official proper-name lemmas; the audit never promotes forms automatically.
-morfeusz2==1.99.15

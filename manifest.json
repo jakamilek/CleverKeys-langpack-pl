@@ -1,8 +1,0 @@
-{
-  "id": "pl-PL",
-  "name": "Polish",
-  "project": "CleverKeys-langpack-pl",
-  "version": "0.1.0",
-  "encoding": "UTF-8",
-  "dictionary": "Hunspell-compatible"
-}
