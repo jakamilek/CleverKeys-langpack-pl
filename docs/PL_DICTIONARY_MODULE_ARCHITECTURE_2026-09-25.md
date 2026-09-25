@@ -74,6 +74,20 @@ controlled locality/country/brand module), fresh source audit, and explicit
 inclusion. Duplicate keys already represented by the 100k core or another active
 module do not justify retaining a second proper-noun entry.
 
+## Retired reviewed morphology pilot
+
+The former `reviewed_morphology` pilot was created as a small diagnostic layer for
+specific observed missing forms during runtime/screenshot testing. It is **not an
+active production category** and is excluded from current capacity accounting,
+frequency-retention calibration, and CKDT generation.
+
+Its historical source is preserved at:
+- `sources/archive/reviewed_morphology_pilot_2026-09-25.tsv`
+
+The archived forms must not be automatically promoted. A future reuse requires
+fresh assignment to an appropriate real category or an explicitly defined new
+category, a fresh source audit, and explicit inclusion.
+
 ## Category admission and inflection protocol
 
 Adding a new category is a defined two-stage process.
@@ -136,9 +150,14 @@ A capitalization violation fails the build.
 
 ## Retention decision after clean module measurement (2026-09-25)
 
-The clean post-pilot measurement found 2,611 net-new unique keys over the protected
-100k core across the active modules. This is sufficiently small that dictionary
-capacity is **not** a reason to cut validated low-frequency inflection forms.
+The clean post-pilot measurement previously found 2,611 net-new unique keys over the protected
+100k core, but that figure still included the now-retired reviewed-morphology pilot.
+It is therefore **superseded**. After removing that pilot from active production
+accounting, the active-module union must be measured again before a new net-new
+total is recorded.
+
+Capacity is not a reason to cut validated low-frequency inflection forms when the
+measured active union is comfortably within the available category/capacity envelope.
 
 Therefore the current active modules use the **full-retention default**: validated
 base items and validated generated forms are retained unless there is a separate
