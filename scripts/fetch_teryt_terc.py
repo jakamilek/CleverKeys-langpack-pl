@@ -7,6 +7,7 @@ import hashlib
 import html
 import json
 import re
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin
 
@@ -49,20 +50,47 @@ def pl_date(iso_date: str) -> str:
     return f"{d} {MONTHS[m]} {y}"
 
 
+class _HiddenInputParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.fields: dict[str, str] = {}
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag.lower() != "input":
+            return
+        data = {key.lower(): value for key, value in attrs}
+        if data.get("type", "").lower() != "hidden":
+            return
+        name = data.get("name")
+        if name:
+            self.fields[name] = data.get("value") or ""
+
+
+def _hidden_fields(response: requests.Response) -> dict[str, str]:
+    parser = _HiddenInputParser()
+    parser.feed(response.content.decode(response.encoding or "utf-8", errors="replace"))
+    return parser.fields
+
+
 def _postback(
     session: requests.Session,
     event_target: str,
     state_date: str,
+    hidden_fields: dict[str, str],
 ) -> requests.Response:
-    """Submit one GUS WebForms postback."""
+    """Submit a GUS WebForms postback with the current hidden form state."""
+    data = dict(hidden_fields)
+    data["__EVENTTARGET"] = event_target
+    data["__EVENTARGUMENT"] = ""
+    data["ctl00$body$TBData"] = pl_date(state_date)
     response = session.post(
         DOWNLOAD_URL,
-        data={
-            "__EVENTTARGET": event_target,
-            "ctl00$body$TBData": pl_date(state_date),
-        },
+        data=data,
         timeout=180,
-        headers={"Referer": DOWNLOAD_URL},
+        headers={
+            "Referer": DOWNLOAD_URL,
+            "Origin": "https://eteryt.stat.gov.pl",
+        },
     )
     response.raise_for_status()
     return response
@@ -129,23 +157,31 @@ def download(
     session: requests.Session,
     state_date: str,
 ) -> tuple[bytes, dict[str, str]]:
-    # GUS uses a two-step WebForms flow. A first Pobierz can return a page
-    # exposing the Generuj action; after Generuj completes, Pobierz must be
-    # called again to receive the ZIP. Repeat until ZIP or a bounded retry
-    # count is reached, matching the behavior of established TERYT clients.
+    # Current GUS uses ASP.NET WebForms. The postback must carry the hidden
+    # form state from the preceding page, and that state changes after each
+    # response. Keep the page state across the Pobierz -> Generuj -> Pobierz
+    # cycle, with a bounded number of cycles.
     attempts: list[str] = []
     last_response: requests.Response | None = None
     pobierz_control = "ctl00$body$BTERCPobierz"
     generuj_control = "ctl00$body$BTERCGeneruj"
 
-    for cycle in range(1, 6):
+    landing = session.get(
+        DOWNLOAD_URL,
+        timeout=180,
+        headers={"Accept": "text/html,application/xhtml+xml"},
+    )
+    landing.raise_for_status()
+    hidden_fields = _hidden_fields(landing)
+
+    for cycle in range(1, 7):
         attempts.append(f"{pobierz_control}#{cycle}")
-        response = _postback(session, pobierz_control, state_date)
+        response = _postback(session, pobierz_control, state_date, hidden_fields)
         last_response = response
         data = _response_zip(response) or _extract_zip_link(session, response)
         if data is not None:
             return data, {
-                "method": "gus-webforms-postback-loop",
+                "method": "gus-webforms-stateful-postback-loop",
                 "state_date": state_date,
                 "download_cycle": str(cycle),
                 "attempted_controls": ",".join(attempts),
@@ -155,20 +191,28 @@ def download(
             response.encoding or "utf-8",
             errors="replace",
         )
+        next_hidden = _hidden_fields(response)
+        if next_hidden:
+            hidden_fields = next_hidden
+
         if "body_BTERCGeneruj".lower() not in page.lower():
             break
 
         attempts.append(f"{generuj_control}#{cycle}")
-        response = _postback(session, generuj_control, state_date)
+        response = _postback(session, generuj_control, state_date, hidden_fields)
         last_response = response
         data = _response_zip(response) or _extract_zip_link(session, response)
         if data is not None:
             return data, {
-                "method": "gus-webforms-postback-loop",
+                "method": "gus-webforms-stateful-postback-loop",
                 "state_date": state_date,
                 "generate_cycle": str(cycle),
                 "attempted_controls": ",".join(attempts),
             }
+
+        next_hidden = _hidden_fields(response)
+        if next_hidden:
+            hidden_fields = next_hidden
 
     diagnostics = _response_diagnostics(last_response) if last_response is not None else "no response"
     raise RuntimeError(
@@ -177,47 +221,4 @@ def download(
     )
 
 
-def main() -> int:
-    args = parse_args()
-    for p in (args.out_zip, args.out_sha256, args.out_provenance):
-        p.parent.mkdir(parents=True, exist_ok=True)
 
-    session = requests.Session()
-    session.headers.update({
-        "User-Agent": "CleverKeys-langpack-pl/TERC-audit",
-        "Accept": "*/*",
-    })
-
-    data, acquisition = download(session, args.state_date)
-    digest = hashlib.sha256(data).hexdigest()
-    args.out_zip.write_bytes(data)
-    args.out_sha256.write_text(digest + "\n", encoding="utf-8")
-
-    provenance = {
-        "source": "GUS TERYT / TERC",
-        "source_url": DOWNLOAD_URL,
-        "state_date_requested": args.state_date,
-        "state_date_form": pl_date(args.state_date),
-        "archive_sha256": digest,
-        "selection_rule": (
-            "three-level territorial division: "
-            "voivodeships, powiats and gminas"
-        ),
-        "acquisition": acquisition,
-        "expected_current_state": {
-            "voivodeships": 16,
-            "powiats": 380,
-            "gminas": 2479,
-            "total": 2875,
-        },
-    }
-    args.out_provenance.write_text(
-        json.dumps(provenance, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    print(json.dumps(provenance, ensure_ascii=False, indent=2))
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
