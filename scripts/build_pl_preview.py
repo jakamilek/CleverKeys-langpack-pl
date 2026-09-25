@@ -417,6 +417,89 @@ def load_terc_inflections(
     return forms, surface_map, case_policy_map
 
 
+def load_geo_source(
+    path: Path,
+    expected_category: str,
+) -> tuple[set[str], dict[str, str], dict[str, str]]:
+    forms: set[str] = set()
+    surface_map: dict[str, str] = {}
+    case_policy_map: dict[str, str] = {}
+    if not path.exists():
+        return forms, surface_map, case_policy_map
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        required = {"name", "case_policy", "source"}
+        if not required.issubset(set(reader.fieldnames or ())):
+            raise SystemExit(
+                f"Malformed {expected_category} source header {path}: missing {sorted(required - set(reader.fieldnames or ()))}"
+            )
+        for line_no, row in enumerate(reader, 2):
+            name = row["name"].strip()
+            policy = row["case_policy"].strip()
+            if not name or policy not in {"lowercase", "capitalized"}:
+                raise SystemExit(f"Malformed {expected_category} source row {path}:{line_no}")
+            if not is_inflection_surface(name):
+                raise SystemExit(f"Non-single-token {expected_category} source surface {path}:{line_no}: {name!r}")
+            lower = name.lower()
+            prior = surface_map.get(lower)
+            if prior is not None and prior != name:
+                raise SystemExit(
+                    f"Conflicting {expected_category} source casing {path}:{line_no}: {prior!r} vs {name!r}"
+                )
+            prior_policy = case_policy_map.get(lower)
+            if prior_policy is not None and prior_policy != policy:
+                raise SystemExit(
+                    f"Conflicting {expected_category} case policy {path}:{line_no}: {prior_policy!r} vs {policy!r}"
+                )
+            forms.add(lower)
+            surface_map[lower] = name
+            case_policy_map[lower] = policy
+    return forms, surface_map, case_policy_map
+
+
+def load_geo_inflections(
+    path: Path,
+) -> tuple[set[str], dict[str, str], dict[str, str]]:
+    forms: set[str] = set()
+    surface_map: dict[str, str] = {}
+    case_policy_map: dict[str, str] = {}
+    if not path.exists():
+        return forms, surface_map, case_policy_map
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        required = {"category", "name", "number", "case", "form", "case_policy", "source", "morfeusz_version"}
+        if set(reader.fieldnames or ()) != required:
+            raise SystemExit(
+                f"Malformed geo inflection header {path}: expected {sorted(required)}"
+            )
+        for line_no, row in enumerate(reader, 2):
+            form = row["form"].strip()
+            policy = row["case_policy"].strip()
+            if row["case"] not in {"nom", "gen", "dat", "acc", "inst", "loc", "voc"}:
+                raise SystemExit(f"Malformed geo inflection case {path}:{line_no}")
+            if row["number"] not in {"sg", "pl", "source"}:
+                raise SystemExit(f"Malformed geo inflection number {path}:{line_no}")
+            if not form or policy not in {"lowercase", "capitalized"}:
+                raise SystemExit(f"Malformed geo inflection row {path}:{line_no}")
+            if not is_inflection_surface(form):
+                raise SystemExit(f"Invalid geo inflection surface {path}:{line_no}: {form!r}")
+            lower = form.lower()
+            prior = surface_map.get(lower)
+            if prior is not None and prior != form:
+                raise SystemExit(
+                    f"Conflicting geo inflection surface {path}:{line_no}: {prior!r} vs {form!r}"
+                )
+            prior_policy = case_policy_map.get(lower)
+            if prior_policy is not None and prior_policy != policy:
+                raise SystemExit(
+                    f"Conflicting geo inflection case policy {path}:{line_no}: {prior_policy!r} vs {policy!r}"
+                )
+            forms.add(lower)
+            surface_map[lower] = form
+            case_policy_map[lower] = policy
+    return forms, surface_map, case_policy_map
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=300000)
@@ -456,6 +539,30 @@ def main() -> int:
         type=Path,
         default=None,
         help="Generated singular inflections for the already-selected first names.",
+    )
+    ap.add_argument(
+        "--countries",
+        type=Path,
+        default=None,
+        help="Official KSNG/GUGiK one-token country source.",
+    )
+    ap.add_argument(
+        "--country-inflections",
+        type=Path,
+        default=None,
+        help="Generated country inflections from KSNG/GUGiK names.",
+    )
+    ap.add_argument(
+        "--capitals",
+        type=Path,
+        default=None,
+        help="Official KSNG/GUGiK one-token capital source.",
+    )
+    ap.add_argument(
+        "--capital-inflections",
+        type=Path,
+        default=None,
+        help="Generated capital inflections from KSNG/GUGiK names.",
     )
     ap.add_argument(
         "--terc",
@@ -503,6 +610,10 @@ def main() -> int:
         args.city_inflections = None
         args.terc = None
         args.terc_inflections = None
+        args.countries = None
+        args.country_inflections = None
+        args.capitals = None
+        args.capital_inflections = None
         args.custom = None
 
     from wordfreq import iter_wordlist, zipf_frequency
@@ -608,6 +719,28 @@ def main() -> int:
     if args.terc_inflections:
         terc_inflection_forms, terc_inflection_surface_map, terc_inflection_case_policy_map = load_terc_inflections(args.terc_inflections)
 
+    country_forms: set[str] = set()
+    country_surface_map: dict[str, str] = {}
+    country_case_policy_map: dict[str, str] = {}
+    capital_forms: set[str] = set()
+    capital_surface_map: dict[str, str] = {}
+    capital_case_policy_map: dict[str, str] = {}
+    if args.countries:
+        country_forms, country_surface_map, country_case_policy_map = load_geo_source(args.countries, "country")
+    if args.capitals:
+        capital_forms, capital_surface_map, capital_case_policy_map = load_geo_source(args.capitals, "capital")
+
+    country_inflection_forms: set[str] = set()
+    country_inflection_surface_map: dict[str, str] = {}
+    country_inflection_case_policy_map: dict[str, str] = {}
+    capital_inflection_forms: set[str] = set()
+    capital_inflection_surface_map: dict[str, str] = {}
+    capital_inflection_case_policy_map: dict[str, str] = {}
+    if args.country_inflections:
+        country_inflection_forms, country_inflection_surface_map, country_inflection_case_policy_map = load_geo_inflections(args.country_inflections)
+    if args.capital_inflections:
+        capital_inflection_forms, capital_inflection_surface_map, capital_inflection_case_policy_map = load_geo_inflections(args.capital_inflections)
+
     custom_forms: set[str] = set()
     custom_surface_map: dict[str, str] = {}
     custom_case_policy_map: dict[str, str] = {}
@@ -711,6 +844,12 @@ def main() -> int:
             ranked.append(word)
             seen.add(word)
 
+    # Official countries and capitals are explicit audited candidates.
+    for word in sorted(country_forms | country_inflection_forms | capital_forms | capital_inflection_forms):
+        if word not in seen:
+            ranked.append(word)
+            seen.add(word)
+
     # Explicit manual/custom surfaces are added as audited candidates.
     for word in sorted(custom_forms):
         if word not in seen:
@@ -801,6 +940,18 @@ def main() -> int:
         if word in terc_forms:
             keep[word] = "reviewed-terc"
             continue
+        if word in country_inflection_forms:
+            keep[word] = "reviewed-country-inflection"
+            continue
+        if word in country_forms:
+            keep[word] = "reviewed-country"
+            continue
+        if word in capital_inflection_forms:
+            keep[word] = "reviewed-capital-inflection"
+            continue
+        if word in capital_forms:
+            keep[word] = "reviewed-capital"
+            continue
         if word in custom_forms:
             keep[word] = "custom-manual"
             continue
@@ -884,7 +1035,7 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in custom_forms or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms or w in terc_forms or w in terc_inflection_forms
+            if w in guards or w in custom_forms or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms or w in terc_forms or w in terc_inflection_forms or w in country_forms or w in country_inflection_forms or w in capital_forms or w in capital_inflection_forms
         }
         if len(protected) > args.limit:
             raise SystemExit(
@@ -959,6 +1110,18 @@ def main() -> int:
         elif word in terc_inflection_surface_map:
             expected_surface = terc_inflection_surface_map[word]
             capitalization_policy = terc_inflection_case_policy_map[word]
+        elif word in country_surface_map:
+            expected_surface = country_surface_map[word]
+            capitalization_policy = country_case_policy_map[word]
+        elif word in capital_surface_map:
+            expected_surface = capital_surface_map[word]
+            capitalization_policy = capital_case_policy_map[word]
+        elif word in country_inflection_surface_map:
+            expected_surface = country_inflection_surface_map[word]
+            capitalization_policy = country_inflection_case_policy_map[word]
+        elif word in capital_inflection_surface_map:
+            expected_surface = capital_inflection_surface_map[word]
+            capitalization_policy = capital_inflection_case_policy_map[word]
         elif word in custom_surface_map:
             expected_surface = custom_surface_map[word]
             capitalization_policy = custom_case_policy_map[word]
@@ -1043,6 +1206,10 @@ def main() -> int:
             "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
             "reviewed_terc": sum(1 for r in keep.values() if r == "reviewed-terc"),
             "reviewed_terc_inflection": sum(1 for r in keep.values() if r == "reviewed-terc-inflection"),
+            "reviewed_country": sum(1 for r in keep.values() if r == "reviewed-country"),
+            "reviewed_country_inflection": sum(1 for r in keep.values() if r == "reviewed-country-inflection"),
+            "reviewed_capital": sum(1 for r in keep.values() if r == "reviewed-capital"),
+            "reviewed_capital_inflection": sum(1 for r in keep.values() if r == "reviewed-capital-inflection"),
             "custom_manual": sum(1 for r in keep.values() if r == "custom-manual"),
             "reviewed_first_name_inflection": sum(1 for r in keep.values() if r == "reviewed-first-name-inflection"),
             "reviewed_city": sum(1 for r in keep.values() if r == "reviewed-city"),
