@@ -18,34 +18,85 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--out-report", type=Path, required=True)
     return ap.parse_args()
 
+def _normalize_abbreviations(text: str) -> str:
+    """Repair PDF extractors that split short abbreviations into spaced glyphs."""
+    text = re.sub(r"(?i)\\bp\\s*o\\s*l\\s*\\.", "pol.", text)
+    text = re.sub(r"(?i)\\bst\\s*o\\s*l\\s*\\.", "stol.", text)
+    text = re.sub(r"(?i)\\bD\\s*\\.", "D.", text)
+    text = re.sub(r"(?i)\\bMc\\s*\\.", "Mc.", text)
+    return text
+
+
+def _score_country_markers(text: str) -> int:
+    return len(re.findall(r"(?i)(?<!\\w)pol\\.\\s+", text))
+
+
 def pdf_text(path: Path) -> str:
-    """Extract the PDF text in visual/layout order.
-    
-    The KSNG PDF uses a complex embedded font/layout where pypdf's default
-    extraction can collapse most country-entry markers. Poppler's pdftotext
-    with -layout preserves the line structure needed by this parser.
-    """
+    """Extract the KSNG PDF using the text representation that preserves entries."""
     import shutil
     import subprocess
 
+    candidates: list[tuple[str, str]] = []
+
+    reader = PdfReader(str(path))
+    for mode in ("default", "layout"):
+        try:
+            if mode == "layout":
+                text = "\\n".join(
+                    (page.extract_text(extraction_mode="layout") or "")
+                    for page in reader.pages
+                )
+            else:
+                text = "\\n".join((page.extract_text() or "") for page in reader.pages)
+            candidates.append((f"pypdf-{mode}", _normalize_abbreviations(text)))
+        except Exception:
+            continue
+
     exe = shutil.which("pdftotext")
     if exe:
-        result = subprocess.run(
-            [exe, "-layout", str(path), "-"],
-            check=True,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
+        for mode in ("layout", "raw"):
+            try:
+                args = [exe]
+                if mode == "layout":
+                    args.append("-layout")
+                else:
+                    args.append("-raw")
+                args.extend([str(path), "-"])
+                result = subprocess.run(
+                    args,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                )
+                candidates.append((f"pdftotext-{mode}", _normalize_abbreviations(result.stdout)))
+            except Exception:
+                continue
+
+    if not candidates:
+        raise RuntimeError("No usable PDF text extraction method available")
+
+    scored = sorted(
+        ((name, text, _score_country_markers(text)) for name, text in candidates),
+        key=lambda item: item[2],
+        reverse=True,
+    )
+    print(
+        "KSNG PDF extraction candidates:",
+        ", ".join(f"{name}={score}" for name, _, score in scored),
+    )
+    best_name, best_text, best_score = scored[0]
+    if best_score < 150:
+        sample = [
+            line for line in best_text.splitlines()
+            if "pol" in line.lower()
+        ][:20]
+        raise RuntimeError(
+            f"Could not obtain enough KSNG country markers: "
+            f"best={best_name} count={best_score} sample={sample!r}"
         )
-        text = result.stdout
-        if text.count("pol.") >= 150:
-            return text
-
-    # Keep a pypdf fallback so local runs fail with the parser's explicit
-    # 197-entry guard if Poppler is unavailable or unusable.
-    return "\n".join((page.extract_text() or "") for page in PdfReader(str(path)).pages)
-
+    return best_text
 def normalize(text: str) -> str:
     text = text.replace("\u00ad", "").replace("\r", "").replace("\f", "")
     return "\n".join(line.strip() for line in text.split("\n") if line.strip())
