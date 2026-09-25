@@ -163,11 +163,28 @@ def parse_capital(block: str) -> dict[str, str]:
             "ndm": "yes" if ndm else "no"}
 
 def parse_main(text: str) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
-    start = text.rfind("Część I. Państwa")
-    end = text.find("Część II. Terytoria niesamodzielne", start + 1)
-    if start < 0 or end < 0:
+    # The PDF repeats section headings in page headers. Do not use rfind()/find()
+    # blindly: choose the heading interval whose country-marker count is exactly
+    # the documented 197 states in Part I.
+    start_positions = [m.start() for m in re.finditer(r"Część I\. Państwa", text)]
+    end_positions = [m.start() for m in re.finditer(r"Część II\. Terytoria niesamodzielne", text)]
+    best_section = None
+    best_count = -1
+    for start in start_positions:
+        next_ends = [end for end in end_positions if end > start]
+        if not next_ends:
+            continue
+        end = min(next_ends)
+        section = text[start:end]
+        count = len(re.findall(r"(?<!\w)pol\.\s+", section, flags=re.IGNORECASE))
+        if count > best_count:
+            best_count = count
+            best_section = section
+        if count == 197:
+            break
+    if best_section is None:
         raise ValueError("Could not isolate Part I")
-    section = text[start:end]
+    section = best_section
     matches = list(re.finditer(r"(?<!\w)pol\.\s+", section, flags=re.IGNORECASE))
     if len(matches) != 197:
         raise ValueError(f"Expected 197 country entries, got {len(matches)}")
@@ -189,7 +206,6 @@ def parse_main(text: str) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
             "source": "KSNG/GUGiK official 2025 list",
         })
     return countries, capitals
-
 def apply_update(capitals: list[dict[str, str]]) -> None:
     rows = [r for r in capitals if r["country"].lower() == "gwinea równikowa"]
     if len(rows) != 1:
