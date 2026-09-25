@@ -132,7 +132,8 @@ def main() -> int:
         }:
             level = "powiat"
         elif pow_ and gmi and rodz in GMINA_RODZ and kind in {
-            "gmina miejska", "gmina wiejska", "gmina miejsko-wiejska", "miasto stołeczne",
+            "gmina miejska", "gmina wiejska", "gmina miejsko-wiejska",
+            "miasto stołeczne", "gmina miejska, miasto stołeczne",
         }:
             level = "gmina"
         else:
