@@ -143,6 +143,9 @@ jobs:
           )
           # Regression guard: these surfaces were observed in real Polish swipe tests and
           # must never be present in the Polish preview dictionary.
+          custom_rows = list(csv.DictReader(Path("sources/staging/custom_manual.tsv").open(encoding="utf-8", newline=""), delimiter="\t"))
+          custom_forms = {row["surface"].strip() for row in custom_rows}
+          assert all(row["case_policy"] in {"lowercase", "capitalized"} for row in custom_rows)
           homonym_audit = json.loads(Path("build/pl-first-name-homonym-audit.json").read_text(encoding="utf-8"))
           capitalized_homonyms = set(homonym_audit["capitalized_homonym_names"])
           lowercase_homonyms = set(homonym_audit["lowercase_common_noun_names"])
@@ -221,6 +224,12 @@ jobs:
               )
           for name in sorted(excluded_names):
               assert name not in ckdt_words, "user-excluded first name still present: " + name
+
+          missing_custom = sorted({row["surface"].lower() for row in custom_rows} - ckdt_words)
+          assert not missing_custom, (
+              "custom manual forms missing from CKDT: "
+              + ", ".join(missing_custom)
+          )
 
           with Path("build/pl-name-history-report.json").open(encoding="utf-8") as handle:
               history = json.load(handle)
@@ -329,7 +338,10 @@ jobs:
               "word_count": expected,
               "zip_entries": names,
               "ckdt_version": version,
-              "has_prefix_boost": False,              "first_name_inflection_forms": len(expected_inflection_surfaces),
+              "has_prefix_boost": False,
+              "custom_manual_forms": len(custom_forms),
+              "custom_manual_forms_present_in_ckdt": len(custom_forms - {w.lower() for w in ckdt_raw}),
+              "first_name_inflection_forms": len(expected_inflection_surfaces),
               "first_name_inflection_forms_present_in_ckdt": len(expected_inflection_surfaces - set(missing_inflections)),
               "city_names": len(city_names),
               "city_inflection_forms": len(city_inflection_surfaces),
@@ -349,7 +361,9 @@ jobs:
             build/pl_words_preview.txt
             build/pl-preview-report.json
             build/aosp/pl_wordlist.combined.gz.sha256
-            sources/staging/autocorrect_errors.tsv            build/aosp/source-ref.txt
+            sources/staging/autocorrect_errors.tsv
+            sources/staging/custom_manual.tsv
+            build/aosp/source-ref.txt
             build/pl-name-history-report.json
             build/pl-name-history.tsv
             build/pl-name-history-core-215-each-gender.txt
