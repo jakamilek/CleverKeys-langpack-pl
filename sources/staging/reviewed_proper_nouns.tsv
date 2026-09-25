@@ -1,0 +1,71 @@
+# Reviewed Polish proper nouns pilot.
+# Columns: family_id	forms(; separated)	basis	note
+# Canonical surface casing is intentional: CleverKeys CKDT can preserve the
+# reviewed capitalized form through its canonical/normalized mapping.
+# This is a project-owned reviewed source and does not automatically promote
+# arbitrary names from external corpora.
+#
+# Sources used for this bounded expansion:
+# - Polish Ministry of Digital Affairs / dane.gov.pl PESEL name statistics,
+#   current living-person name dataset updated 2026-01-30.
+# - Polish Ministry of Digital Affairs: top first names given in H1 2026,
+#   published 2026-08-19.
+# - Official GUS TERYT/SIMC + GUGiK PRNG naming registers for place-name
+#   canonical spelling.
+#
+# This is deliberately a reviewed pilot, not an uncontrolled import of all
+# personal names or all geographic names.
+
+place-bydgoszcz	Bydgoszcz;Bydgoszczy	Observed missing proper-name/place forms	Observed in Polish device testing; include the city name and a common inflected form.
+place-nicea	Nicea;Nicei	Observed missing proper-name/place forms	Observed in Polish device testing; include the city name and a common inflected form.
+place-tomaszow	Tomaszów;Tomaszowa;Tomaszowie;Tomaszowem	Observed runtime proper-name failure + GUS TERYT place-name evidence	Standalone city-name surface observed in device testing; inflected forms manually reviewed from the Polish declension pattern for -ów place names. GUS TERYT confirms the corresponding official place names Tomaszów Mazowiecki and Tomaszów Lubelski.
+place-zamosc	Zamość;Zamościa;Zamościu;Zamościem	Observed runtime proper-name failure + GUS TERYT place-name evidence	Canonical city surface and common inflected forms manually reviewed; GUS TERYT confirms Zamość as an official place name.
+name-grazyna	Grażyna;Grażyny;Grażynie;Grażynę;Grażyną	Observed runtime proper-name failure + official PESEL name statistics	Canonical given name plus common case forms manually reviewed. Grażyna appears in the official PESEL name register statistics published by the Ministry of Digital Affairs.
+name-zofia-expanded	Zofia;Zofii;Zofię;Zofią;Zofio	Observed runtime capitalization failure + 2026 Ministry of Digital Affairs name ranking	Canonical given name plus common case forms manually reviewed. Zofia is the leading girls' name in the Ministry of Digital Affairs H1 2026 ranking.
+place-warszawa	Warszawa;Warszawy;Warszawie;Warszawę;Warszawą	User device test + official GUS/GUGiK place-name register	Canonical capital-city surface plus common inflected forms for runtime capitalization tests.
+place-gdansk	Gdańsk;Gdańska;Gdańsku	User device test + official GUS/GUGiK place-name register	Canonical city surface plus common inflected forms for runtime capitalization tests.
+place-krakow	Kraków	Official GUS/GUGiK place-name register	Canonical city surface for proper-name smoke tests.
+place-wroclaw	Wrocław	Official GUS/GUGiK place-name register	Canonical city surface for proper-name smoke tests.
+place-poznan	Poznań	Official GUS/GUGiK place-name register	Canonical city surface for proper-name smoke tests.
+place-lodz	Łódź	Official GUS/GUGiK place-name register	Canonical city surface for proper-name smoke tests.
+
+name-andrzej	Andrzej;Andrzeju	Observed missing proper-name forms	Observed in Polish device testing; nominative + vocative.
+name-marzena	Marzena	Observed missing proper-name forms + PESEL name statistics	Observed in Polish device testing; also present in official Polish name statistics.
+name-januszek	Januszek	Observed missing proper-name forms	Observed in Polish device testing; diminutive/proper-name surface.
+name-aska	Aśka	Observed missing proper-name forms	Observed in Polish device testing; colloquial diminutive used as a proper name.
+
+name-zoska	Zośka;Zośki;Zośce;Zośkę;Zośką;Zośko	SJP entry „Zośka”; declension and etymology	Diminutive of Zofia; canonical proper-name capitalization and singular case forms reviewed from the cited SJP entry.
+
+name-anna	Anna	PESEL name statistics + current Polish name usage	Common Polish female given-name anchor.
+name-katarzyna	Katarzyna	PESEL name statistics	Common Polish female given-name anchor.
+name-maria	Maria	PESEL name statistics + H1 2026 second-name statistics	Common Polish female given-name anchor.
+name-zofia	Zofia	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+name-zuzanna	Zuzanna	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+name-maja	Maja	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+name-laura	Laura	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+name-hanna	Hanna	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+name-oliwia	Oliwia	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+name-pola	Pola	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+name-julia	Julia	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+name-alicja	Alicja	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+name-antonina	Antonina	H1 2026 Ministry of Digital Affairs ranking	Top current Polish female given-name anchor.
+
+name-piotr	Piotr	PESEL name statistics + H1 2026 second-name statistics	Common Polish male given-name anchor.
+name-krzysztof	Krzysztof	PESEL name statistics	Common Polish male given-name anchor.
+name-tomasz	Tomasz	PESEL name statistics	Common Polish male given-name anchor.
+name-pawel	Paweł	PESEL name statistics	Common Polish male given-name anchor.
+name-jan	Jan	PESEL name statistics + H1 2026 ranking	Common Polish male given-name anchor.
+name-michal	Michał	PESEL name statistics	Common Polish male given-name anchor.
+name-marcin	Marcin	PESEL name statistics	Common Polish male given-name anchor.
+name-jakub	Jakub	PESEL name statistics + H1 2026 ranking	Common Polish male given-name anchor.
+name-adam	Adam	PESEL name statistics	Common Polish male given-name anchor.
+name-jozef	Józef	PESEL name statistics + H1 2026 second-name statistics	Common Polish male given-name anchor.
+
+name-nikodem	Nikodem	H1 2026 Ministry of Digital Affairs ranking	Top current Polish male given-name anchor.
+name-antoni	Antoni	H1 2026 Ministry of Digital Affairs ranking	Top current Polish male given-name anchor.
+name-leon	Leon	H1 2026 Ministry of Digital Affairs ranking	Top current Polish male given-name anchor.
+name-aleksander	Aleksander	H1 2026 Ministry of Digital Affairs ranking	Top current Polish male given-name anchor.
+name-franciszek	Franciszek	H1 2026 Ministry of Digital Affairs ranking	Top current Polish male given-name anchor.
+name-ignacy	Ignacy	H1 2026 Ministry of Digital Affairs ranking	Top current Polish male given-name anchor.
+name-stanislaw	Stanisław	H1 2026 Ministry of Digital Affairs ranking	Top current Polish male given-name anchor.
+name-mikolaj	Mikołaj	H1 2026 Ministry of Digital Affairs ranking	Top current Polish male given-name anchor.

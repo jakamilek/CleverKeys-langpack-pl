@@ -1,0 +1,38 @@
+name: Build CleverKeys Polish language pack
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate dictionary
+        run: |
+          chmod +x scripts/validate_pl.sh
+          ./scripts/validate_pl.sh
+
+      - name: Quality analysis
+        run: |
+          python3 scripts/check_quality.py
+
+      - name: Build package
+        run: |
+          chmod +x scripts/build_pl.sh
+          ./scripts/build_pl.sh
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleverkeys-langpack-pl
+          path: |
+            cleverkeys-langpack-pl.zip
+            cleverkeys-langpack-pl.sha256
+            build_quality.json

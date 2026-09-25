@@ -1,0 +1,16 @@
+{
+  "name": "Polish Engineering",
+  "base": "standard_pl",
+  "modules": [
+    "engineering",
+    "roads",
+    "construction",
+    "geotechnics",
+    "engineering_structures",
+    "cost_estimation"
+  ],
+  "priority": {
+    "professional_terms": 1.25,
+    "rare_terms": 0.6
+  }
+}

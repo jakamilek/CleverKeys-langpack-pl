@@ -1,0 +1,11 @@
+word,priority,category
+asfalt,90,road
+podbudowa,90,road
+nawierzchnia,90,road
+kruszywo,80,materials
+niwelacja,80,surveying
+kosztorys,80,estimating
+KNR,70,estimating
+walec,70,machinery
+koparka,70,machinery
+BHP,60,safety

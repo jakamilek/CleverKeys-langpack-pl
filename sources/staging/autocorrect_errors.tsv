@@ -1,0 +1,17 @@
+# wrong<TAB>canonical<TAB>error_class<TAB>note
+ktury	który	diacritic	Classic Polish orthographic error.
+rzeczywiscie	rzeczywiście	diacritic	Missing diacritic.
+mozna	można	diacritic	Missing diacritic.
+czesc	cześć	diacritic	Missing diacritic.
+wogole	w ogóle	missing-space+diacritic	Multiword correction; not a dictionary entry.
+napewno	na pewno	missing-space	Multiword correction; not a dictionary entry.
+wziąść	wziąć	lexical	Wrong infinitive.
+włanczać	włączać	lexical	Wrong verb form.
+ktory	który	diacritic	Missing diacritic.
+odrazu	od razu	missing-space	Multiword correction; not a dictionary entry.
+narazie	na razie	missing-space	Multiword correction; not a dictionary entry.
+niewiem	nie wiem	missing-space	Multiword correction; not a dictionary entry.
+naprawde	naprawdę	diacritic	Missing diacritic.
+wogule	w ogóle	lexical+missing-space	Variant of the common error wogole.
+jusz	już	substitution	Common consonant substitution.
+wziasc	wziąć	diacritic+lexical	Common malformed infinitive.

@@ -1,0 +1,414 @@
+name: Polish language pack preview
+
+on:
+  push:
+    branches:
+      - "ops/baseline-sync-2026-09-20"
+    paths:
+      - "scripts/build_pl_preview.py"
+      - "scripts/requirements-pl-audit.txt"
+      - "sources/staging/autocorrect_errors.tsv"
+      - "sources/staging/reviewed_morphology.tsv"
+      - "sources/staging/reviewed_proper_nouns.tsv"
+      - "sources/staging/historical_name_candidates.tsv"
+      - "sources/staging/first_name_surface_policy.tsv"
+      - "scripts/audit_name_history.py"
+      - "scripts/generate_first_name_inflections.py"
+      - "scripts/fetch_teryt_simc.py"
+      - "scripts/extract_teryt_cities.py"
+      - "scripts/generate_city_inflections.py"
+      - "sources/staging/reviewed_city_inflection_priority.tsv"
+      - "sources/staging/reviewed_city_inflection_overrides.tsv"
+      - "docs/PL_CITY_SOURCE_POLICY_2026-09-24.md"
+      - "docs/PL_NAME_HISTORY_SOURCE_POLICY_2026-09-23.md"
+      - ".github/workflows/pl-preview.yml"
+      - "docs/PL_MORFEUSZ_SGJP_ATTRIBUTION_2026-09-24.md"
+      - "docs/PL_LANGUAGE_DATA_PLAN.md"
+      - "docs/PL_SOURCE_MATRIX_2026-09-20.md"
+  workflow_dispatch:
+
+# CI checkpoint: reviewed morphology pilot is validated from a concrete Actions run.
+# Current checkpoint tree was restored from the verified 43d946b6 baseline.
+concurrency:
+  group: cleverkeys-pl-preview
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout language project
+        uses: actions/checkout@v4
+
+      - name: Install Polish spelling oracle
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y hunspell hunspell-pl
+
+      - name: Install pinned wordfreq
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r scripts/requirements-pl-audit.txt
+
+      - name: Acquire current AOSP Polish dictionary
+        run: |
+          mkdir -p build/aosp
+          curl --fail --retry 6 --retry-delay 3 --retry-all-errors --location             'https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/refs/heads/main/dictionaries/pl_wordlist.combined.gz?format=TEXT'             -o build/aosp/pl_wordlist.combined.gz.base64
+          base64 --decode             build/aosp/pl_wordlist.combined.gz.base64             > build/aosp/pl_wordlist.combined.gz
+          sha256sum build/aosp/pl_wordlist.combined.gz             | awk '{print $1}'             > build/aosp/pl_wordlist.combined.gz.sha256
+          test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
+          printf '%s\n'             'android.googlesource.com/platform/packages/inputmethods/LatinIME'             'refs/heads/main'             'dictionaries/pl_wordlist.combined.gz'             'sha256=75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45'             'directory-tree=2b550379fe38213f9b01dcb75478ef2133682685'             > build/aosp/source-ref.txt
+
+      - name: Acquire current official TERYT SIMC catalog
+        run: |
+          mkdir -p build/teryt
+          python3 scripts/fetch_teryt_simc.py \
+            --state-date 2026-09-24 \
+            --out-zip build/teryt/SIMC_Urzedowy_2026-09-24.zip \
+            --out-sha256 build/teryt/SIMC_Urzedowy_2026-09-24.sha256 \
+            --out-provenance build/teryt/source-ref.json
+          python3 scripts/extract_teryt_cities.py \
+            --zip build/teryt/SIMC_Urzedowy_2026-09-24.zip \
+            --out-tsv build/pl-city-source.tsv \
+            --out-report build/pl-city-source-report.json
+
+      - name: Audit official modern first-name core
+        run: |
+          python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-215-each-gender.txt             --out-buffer build/pl-name-history-buffer-216-300.tsv             --workdir build/pl-name-history-sources             --core-per-gender 215             --buffer-end-rank 300
+
+      - name: Audit first-name common-noun homonyms
+        run: |
+          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --surface-policy sources/staging/first_name_surface_policy.tsv
+
+      - name: Generate selected first-name inflections
+        run: |
+          python3 scripts/generate_first_name_inflections.py \
+            --history-report build/pl-name-history-report.json \
+            --historical-first-names sources/staging/historical_name_candidates.tsv \
+            --surface-policy sources/staging/first_name_surface_policy.tsv \
+            --out-tsv build/pl-first-name-inflections.tsv \
+            --out-report build/pl-first-name-inflections-report.json
+
+      - name: Generate selective city inflections
+        run: |
+          python3 scripts/generate_city_inflections.py \
+            --cities build/pl-city-source.tsv \
+            --priorities sources/staging/reviewed_city_inflection_priority.tsv \
+            --top-n 300 \
+            --out-tsv build/pl-city-inflections.tsv \
+            --out-report build/pl-city-inflections-report.json \
+            --overrides sources/staging/reviewed_city_inflection_overrides.tsv
+
+      - name: Preview Polish word list
+        run: |
+          python3 scripts/build_pl_preview.py             --top 300000             --band 150000             --limit 150000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --morphology sources/staging/reviewed_morphology.tsv             --proper-nouns sources/staging/reviewed_proper_nouns.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+
+      - name: Pin CleverKeys runtime
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/tribixbite/CleverKeys.git build/CleverKeys-runtime
+          git -C build/CleverKeys-runtime fetch --depth=1 origin 263bd0abc03dec420f60fa073a9d2c5e25a176b5
+          git -C build/CleverKeys-runtime checkout --detach 263bd0abc03dec420f60fa073a9d2c5e25a176b5
+          test "$(git -C build/CleverKeys-runtime rev-parse HEAD)" = "263bd0abc03dec420f60fa073a9d2c5e25a176b5"
+
+      - name: Build CKDT V2 dictionary with CleverKeys code
+        run: |
+          python3 build/CleverKeys-runtime/scripts/build_dictionary.py             --lang pl             --input build/pl_words_preview.txt             --output build/dictionary.bin             --use-wordfreq
+
+      - name: Generate unigrams with CleverKeys code
+        run: |
+          python3 build/CleverKeys-runtime/scripts/generate_unigrams.py             --lang pl             --output build/unigrams.txt             --top-n 5000
+
+      - name: Build deterministic CleverKeys pack
+        run: |
+          python3 build/CleverKeys-runtime/scripts/build_langpack.py             --lang pl             --name "Polish"             --dict build/dictionary.bin             --unigrams build/unigrams.txt             --version 2             --author "jakamilek/CleverKeys-langpack-pl"             --output build/cleverkeys-langpack-pl-preview.zip
+          sha256sum build/cleverkeys-langpack-pl-preview.zip             > build/cleverkeys-langpack-pl-preview.sha256
+
+      - name: Verify CKDT and pack contents
+        run: |
+          python3 - <<'PY'
+          import json, struct, zipfile
+          from pathlib import Path
+
+          report = json.loads(Path("build/pl-preview-report.json").read_text(encoding="utf-8"))
+          expected = report["kept"]
+
+          # Every retained surface must pass the capitalization gate before dictionary
+          # generation. The gate distinguishes ordinary lowercase vocabulary from
+          # explicitly audited proper-name/city surfaces.
+          capitalization = report["capitalization_audit"]
+          assert capitalization["checked"] == expected
+          assert capitalization["violations"] == []
+          assert (
+              capitalization["lowercase_surfaces"] + capitalization["capitalized_surfaces"]
+              == expected
+          )
+          reviewed = {
+              word
+              for forms in report["reviewed_morphology"]["families"].values()
+              for word in forms
+          }
+          reviewed_proper_nouns = {
+              word
+              for forms in report["reviewed_proper_nouns"]["families"].values()
+              for word in forms
+          }
+
+          # Regression guard: these surfaces were observed in real Polish swipe tests and
+          # must never be present in the Polish preview dictionary.
+          homonym_audit = json.loads(Path("build/pl-first-name-homonym-audit.json").read_text(encoding="utf-8"))
+          capitalized_homonyms = set(homonym_audit["capitalized_homonym_names"])
+          lowercase_homonyms = set(homonym_audit["lowercase_common_noun_names"])
+          excluded_names = set(homonym_audit["excluded_names"])
+          assert len(capitalized_homonyms) == 48, sorted(capitalized_homonyms)
+          assert lowercase_homonyms == {"jagoda", "lilia", "malina", "melisa", "róża"}, sorted(lowercase_homonyms)
+          assert excluded_names == {"oleksandr"}, sorted(excluded_names)
+
+          forbidden = {
+              "chopin", "chopina", "goebbels", "goebbelsa",
+              "catherine", "catalina", "cameron", "carli", "carlo",
+              "castillo", "cali", "celli", "casino", "calli",
+              "carrillo", "caroli", "cassino", "compos", "gourami",
+              "celastial",
+          }
+
+          data = Path("build/dictionary.bin").read_bytes()
+          magic, version = struct.unpack_from("<II", data, 0)
+          assert magic == 0x54444B43 and version == 2
+          word_count = struct.unpack_from("<I", data, 12)[0]
+          assert word_count == expected, (word_count, expected)
+
+          with zipfile.ZipFile("build/cleverkeys-langpack-pl-preview.zip") as zf:
+              names = zf.namelist()
+              assert names == ["dictionary.bin", "manifest.json", "unigrams.txt"], names
+              manifest = json.loads(zf.read("manifest.json"))
+              assert manifest["code"] == "pl"
+              assert manifest["version"] == 2
+              assert manifest["wordCount"] == expected
+              assert manifest["hasPrefixBoost"] is False
+
+          # Read the canonical CKDT section directly so the guard checks the actual artifact,
+          # not only the text preview.
+          p = 48
+          ckdt_raw = set()
+          ckdt_words = set()
+          found = set()
+          for _ in range(word_count):
+              n = struct.unpack_from("<H", data, p)[0]
+              p += 2
+              raw_word = data[p:p+n].decode("utf-8")
+              p += n + 1
+              word = raw_word.lower()
+              ckdt_raw.add(raw_word)
+              ckdt_words.add(word)
+              if word in forbidden:
+                  found.add(word)
+
+          assert len(ckdt_words) == word_count, "duplicate words detected in CKDT"
+          assert not found, "forbidden regression words in CKDT: " + ", ".join(sorted(found))
+          missing_capitalized_homonyms = sorted(
+              w for w in capitalized_homonyms
+              if w.capitalize() not in ckdt_raw
+          )
+          assert not missing_capitalized_homonyms, (
+              "capitalized homonym names missing from CKDT: "
+              + ", ".join(missing_capitalized_homonyms)
+          )
+          for lower in sorted(lowercase_homonyms):
+              assert lower in ckdt_words, "lowercase common noun missing from CKDT: " + lower
+              assert lower.capitalize() not in ckdt_raw, "lowercase exception was capitalized in CKDT: " + lower
+
+          # Orthographic regression: adjectives derived from geographic/proper names are
+          # ordinary lexical words and must remain lowercase. These examples exercise the
+          # rule without treating adjectives as proper-name surfaces.
+          derived_adjectives = {
+              "warszawski", "warszawska", "warszawskie",
+              "wrocławski", "wrocławska", "wrocławskie",
+              "toruński", "toruńska", "toruńskie",
+              "gdyński", "gdyńska", "gdyńskie",
+          }
+          for adjective in sorted(derived_adjectives):
+              assert adjective == adjective.lower()
+              assert adjective.capitalize() not in ckdt_raw, (
+                  "derived adjective was incorrectly capitalized in CKDT: " + adjective
+              )
+          for name in sorted(excluded_names):
+              assert name not in ckdt_words, "user-excluded first name still present: " + name
+
+          missing_reviewed = sorted(reviewed - ckdt_words)
+          assert not missing_reviewed, (
+              "reviewed morphology forms missing from CKDT: "
+              + ", ".join(missing_reviewed)
+          )
+
+          with Path("build/pl-name-history-report.json").open(encoding="utf-8") as handle:
+              history = json.load(handle)
+          import csv
+          with Path("sources/staging/historical_name_candidates.tsv").open(encoding="utf-8", newline="") as handle:
+              historical_rows_src = list(csv.DictReader(handle, delimiter="\t"))
+          with Path("sources/staging/first_name_surface_policy.tsv").open(encoding="utf-8", newline="") as handle:
+              surface_policy = {
+                  row["name"].strip().lower(): row["policy"].strip()
+                  for row in csv.DictReader(handle, delimiter="\t")
+              }
+          expected_surfaces = []
+          for key in ("top_female", "top_male"):
+              for row in history[key][:215]:
+                  canonical = row["name"].strip()
+                  lower = canonical.lower()
+                  policy = surface_policy.get(lower, "capitalized_name")
+                  if policy == "exclude":
+                      continue
+                  expected_surfaces.append(lower if policy == "lowercase_common_noun" else canonical)
+          for row in historical_rows_src:
+              canonical = row["name"].strip()
+              lower = canonical.lower()
+              policy = surface_policy.get(lower, "capitalized_name")
+              if policy == "exclude":
+                  continue
+              expected_surfaces.append(lower if policy == "lowercase_common_noun" else canonical)
+          assert len(expected_surfaces) == 469
+          assert len(set(expected_surfaces)) == 469
+          missing_first_names = sorted(set(expected_surfaces) - ckdt_raw)
+          assert not missing_first_names, "selected first names missing from CKDT: " + ", ".join(missing_first_names)
+
+          # First-name inflection gate: every generated singular surface for the
+          # selected, non-lowercase/non-excluded names must survive into CKDT exactly.
+          inflection_rows = []
+          with Path("build/pl-first-name-inflections.tsv").open(encoding="utf-8", newline="") as handle:
+              inflection_rows = list(csv.DictReader(handle, delimiter="\t"))
+          policy_map = {
+              row["name"].strip().lower(): row["policy"].strip()
+              for row in csv.DictReader(
+                  Path("sources/staging/first_name_surface_policy.tsv").open(
+                      encoding="utf-8", newline=""
+                  ),
+                  delimiter="\t",
+              )
+          }
+          expected_inflection_surfaces = {
+              row["form"]
+              for row in inflection_rows
+              if policy_map.get(row["name"].strip().lower(), "capitalized_name")
+              not in {"lowercase_common_noun", "exclude"}
+          }
+          missing_inflections = sorted(expected_inflection_surfaces - ckdt_raw)
+          assert not missing_inflections, (
+              "selected first-name inflection forms missing from CKDT: "
+              + ", ".join(missing_inflections)
+          )
+          assert "Jakub" in expected_inflection_surfaces
+          assert "Jakuba" in expected_inflection_surfaces
+          assert "Jakubowi" in expected_inflection_surfaces
+          assert "Jakubem" in expected_inflection_surfaces
+          assert "Jakubie" in expected_inflection_surfaces
+          assert {"Jakub", "Jakuba", "Jakubowi", "Jakubem", "Jakubie"} <= ckdt_raw
+
+          city_rows = []
+          with Path("build/pl-city-source.tsv").open(encoding="utf-8", newline="") as handle:
+              city_rows = list(csv.DictReader(handle, delimiter="\t"))
+          city_names = {row["name"] for row in city_rows}
+          missing_city_names = sorted(city_names - ckdt_raw)
+          assert not missing_city_names, (
+              "official one-token city names missing from CKDT: "
+              + ", ".join(missing_city_names)
+          )
+          assert "Gdynia" in city_names
+          assert "Gdynia" in ckdt_raw
+
+          city_inflection_rows = []
+          with Path("build/pl-city-inflections.tsv").open(encoding="utf-8", newline="") as handle:
+              city_inflection_rows = list(csv.DictReader(handle, delimiter="\t"))
+          priority_names = {
+              row["name"].strip()
+              for row in csv.DictReader(
+                  Path("sources/staging/reviewed_city_inflection_priority.tsv").open(
+                      encoding="utf-8", newline=""
+                  ),
+                  delimiter="\t",
+              )
+          }
+          selected_city_names = {row["name"].strip() for row in city_inflection_rows}
+          assert priority_names <= selected_city_names
+          city_inflection_surfaces = {row["form"] for row in city_inflection_rows}
+          missing_city_inflections = sorted(city_inflection_surfaces - ckdt_raw)
+          assert not missing_city_inflections, (
+              "selected city inflection forms missing from CKDT: "
+              + ", ".join(missing_city_inflections)
+          )
+          for expected_city_form in ("Gdynia", "Gdyni", "Gdynię", "Gdynią"):
+              assert expected_city_form in ckdt_raw, expected_city_form
+          for expected_city_form in (
+              "Wrocław", "Wrocławia", "Wrocławiowi", "Wrocławiem", "Wrocławiu",
+              "Toruń", "Torunia", "Toruniowi", "Toruniem", "Toruniu",
+          ):
+              assert expected_city_form in ckdt_raw, expected_city_form
+
+          missing_proper_nouns = sorted(
+              {word.lower() for word in reviewed_proper_nouns} - ckdt_words
+          )
+          assert not missing_proper_nouns, (
+              "reviewed proper nouns missing from CKDT: "
+              + ", ".join(missing_proper_nouns)
+          )
+          expected_proper_case = {
+              word for word in reviewed_proper_nouns
+          }
+          actual_proper_case = {
+              word for word in ckdt_raw
+              if word.lower() in {w.lower() for w in reviewed_proper_nouns}
+          }
+          assert actual_proper_case == expected_proper_case, (
+              "reviewed proper noun casing mismatch: "
+              f"expected={sorted(expected_proper_case)}, "
+              f"actual={sorted(actual_proper_case)}"
+          )
+
+          print(json.dumps({
+              "word_count": expected,
+              "zip_entries": names,
+              "ckdt_version": version,
+              "has_prefix_boost": False,
+              "reviewed_morphology_forms": len(reviewed),
+              "reviewed_morphology_present_in_ckdt": len(reviewed - set(missing_reviewed)),
+              "reviewed_proper_noun_forms": len(reviewed_proper_nouns),
+              "reviewed_proper_nouns_present_in_ckdt": len(reviewed_proper_nouns - set(missing_proper_nouns)),
+              "first_name_inflection_forms": len(expected_inflection_surfaces),
+              "first_name_inflection_forms_present_in_ckdt": len(expected_inflection_surfaces - set(missing_inflections)),
+              "city_names": len(city_names),
+              "city_inflection_forms": len(city_inflection_surfaces),
+              "city_inflection_forms_present_in_ckdt": len(city_inflection_surfaces - set(missing_city_inflections)),
+              "regression_hits": len(found),
+              "promotion": False,
+          }, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Publish preview artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleverkeys-pl-preview
+          path: |
+            build/cleverkeys-langpack-pl-preview.zip
+            build/cleverkeys-langpack-pl-preview.sha256
+            build/pl_words_preview.txt
+            build/pl-preview-report.json
+            build/aosp/pl_wordlist.combined.gz.sha256
+            sources/staging/autocorrect_errors.tsv
+            sources/staging/reviewed_morphology.tsv
+            sources/staging/reviewed_proper_nouns.tsv
+            build/aosp/source-ref.txt
+            build/pl-name-history-report.json
+            build/pl-name-history.tsv
+            build/pl-name-history-core-215-each-gender.txt
+            build/pl-name-history-buffer-216-300.tsv
+            build/pl-first-name-inflections.tsv
+            build/pl-first-name-inflections-report.json
+            build/teryt/SIMC_Urzedowy_2026-09-24.zip
+            build/teryt/SIMC_Urzedowy_2026-09-24.sha256
+            build/teryt/source-ref.json
+            build/pl-city-source.tsv
+            build/pl-city-source-report.json
+            build/pl-city-inflections.tsv
+            build/pl-city-inflections-report.json
