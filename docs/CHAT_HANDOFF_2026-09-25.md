@@ -49,16 +49,23 @@ Case-insensitive capacity rule:
 Final size:
 100,000 + union(net-new module keys)
 
-### Morphology strategy
-Agreed target architecture:
-1. Generate complete validated paradigms first.
-2. Measure frequency and evidence.
-3. Retain forms according to frequency + grammatical usefulness + source confidence + available capacity.
-4. Preserve full provenance even when a particular form is not retained in CKDT.
+### Morphology and category admission strategy
+Every new category follows this protocol:
+1. Prepare and audit the category's base words/items.
+2. Generate the complete validated singular paradigm.
+3. Validate provenance, morphology and capitalization.
+4. Deduplicate case-insensitively against the 100k core and active modules.
+5. Measure the category before deciding what to retain.
+6. When the measured size is within the category's agreed capacity envelope, retain all validated base items and forms.
+7. When the category is too large, retain the base items and reduce inflection forms using frequency, grammatical usefulness and source confidence.
+8. Keep the complete generated paradigm and evidence for any excluded forms in audit artifacts.
+9. Re-measure the final retained set and its net-new union contribution.
 
-IMPORTANT:
-- This frequency-aware retention policy is conceptually accepted but NOT YET fully implemented.
-- Current generators generally emit full available singular forms for selected names/cities; current run #74 measures their cost but does not apply frequency-based form retention.
+Capacity is evaluated primarily on net-new unique keys, not raw generated-form counts. A low-frequency valid form is not removed when there is sufficient capacity. A category-specific capacity envelope is established only when needed and only after its cost has been measured. No numeric frequency threshold is set before measurement.
+
+Current status:
+- name/city modules use full retention;
+- frequency-aware reduction is reserved for future capacity pressure and does not justify pruning the current 2,611-key active addition set.
 
 ## 2. Frequency policy (accepted decision)
 
