@@ -13,6 +13,9 @@ on:
       - "scripts/audit_name_history.py"
       - "scripts/generate_first_name_inflections.py"
       - "scripts/fetch_teryt_simc.py"
+      - "scripts/fetch_teryt_terc.py"
+      - "scripts/extract_teryt_terc.py"
+      - "scripts/generate_terc_inflections.py"
       - "scripts/extract_teryt_cities.py"
       - "scripts/generate_city_inflections.py"
       - "sources/staging/reviewed_city_inflection_priority.tsv"
@@ -58,6 +61,12 @@ jobs:
           test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
           printf '%s\n'             'android.googlesource.com/platform/packages/inputmethods/LatinIME'             'refs/heads/main'             'dictionaries/pl_wordlist.combined.gz'             'sha256=75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45'             'directory-tree=2b550379fe38213f9b01dcb75478ef2133682685'             > build/aosp/source-ref.txt
 
+      - name: Acquire current official TERYT TERC catalog
+        run: |
+          mkdir -p build/teryt
+          python3 scripts/fetch_teryt_terc.py             --state-date 2026-01-01             --out-zip build/teryt/TERC_Urzedowy_2026-01-01.zip             --out-sha256 build/teryt/TERC_Urzedowy_2026-01-01.sha256             --out-provenance build/teryt/TERC-source-ref.json
+          python3 scripts/extract_teryt_terc.py             --zip build/teryt/TERC_Urzedowy_2026-01-01.zip             --out-tsv build/pl-terc-source.tsv             --out-flat-tsv build/pl-terc-flat.tsv             --out-report build/pl-terc-source-report.json
+
       - name: Acquire current official TERYT SIMC catalog
         run: |
           mkdir -p build/teryt
@@ -88,6 +97,10 @@ jobs:
             --out-tsv build/pl-first-name-inflections.tsv \
             --out-report build/pl-first-name-inflections-report.json
 
+      - name: Generate full TERC administrative inflections
+        run: |
+          python3 scripts/generate_terc_inflections.py             --terc build/pl-terc-flat.tsv             --out-tsv build/pl-terc-inflections.tsv             --out-report build/pl-terc-inflections-report.json
+
       - name: Generate selective city inflections
         run: |
           python3 scripts/generate_city_inflections.py \
@@ -100,7 +113,7 @@ jobs:
 
       - name: Preview Polish word list
         run: |
-          python3 scripts/build_pl_preview.py             --top 300000             --band 150000             --limit 150000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 300000             --band 150000             --limit 150000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-flat.tsv             --terc-inflections build/pl-terc-inflections.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -377,3 +390,11 @@ jobs:
             build/pl-city-source-report.json
             build/pl-city-inflections.tsv
             build/pl-city-inflections-report.json
+            build/teryt/TERC_Urzedowy_2026-01-01.zip
+            build/teryt/TERC_Urzedowy_2026-01-01.sha256
+            build/teryt/TERC-source-ref.json
+            build/pl-terc-source.tsv
+            build/pl-terc-flat.tsv
+            build/pl-terc-source-report.json
+            build/pl-terc-inflections.tsv
+            build/pl-terc-inflections-report.json
