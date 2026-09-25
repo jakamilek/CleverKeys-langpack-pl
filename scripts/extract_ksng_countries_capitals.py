@@ -122,7 +122,9 @@ def pdf_text(path: Path, *, min_markers: int = 1) -> str:
             f"Could not obtain enough KSNG markers: "
             f"best={best_name} count={best_score} sample={sample!r}"
         )
-    return best_textdef normalize(text: str) -> str:
+    return best_text
+
+def normalize(text: str) -> str:
     text = text.replace("\u00ad", "").replace("\r", "").replace("\f", "")
     return "\n".join(line.strip() for line in text.split("\n") if line.strip())
 
