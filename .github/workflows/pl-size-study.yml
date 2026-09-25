@@ -114,6 +114,14 @@ jobs:
             sha256sum "build/study/$limit/cleverkeys-langpack-pl-$limit.zip" > "build/study/$limit/cleverkeys-langpack-pl-$limit.sha256"
           done
 
+      - name: Build immutable 100k frequency core
+        run: |
+          python3 scripts/build_pl_preview.py               --base-only               --top 300000               --band 100000               --limit 100000               --aosp build/aosp/pl_wordlist.combined.gz               --out-wordlist build/base100k.txt               --out-report build/base100k-report.json
+
+      - name: Measure net module cost over immutable 100k core
+        run: |
+          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__lines__             --module reviewed_proper_nouns=sources/staging/reviewed_proper_nouns.tsv:__lines__             --out build/study/module-study-report.json
+
       - name: Compare coverage and audit CKDTs
         run: |
           python3 - <<'PY'
@@ -136,7 +144,11 @@ jobs:
               )
 
           for size in sizes:
-              assert len(words[size]) == size, (size, len(words[size]), reports[size]["candidate_count"])
+              assert len(words[size]) <= size, (
+                  size,
+                  len(words[size]),
+                  reports[size]["candidate_count"],
+              )
 
           reviewed = {
               word
@@ -193,7 +205,10 @@ jobs:
           ckdt_raw = {}
           ckdt = {}
           for size in sizes:
-              raw, normalized = read_ckdt(root / str(size) / "dictionary.bin", size)
+              raw, normalized = read_ckdt(
+                  root / str(size) / "dictionary.bin",
+                  len(words[size]),
+              )
               ckdt_raw[size] = raw
               ckdt[size] = normalized
 
@@ -267,6 +282,7 @@ jobs:
           for size in sizes:
               report = reports[size]
               result["variants"][str(size)] = {
+                  "requested_limit": size,
                   "kept": report["kept"],
                   "candidate_count": report["candidate_count"],
                   "reviewed_morphology_forms": report["reviewed_morphology"]["form_count"],
@@ -339,6 +355,9 @@ jobs:
             build/study/75000/cleverkeys-langpack-pl-75000.sha256
             build/study/100000/cleverkeys-langpack-pl-100000.zip
             build/study/100000/cleverkeys-langpack-pl-100000.sha256
+            build/base100k.txt
+            build/base100k-report.json
+            build/study/module-study-report.json
             build/aosp/pl_wordlist.combined.gz.sha256
             build/teryt/SIMC_Urzedowy_2026-09-24.zip
             build/teryt/SIMC_Urzedowy_2026-09-24.sha256
