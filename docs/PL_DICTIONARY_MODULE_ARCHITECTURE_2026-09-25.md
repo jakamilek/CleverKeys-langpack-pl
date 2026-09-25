@@ -74,18 +74,52 @@ controlled locality/country/brand module), fresh source audit, and explicit
 inclusion. Duplicate keys already represented by the 100k core or another active
 module do not justify retaining a second proper-noun entry.
 
-## Inflection policy
+## Category admission and inflection protocol
 
-Every category generator should be capable of producing the complete validated singular paradigm first. The final dictionary then decides which forms are retained.
+Adding a new category is a defined two-stage process.
 
-Retention should depend on:
+### Stage 1 — build the category completely enough to measure it
 
-- frequency of the base lemma;
-- practical usefulness of the particular grammatical case;
-- source confidence of the generated form;
-- available dictionary capacity.
+1. Prepare the audited set of **base words/items** for the category.
+2. Validate provenance, identity and capitalization of those base items.
+3. Generate the **complete validated singular inflection paradigm** for every applicable base item.
+4. Validate the generated forms linguistically and record provenance.
+5. Deduplicate case-insensitively against the immutable 100k core and all already-active modules.
+6. Measure the category's:
+   - number of base items;
+   - number of generated surface forms;
+   - unique case-insensitive keys;
+   - overlap with the 100k core;
+   - net-new keys versus the core;
+   - overlap with earlier modules;
+   - incremental contribution to the final union.
 
-This preserves full provenance even when a rare form is not selected into CKDT.
+The capacity decision is made **after this measurement**, not before.
+
+### Stage 2 — choose the retained set
+
+**Default:** when the measured category size is comfortably within its agreed capacity envelope, retain **all validated base items and all validated inflection forms**.
+
+A category capacity envelope is not assumed globally. It is established per category only when needed, based on the actual measured cost of that category and the current remaining dictionary capacity.
+
+When the measured category would exceed that envelope:
+
+- retain all validated base items unless a separate quality/provenance rule excludes an item;
+- retain inflection forms selectively;
+- use frequency evidence together with grammatical usefulness and source confidence;
+- prefer a transparent, deterministic retention order;
+- preserve the full generated paradigm and the evidence for every excluded form in the audit artifacts;
+- after selection, re-measure the category and its **net-new contribution**, including cross-module deduplication.
+
+### Important refinement
+
+Capacity should be evaluated primarily on the **net-new union contribution**, not on the raw count of generated forms. This prevents the same word appearing in several categories from consuming multiple capacity slots.
+
+Frequency is a selection signal only when capacity is genuinely constrained. A low-frequency but linguistically valid form must not be removed merely because it is rare when there is sufficient room.
+
+No arbitrary frequency threshold is introduced before the category has been measured. The threshold, if one is eventually necessary, is calibrated from the observed distribution for that category and documented in the commit that introduces the constraint.
+
+This protocol applies to every future category, including administrative units, countries/capitals and controlled brands.
 
 ## Capitalization gate
 
@@ -106,17 +140,19 @@ The clean post-pilot measurement found 2,611 net-new unique keys over the protec
 100k core across the active modules. This is sufficiently small that dictionary
 capacity is **not** a reason to cut validated low-frequency inflection forms.
 
-Therefore frequency evidence remains an audit and diagnostic signal, not an automatic
-capacity-based exclusion rule for the currently selected name/city paradigms. A
-validated generated form should normally be retained when its source and morphology
-are sound. A form may still be excluded for a separate quality reason (invalid or
-unsupported morphology, duplicate identity, incorrect capitalization, or a specific
-observed keyboard regression), but not merely because its corpus frequency is low.
+Therefore the current active modules use the **full-retention default**: validated
+base items and validated generated forms are retained unless there is a separate
+quality/provenance/capitalization/regression reason to exclude them.
 
-The historical idea of frequency-based full/partial/nominative-only retention is
-therefore deferred unless later module expansion creates a material capacity or
-quality problem. No numeric frequency threshold is to be invented for the current
-2,611-key active addition set.
+The frequency-aware selection branch remains available as a **capacity-control
+mechanism for future category expansion**, but it is not applied merely because a
+form is rare. If a future category exceeds its agreed capacity envelope, the
+selection is made after full-paradigm generation and measurement, and the retained
+set is chosen deterministically using frequency, grammatical usefulness and source
+confidence while preserving the complete excluded-form audit trail.
+
+No numeric frequency threshold is to be invented for the current 2,611-key active
+addition set.
 
 ## Capacity policy
 
