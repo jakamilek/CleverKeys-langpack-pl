@@ -36,6 +36,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--zip", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
+    ap.add_argument("--out-flat-tsv", type=Path, required=True)
     return ap.parse_args()
 
 
@@ -52,9 +53,6 @@ def text_of(elem: ET.Element, key: str) -> str:
 
 def main() -> int:
     args = parse_args()
-    args.out_tsv.parent.mkdir(parents=True, exist_ok=True)
-    args.out_report.parent.mkdir(parents=True, exist_ok=True)
-
     with zipfile.ZipFile(args.zip) as zf:
         xml_names = [n for n in zf.namelist() if n.upper().endswith(".XML") and "TERC" in n.upper()]
         if len(xml_names) != 1:
@@ -117,6 +115,9 @@ def main() -> int:
     if counts != expected:
         raise SystemExit(f"Unexpected TERC counts: got {counts}, expected {expected}")
 
+    for output in (args.out_tsv, args.out_flat_tsv):
+        output.parent.mkdir(parents=True, exist_ok=True)
+
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
             handle,
@@ -130,6 +131,21 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(sorted(rows, key=lambda r: (r["level"], r["terc"], r["name"].lower())))
 
+    flat_rows = [row for row in rows if row["eligible_single_token"] == "yes"]
+    with args.out_flat_tsv.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "level", "terc", "woj", "pow", "gmi", "rodz", "name",
+                "nazdod", "stan_na", "eligible_single_token", "case_policy",
+                "source_name", "source",
+            ],
+            delimiter="\t",
+            lineterminator="\n",
+        )
+        writer.writeheader()
+        writer.writerows(sorted(flat_rows, key=lambda r: (r["level"], r["terc"], r["name"].lower())))
+
     unique_keys = {}
     for row in rows:
         unique_keys.setdefault(row["name"].lower(), set()).add(row["terc"])
@@ -139,7 +155,8 @@ def main() -> int:
         "total_records": len(rows),
         "unique_case_insensitive_names": len(unique_keys),
         "duplicate_name_keys": sum(1 for codes in unique_keys.values() if len(codes) > 1),
-        "single_token_records": sum(1 for r in rows if r["eligible_single_token"] == "yes"),
+        "single_token_records": len(flat_rows),
+        "flat_output": str(args.out_flat_tsv),
         "multi_token_records": sum(1 for r in rows if r["eligible_single_token"] == "no"),
         "skipped_lower_level_or_non_three_level_rows": skipped_lower_level,
     }
