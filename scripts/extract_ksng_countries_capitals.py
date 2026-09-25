@@ -26,7 +26,11 @@ def normalize(text: str) -> str:
     return "\n".join(line.strip() for line in text.split("\n") if line.strip())
 
 def parse_pol(block: str) -> dict[str, str]:
-    m = re.search(r"(?m)^\s*pol\.\s*(.*?)(?=\n\s*(?:przym|obyw|mieszk|stol)\.)", block, re.DOTALL)
+    m = re.search(
+        r"(?<!\w)pol\.\s*(.*?)(?=\s+(?:przym|obyw|mieszk|stol)\.)",
+        block,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
     if not m:
         raise ValueError("missing Polish country section")
     v = re.sub(r"\s+", " ", m.group(1)).strip()
@@ -42,7 +46,7 @@ def parse_pol(block: str) -> dict[str, str]:
             "ndm": "yes" if ndm else "no", "official_name": official}
 
 def parse_capital(block: str) -> dict[str, str]:
-    m = re.search(r"(?m)^\s*stol\.\s*(.*)$", block, re.DOTALL)
+    m = re.search(r"(?<!\w)stol\.\s*(.*)$", block, flags=re.IGNORECASE | re.DOTALL)
     if not m:
         raise ValueError("missing capital section")
     v = re.sub(r"\s+", " ", m.group(1)).strip()
@@ -62,7 +66,7 @@ def parse_main(text: str) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
     if start < 0 or end < 0:
         raise ValueError("Could not isolate Part I")
     section = text[start:end]
-    matches = list(re.finditer(r"(?m)^\s*pol\.\s+", section))
+    matches = list(re.finditer(r"(?<!\w)pol\.\s+", section, flags=re.IGNORECASE))
     if len(matches) != 197:
         raise ValueError(f"Expected 197 country entries, got {len(matches)}")
     countries, capitals = [], []
