@@ -921,6 +921,24 @@ def main() -> int:
     keep: dict[str, str] = {}
     drop: dict[str, str] = {}
 
+    # Add source-backed category surfaces to the candidate universe before the
+    # common quality filters. These rows are additive modules: they are not ranked
+    # by wordfreq and therefore must not disappear merely because they fall outside
+    # the frequency candidate window. Their actual net cost is measured separately.
+    explicit_module_forms = (
+        terc_forms
+        | terc_inflection_forms
+        | country_forms
+        | country_inflection_forms
+        | capital_forms
+        | capital_inflection_forms
+        | custom_forms
+    )
+    for word in sorted(explicit_module_forms):
+        if word not in seen:
+            ranked.append(word)
+            seen.add(word)
+
     rank_of = {word: rank for rank, word in enumerate(ranked)}
 
     for rank, word in enumerate(ranked):
