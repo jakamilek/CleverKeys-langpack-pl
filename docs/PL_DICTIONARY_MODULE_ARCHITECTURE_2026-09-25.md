@@ -100,6 +100,24 @@ Policies are:
 
 A capitalization violation fails the build.
 
+## Retention decision after clean module measurement (2026-09-25)
+
+The clean post-pilot measurement found 2,611 net-new unique keys over the protected
+100k core across the active modules. This is sufficiently small that dictionary
+capacity is **not** a reason to cut validated low-frequency inflection forms.
+
+Therefore frequency evidence remains an audit and diagnostic signal, not an automatic
+capacity-based exclusion rule for the currently selected name/city paradigms. A
+validated generated form should normally be retained when its source and morphology
+are sound. A form may still be excluded for a separate quality reason (invalid or
+unsupported morphology, duplicate identity, incorrect capitalization, or a specific
+observed keyboard regression), but not merely because its corpus frequency is low.
+
+The historical idea of frequency-based full/partial/nominative-only retention is
+therefore deferred unless later module expansion creates a material capacity or
+quality problem. No numeric frequency threshold is to be invented for the current
+2,611-key active addition set.
+
 ## Capacity policy
 
 The 100k frequency core is protected.
