@@ -224,7 +224,7 @@ jobs:
                   manifest = json.loads(zf.read("manifest.json"))
                   assert manifest["code"] == "pl", (size, manifest)
                   assert manifest["version"] == 2, (size, manifest)
-                  assert manifest["wordCount"] == size, (size, manifest)
+                  assert manifest["wordCount"] == len(words[size]), (size, manifest)
                   assert manifest["hasPrefixBoost"] is False, (size, manifest)
               missing = sorted(reviewed - ckdt[size])
               assert not missing, f"{size}: missing reviewed forms: {', '.join(missing)}"
