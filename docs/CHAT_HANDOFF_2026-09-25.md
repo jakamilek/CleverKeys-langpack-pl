@@ -473,14 +473,11 @@ A. Inspect the module distributions and NKJP/wordfreq disagreements by module
    and individual form, especially forms absent from NKJP1M but supported by
    wordfreq or category semantics.
 
-B. Only after that analysis, document explicit data-driven retention tiers:
-   full paradigm / partial high-utility cases / nominative only. Numeric
-   boundaries must come from measured data.
+B. Validate the active 2,611 net-new keys for morphology/provenance/capitalization/regressions; do not remove forms merely for low frequency.
 
-C. Implement frequency-aware retention as a separate layer while retaining full
-   generated paradigms and provenance records.
+C. Keep full validated paradigms in the active modules; retain NKJP/wordfreq measurements as audit evidence and diagnostics.
 
-D. Recalculate net module cost over the protected 100k core after retention.
+D. Recalculate final net module cost only after any quality-based exclusions.
 
 E. Continue planned modules only after the above audit is stable:
    TERC administrative units, countries + capitals, controlled brands, and
