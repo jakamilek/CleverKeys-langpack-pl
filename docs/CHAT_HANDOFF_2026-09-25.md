@@ -38,7 +38,6 @@ Current / planned modules:
 3. Polish administrative division (GUS TERYT / TERC): voivodeships, powiats, gminas
 4. Countries and capitals (official KSNG/GUGiK list)
 5. Controlled brands / trade names (planned; not a raw trademark dump)
-6. Other reviewed morphology only; the early proper-noun pilot is retired and excluded from active module accounting
 
 Case-insensitive capacity rule:
 - core 'warszawa' + module 'Warszawa' = one key, not two;
@@ -65,7 +64,19 @@ Capacity is evaluated primarily on net-new unique keys, not raw generated-form c
 
 Current status:
 - name/city modules use full retention;
-- frequency-aware reduction is reserved for future capacity pressure and does not justify pruning the current 2,611-key active addition set.
+- frequency-aware reduction is reserved for future capacity pressure and does not justify pruning a validated active addition while sufficient capacity exists.
+
+### Retired reviewed morphology pilot
+
+The former `reviewed_morphology` pilot has been retired from active production, using
+the same treatment as the early proper-noun pilot.
+
+- active staging file removed: `sources/staging/reviewed_morphology.tsv`
+- historical copy: `sources/archive/reviewed_morphology_pilot_2026-09-25.tsv`
+- preview builder no longer loads or protects these forms
+- preview and size-study workflows no longer account for or publish the pilot
+- its historical 123-form measurement is not part of current active capacity accounting
+- future reuse requires fresh assignment to an appropriate category or explicitly defined new category, fresh source audit, and explicit promotion
 
 ## 2. Frequency policy (accepted decision)
 
@@ -333,8 +344,7 @@ Fixed bug:
 - replacement records now sort via key=lambda item: item["key"].
 
 Also fixed reviewed TSV parsing:
-- reviewed_morphology.tsv uses the semicolon-separated forms field;
-- reviewed_proper_nouns.tsv uses its forms field;
+- historical pilot TSVs were parsed by their respective form fields;
 - analyzer must measure actual dictionary surfaces, not whole metadata lines.
 
 Run #74 successfully executed module-cost analysis.
@@ -448,7 +458,7 @@ Module coverage:
 - first-name forms: NKJP seen 736/1,759; zero 1,023
 - city names: NKJP seen 292/844; zero 552
 - city inflections: NKJP seen 537/1,218; zero 681
-- reviewed morphology: NKJP seen 46/123; zero 77
+- reviewed morphology: 46/123 seen; this is historical pilot evidence only and is no longer part of active module accounting
 - reviewed proper nouns: NKJP seen 63/76; zero 13
   Note: this 76-form figure belongs to historical run #79 only; the pilot is now retired and excluded from active production accounting.
 
@@ -456,21 +466,17 @@ No retention thresholds have been chosen. The zero-count forms remain candidates
 for later analysis, not automatic exclusions.
 
 
-### Latest clean size study after proper-noun pilot retirement
+### Latest clean size study before reviewed-morphology retirement
 
-Size-study #86 (run `36178666213`, commit `b28ef44c98069847ad6405655f7d164b67868cd0`) completed successfully with the retired proper-noun pilot excluded.
+Size-study #86 (run `36178666213`, commit `b28ef44c98069847ad6405655f7d164b67868cd0`) was the last clean measurement before retiring the reviewed-morphology pilot.
 
-Active module measurement:
-- first-name forms: 1,736 unique keys; 308 overlap the 100k core; 1,428 net-new vs core
-- city names: 844 unique keys; 372 overlap the 100k core; 472 net-new vs core
-- city inflections: 1,218 unique keys; 493 overlap the 100k core; 725 net-new vs core; 89 overlap earlier active modules
-- reviewed morphology: 123 unique keys; 48 overlap the 100k core; 75 net-new vs core
-- union of active module keys: 3,620
-- active module keys already in core: 1,009
-- net-new active module keys over the protected 100k core: 2,611
-- current measured union before any future frequency-aware retention: 102,611 unique keys
+Its active-module result of 2,611 net-new keys and 102,611 total keys is now **superseded**, because it included the 123-form reviewed-morphology pilot. The exact active total after this retirement must be taken from a fresh size-study run; it must not be inferred by subtraction because cross-module overlaps and case-insensitive deduplication affect the union.
 
-The old 3,635 / 2,623 figures are superseded because they included the retired proper-noun pilot. The 76-form proper-noun result remains historical only.
+Historical figures from the retired pilot:
+- reviewed morphology: 123 unique keys; 48 overlapped the 100k core; 75 were net-new versus the core
+- these figures are retained only for traceability and are excluded from all current capacity decisions
+
+The old 3,635 / 2,623 figures are also historical because they included the retired proper-noun pilot.
 
 The same #86 run also passed the pinned NKJP1M acquisition and module-frequency audit. NKJP nonzero surface distribution in this clean active set: P10/P25/P50/P75/P90/P95 = 1 / 1 / 2 / 6 / 21 / 44. Wordfreq nonzero Zipf: 1.49 / 2.00 / 2.56 / 3.09 / 3.776 / 4.13.
 
@@ -480,7 +486,7 @@ A. Inspect the module distributions and NKJP/wordfreq disagreements by module
    and individual form, especially forms absent from NKJP1M but supported by
    wordfreq or category semantics.
 
-B. Validate the active 2,611 net-new keys for morphology/provenance/capitalization/regressions; do not remove forms merely for low frequency.
+B. Validate the current active net-new set after the reviewed-morphology retirement for provenance/capitalization/regressions; do not remove forms merely for low frequency.
 
 C. Keep full validated paradigms in the active modules; retain NKJP/wordfreq measurements as audit evidence and diagnostics.
 
