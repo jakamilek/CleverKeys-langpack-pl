@@ -410,7 +410,7 @@ Commits:
 - `7492c23ec0577c5e38360796c5a5b10c32f6420d` — remove pilot from preview workflow
 - `1331104065b5aab84ac9acc6b2c2df4803c5a79d` — remove standalone pilot audit workflow
 
-Current branch HEAD: `b1b7ddce66ca08687a365576760fa400fe3402c1`
+Current branch HEAD: verify directly from the GitHub branch ref before resuming (this handoff file is itself updated by commits).
 
 ## 13. Current NKJP acquisition and frequency-audit state
 
