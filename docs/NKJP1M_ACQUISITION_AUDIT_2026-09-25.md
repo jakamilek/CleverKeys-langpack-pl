@@ -34,13 +34,13 @@ and CI is pinned to the verified SHA-256.
 
 ## Frequency audit result from #79
 
-The audit covered 4,020 unique surface/lemma pairs across:
+The historical #79 audit covered 4,020 unique surface/lemma pairs across:
 
 - first-name forms: 1,759
 - official one-token city names: 844
 - selected city inflections: 1,218
 - reviewed morphology: 123
-- reviewed proper nouns: 76
+- reviewed proper nouns: 76 (historical early-test pilot; retired from active module accounting after #79)
 
 Global surface-frequency distribution:
 
@@ -58,7 +58,6 @@ Observed source coverage:
 | city inflections | 537 / 1,218 | 681 |
 | reviewed morphology | 46 / 123 | 77 |
 | reviewed proper nouns | 63 / 76 | 13 |
-
 Interpretation rule:
 
 - NKJP remains the primary frequency signal.
@@ -71,3 +70,9 @@ Interpretation rule:
 The next step is to inspect the module distributions and NKJP/wordfreq
 disagreements by module and by individual form, then document data-driven
 retention tiers. The immutable 100k core remains unchanged and protected.
+
+## Active-module interpretation after #79
+
+The 76-form reviewed proper-noun pilot was an early runtime-test/anchor set, not a production category. It has been removed from active staging and preserved only as historical material at `sources/archive/reviewed_proper_nouns_pilot_2026-09-25.tsv`.
+
+Therefore the 76 forms and their 63/13 NKJP coverage are retained as an auditable historical result, but they must not be used in current module-capacity totals or retention-threshold calibration. A new frequency audit is required after active-module cleanup before setting any thresholds.
