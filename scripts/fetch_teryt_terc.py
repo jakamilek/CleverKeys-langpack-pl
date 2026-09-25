@@ -137,19 +137,32 @@ def _response_diagnostics(response: requests.Response) -> str:
             "__EVENTVALIDATION", ".zip", "href", "window.location",
         ) if marker.lower() in text_body.lower()
     ]
-    hrefs = re.findall(
-        r"""(?:href|src)=[\"']([^\"']+)[\"']""",
+    controls = sorted(set(re.findall(
+        r"""(?:name|id)=["']([^"']*(?:TERC|TBData|Generuj|Pobierz)[^"']*)["']""",
         text_body,
         flags=re.IGNORECASE,
-    )
-    interesting_hrefs = [
-        href for href in hrefs
-        if ".zip" in href.lower() or "terc" in href.lower()
-    ][:10]
+    )))
+    title = ""
+    title_match = re.search(r"<title[^>]*>(.*?)</title>", text_body, flags=re.IGNORECASE | re.DOTALL)
+    if title_match:
+        title = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", title_match.group(1))).strip()
+    visible = re.sub(r"<script.*?</script>|<style.*?</style>", " ", text_body, flags=re.IGNORECASE | re.DOTALL)
+    visible = re.sub(r"<[^>]+>", " ", visible)
+    visible = re.sub(r"\s+", " ", visible).strip()
+    needles = ("błąd", "error", "nie można", "nieprawid", "wymag", "brak", "data", "plik", "terc")
+    snippets = []
+    lower = visible.lower()
+    for needle in needles:
+        pos = lower.find(needle)
+        if pos >= 0:
+            snippets.append(visible[max(0, pos - 120):pos + 320])
+        if len(snippets) >= 4:
+            break
     return (
         f"status={response.status_code}; url={response.url}; "
         f"content_type={response.headers.get('content-type', '')}; "
-        f"bytes={len(body)}; markers={markers}; links={interesting_hrefs}"
+        f"bytes={len(body)}; title={title!r}; markers={markers}; "
+        f"controls={controls[:30]}; snippets={snippets}"
     )
 
 
