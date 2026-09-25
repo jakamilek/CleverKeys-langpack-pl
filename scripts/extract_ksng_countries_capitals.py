@@ -163,34 +163,40 @@ def parse_capital(block: str) -> dict[str, str]:
             "ndm": "yes" if ndm else "no"}
 
 def parse_main(text: str) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
-    # The PDF repeats section headings in page headers. Do not use rfind()/find()
-    # blindly: choose the heading interval whose country-marker count is exactly
-    # the documented 197 states in Part I.
-    start_positions = [m.start() for m in re.finditer(r"Część I\. Państwa", text)]
-    end_positions = [m.start() for m in re.finditer(r"Część II\. Terytoria niesamodzielne", text)]
-    best_section = None
-    best_count = -1
-    for start in start_positions:
-        next_ends = [end for end in end_positions if end > start]
-        if not next_ends:
-            continue
-        end = min(next_ends)
-        section = text[start:end]
-        count = len(re.findall(r"(?<!\w)pol\.\s+", section, flags=re.IGNORECASE))
-        if count > best_count:
-            best_count = count
-            best_section = section
-        if count == 197:
+    # The extracted PDF stream may reorder/repeat section headings. The actual
+    # country-entry schema is stable: each country block has a "pol." marker and
+    # a corresponding "stol." marker before the next country marker.
+    matches = list(re.finditer(r"(?<!\w)pol\.\s+", text, flags=re.IGNORECASE))
+    if len(matches) < 197:
+        raise ValueError(f"Expected at least 197 country markers, got {len(matches)}")
+
+    best_start = None
+    best_valid = -1
+    best_total = -1
+    for start_index in range(len(matches) - 197 + 1):
+        valid = 0
+        for i in range(start_index, start_index + 197):
+            block_end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            block = text[matches[i].start():block_end]
+            if re.search(r"(?<!\w)stol\.\s+", block, flags=re.IGNORECASE):
+                valid += 1
+        if valid > best_valid:
+            best_valid = valid
+            best_start = start_index
+            best_total = 197
+        if valid == 197:
             break
-    if best_section is None:
-        raise ValueError("Could not isolate Part I")
-    section = best_section
-    matches = list(re.finditer(r"(?<!\w)pol\.\s+", section, flags=re.IGNORECASE))
-    if len(matches) != 197:
-        raise ValueError(f"Expected 197 country entries, got {len(matches)}")
+
+    if best_start is None or best_valid < 190:
+        raise ValueError(
+            f"Could not isolate 197 KSNG country blocks: marker_count={len(matches)} best_valid={best_valid}"
+        )
+
+    selected_matches = matches[best_start:best_start + 197]
     countries, capitals = [], []
-    for i, m in enumerate(matches):
-        block = section[m.start(): matches[i+1].start() if i+1 < len(matches) else len(section)]
+    for i, m in enumerate(selected_matches):
+        next_match = selected_matches[i + 1].start() if i + 1 < len(selected_matches) else len(text)
+        block = text[m.start():next_match]
         pol = parse_pol(block)
         cap = parse_capital(block)
         countries.append({
