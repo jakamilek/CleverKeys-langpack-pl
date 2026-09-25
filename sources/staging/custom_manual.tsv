@@ -1,8 +1,4 @@
 # Manual/custom Polish dictionary category.
-# These entries are hand-reviewed additions. The current rows were carried forward
-# from the retired reviewed-morphology pilot only after checking they were absent
-# from the 100k core and active first-name/city modules at the last complete measurement.
-# Future entries must be added deliberately with explicit case policy and provenance.
 
 surface	case_policy	basis	source
 bąbelka	lowercase	user-approved manual carry-forward	retired pilot: sources/archive/reviewed_morphology_pilot_2026-09-25.tsv
