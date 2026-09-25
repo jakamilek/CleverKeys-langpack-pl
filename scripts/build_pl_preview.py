@@ -377,6 +377,38 @@ def load_first_name_inflections(
     return forms, surface_map
 
 
+def load_terc_inflections(
+    path: Path,
+) -> tuple[set[str], dict[str, str]]:
+    forms: set[str] = set()
+    surface_map: dict[str, str] = {}
+    if not path.exists():
+        return forms, surface_map
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        expected_fields = {"name", "level", "terc", "case", "form", "source", "morfeusz_version"}
+        if set(reader.fieldnames or ()) != expected_fields:
+            raise SystemExit(
+                f"Malformed TERC inflection header {path}: expected {sorted(expected_fields)}"
+            )
+        for line_no, row in enumerate(reader, 2):
+            form = row["form"].strip()
+            case_tag = row["case"].strip()
+            if case_tag not in {"nom", "gen", "dat", "acc", "inst", "loc", "voc"} or not form:
+                raise SystemExit(f"Malformed TERC inflection row {path}:{line_no}")
+            if not is_inflection_surface(form):
+                raise SystemExit(f"Invalid TERC inflection form {path}:{line_no}: {form!r}")
+            lower = form.lower()
+            prior = surface_map.get(lower)
+            if prior is not None and prior != form:
+                raise SystemExit(
+                    f"Conflicting TERC inflection surface {path}:{line_no}: {prior!r} vs {form!r}"
+                )
+            surface_map[lower] = form
+            forms.add(lower)
+    return forms, surface_map
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=300000)
@@ -418,6 +450,18 @@ def main() -> int:
         help="Generated singular inflections for the already-selected first names.",
     )
     ap.add_argument(
+        "--terc",
+        type=Path,
+        default=None,
+        help="Current official GUS TERYT TERC three-level administrative source.",
+    )
+    ap.add_argument(
+        "--terc-inflections",
+        type=Path,
+        default=None,
+        help="Generated singular inflections for one-token TERC names.",
+    )
+    ap.add_argument(
         "--custom",
         type=Path,
         default=Path("sources/staging/custom_manual.tsv"),
@@ -449,6 +493,8 @@ def main() -> int:
         args.first_name_inflections = None
         args.cities = None
         args.city_inflections = None
+        args.terc = None
+        args.terc_inflections = None
         args.custom = None
 
     from wordfreq import iter_wordlist, zipf_frequency
@@ -521,6 +567,32 @@ def main() -> int:
     city_inflection_surface_map: dict[str, str] = {}
     if args.city_inflections:
         city_inflection_forms, city_inflection_surface_map = load_first_name_inflections(args.city_inflections)
+
+    terc_forms: set[str] = set()
+    terc_surface_map: dict[str, str] = {}
+    if args.terc:
+        with args.terc.open(encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle, delimiter="\t")
+            required = {"level", "terc", "woj", "pow", "gmi", "rodz", "name", "nazdod", "stan_na", "eligible_single_token", "source"}
+            if set(reader.fieldnames or ()) != required:
+                raise SystemExit(f"Malformed TERC source header {args.terc}: expected {sorted(required)}")
+            terc_surface_map = {}
+            for line_no, row in enumerate(reader, 2):
+                name = row["name"].strip()
+                if row["eligible_single_token"] != "yes":
+                    continue
+                if not is_inflection_surface(name):
+                    raise SystemExit(f"Invalid TERC source surface {args.terc}:{line_no}: {name!r}")
+                lower = name.lower()
+                prior = terc_surface_map.get(lower)
+                if prior is not None and prior != name:
+                    raise SystemExit(f"Conflicting TERC source casing {args.terc}:{line_no}: {prior!r} vs {name!r}")
+                terc_surface_map[lower] = name
+                terc_forms.add(lower)
+    terc_inflection_forms: set[str] = set()
+    terc_inflection_surface_map: dict[str, str] = {}
+    if args.terc_inflections:
+        terc_inflection_forms, terc_inflection_surface_map = load_terc_inflections(args.terc_inflections)
 
     custom_forms: set[str] = set()
     custom_surface_map: dict[str, str] = {}
@@ -618,6 +690,13 @@ def main() -> int:
             ranked.append(word)
             seen.add(word)
 
+    # Official three-level TERC names are explicit candidates. Lower-level TERC rows are
+    # retained in the source audit but are not mixed into this flat administrative layer.
+    for word in sorted(terc_forms | terc_inflection_forms):
+        if word not in seen:
+            ranked.append(word)
+            seen.add(word)
+
     # Explicit manual/custom surfaces are added as audited candidates.
     for word in sorted(custom_forms):
         if word not in seen:
@@ -702,6 +781,12 @@ def main() -> int:
         if word in guards:
             keep[word] = "guard"
             continue
+        if word in terc_inflection_forms:
+            keep[word] = "reviewed-terc-inflection"
+            continue
+        if word in terc_forms:
+            keep[word] = "reviewed-terc"
+            continue
         if word in custom_forms:
             keep[word] = "custom-manual"
             continue
@@ -785,7 +870,7 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in custom_forms or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms
+            if w in guards or w in custom_forms or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms or w in terc_forms or w in terc_inflection_forms
         }
         if len(protected) > args.limit:
             raise SystemExit(
@@ -854,6 +939,12 @@ def main() -> int:
         elif word in lowercase_first_name_inflection_surfaces:
             expected_surface = word
             capitalization_policy = "lowercase"
+        elif word in terc_surface_map:
+            expected_surface = terc_surface_map[word]
+            capitalization_policy = "capitalized"
+        elif word in terc_inflection_surface_map:
+            expected_surface = terc_inflection_surface_map[word]
+            capitalization_policy = "capitalized"
         elif word in custom_surface_map:
             expected_surface = custom_surface_map[word]
             capitalization_policy = custom_case_policy_map[word]
@@ -936,6 +1027,8 @@ def main() -> int:
             "guard": sum(1 for r in keep.values() if r == "guard"),
             "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
             "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
+            "reviewed_terc": sum(1 for r in keep.values() if r == "reviewed-terc"),
+            "reviewed_terc_inflection": sum(1 for r in keep.values() if r == "reviewed-terc-inflection"),
             "custom_manual": sum(1 for r in keep.values() if r == "custom-manual"),
             "reviewed_first_name_inflection": sum(1 for r in keep.values() if r == "reviewed-first-name-inflection"),
             "reviewed_city": sum(1 for r in keep.values() if r == "reviewed-city"),
