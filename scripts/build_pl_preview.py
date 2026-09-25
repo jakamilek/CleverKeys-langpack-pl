@@ -210,7 +210,12 @@ def load_custom_words(
     if not path.exists():
         return forms, surface_map, case_policy_map
     with path.open(encoding="utf-8", newline="") as handle:
-        reader = csv.DictReader(handle, delimiter="\t")
+        # Allow human-readable comment lines before the TSV header.
+        rows = (
+            line for line in handle
+            if line.strip() and not line.lstrip().startswith("#")
+        )
+        reader = csv.DictReader(rows, delimiter="\t")
         expected_fields = {"surface", "case_policy", "basis", "source"}
         if set(reader.fieldnames or ()) != expected_fields:
             raise SystemExit(
