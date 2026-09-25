@@ -14,6 +14,23 @@ POLISH_WORD_RE = re.compile(r"^[a-ząćęłńóśźż]+$", re.IGNORECASE)
 GMINA_RODZ = {"1", "2", "3"}
 
 
+def canonical_surface(name: str, level: str, kind: str) -> tuple[str, str]:
+    """Return the CKDT surface and explicit casing policy for an admin unit name."""
+    value = name.strip()
+    if level == "voivodeship":
+        # TERYT stores voivodeship names in uppercase; ordinary Polish usage writes
+        # the standalone adjective with an initial capital only in a name-like layer.
+        return value[:1].upper() + value[1:].lower(), "capitalized"
+    if level == "powiat" and kind == "powiat":
+        # Powiat names are adjectival: powiat cieszyński -> cieszyński.
+        return value.lower(), "lowercase"
+    # City-with-powiat-rights and gmina names identify concrete units and retain
+    # proper-name capitalization from the official source.
+    return value, "capitalized"
+
+
+
+
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
     ap.add_argument("--zip", type=Path, required=True)
@@ -78,7 +95,8 @@ def main() -> int:
             continue
 
         counts[level] += 1
-        eligible_single_token = bool(POLISH_WORD_RE.fullmatch(name))
+        canonical_name, case_policy = canonical_surface(name, level, kind)
+        eligible_single_token = bool(POLISH_WORD_RE.fullmatch(canonical_name))
         rows.append({
             "level": level,
             "terc": woj + pow_ + gmi + rodz,
@@ -86,7 +104,9 @@ def main() -> int:
             "pow": pow_,
             "gmi": gmi,
             "rodz": rodz,
-            "name": name,
+            "name": canonical_name,
+            "case_policy": case_policy,
+            "source_name": name,
             "nazdod": kind,
             "stan_na": stan_na,
             "eligible_single_token": "yes" if eligible_single_token else "no",
