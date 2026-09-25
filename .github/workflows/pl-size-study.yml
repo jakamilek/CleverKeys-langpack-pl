@@ -48,7 +48,7 @@ jobs:
       - name: Install Polish spelling oracle
         run: |
           sudo apt-get update
-          sudo apt-get install -y hunspell hunspell-pl
+          sudo apt-get install -y hunspell hunspell-pl poppler-utils
 
       - name: Install pinned wordfreq
         run: |
