@@ -250,7 +250,7 @@ def load_city_source(
     forms: set[str] = set()
     surface_map: dict[str, str] = {}
     if not path.exists():
-        return forms, surface_map
+        return forms, surface_map, case_policy_map
     with path.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
         required = {"name", "simc", "rm", "stan_na", "source"}
@@ -373,20 +373,28 @@ def load_first_name_inflections(
                     )
             else:
                 surface_map[lower] = form
+            policy = row["case_policy"].strip()
+            if policy not in {"lowercase", "capitalized"}:
+                raise SystemExit(f"Invalid TERC inflection case policy {path}:{line_no}: {policy!r}")
+            prior_policy = case_policy_map.get(lower)
+            if prior_policy is not None and prior_policy != policy:
+                raise SystemExit(f"Conflicting TERC inflection case policy {path}:{line_no}: {prior_policy!r} vs {policy!r}")
+            case_policy_map[lower] = policy
             forms.add(lower)
-    return forms, surface_map
+    return forms, surface_map, case_policy_map
 
 
 def load_terc_inflections(
     path: Path,
-) -> tuple[set[str], dict[str, str]]:
+) -> tuple[set[str], dict[str, str], dict[str, str]]:
     forms: set[str] = set()
     surface_map: dict[str, str] = {}
+    case_policy_map: dict[str, str] = {}
     if not path.exists():
         return forms, surface_map
     with path.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
-        expected_fields = {"name", "level", "terc", "case", "form", "source", "morfeusz_version"}
+        expected_fields = {"name", "level", "terc", "case", "form", "case_policy", "source", "morfeusz_version"}
         if set(reader.fieldnames or ()) != expected_fields:
             raise SystemExit(
                 f"Malformed TERC inflection header {path}: expected {sorted(expected_fields)}"
@@ -570,6 +578,7 @@ def main() -> int:
 
     terc_forms: set[str] = set()
     terc_surface_map: dict[str, str] = {}
+    terc_case_policy_map: dict[str, str] = {}
     if args.terc:
         with args.terc.open(encoding="utf-8", newline="") as handle:
             reader = csv.DictReader(handle, delimiter="\t")
@@ -588,11 +597,16 @@ def main() -> int:
                 if prior is not None and prior != name:
                     raise SystemExit(f"Conflicting TERC source casing {args.terc}:{line_no}: {prior!r} vs {name!r}")
                 terc_surface_map[lower] = name
+                policy = row["case_policy"].strip()
+                if policy not in {"lowercase", "capitalized"}:
+                    raise SystemExit(f"Invalid TERC case policy {args.terc}:{line_no}: {policy!r}")
+                terc_case_policy_map[lower] = policy
                 terc_forms.add(lower)
     terc_inflection_forms: set[str] = set()
     terc_inflection_surface_map: dict[str, str] = {}
+    terc_inflection_case_policy_map: dict[str, str] = {}
     if args.terc_inflections:
-        terc_inflection_forms, terc_inflection_surface_map = load_terc_inflections(args.terc_inflections)
+        terc_inflection_forms, terc_inflection_surface_map, terc_inflection_case_policy_map = load_terc_inflections(args.terc_inflections)
 
     custom_forms: set[str] = set()
     custom_surface_map: dict[str, str] = {}
@@ -941,10 +955,10 @@ def main() -> int:
             capitalization_policy = "lowercase"
         elif word in terc_surface_map:
             expected_surface = terc_surface_map[word]
-            capitalization_policy = "capitalized"
+            capitalization_policy = terc_case_policy_map[word]
         elif word in terc_inflection_surface_map:
             expected_surface = terc_inflection_surface_map[word]
-            capitalization_policy = "capitalized"
+            capitalization_policy = terc_inflection_case_policy_map[word]
         elif word in custom_surface_map:
             expected_surface = custom_surface_map[word]
             capitalization_policy = custom_case_policy_map[word]
