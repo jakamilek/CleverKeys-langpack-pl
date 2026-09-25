@@ -34,7 +34,7 @@ MONTHS = {
     12: "grudnia",
 }
 
-TERC_CONTROL = "ctl00$body$BTERC"
+TERC_CONTROL = "ctl00$body$BTERCUrzedowy"
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
@@ -176,8 +176,8 @@ def download(
     # cycle, with a bounded number of cycles.
     attempts: list[str] = []
     last_response: requests.Response | None = None
-    pobierz_control = "ctl00$body$BTERCPobierz"
-    generuj_control = "ctl00$body$BTERCGeneruj"
+    pobierz_control = f"{TERC_CONTROL}Pobierz"
+    generuj_control = f"{TERC_CONTROL}Generuj"
 
     landing = session.get(
         DOWNLOAD_URL,
@@ -208,7 +208,7 @@ def download(
         if next_hidden:
             hidden_fields = next_hidden
 
-        if "body_BTERCGeneruj".lower() not in page.lower():
+        if "body_BTERCUrzedowyGeneruj".lower() not in page.lower():
             break
 
         attempts.append(f"{generuj_control}#{cycle}")
