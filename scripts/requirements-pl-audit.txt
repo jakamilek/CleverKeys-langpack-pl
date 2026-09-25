@@ -11,3 +11,6 @@ requests==2.34.2
 
 # SGJP data-only fallback for explicit selected first-name and city inflection.
 polish-inflection==0.7.3
+
+# PDF text extraction for the official KSNG/GUGiK country-capital source.
+pypdf==6.19.0
