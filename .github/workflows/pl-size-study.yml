@@ -21,12 +21,16 @@ on:
       - "sources/staging/custom_manual.tsv"
       - "scripts/audit_name_history.py"
       - "scripts/fetch_teryt_simc.py"
+      - "scripts/fetch_teryt_terc.py"
+      - "scripts/extract_teryt_terc.py"
+      - "scripts/generate_terc_inflections.py"
       - "scripts/extract_teryt_cities.py"
       - "scripts/generate_first_name_inflections.py"
       - "scripts/generate_city_inflections.py"
       - "sources/staging/reviewed_city_inflection_priority.tsv"
       - "sources/staging/reviewed_city_inflection_overrides.tsv"
       - "docs/PL_NAME_HISTORY_SOURCE_POLICY_2026-09-23.md"
+      - "docs/PL_COUNTRY_CAPITAL_SOURCE_POLICY_2026-09-25.md"
 
 permissions:
   contents: read
@@ -59,6 +63,12 @@ jobs:
       - name: Acquire and validate pinned NKJP1M frequency table (SHA-256 pinned)
         run: |
           python3 scripts/fetch_nkjp1m.py             --out build/nkjp/NKJP1M-tagged-frequency.tab             --out-sha256 build/nkjp/NKJP1M-tagged-frequency.tab.sha256             --out-provenance build/nkjp/NKJP1M-tagged-frequency.provenance.json             --expected-sha256 fee31b1d6a682970b4e8ca68b593aea8dadbc8541e875e2d287480d83601e79c
+
+      - name: Acquire current official TERYT TERC catalog
+        run: |
+          mkdir -p build/teryt
+          python3 scripts/fetch_teryt_terc.py             --state-date 2026-01-01             --out-zip build/teryt/TERC_Urzedowy_2026-01-01.zip             --out-sha256 build/teryt/TERC_Urzedowy_2026-01-01.sha256             --out-provenance build/teryt/TERC-source-ref.json
+          python3 scripts/extract_teryt_terc.py             --zip build/teryt/TERC_Urzedowy_2026-01-01.zip             --out-tsv build/pl-terc-source.tsv             --out-flat-tsv build/pl-terc-flat.tsv             --out-report build/pl-terc-source-report.json
 
       - name: Acquire current official TERYT SIMC catalog
         run: |
@@ -97,6 +107,10 @@ jobs:
             --out-report build/pl-city-inflections-report.json \
             --overrides sources/staging/reviewed_city_inflection_overrides.tsv
 
+      - name: Generate full TERC administrative inflections
+        run: |
+          python3 scripts/generate_terc_inflections.py             --terc build/pl-terc-flat.tsv             --out-tsv build/pl-terc-inflections.tsv             --out-report build/pl-terc-inflections-report.json
+
       - name: Pin CleverKeys runtime
         run: |
           git clone --filter=blob:none --no-checkout https://github.com/tribixbite/CleverKeys.git build/CleverKeys-runtime
@@ -111,7 +125,7 @@ jobs:
 
           for limit in 50000 100000 125000 150000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --terc build/pl-terc-flat.tsv               --terc-inflections build/pl-terc-inflections.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
 
@@ -125,11 +139,11 @@ jobs:
 
       - name: Measure net module cost over immutable 100k core
         run: |
-          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --out build/study/module-study-report.json
+          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --module terc_names=build/pl-terc-flat.tsv:name             --module terc_inflections=build/pl-terc-inflections.tsv:form             --out build/study/module-study-report.json
 
       - name: Audit module frequency with NKJP primary and wordfreq secondary
         run: |
-          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --out build/study/module-frequency-report.json
+          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --module terc_names=build/pl-terc-flat.tsv:name             --module terc_inflections=build/pl-terc-inflections.tsv:form             --out build/study/module-frequency-report.json
 
       - name: Compare coverage and audit CKDTs
         run: |
@@ -346,3 +360,11 @@ jobs:
             build/pl-first-name-inflections-report.json
             build/pl-city-inflections.tsv
             build/pl-city-inflections-report.json
+            build/teryt/TERC_Urzedowy_2026-01-01.zip
+            build/teryt/TERC_Urzedowy_2026-01-01.sha256
+            build/teryt/TERC-source-ref.json
+            build/pl-terc-source.tsv
+            build/pl-terc-flat.tsv
+            build/pl-terc-source-report.json
+            build/pl-terc-inflections.tsv
+            build/pl-terc-inflections-report.json
