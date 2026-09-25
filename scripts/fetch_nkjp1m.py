@@ -13,7 +13,7 @@ Acquisition order:
 4. shallow Git fetch/show of the exact pinned commit and path.
 
 Acceptance requires UTF-8 text, non-HTML content, a plausible minimum size,
-exactly seven tab-separated columns on every data row, a positive integer
+exactly eight tab-separated columns on every data row, a positive integer
 frequency in column 4, and a minimum number of valid rows.
 
 The optional --expected-sha256 is intended for the later immutable source
@@ -41,7 +41,7 @@ GITLAB_BASE = "https://git.nlp.ipipan.waw.pl"
 PROJECT = "wojciech.jaworski/ENIAM"
 REVISION = "be02836cf3aa0286ad8961d2e4528cdc2f72d044"
 FILE_PATH = "resources/NKJP1M/NKJP1M-tagged-frequency.tab"
-EXPECTED_COLUMNS = 7
+EXPECTED_COLUMNS = 8
 DEFAULT_MIN_BYTES = 1_000_000
 DEFAULT_MIN_ROWS = 10_000
 TIMEOUT = (30, 180)
