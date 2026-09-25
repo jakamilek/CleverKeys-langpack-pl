@@ -80,7 +80,8 @@ def load_module(path: Path, column: str) -> list[dict[str, str]]:
         return out
 
     with path.open(encoding="utf-8", newline="") as handle:
-        reader = csv.DictReader(handle, delimiter="\t")
+        rows = (line for line in handle if line.strip() and not line.lstrip().startswith("#"))
+        reader = csv.DictReader(rows, delimiter="\t")
         if column not in (reader.fieldnames or []):
             raise SystemExit(
                 f"Module source {path} has no column {column!r}; "
