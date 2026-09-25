@@ -14,6 +14,7 @@ on:
       - "scripts/build_pl_preview.py"
       - "scripts/analyze_dictionary_modules.py"
       - "scripts/requirements-pl-audit.txt"
+      - "scripts/fetch_nkjp1m.py"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/reviewed_morphology.tsv"
       - "sources/staging/reviewed_proper_nouns.tsv"
@@ -56,12 +57,9 @@ jobs:
           sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}' > build/aosp/pl_wordlist.combined.gz.sha256
           test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
 
-      - name: Acquire pinned NKJP1M frequency table
+      - name: Acquire and validate pinned NKJP1M frequency table
         run: |
-          set -euo pipefail
-          mkdir -p build/nkjp
-          curl --fail --retry 6 --retry-delay 3 --retry-all-errors --location             'https://git.nlp.ipipan.waw.pl/wojciech.jaworski/ENIAM/-/raw/be02836cf3aa0286ad8961d2e4528cdc2f72d044/resources/NKJP1M/NKJP1M-tagged-frequency.tab'             -o build/nkjp/NKJP1M-tagged-frequency.tab
-          sha256sum build/nkjp/NKJP1M-tagged-frequency.tab > build/nkjp/NKJP1M-tagged-frequency.tab.sha256
+          python3 scripts/fetch_nkjp1m.py             --out build/nkjp/NKJP1M-tagged-frequency.tab             --out-sha256 build/nkjp/NKJP1M-tagged-frequency.tab.sha256             --out-provenance build/nkjp/NKJP1M-tagged-frequency.provenance.json
 
       - name: Acquire current official TERYT SIMC catalog
         run: |
