@@ -34,8 +34,6 @@ MONTHS = {
 }
 
 TERC_CONTROL = "ctl00$body$BTERC"
-TERC_ARCHIVED_NAME = "TERC_Urzedowy"
-
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser()
@@ -55,20 +53,14 @@ def _postback(
     session: requests.Session,
     event_target: str,
     state_date: str,
-    *,
-    archived_name: str | None = None,
 ) -> requests.Response:
-    """Submit the same WebForms fields used by the public GUS download page."""
-    data = {
-        "__EVENTTARGET": event_target,
-        "ctl00$body$TBData": pl_date(state_date),
-    }
-    if archived_name is not None:
-        data["archived_name"] = archived_name
-
+    """Submit one GUS WebForms postback."""
     response = session.post(
         DOWNLOAD_URL,
-        data=data,
+        data={
+            "__EVENTTARGET": event_target,
+            "ctl00$body$TBData": pl_date(state_date),
+        },
         timeout=180,
         headers={"Referer": DOWNLOAD_URL},
     )
@@ -108,22 +100,6 @@ def _extract_zip_link(
     return None
 
 
-def _fetch_once(
-    session: requests.Session,
-    event_target: str,
-    state_date: str,
-    *,
-    archived_name: str | None = None,
-) -> bytes | None:
-    response = _postback(
-        session,
-        event_target,
-        state_date,
-        archived_name=archived_name,
-    )
-    return _response_zip(response) or _extract_zip_link(session, response)
-
-
 def _response_diagnostics(response: requests.Response) -> str:
     body = response.content
     text_body = body.decode(response.encoding or "utf-8", errors="replace")
@@ -153,46 +129,51 @@ def download(
     session: requests.Session,
     state_date: str,
 ) -> tuple[bytes, dict[str, str]]:
+    # GUS uses a two-step WebForms flow. A first Pobierz can return a page
+    # exposing the Generuj action; after Generuj completes, Pobierz must be
+    # called again to receive the ZIP. Repeat until ZIP or a bounded retry
+    # count is reached, matching the behavior of established TERYT clients.
     attempts: list[str] = []
-    last_diagnostics = "no response"
+    last_response: requests.Response | None = None
+    pobierz_control = "ctl00$body$BTERCPobierz"
+    generuj_control = "ctl00$body$BTERCGeneruj"
 
-    # GUS first asks for the TERC file and, when it is not already generated,
-    # returns the Generuj control. The latter must carry archived_name=TERC_Urzedowy.
-    direct_control = f"{TERC_CONTROL}Pobierz"
-    generate_control = f"{TERC_CONTROL}Generuj"
+    for cycle in range(1, 6):
+        attempts.append(f"{pobierz_control}#{cycle}")
+        response = _postback(session, pobierz_control, state_date)
+        last_response = response
+        data = _response_zip(response) or _extract_zip_link(session, response)
+        if data is not None:
+            return data, {
+                "method": "gus-webforms-postback-loop",
+                "state_date": state_date,
+                "download_cycle": str(cycle),
+                "attempted_controls": ",".join(attempts),
+            }
 
-    attempts.append(direct_control)
-    response = _postback(session, direct_control, state_date)
-    data = _response_zip(response) or _extract_zip_link(session, response)
-    if data is not None:
-        return data, {
-            "method": "gus-webforms-postback",
-            "control": direct_control,
-            "state_date": state_date,
-        }
+        page = response.content.decode(
+            response.encoding or "utf-8",
+            errors="replace",
+        )
+        if "body_BTERCGeneruj".lower() not in page.lower():
+            break
 
-    last_diagnostics = _response_diagnostics(response)
-    attempts.append(generate_control)
-    response = _postback(
-        session,
-        generate_control,
-        state_date,
-        archived_name=TERC_ARCHIVED_NAME,
-    )
-    data = _response_zip(response) or _extract_zip_link(session, response)
-    if data is not None:
-        return data, {
-            "method": "gus-webforms-postback",
-            "control": generate_control,
-            "archived_name": TERC_ARCHIVED_NAME,
-            "attempted_controls": ",".join(attempts),
-            "state_date": state_date,
-        }
+        attempts.append(f"{generuj_control}#{cycle}")
+        response = _postback(session, generuj_control, state_date)
+        last_response = response
+        data = _response_zip(response) or _extract_zip_link(session, response)
+        if data is not None:
+            return data, {
+                "method": "gus-webforms-postback-loop",
+                "state_date": state_date,
+                "generate_cycle": str(cycle),
+                "attempted_controls": ",".join(attempts),
+            }
 
-    last_diagnostics = _response_diagnostics(response)
+    diagnostics = _response_diagnostics(last_response) if last_response is not None else "no response"
     raise RuntimeError(
         "Official GUS TERC full-file postback did not return a ZIP archive. "
-        f"Tried={attempts}. Last response diagnostics: {last_diagnostics}"
+        f"Tried={attempts}. Last response diagnostics: {diagnostics}"
     )
 
 
