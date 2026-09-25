@@ -31,7 +31,7 @@ def _score_country_markers(text: str) -> int:
     return len(re.findall(r"(?i)(?<!\w)pol\.\s+", text))
 
 
-def pdf_text(path: Path) -> str:
+def pdf_text(path: Path, *, min_markers: int = 1) -> str:
     """Extract the KSNG PDF using the text representation that preserves entries."""
     import shutil
     import subprocess
@@ -106,7 +106,7 @@ def pdf_text(path: Path) -> str:
         ", ".join(f"{name}={score}" for name, _, score in scored),
     )
     best_name, best_text, best_score = scored[0]
-    if best_score < 150:
+    if best_score < min_markers:
         print("KSNG PDF extraction diagnostics:")
         for name, text_value, score in scored:
             marker_lines = [
@@ -119,11 +119,10 @@ def pdf_text(path: Path) -> str:
             if "pol" in line.lower()
         ][:20]
         raise RuntimeError(
-            f"Could not obtain enough KSNG country markers: "
+            f"Could not obtain enough KSNG markers: "
             f"best={best_name} count={best_score} sample={sample!r}"
         )
-    return best_text
-def normalize(text: str) -> str:
+    return best_textdef normalize(text: str) -> str:
     text = text.replace("\u00ad", "").replace("\r", "").replace("\f", "")
     return "\n".join(line.strip() for line in text.split("\n") if line.strip())
 
