@@ -121,3 +121,17 @@ If it grows substantially beyond that, we can then use frequency-based inflectio
 No module may silently displace a word from the 100k core.
 
 The build system must make every net-new module key and every replacement of a core surface traceable to its source and category.
+
+## Frequency evidence for additive modules
+
+For additive module retention, frequency is measured independently of the immutable 100k core. Absence from the core is not treated as zero frequency.
+
+The primary batch signal is the pinned NKJP1M tagged frequency table derived from the manually annotated one-million-word NKJP subcorpus. The table provides word form, lemma, grammatical tag and frequency; its provenance is pinned to ENIAM revision be02836cf3aa0286ad8961d2e4528cdc2f72d044. The project audit records the downloaded file SHA-256 and explicitly labels the corpus scope as NKJP1M rather than the full searchable NKJP corpus.
+
+The secondary signal is pinned wordfreq Polish frequency. It is used as an independent cross-check and can provide evidence for forms absent from the NKJP1M snapshot.
+
+The two measurements are stored separately. They are not silently combined into one invented frequency number.
+
+Retention tiers are not hard-coded before measurement. First the observed distribution of module-form frequencies is recorded; only then are retention thresholds calibrated together with grammatical usefulness and source confidence. A rare module item therefore does not automatically disappear merely because it falls outside the 100k core, and a frequent module item can remain fully inflected even when all of its forms are net-new keys.
+
+For names and places, source-specific importance (for example official name statistics or controlled geographic status) is treated as a separate evidence dimension, not as a substitute for linguistic corpus frequency.
