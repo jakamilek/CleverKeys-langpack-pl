@@ -70,7 +70,7 @@ jobs:
       - name: Acquire current official TERYT TERC catalog
         run: |
           mkdir -p build/teryt
-          python3 scripts/fetch_teryt_terc.py             --state-date 2026-01-01             --out-zip build/teryt/TERC_Urzedowy_2026-01-01.zip             --out-sha256 build/teryt/TERC_Urzedowy_2026-01-01.sha256             --out-provenance build/teryt/TERC-source-ref.json
+          python3 scripts/fetch_teryt_terc.py             --state-date 2026-09-25             --out-zip build/teryt/TERC_Urzedowy_2026-01-01.zip             --out-sha256 build/teryt/TERC_Urzedowy_2026-01-01.sha256             --out-provenance build/teryt/TERC-source-ref.json
           python3 scripts/extract_teryt_terc.py             --zip build/teryt/TERC_Urzedowy_2026-01-01.zip             --out-tsv build/pl-terc-source.tsv             --out-flat-tsv build/pl-terc-flat.tsv             --out-report build/pl-terc-source-report.json
 
       - name: Acquire current official TERYT SIMC catalog
