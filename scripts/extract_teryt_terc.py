@@ -45,8 +45,12 @@ def strip_tag(tag: str) -> str:
 
 
 def text_of(elem: ET.Element, key: str) -> str:
+    """Read a named <col> field from the official TERC row structure."""
+    wanted = key.upper()
     for child in elem:
-        if strip_tag(child.tag) == key.upper():
+        if strip_tag(child.tag) != "COL":
+            continue
+        if str(child.attrib.get("name", "")).upper() == wanted:
             return (child.text or "").strip()
     return ""
 
