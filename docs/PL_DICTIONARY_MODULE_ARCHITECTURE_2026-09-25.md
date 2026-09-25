@@ -44,6 +44,19 @@ Planned module based on GUS TERYT/TERC. TERC contains the names and identifiers 
 
 Planned module based on the official KSNG/GUGiK 2025 list. This source provides recommended Polish spellings of country and capital names, selected inflection information, country adjectives and inhabitant names.
 
+### Manual / custom
+
+Active permanent category for explicitly hand-selected dictionary surfaces.
+
+Current bootstrap:
+- 75 forms carried forward from the retired reviewed-morphology pilot after verification that they were absent from the 100k core and active name/city modules at the last complete measurement.
+- Source: sources/staging/custom_manual.tsv.
+- Every row carries an explicit capitalization policy, basis and provenance.
+- The category is intended for future hand-added words that do not naturally belong to an existing structured source category.
+- Manual additions still pass the same final quality, deduplication and capitalization gates as all other modules.
+
+The archived reviewed-morphology pilot is not restored as a category; its eligible unique forms are now represented here as explicit manual entries.
+
 ### Brands / trade names
 
 Planned as a **controlled practical-keyboard module**, not as an import of all registered trademarks.
