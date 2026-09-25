@@ -419,6 +419,11 @@ def main() -> int:
     ap.add_argument("--top", type=int, default=300000)
     ap.add_argument("--band", type=int, default=150000)
     ap.add_argument("--limit", type=int, default=150000)
+    ap.add_argument(
+        "--base-only",
+        action="store_true",
+        help="Build the 100k frequency core without names, cities, morphology, or proper-noun modules.",
+    )
     ap.add_argument("--aosp", type=Path, required=True)
     ap.add_argument(
         "--errors",
@@ -474,6 +479,19 @@ def main() -> int:
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
+
+    if args.base_only:
+        # The base core is intentionally built only from frequency-ranked candidates
+        # plus the normal linguistic evidence/quality gates. All additive category
+        # inputs are excluded from this pass so its 100k membership remains immutable.
+        args.first_name_history = None
+        args.historical_first_names = None
+        args.first_name_surface_policy = None
+        args.first_name_inflections = None
+        args.cities = None
+        args.city_inflections = None
+        args.morphology = None
+        args.proper_nouns = None
 
     from wordfreq import iter_wordlist, zipf_frequency
     try:
@@ -643,9 +661,15 @@ def main() -> int:
     aosp = load_aosp(args.aosp)
     spell = hunspell_accepts(ranked)
     blocked_errors, error_rows = load_blocked_errors(args.errors)
-    reviewed_morphology, morphology_families = load_reviewed_morphology(args.morphology)
-    reviewed_proper_nouns, proper_noun_families, proper_case_map = load_reviewed_proper_nouns(
-        args.proper_nouns
+    reviewed_morphology, morphology_families = (
+        load_reviewed_morphology(args.morphology)
+        if args.morphology
+        else (set(), {})
+    )
+    reviewed_proper_nouns, proper_noun_families, proper_case_map = (
+        load_reviewed_proper_nouns(args.proper_nouns)
+        if args.proper_nouns
+        else (set(), {}, {})
     )
     base_ranked = set(ranked)
     supplemental_morphology = sorted(reviewed_morphology - base_ranked)
