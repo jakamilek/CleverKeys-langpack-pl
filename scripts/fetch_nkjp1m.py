@@ -2,15 +2,15 @@
 """Fetch and strictly validate the pinned NKJP1M tagged-frequency table.
 
 The previous ENIAM web raw endpoint returned a tiny non-tabular response in
-CI. This helper stays on the same official ENIAM revision and uses official
-GitLab API/archive routes. It validates the file before the frequency audit
-can consume it.
+CI. This helper stays on the same official ENIAM revision and uses routes
+available on this GitLab host. It validates the file before the frequency
+audit can consume it.
 
 Acquisition order:
-1. preflight the GitLab Repository Files API metadata for the pinned commit;
-2. official repository archive for that exact commit/path;
-3. official raw Repository Files API with LFS enabled;
-4. Repository Files API content response.
+1. verify the pinned public GitLab file page;
+2. official GitLab web archive for that exact commit/path;
+3. official GitLab web raw endpoint;
+4. shallow Git fetch/show of the exact pinned commit and path.
 
 Acceptance requires UTF-8 text, non-HTML content, a plausible minimum size,
 exactly seven tab-separated columns on every data row, a positive integer
@@ -37,7 +37,7 @@ from urllib.parse import quote
 import requests
 
 
-GITLAB_BASE = "https://git.nlp.ipipan.waw.pl/api/v4"
+GITLAB_BASE = "https://git.nlp.ipipan.waw.pl"
 PROJECT = "wojciech.jaworski/ENIAM"
 REVISION = "be02836cf3aa0286ad8961d2e4528cdc2f72d044"
 FILE_PATH = "resources/NKJP1M/NKJP1M-tagged-frequency.tab"
@@ -65,28 +65,18 @@ class AcquisitionError(RuntimeError):
     pass
 
 
-def project_url_part() -> str:
-    return quote(PROJECT, safe="")
+def project_web_url() -> str:
+    return f"{GITLAB_BASE}/{PROJECT}"
 
 
-def file_url_part() -> str:
-    return quote(FILE_PATH, safe="")
+def raw_web_url() -> str:
+    return f"{project_web_url()}/-/raw/{REVISION}/{FILE_PATH}"
 
 
-def metadata_url() -> str:
+def archive_web_url() -> str:
     return (
-        f"{GITLAB_BASE}/projects/{project_url_part()}/repository/files/"
-        f"{file_url_part()}"
-    )
-
-
-def raw_url() -> str:
-    return f"{metadata_url()}/raw"
-
-
-def archive_url() -> str:
-    return (
-        f"{GITLAB_BASE}/projects/{project_url_part()}/repository/archive.tar.gz"
+        f"{project_web_url()}/-/archive/{REVISION}/"
+        f"ENIAM-{REVISION}.tar.gz"
     )
 
 
@@ -111,46 +101,28 @@ def reject_response(response: requests.Response, *, archive: bool = False) -> No
 
 
 def fetch_metadata(session: requests.Session) -> dict:
-    params = {"ref": REVISION}
-    response = session.head(
-        metadata_url(),
-        params=params,
-        timeout=TIMEOUT,
-        allow_redirects=True,
-    )
-    if response.status_code >= 400 or not response.headers.get("X-Gitlab-Commit-Id"):
-        response = session.get(
-            metadata_url(),
-            params=params,
-            timeout=TIMEOUT,
-            allow_redirects=True,
-        )
-    reject_response(response)
+    """Best-effort verification of the pinned public GitLab file page.
 
-    try:
-        data = response.json()
-    except ValueError as exc:
-        raise AcquisitionError("Repository Files metadata is not JSON") from exc
-
-    commit_id = data.get("commit_id") or response.headers.get("X-Gitlab-Commit-Id")
-    if commit_id and commit_id != REVISION:
+    This host currently returns 404 for /api/v4, so the page check is
+    informational. The acquisition URLs still hard-pin both commit and path,
+    and the downloaded bytes are independently validated and hashed.
+    """
+    url = f"{project_web_url()}/-/blob/{REVISION}/{FILE_PATH}"
+    response = session.get(url, timeout=TIMEOUT, allow_redirects=True)
+    if response.status_code >= 400:
         raise AcquisitionError(
-            f"Revision mismatch: requested {REVISION}, got {commit_id}"
+            f"Pinned file page returned HTTP {response.status_code}: {response.url}"
         )
-
-    file_path = data.get("file_path") or data.get("path")
-    if file_path and file_path != FILE_PATH:
+    content_type = response.headers.get("Content-Type", "").lower()
+    if "text/html" not in content_type:
         raise AcquisitionError(
-            f"File path mismatch: requested {FILE_PATH!r}, got {file_path!r}"
+            f"Pinned file page returned unexpected content-type: {content_type!r}"
         )
-
     return {
-        "commit_id": commit_id,
-        "blob_id": data.get("blob_id") or response.headers.get("X-Gitlab-Blob-Id"),
-        "size": data.get("size") or response.headers.get("X-Gitlab-Size"),
-        "content_sha256": data.get("content_sha256")
-        or response.headers.get("X-Gitlab-Content-Sha256"),
-        "encoding": data.get("encoding"),
+        "page_url": response.url,
+        "commit_id": REVISION,
+        "file_path": FILE_PATH,
+        "content_type": content_type,
     }
 
 
@@ -167,12 +139,8 @@ def stream_to_path(response: requests.Response, target: Path) -> int:
 
 def attempt_archive(session: requests.Session, target: Path) -> str:
     with session.get(
-        archive_url(),
-        params={
-            "sha": REVISION,
-            "path": "resources/NKJP1M",
-            "include_lfs_blobs": "true",
-        },
+        archive_web_url(),
+        params={"path": "resources/NKJP1M"},
         timeout=TIMEOUT,
         stream=True,
         allow_redirects=True,
@@ -213,8 +181,7 @@ def attempt_archive(session: requests.Session, target: Path) -> str:
 
 def attempt_raw_lfs(session: requests.Session, target: Path) -> None:
     with session.get(
-        raw_url(),
-        params={"ref": REVISION, "lfs": "true"},
+        raw_web_url(),
         timeout=TIMEOUT,
         stream=True,
         allow_redirects=True,
@@ -223,31 +190,50 @@ def attempt_raw_lfs(session: requests.Session, target: Path) -> None:
         stream_to_path(response, target)
 
 
-def attempt_file_api_content(session: requests.Session, target: Path) -> None:
-    response = session.get(
-        metadata_url(),
-        params={"ref": REVISION},
-        timeout=TIMEOUT,
-        allow_redirects=True,
-    )
-    reject_response(response)
+def attempt_git_clone(session: requests.Session, target: Path) -> None:
+    del session
+    import subprocess
 
-    try:
-        data = response.json()
-    except ValueError as exc:
-        raise AcquisitionError("Repository Files content response is not JSON") from exc
-
-    if data.get("encoding") != "base64" or not isinstance(data.get("content"), str):
-        raise AcquisitionError(
-            f"Repository Files API returned unexpected encoding: {data.get('encoding')!r}"
+    with tempfile.TemporaryDirectory(prefix="nkjp1m-git-") as work:
+        repo_dir = Path(work) / "repo"
+        clone = subprocess.run(
+            [
+                "git", "clone", "--filter=blob:none", "--no-checkout",
+                "--depth", "1", project_web_url() + ".git", str(repo_dir)
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
         )
+        if clone.returncode != 0:
+            raise AcquisitionError(
+                f"git clone failed: {clone.stderr[-400:]}"
+            )
 
-    try:
-        raw = base64.b64decode(data["content"], validate=True)
-    except (ValueError, binascii.Error) as exc:
-        raise AcquisitionError("Repository Files API returned invalid base64") from exc
+        fetch = subprocess.run(
+            ["git", "-C", str(repo_dir), "fetch", "--depth", "1", "origin", REVISION],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            check=False,
+        )
+        if fetch.returncode != 0:
+            raise AcquisitionError(
+                f"git fetch pinned revision failed: {fetch.stderr[-400:]}"
+            )
 
-    target.write_bytes(raw)
+        show = subprocess.run(
+            ["git", "-C", str(repo_dir), "show", f"{REVISION}:{FILE_PATH}"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+        )
+        if show.returncode != 0:
+            raise AcquisitionError(
+                f"git show pinned file failed: {show.stderr.decode(errors='replace')[-400:]}"
+            )
+        target.write_bytes(show.stdout)
 
 
 def sha256(path: Path) -> str:
@@ -365,6 +351,7 @@ def main() -> int:
         "source": {
             "gitlab_base": GITLAB_BASE,
             "project": PROJECT,
+            "project_web_url": project_web_url(),
             "file_path": FILE_PATH,
             "pinned_revision": REVISION,
         },
@@ -392,11 +379,8 @@ def main() -> int:
 
         attempts = (
             ("repository-archive", lambda: attempt_archive(session, args.out)),
-            ("repository-files-raw-lfs", lambda: attempt_raw_lfs(session, args.out)),
-            (
-                "repository-files-api-content",
-                lambda: attempt_file_api_content(session, args.out),
-            ),
+            ("gitlab-web-raw", lambda: attempt_raw_lfs(session, args.out)),
+            ("git-pinned-commit", lambda: attempt_git_clone(session, args.out)),
         )
 
         last_error: Exception | None = None
