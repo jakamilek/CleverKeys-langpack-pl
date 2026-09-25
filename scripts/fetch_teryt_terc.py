@@ -124,11 +124,37 @@ def _fetch_once(
     return _response_zip(response) or _extract_zip_link(session, response)
 
 
+def _response_diagnostics(response: requests.Response) -> str:
+    body = response.content
+    text_body = body.decode(response.encoding or "utf-8", errors="replace")
+    markers = [
+        marker for marker in (
+            "BTERCGeneruj", "BTERCPobierz", "TBData", "__VIEWSTATE",
+            "__EVENTVALIDATION", ".zip", "href", "window.location",
+        ) if marker.lower() in text_body.lower()
+    ]
+    hrefs = re.findall(
+        r"""(?:href|src)=[\"']([^\"']+)[\"']""",
+        text_body,
+        flags=re.IGNORECASE,
+    )
+    interesting_hrefs = [
+        href for href in hrefs
+        if ".zip" in href.lower() or "terc" in href.lower()
+    ][:10]
+    return (
+        f"status={response.status_code}; url={response.url}; "
+        f"content_type={response.headers.get('content-type', '')}; "
+        f"bytes={len(body)}; markers={markers}; links={interesting_hrefs}"
+    )
+
+
 def download(
     session: requests.Session,
     state_date: str,
 ) -> tuple[bytes, dict[str, str]]:
     attempts: list[str] = []
+    last_diagnostics = "no response"
 
     # GUS first asks for the TERC file and, when it is not already generated,
     # returns the Generuj control. The latter must carry archived_name=TERC_Urzedowy.
@@ -136,7 +162,8 @@ def download(
     generate_control = f"{TERC_CONTROL}Generuj"
 
     attempts.append(direct_control)
-    data = _fetch_once(session, direct_control, state_date)
+    response = _postback(session, direct_control, state_date)
+    data = _response_zip(response) or _extract_zip_link(session, response)
     if data is not None:
         return data, {
             "method": "gus-webforms-postback",
@@ -144,13 +171,15 @@ def download(
             "state_date": state_date,
         }
 
+    last_diagnostics = _response_diagnostics(response)
     attempts.append(generate_control)
-    data = _fetch_once(
+    response = _postback(
         session,
         generate_control,
         state_date,
         archived_name=TERC_ARCHIVED_NAME,
     )
+    data = _response_zip(response) or _extract_zip_link(session, response)
     if data is not None:
         return data, {
             "method": "gus-webforms-postback",
@@ -160,9 +189,10 @@ def download(
             "state_date": state_date,
         }
 
+    last_diagnostics = _response_diagnostics(response)
     raise RuntimeError(
         "Official GUS TERC full-file postback did not return a ZIP archive. "
-        f"Tried={attempts}"
+        f"Tried={attempts}. Last response diagnostics: {last_diagnostics}"
     )
 
 
