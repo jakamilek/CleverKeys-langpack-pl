@@ -59,6 +59,21 @@ UPRP and EUIPO/TMview are suitable for verifying trademark existence. Independen
 
 Registered-trademark databases alone must not be used as a dump: they contain many marks that are irrelevant to normal keyboard typing.
 
+## Retired early proper-noun pilot
+
+The former `reviewed_proper_nouns` pilot was created for early runtime testing and
+anchor/regression probing. It is **not an active production module** and is not
+included in module capacity accounting or retention decisions.
+
+Its historical source is preserved at:
+- `sources/archive/reviewed_proper_nouns_pilot_2026-09-25.tsv`
+
+The archived entries must not be automatically promoted. A future reuse requires
+fresh assignment to the appropriate category (for example first names or a
+controlled locality/country/brand module), fresh source audit, and explicit
+inclusion. Duplicate keys already represented by the 100k core or another active
+module do not justify retaining a second proper-noun entry.
+
 ## Inflection policy
 
 Every category generator should be capable of producing the complete validated singular paradigm first. The final dictionary then decides which forms are retained.
