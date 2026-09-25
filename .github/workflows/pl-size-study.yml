@@ -17,7 +17,6 @@ on:
       - "scripts/fetch_nkjp1m.py"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/reviewed_morphology.tsv"
-      - "sources/staging/reviewed_proper_nouns.tsv"
       - "sources/staging/historical_name_candidates.tsv"
       - "sources/staging/first_name_surface_policy.tsv"
       - "scripts/audit_name_history.py"
@@ -112,7 +111,7 @@ jobs:
 
           for limit in 50000 100000 125000 150000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --morphology sources/staging/reviewed_morphology.tsv               --proper-nouns sources/staging/reviewed_proper_nouns.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --morphology sources/staging/reviewed_morphology.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
 
@@ -126,11 +125,11 @@ jobs:
 
       - name: Measure net module cost over immutable 100k core
         run: |
-          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__family_forms__             --module reviewed_proper_nouns=sources/staging/reviewed_proper_nouns.tsv:__family_forms__             --out build/study/module-study-report.json
+          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__family_forms__             --out build/study/module-study-report.json
 
       - name: Audit module frequency with NKJP primary and wordfreq secondary
         run: |
-          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__family_forms__             --module reviewed_proper_nouns=sources/staging/reviewed_proper_nouns.tsv:__family_forms__             --out build/study/module-frequency-report.json
+          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__family_forms__             --out build/study/module-frequency-report.json
 
       - name: Compare coverage and audit CKDTs
         run: |
@@ -165,12 +164,6 @@ jobs:
               for forms in reports[50000]["reviewed_morphology"]["families"].values()
               for word in forms
           }
-          reviewed_proper_nouns = {
-              word
-              for forms in reports[50000]["reviewed_proper_nouns"]["families"].values()
-              for word in forms
-          }
-
           city_names = {
               row["name"]
               for row in __import__("csv").DictReader(
@@ -250,20 +243,6 @@ jobs:
                   f"{size}: missing selected first-name inflections: "
                   f"{', '.join(missing_first_name_inflections)}"
               )
-              missing_proper = sorted({w.lower() for w in reviewed_proper_nouns} - ckdt[size])
-              assert not missing_proper, (
-                  f"{size}: missing reviewed proper nouns: {', '.join(missing_proper)}"
-              )
-              expected_case = set(reviewed_proper_nouns)
-              actual_case = {
-                  w for w in ckdt_raw[size]
-                  if w.lower() in {x.lower() for x in reviewed_proper_nouns}
-              }
-              assert actual_case == expected_case, (
-                  f"{size}: proper noun casing mismatch: "
-                  f"expected={sorted(expected_case)}, actual={sorted(actual_case)}"
-              )
-
           forbidden = {
               "chopin", "chopina", "goebbels", "goebbelsa",
               "catherine", "catalina", "cameron", "carli", "carlo",
@@ -300,7 +279,6 @@ jobs:
                   "drop_reasons": report["drop_reasons"],
                   "dictionary_bytes": (root / str(size) / "dictionary.bin").stat().st_size,
                   "reviewed_forms_present": len(reviewed),
-                  "reviewed_proper_nouns_present": len(reviewed_proper_nouns),
                   "city_names_present": len(city_names),
                   "city_inflection_forms_present": len(city_inflections),
                   "regression_hits": regression_hits[size],
