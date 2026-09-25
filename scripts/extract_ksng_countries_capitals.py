@@ -20,15 +20,15 @@ def parse_args() -> argparse.Namespace:
 
 def _normalize_abbreviations(text: str) -> str:
     """Repair PDF extractors that split short abbreviations into spaced glyphs."""
-    text = re.sub(r"(?i)\\bp\\s*o\\s*l\\s*\\.", "pol.", text)
-    text = re.sub(r"(?i)\\bst\\s*o\\s*l\\s*\\.", "stol.", text)
-    text = re.sub(r"(?i)\\bD\\s*\\.", "D.", text)
-    text = re.sub(r"(?i)\\bMc\\s*\\.", "Mc.", text)
+    text = re.sub(r"(?i)\bp\s*o\s*l\s*\.", "pol.", text)
+    text = re.sub(r"(?i)\bst\s*o\s*l\s*\.", "stol.", text)
+    text = re.sub(r"(?i)\bD\s*\.", "D.", text)
+    text = re.sub(r"(?i)\bMc\s*\.", "Mc.", text)
     return text
 
 
 def _score_country_markers(text: str) -> int:
-    return len(re.findall(r"(?i)(?<!\\w)pol\\.\\s+", text))
+    return len(re.findall(r"(?i)(?<!\w)pol\.\s+", text))
 
 
 def pdf_text(path: Path) -> str:
