@@ -235,3 +235,50 @@ def download(
 
 
 
+
+
+def main() -> int:
+    args = parse_args()
+    for path in (args.out_zip, args.out_sha256, args.out_provenance):
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+    session = requests.Session()
+    session.headers.update({
+        "User-Agent": "CleverKeys-langpack-pl/TERC-audit",
+        "Accept": "text/html,application/xhtml+xml,application/zip,*/*",
+    })
+
+    data, acquisition = download(session, args.state_date)
+    digest = hashlib.sha256(data).hexdigest()
+
+    args.out_zip.write_bytes(data)
+    args.out_sha256.write_text(digest + "\n", encoding="utf-8")
+
+    provenance = {
+        "source": "GUS TERYT / TERC",
+        "source_url": DOWNLOAD_URL,
+        "state_date_requested": args.state_date,
+        "state_date_form": pl_date(args.state_date),
+        "archive_sha256": digest,
+        "selection_rule": (
+            "three-level territorial division: "
+            "voivodeships, powiats and gminas"
+        ),
+        "acquisition": acquisition,
+        "expected_current_state": {
+            "voivodeships": 16,
+            "powiats": 380,
+            "gminas": 2479,
+            "total": 2875,
+        },
+    }
+    args.out_provenance.write_text(
+        json.dumps(provenance, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(json.dumps(provenance, ensure_ascii=False, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
