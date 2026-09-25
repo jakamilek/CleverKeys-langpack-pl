@@ -38,6 +38,25 @@ def pdf_text(path: Path) -> str:
 
     candidates: list[tuple[str, str]] = []
 
+    # PyMuPDF is an independent parser path. The official KSNG PDF uses rotated
+    # and embedded-font text that can be exposed differently by pypdf/Poppler.
+    try:
+        try:
+            import pymupdf
+        except ImportError:
+            import fitz as pymupdf
+        with pymupdf.open(str(path)) as document:
+            for sort in (False, True):
+                text = "\n".join(
+                    page.get_text("text", sort=sort) or ""
+                    for page in document
+                )
+                candidates.append(
+                    (f"pymupdf-text-sort-{str(sort).lower()}", _normalize_abbreviations(text))
+                )
+    except Exception as exc:
+        print(f"KSNG PyMuPDF extraction unavailable: {type(exc).__name__}: {exc}")
+
     reader = PdfReader(str(path))
     for mode in ("default", "layout"):
         try:
@@ -88,6 +107,13 @@ def pdf_text(path: Path) -> str:
     )
     best_name, best_text, best_score = scored[0]
     if best_score < 150:
+        print("KSNG PDF extraction diagnostics:")
+        for name, text_value, score in scored:
+            marker_lines = [
+                line for line in text_value.splitlines()
+                if "pol" in line.lower()
+            ][:8]
+            print(f"  {name}: markers={score} samples={marker_lines!r}")
         sample = [
             line for line in best_text.splitlines()
             if "pol" in line.lower()
