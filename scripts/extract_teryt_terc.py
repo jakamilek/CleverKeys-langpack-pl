@@ -123,7 +123,8 @@ def main() -> int:
             handle,
             fieldnames=[
                 "level", "terc", "woj", "pow", "gmi", "rodz", "name",
-                "nazdod", "stan_na", "eligible_single_token", "source",
+                "nazdod", "stan_na", "eligible_single_token", "case_policy",
+                "source_name", "source",
             ],
             delimiter="\t",
             lineterminator="\n",
