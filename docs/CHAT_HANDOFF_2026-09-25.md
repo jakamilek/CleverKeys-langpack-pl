@@ -448,6 +448,25 @@ Module coverage:
 No retention thresholds have been chosen. The zero-count forms remain candidates
 for later analysis, not automatic exclusions.
 
+
+### Latest clean size study after proper-noun pilot retirement
+
+Size-study #86 (run `36178666213`, commit `b28ef44c98069847ad6405655f7d164b67868cd0`) completed successfully with the retired proper-noun pilot excluded.
+
+Active module measurement:
+- first-name forms: 1,736 unique keys; 308 overlap the 100k core; 1,428 net-new vs core
+- city names: 844 unique keys; 372 overlap the 100k core; 472 net-new vs core
+- city inflections: 1,218 unique keys; 493 overlap the 100k core; 725 net-new vs core; 89 overlap earlier active modules
+- reviewed morphology: 123 unique keys; 48 overlap the 100k core; 75 net-new vs core
+- union of active module keys: 3,620
+- active module keys already in core: 1,009
+- net-new active module keys over the protected 100k core: 2,611
+- current measured union before any future frequency-aware retention: 102,611 unique keys
+
+The old 3,635 / 2,623 figures are superseded because they included the retired proper-noun pilot. The 76-form proper-noun result remains historical only.
+
+The same #86 run also passed the pinned NKJP1M acquisition and module-frequency audit. NKJP nonzero surface distribution in this clean active set: P10/P25/P50/P75/P90/P95 = 1 / 1 / 2 / 6 / 21 / 44. Wordfreq nonzero Zipf: 1.49 / 2.00 / 2.56 / 3.09 / 3.776 / 4.13.
+
 ### What remains to do next
 
 A. Inspect the module distributions and NKJP/wordfreq disagreements by module
