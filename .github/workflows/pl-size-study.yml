@@ -18,6 +18,7 @@ on:
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/historical_name_candidates.tsv"
       - "sources/staging/first_name_surface_policy.tsv"
+      - "sources/staging/custom_manual.tsv"
       - "scripts/audit_name_history.py"
       - "scripts/fetch_teryt_simc.py"
       - "scripts/extract_teryt_cities.py"
@@ -124,11 +125,11 @@ jobs:
 
       - name: Measure net module cost over immutable 100k core
         run: |
-          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --out build/study/module-study-report.json
+          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --out build/study/module-study-report.json
 
       - name: Audit module frequency with NKJP primary and wordfreq secondary
         run: |
-          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --out build/study/module-frequency-report.json
+          python3 scripts/audit_module_frequency.py             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module custom_manual=sources/staging/custom_manual.tsv:surface             --out build/study/module-frequency-report.json
 
       - name: Compare coverage and audit CKDTs
         run: |
