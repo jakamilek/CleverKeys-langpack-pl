@@ -369,51 +369,6 @@ def load_first_name_inflections(
     return forms, surface_map
 
 
-def load_reviewed_proper_nouns(
-    path: Path,
-) -> tuple[set[str], dict[str, list[str]], dict[str, str]]:
-    forms: set[str] = set()
-    families: dict[str, list[str]] = {}
-    lower_to_canonical: dict[str, str] = {}
-    if not path.exists():
-        return forms, families, lower_to_canonical
-    for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        parts = line.split("	")
-        if len(parts) != 4:
-            raise SystemExit(
-                f"Malformed proper-noun row {path}:{line_no}; expected 4 TSV columns"
-            )
-        family_id, raw_forms, basis, note = parts
-        if not family_id or not raw_forms or not basis or not note:
-            raise SystemExit(f"Malformed proper-noun row {path}:{line_no}")
-        family_forms = [w.strip() for w in raw_forms.split(";") if w.strip()]
-        if not family_forms:
-            raise SystemExit(f"Empty proper-noun family {path}:{line_no}")
-        invalid = [w for w in family_forms if not is_candidate(w)]
-        if invalid:
-            raise SystemExit(
-                f"Invalid proper-noun candidate(s) at {path}:{line_no}: "
-                + ", ".join(sorted(set(invalid)))
-            )
-        bucket = families.setdefault(family_id, [])
-        for word in family_forms:
-            lower = word.lower()
-            prior = lower_to_canonical.get(lower)
-            if prior is not None and prior != word:
-                raise SystemExit(
-                    f"Conflicting proper-noun casing at {path}:{line_no}: "
-                    f"{prior!r} vs {word!r}"
-                )
-            lower_to_canonical[lower] = word
-            if word not in bucket:
-                bucket.append(word)
-            forms.add(word)
-    return forms, families, lower_to_canonical
-
-
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--top", type=int, default=300000)
@@ -422,7 +377,7 @@ def main() -> int:
     ap.add_argument(
         "--base-only",
         action="store_true",
-        help="Build the 100k frequency core without names, cities, morphology, or proper-noun modules.",
+        help="Build the 100k frequency core without names, cities, or morphology modules.",
     )
     ap.add_argument("--aosp", type=Path, required=True)
     ap.add_argument(
@@ -434,11 +389,6 @@ def main() -> int:
         "--morphology",
         type=Path,
         default=Path("sources/staging/reviewed_morphology.tsv"),
-    )
-    ap.add_argument(
-        "--proper-nouns",
-        type=Path,
-        default=Path("sources/staging/reviewed_proper_nouns.tsv"),
     )
     ap.add_argument(
         "--first-name-history",
@@ -491,7 +441,6 @@ def main() -> int:
         args.cities = None
         args.city_inflections = None
         args.morphology = None
-        args.proper_nouns = None
 
     from wordfreq import iter_wordlist, zipf_frequency
     try:
@@ -516,7 +465,7 @@ def main() -> int:
             non_polish += 1
 
     # Snapshot the original wordfreq candidate universe before any explicit first-name,
-    # city, morphology, or proper-noun additions are appended. This is the baseline for the
+    # city or morphology additions are appended. This is the baseline for the
     # later capacity-displacement audit.
     base_candidate_words = set(ranked)
 
@@ -656,7 +605,7 @@ def main() -> int:
 
     # Capture the candidate universe before the explicit first-name/city layers are
     # appended. This lets the final capacity audit identify words displaced specifically
-    # by those additions, rather than conflating them with the older morphology/proper-noun layers.
+    # by those additions, rather than conflating them with the older morphology layers.
     zipf = {word: float(zipf_frequency(word, "pl")) for word in ranked}
     aosp = load_aosp(args.aosp)
     spell = hunspell_accepts(ranked)
@@ -666,27 +615,15 @@ def main() -> int:
         if args.morphology
         else (set(), {})
     )
-    reviewed_proper_nouns, proper_noun_families, proper_case_map = (
-        load_reviewed_proper_nouns(args.proper_nouns)
-        if args.proper_nouns
-        else (set(), {}, {})
-    )
     base_ranked = set(ranked)
     supplemental_morphology = sorted(reviewed_morphology - base_ranked)
     for word in supplemental_morphology:
         ranked.append(word)
         seen.add(word)
-    supplemental_proper_nouns = sorted(
-        {word.lower() for word in reviewed_proper_nouns} - set(ranked)
-    )
-    for word in supplemental_proper_nouns:
-        ranked.append(word)
-        seen.add(word)
     zipf.update({
         word: float(zipf_frequency(word, "pl"))
-        for word in supplemental_morphology + supplemental_proper_nouns
+        for word in supplemental_morphology
     })
-    reviewed_proper_nouns_lower = {word.lower() for word in reviewed_proper_nouns}
     reviewed_first_names |= historical_first_names
     positive = spell | aosp
 
@@ -770,9 +707,6 @@ def main() -> int:
         if word in city_forms:
             keep[word] = "reviewed-city"
             continue
-        if word in reviewed_proper_nouns_lower:
-            keep[word] = "reviewed-proper-noun"
-            continue
         if word in reviewed_first_names:
             # Explicitly selected first names are source-backed candidates.
             # Their inclusion must not depend on corpus/foreign-language evidence;
@@ -821,8 +755,6 @@ def main() -> int:
                 or word in city_inflection_forms
             ):
                 continue
-            if word in reviewed_proper_nouns_lower:
-                continue
             best = max(accented, key=lambda w: zipf.get(w, 0.0))
             if best != word and best in positive:
                 del keep[word]
@@ -847,7 +779,7 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms
+            if w in guards or w in reviewed_morphology or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms
         }
         if len(protected) > args.limit:
             raise SystemExit(
@@ -863,12 +795,12 @@ def main() -> int:
             drop[word] = "limit-cut"
 
     # Reconstruct the counterfactual final dictionary without the genuinely new name/city
-    # layer. Existing morphology/proper-noun additions remain protected, so the comparison
+    # layer. Existing morphology additions remain protected, so the comparison
     # isolates capacity displacement caused by the new city/name entries.
     baseline_without_new_name_city = pre_limit_keep - new_name_city_words
     baseline_protected = {
         w for w in baseline_without_new_name_city
-        if w in guards or w in reviewed_morphology or w in reviewed_proper_nouns_lower
+        if w in guards or w in reviewed_morphology
     }
     if len(baseline_without_new_name_city) <= args.limit:
         baseline_final_without_new_name_city = baseline_without_new_name_city
@@ -888,12 +820,6 @@ def main() -> int:
     missing_guards = sorted(guards - set(keep))
     if missing_guards:
         raise SystemExit("Guard words lost: " + ", ".join(missing_guards))
-
-    missing_proper_nouns = sorted(reviewed_proper_nouns_lower - set(keep))
-    if missing_proper_nouns:
-        raise SystemExit(
-            "Reviewed proper nouns lost: " + ", ".join(missing_proper_nouns)
-        )
 
     # Final capitalization gate: every retained word is checked immediately before it
     # becomes a dictionary surface. Ordinary vocabulary stays lowercase; only audited
@@ -931,9 +857,6 @@ def main() -> int:
             capitalization_policy = "capitalized"
         elif word in first_name_inflection_surface_map:
             expected_surface = first_name_inflection_surface_map[word]
-            capitalization_policy = "capitalized"
-        elif word in proper_case_map:
-            expected_surface = proper_case_map[word]
             capitalization_policy = "capitalized"
         elif word in first_name_case_map:
             expected_surface = first_name_case_map[word]
@@ -1004,7 +927,6 @@ def main() -> int:
             "spell_evidence": sum(1 for r in keep.values() if r == "spell-evidence"),
             "guard": sum(1 for r in keep.values() if r == "guard"),
             "reviewed_morphology": sum(1 for r in keep.values() if r == "reviewed-morphology"),
-            "reviewed_proper_noun": sum(1 for r in keep.values() if r == "reviewed-proper-noun"),
             "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
             "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
             "reviewed_first_name_inflection": sum(1 for r in keep.values() if r == "reviewed-first-name-inflection"),
@@ -1041,15 +963,6 @@ def main() -> int:
                 for family_id, forms in sorted(morphology_families.items())
             },
         },
-        "reviewed_proper_nouns": {
-            "family_count": len(proper_noun_families),
-            "form_count": len(reviewed_proper_nouns),
-            "supplemental_form_count": len(supplemental_proper_nouns),
-            "families": {
-                family_id: sorted(forms)
-                for family_id, forms in sorted(proper_noun_families.items())
-            },
-        },
         "dropped": len(drop),
         "drop_reasons": {},
         "name_city_capacity_audit": {
@@ -1075,7 +988,7 @@ def main() -> int:
                 key=lambda x: (-x["foreign_zipf"], x["word"]),
             )[:100],
             "kept_tail": [
-                {"word": w, "zipf": round(zipf[w], 2), "reason": surface_keep.get(proper_case_map.get(w, w), keep[w])}
+                {"word": w, "zipf": round(zipf[w], 2), "reason": surface_keep.get(w, keep[w])}
                 for w in sorted(keep, key=lambda x: (-zipf[x], x))[:100]
             ],
         },
