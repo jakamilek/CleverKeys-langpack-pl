@@ -200,6 +200,50 @@ def load_blocked_errors(path: Path) -> tuple[set[str], list[dict[str, str]]]:
 
 
 
+def load_custom_words(
+    path: Path,
+) -> tuple[set[str], dict[str, str], dict[str, str]]:
+    """Load explicit hand-reviewed dictionary surfaces with an explicit casing policy."""
+    forms: set[str] = set()
+    surface_map: dict[str, str] = {}
+    case_policy_map: dict[str, str] = {}
+    if not path.exists():
+        return forms, surface_map, case_policy_map
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        expected_fields = {"surface", "case_policy", "basis", "source"}
+        if set(reader.fieldnames or ()) != expected_fields:
+            raise SystemExit(
+                f"Malformed custom category header {path}: expected {sorted(expected_fields)}"
+            )
+        for line_no, row in enumerate(reader, 2):
+            surface = row["surface"].strip()
+            policy = row["case_policy"].strip()
+            if not surface or policy not in {"lowercase", "capitalized"}:
+                raise SystemExit(f"Malformed custom category row {path}:{line_no}")
+            if not is_inflection_surface(surface):
+                raise SystemExit(
+                    f"Invalid custom category surface {path}:{line_no}: {surface!r}"
+                )
+            lower = surface.lower()
+            prior = surface_map.get(lower)
+            if prior is not None and prior != surface:
+                raise SystemExit(
+                    f"Conflicting custom category surface {path}:{line_no}: "
+                    f"{prior!r} vs {surface!r}"
+                )
+            prior_policy = case_policy_map.get(lower)
+            if prior_policy is not None and prior_policy != policy:
+                raise SystemExit(
+                    f"Conflicting custom category case policy {path}:{line_no}: "
+                    f"{prior_policy!r} vs {policy!r}"
+                )
+            forms.add(lower)
+            surface_map[lower] = surface
+            case_policy_map[lower] = policy
+    return forms, surface_map, case_policy_map
+
+
 def load_city_source(
     path: Path,
 ) -> tuple[set[str], dict[str, str]]:
@@ -374,6 +418,12 @@ def main() -> int:
         help="Generated singular inflections for the already-selected first names.",
     )
     ap.add_argument(
+        "--custom",
+        type=Path,
+        default=Path("sources/staging/custom_manual.tsv"),
+        help="Explicit hand-reviewed manual/custom dictionary surfaces.",
+    )
+    ap.add_argument(
         "--cities",
         type=Path,
         default=None,
@@ -399,6 +449,7 @@ def main() -> int:
         args.first_name_inflections = None
         args.cities = None
         args.city_inflections = None
+        args.custom = None
 
     from wordfreq import iter_wordlist, zipf_frequency
     try:
@@ -470,6 +521,12 @@ def main() -> int:
     city_inflection_surface_map: dict[str, str] = {}
     if args.city_inflections:
         city_inflection_forms, city_inflection_surface_map = load_first_name_inflections(args.city_inflections)
+
+    custom_forms: set[str] = set()
+    custom_surface_map: dict[str, str] = {}
+    custom_case_policy_map: dict[str, str] = {}
+    if args.custom:
+        custom_forms, custom_surface_map, custom_case_policy_map = load_custom_words(args.custom)
 
     first_name_case_map: dict[str, str] = {}
     reviewed_first_names: set[str] = set()
@@ -561,6 +618,12 @@ def main() -> int:
             ranked.append(word)
             seen.add(word)
 
+    # Explicit manual/custom surfaces are added as audited candidates.
+    for word in sorted(custom_forms):
+        if word not in seen:
+            ranked.append(word)
+            seen.add(word)
+
     # Capture the candidate universe before the explicit first-name/city layers are
     # appended. This lets the final capacity audit identify words displaced specifically
     # by those additions.
@@ -638,6 +701,9 @@ def main() -> int:
             continue
         if word in guards:
             keep[word] = "guard"
+            continue
+        if word in custom_forms:
+            keep[word] = "custom-manual"
             continue
         if word in first_name_inflection_forms and word not in lowercase_first_name_exceptions:
             keep[word] = "reviewed-first-name-inflection"
@@ -788,6 +854,9 @@ def main() -> int:
         elif word in lowercase_first_name_inflection_surfaces:
             expected_surface = word
             capitalization_policy = "lowercase"
+        elif word in custom_surface_map:
+            expected_surface = custom_surface_map[word]
+            capitalization_policy = custom_case_policy_map[word]
         elif word in city_surface_map:
             expected_surface = city_surface_map[word]
             capitalization_policy = "capitalized"
@@ -867,6 +936,7 @@ def main() -> int:
             "guard": sum(1 for r in keep.values() if r == "guard"),
             "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
             "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
+            "custom_manual": sum(1 for r in keep.values() if r == "custom-manual"),
             "reviewed_first_name_inflection": sum(1 for r in keep.values() if r == "reviewed-first-name-inflection"),
             "reviewed_city": sum(1 for r in keep.values() if r == "reviewed-city"),
             "reviewed_city_inflection": sum(1 for r in keep.values() if r == "reviewed-city-inflection"),
