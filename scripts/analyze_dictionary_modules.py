@@ -113,12 +113,15 @@ def main() -> int:
             "already_in_100k_base": len(already_in_base),
             "existing_keys_with_surface_replacement": len(replacement_keys),
             "surface_replacements": sorted(
-                {
-                    "key": key,
-                    "base_surface": base_surface_by_key[key],
-                    "module_surfaces": sorted(surface for surface in raw if surface.lower() == key),
-                }
-                for key in replacement_keys
+                (
+                    {
+                        "key": key,
+                        "base_surface": base_surface_by_key[key],
+                        "module_surfaces": sorted(surface for surface in raw if surface.lower() == key),
+                    }
+                    for key in replacement_keys
+                ),
+                key=lambda item: item["key"],
             ),
             "new_unique_keys_vs_100k_base": len(new_vs_base),
             "new_unique_keys_after_previous_modules": len(cumulative_new),
