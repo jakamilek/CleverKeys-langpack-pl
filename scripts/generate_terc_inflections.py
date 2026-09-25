@@ -8,11 +8,41 @@ import json
 from pathlib import Path
 
 CASES = ("nom", "gen", "dat", "acc", "inst", "loc", "voc")
+OUTPUT_FIELDS = (
+    "category",
+    "name",
+    "level",
+    "terc",
+    "number",
+    "case",
+    "form",
+    "case_policy",
+    "source",
+    "morfeusz_version",
+)
 
 
 def load_tsv(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
-        return list(csv.DictReader(handle, delimiter="\t"))
+        rows = list(csv.DictReader(handle, delimiter="\t"))
+    required = {
+        "level",
+        "terc",
+        "woj",
+        "pow",
+        "gmi",
+        "rodz",
+        "name",
+        "nazdod",
+        "stan_na",
+        "eligible_single_token",
+        "case_policy",
+        "source_name",
+        "source",
+    }
+    if set(rows[0].keys()) != required if rows else True:
+        raise SystemExit(f"Malformed TERC source header {path}")
+    return rows
 
 
 def case_from_tag(tag: str) -> set[str]:
@@ -80,13 +110,16 @@ def main() -> int:
                     for a in analyses
                 ):
                     generated.add((case_tag, form[:1].upper() + form[1:]))
+
         policy = names[lower_name].get("case_policy", "capitalized")
         for case_tag, surface in sorted(generated, key=lambda x: (CASES.index(x[0]), x[1])):
             surface = surface.lower() if policy == "lowercase" else surface[:1].upper() + surface[1:]
             out.append({
+                "category": "terc",
                 "name": name,
                 "level": names[lower_name]["level"],
                 "terc": names[lower_name]["terc"],
+                "number": "sg",
                 "case": case_tag,
                 "form": surface,
                 "case_policy": policy,
@@ -95,19 +128,33 @@ def main() -> int:
             })
         case_coverage[lower_name] = {case for case, _ in generated}
 
+    args.out_tsv.parent.mkdir(parents=True, exist_ok=True)
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=["name","level","terc","case","form","case_policy","source","morfeusz_version"], delimiter="\t", lineterminator="\n")
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=OUTPUT_FIELDS,
+            delimiter="\t",
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(out)
 
     report = {
         "oracle": "Morfeusz 2 / SGJP",
         "morfeusz_version": str(morfeusz2.__version__),
+        "category": "terc",
+        "number": "sg",
         "input_unique_one_token_names": len(names),
         "inflection_record_count": len(out),
-        "names_with_non_nominative": sum(1 for cases in case_coverage.values() if len(cases) > 1),
+        "names_with_non_nominative": sum(
+            1 for cases in case_coverage.values() if len(cases) > 1
+        ),
     }
-    args.out_report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    args.out_report.parent.mkdir(parents=True, exist_ok=True)
+    args.out_report.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
 
