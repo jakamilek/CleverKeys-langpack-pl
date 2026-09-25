@@ -250,7 +250,7 @@ def load_city_source(
     forms: set[str] = set()
     surface_map: dict[str, str] = {}
     if not path.exists():
-        return forms, surface_map, case_policy_map
+        return forms, surface_map
     with path.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
         required = {"name", "simc", "rm", "stan_na", "source"}
@@ -373,15 +373,8 @@ def load_first_name_inflections(
                     )
             else:
                 surface_map[lower] = form
-            policy = row["case_policy"].strip()
-            if policy not in {"lowercase", "capitalized"}:
-                raise SystemExit(f"Invalid TERC inflection case policy {path}:{line_no}: {policy!r}")
-            prior_policy = case_policy_map.get(lower)
-            if prior_policy is not None and prior_policy != policy:
-                raise SystemExit(f"Conflicting TERC inflection case policy {path}:{line_no}: {prior_policy!r} vs {policy!r}")
-            case_policy_map[lower] = policy
             forms.add(lower)
-    return forms, surface_map, case_policy_map
+    return forms, surface_map
 
 
 def load_terc_inflections(
@@ -391,7 +384,7 @@ def load_terc_inflections(
     surface_map: dict[str, str] = {}
     case_policy_map: dict[str, str] = {}
     if not path.exists():
-        return forms, surface_map
+        return forms, surface_map, case_policy_map
     with path.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
         expected_fields = {"name", "level", "terc", "case", "form", "case_policy", "source", "morfeusz_version"}
@@ -413,8 +406,15 @@ def load_terc_inflections(
                     f"Conflicting TERC inflection surface {path}:{line_no}: {prior!r} vs {form!r}"
                 )
             surface_map[lower] = form
+            policy = row["case_policy"].strip()
+            if policy not in {"lowercase", "capitalized"}:
+                raise SystemExit(f"Invalid TERC inflection case policy {path}:{line_no}: {policy!r}")
+            prior_policy = case_policy_map.get(lower)
+            if prior_policy is not None and prior_policy != policy:
+                raise SystemExit(f"Conflicting TERC inflection case policy {path}:{line_no}: {prior_policy!r} vs {policy!r}")
+            case_policy_map[lower] = policy
             forms.add(lower)
-    return forms, surface_map
+    return forms, surface_map, case_policy_map
 
 
 def main() -> int:
