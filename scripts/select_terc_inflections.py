@@ -60,7 +60,7 @@ def load_full(path: Path) -> list[dict[str, str]]:
     if set(rows[0].keys()) != required if rows else True:
         raise SystemExit(f"Malformed TERC inflection header {path}")
     for line_no, row in enumerate(rows, 2):
-        if row.get("number", "sg") != "sg" or row["case"] not in CASES or not row["form"].strip():
+        if row["case"] not in CASES or not row["form"].strip():
             raise SystemExit(f"Malformed TERC inflection row {path}:{line_no}")
     return rows
 
