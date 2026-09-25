@@ -357,7 +357,7 @@ jobs:
           assert "Gdynia" in city_names
           assert "Gdynia" in ckdt_raw
 
-          terc_inflection_rows = list(csv.DictReader(Path("build/pl-terc-inflections.tsv").open(encoding="utf-8", newline=""), delimiter="\t"))
+          terc_inflection_rows = list(csv.DictReader(Path("build/pl-terc-inflections-selected.tsv").open(encoding="utf-8", newline=""), delimiter="\t"))
           terc_inflection_surfaces = {row["form"] for row in terc_inflection_rows}
           assert all(row["case_policy"] in {"lowercase", "capitalized"} for row in terc_inflection_rows)
 
@@ -456,7 +456,9 @@ jobs:
             build/pl-terc-flat.tsv
             build/pl-terc-source-report.json
             build/pl-terc-inflections.tsv
+            build/pl-terc-inflections-selected.tsv
             build/pl-terc-inflections-report.json
+            build/pl-terc-retention-report.json
             build/ksng/ksng-2025.pdf
             build/ksng/ksng-2025.sha256
             build/ksng/ksng-update-1-2026.pdf
@@ -477,4 +479,6 @@ jobs:
             build/pl-terc-flat.tsv
             build/pl-terc-source-report.json
             build/pl-terc-inflections.tsv
+            build/pl-terc-inflections-selected.tsv
             build/pl-terc-inflections-report.json
+            build/pl-terc-retention-report.json
