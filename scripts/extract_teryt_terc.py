@@ -12,6 +12,7 @@ from pathlib import Path
 
 POLISH_WORD_RE = re.compile(r"^[a-ząćęłńóśźż]+$", re.IGNORECASE)
 GMINA_RODZ = {"1", "2", "3"}
+TERC_COLUMN_ORDER = ["WOJ", "POW", "GMI", "RODZ", "NAZWA", "NAZDOD", "STAN_NA"]
 
 
 def canonical_surface(name: str, level: str, kind: str) -> tuple[str, str]:
@@ -49,12 +50,32 @@ def text_of(elem: ET.Element, key: str) -> str:
     wanted = key.upper()
 
     # Current/legacy full-file XML: <col name="WOJ">02</col>
+    named_cols = []
     for child in elem:
-        if str(child.attrib.get("name", "")).upper() == wanted:
-            value = child.attrib.get("value")
-            if value is not None:
-                return value.strip()
-            return (child.text or "").strip()
+        if str(child.attrib.get("name", "")).strip():
+            named_cols.append(child)
+            if str(child.attrib.get("name", "")).upper() == wanted:
+                value = child.attrib.get("value")
+                if value is not None:
+                    return value.strip()
+                return (child.text or "").strip()
+
+    # Compact TERYT XML can omit the name attribute and rely on the documented
+    # seven-column order: WOJ, POW, GMI, RODZ, NAZWA, NAZDOD, STAN_NA.
+    unnamed_cols = [
+        child for child in elem
+        if strip_tag(child.tag) == "COL"
+        and not str(child.attrib.get("name", "")).strip()
+    ]
+    if unnamed_cols and not named_cols:
+        if len(unnamed_cols) != len(TERC_COLUMN_ORDER):
+            return ""
+        for index, child in enumerate(unnamed_cols):
+            if TERC_COLUMN_ORDER[index] == wanted:
+                value = child.attrib.get("value")
+                if value is not None:
+                    return value.strip()
+                return (child.text or "").strip()
 
     # Some TERYT XML variants use direct child tags: <WOJ>02</WOJ>.
     for child in elem:
