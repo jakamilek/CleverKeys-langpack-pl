@@ -307,6 +307,11 @@ jobs:
           assert "Jakubie" in expected_inflection_surfaces
           assert {"Jakub", "Jakuba", "Jakubowi", "Jakubem", "Jakubie"} <= ckdt_raw
 
+          terc_rows = list(csv.DictReader(Path("build/pl-terc-flat.tsv").open(encoding="utf-8", newline=""), delimiter="\t"))
+          terc_names = {row["name"] for row in terc_rows}
+          assert all(row["case_policy"] in {"lowercase", "capitalized"} for row in terc_rows)
+          assert terc_names
+
           city_rows = []
           with Path("build/pl-city-source.tsv").open(encoding="utf-8", newline="") as handle:
               city_rows = list(csv.DictReader(handle, delimiter="\t"))
@@ -318,6 +323,10 @@ jobs:
           )
           assert "Gdynia" in city_names
           assert "Gdynia" in ckdt_raw
+
+          terc_inflection_rows = list(csv.DictReader(Path("build/pl-terc-inflections.tsv").open(encoding="utf-8", newline=""), delimiter="\t"))
+          terc_inflection_surfaces = {row["form"] for row in terc_inflection_rows}
+          assert all(row["case_policy"] in {"lowercase", "capitalized"} for row in terc_inflection_rows)
 
           city_inflection_rows = []
           with Path("build/pl-city-inflections.tsv").open(encoding="utf-8", newline="") as handle:
@@ -341,6 +350,17 @@ jobs:
           )
           for expected_city_form in ("Gdynia", "Gdyni", "Gdynię", "Gdynią"):
               assert expected_city_form in ckdt_raw, expected_city_form
+          missing_terc_names = sorted(terc_names - ckdt_raw)
+          assert not missing_terc_names, (
+              "official one-token TERC names missing from CKDT: "
+              + ", ".join(missing_terc_names)
+          )
+          missing_terc_inflections = sorted(terc_inflection_surfaces - ckdt_raw)
+          assert not missing_terc_inflections, (
+              "generated TERC inflection forms missing from CKDT: "
+              + ", ".join(missing_terc_inflections)
+          )
+
           for expected_city_form in (
               "Wrocław", "Wrocławia", "Wrocławiowi", "Wrocławiem", "Wrocławiu",
               "Toruń", "Torunia", "Toruniowi", "Toruniem", "Toruniu",
@@ -349,6 +369,8 @@ jobs:
 
           print(json.dumps({
               "word_count": expected,
+              "terc_names": len(terc_names),
+              "terc_inflection_forms": len(terc_inflection_surfaces),
               "zip_entries": names,
               "ckdt_version": version,
               "has_prefix_boost": False,
@@ -390,6 +412,14 @@ jobs:
             build/pl-city-source-report.json
             build/pl-city-inflections.tsv
             build/pl-city-inflections-report.json
+            build/teryt/TERC_Urzedowy_2026-01-01.zip
+            build/teryt/TERC_Urzedowy_2026-01-01.sha256
+            build/teryt/TERC-source-ref.json
+            build/pl-terc-source.tsv
+            build/pl-terc-flat.tsv
+            build/pl-terc-source-report.json
+            build/pl-terc-inflections.tsv
+            build/pl-terc-inflections-report.json
             build/teryt/TERC_Urzedowy_2026-01-01.zip
             build/teryt/TERC_Urzedowy_2026-01-01.sha256
             build/teryt/TERC-source-ref.json
