@@ -293,7 +293,7 @@ This motivates reducing irrelevant foreign/proper-name noise and improving Polis
 
 Recent successful runs:
 - Polish preview #109 — success, commit 1e4b3fb4ace8d595249d0026b41518df14b0e9a2
-- Proper-noun coverage audit #43 — success, commit b44697e5181f303caa8465ae91d921c09e621434
+- Proper-noun coverage audit #43 — historical pilot audit; the pilot is now retired and its workflow has been removed
 - First-name audit #58 — success, commit b44697e5181f303caa8465ae91d921c09e621434
 - Size study #74 — success, commit 2bac611c35b30c2ce544c834204cda295ade7f0a
 - Size study #73 — success, commit 8556c258f3790b8bc8256c592378a6c99c9b0a83
@@ -388,6 +388,29 @@ Key accepted implementation commits:
 - 6546b3d186e18db0ec6e9513c779d6d0f063796e — NKJP audit workflow added; #75 failed at NKJP source parsing.
 
 Current branch also contains a documentation update for NKJP frequency policy.
+
+## 12a. Early proper-noun pilot retirement (2026-09-25)
+
+The early `reviewed_proper_nouns` pilot has been retired from active production data.
+
+- active staging file removed: `sources/staging/reviewed_proper_nouns.tsv`
+- historical copy: `sources/archive/reviewed_proper_nouns_pilot_2026-09-25.tsv`
+- active preview and size-study workflows no longer pass or account for the pilot
+- standalone `pl-proper-noun-audit.yml` workflow removed
+- the pilot's 76-form NKJP measurement remains historical only and is excluded from current module-capacity totals
+- future reuse requires explicit reassignment to the correct category and a fresh source audit
+
+Commits:
+- `0116eb83014b8998f69e69aceee44af62a9f6417` — archive pilot
+- `f9effdd24b52b49929ef0b38c6e499a96f645ac2` — remove active staging file
+- `6e80025bf81b1eac7406c3ff2de05a316f81a51c` — remove from size-study accounting
+- `79df50082a40cc1d9373038894a6e687298b9e44` — architecture decision
+- `848d8ce6bb70d1ff3bc53fafa0659d97c7c784c9` — update handoff
+- `b28ef44c98069847ad6405655f7d164b67868cd0` — remove pilot from builder
+- `7492c23ec0577c5e38360796c5a5b10c32f6420d` — remove pilot from preview workflow
+- `1331104065b5aab84ac9acc6b2c2df4803c5a79d` — remove standalone pilot audit workflow
+
+Current branch HEAD: `1331104065b5aab84ac9acc6b2c2df4803c5a79d`
 
 ## 13. Current NKJP acquisition and frequency-audit state
 
