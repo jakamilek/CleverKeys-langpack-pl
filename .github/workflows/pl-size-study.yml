@@ -57,7 +57,7 @@ jobs:
           sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}' > build/aosp/pl_wordlist.combined.gz.sha256
           test "$(cat build/aosp/pl_wordlist.combined.gz.sha256)" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
 
-      - name: Acquire and validate pinned NKJP1M frequency table
+      - name: Acquire and validate pinned NKJP1M frequency table (SHA-256 pinned)
         run: |
           python3 scripts/fetch_nkjp1m.py             --out build/nkjp/NKJP1M-tagged-frequency.tab             --out-sha256 build/nkjp/NKJP1M-tagged-frequency.tab.sha256             --out-provenance build/nkjp/NKJP1M-tagged-frequency.provenance.json             --expected-sha256 fee31b1d6a682970b4e8ca68b593aea8dadbc8541e875e2d287480d83601e79c
 
