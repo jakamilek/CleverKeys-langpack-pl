@@ -93,7 +93,7 @@ def main() -> int:
         case_coverage[lower_name] = {case for case, _ in generated}
 
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=["name","level","terc","case","form","source","morfeusz_version"], delimiter="\t", lineterminator="\n")
+        writer = csv.DictWriter(handle, fieldnames=["name","level","terc","case","form","case_policy","source","morfeusz_version"], delimiter="\t", lineterminator="\n")
         writer.writeheader()
         writer.writerows(out)
 
