@@ -16,6 +16,7 @@ on:
       - "scripts/fetch_teryt_terc.py"
       - "scripts/extract_teryt_terc.py"
       - "scripts/generate_terc_inflections.py"
+      - "scripts/select_terc_inflections.py"
       - "scripts/fetch_ksng_countries_capitals.py"
       - "scripts/extract_ksng_countries_capitals.py"
       - "scripts/generate_ksng_inflections.py"
@@ -54,6 +55,11 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install -r scripts/requirements-pl-audit.txt
+
+      - name: Acquire and validate pinned NKJP1M frequency table
+        run: |
+          mkdir -p build/nkjp
+          python3 scripts/fetch_nkjp1m.py             --out build/nkjp/NKJP1M-tagged-frequency.tab             --out-sha256 build/nkjp/NKJP1M-tagged-frequency.tab.sha256             --out-provenance build/nkjp/NKJP1M-tagged-frequency.provenance.json             --expected-sha256 fee31b1d6a682970b4e8ca68b593aea8dadbc8541e875e2d287480d83601e79c
 
       - name: Acquire current AOSP Polish dictionary
         run: |
