@@ -56,11 +56,11 @@ def load_nkjp(path: Path) -> dict[str, int]:
 def load_full(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle, delimiter="\t"))
-    required = {"category", "name", "level", "terc", "number", "case", "form", "case_policy", "source", "morfeusz_version"}
+    required = {"name", "level", "terc", "case", "form", "case_policy", "source", "morfeusz_version"}
     if set(rows[0].keys()) != required if rows else True:
         raise SystemExit(f"Malformed TERC inflection header {path}")
     for line_no, row in enumerate(rows, 2):
-        if row["number"] != "sg" or row["case"] not in CASES or not row["form"].strip():
+        if row.get("number", "sg") != "sg" or row["case"] not in CASES or not row["form"].strip():
             raise SystemExit(f"Malformed TERC inflection row {path}:{line_no}")
     return rows
 
@@ -68,7 +68,7 @@ def load_full(path: Path) -> list[dict[str, str]]:
 def select(rows: list[dict[str, str]], nkjp: dict[str, int], wordfreq_fn, input_path: Path, nkjp_path: Path) -> tuple[list[dict[str, str]], dict]:
     groups: dict[tuple[str, str, str, str], list[dict[str, str]]] = defaultdict(list)
     for row in rows:
-        key = (row["category"], row["level"], row["terc"] if "terc" in row else "", row["name"])
+        key = ("terc", row["level"], row["terc"], row["name"])
         groups[key].append(row)
 
     selected: list[dict[str, str]] = []
@@ -77,7 +77,7 @@ def select(rows: list[dict[str, str]], nkjp: dict[str, int], wordfreq_fn, input_
     counts_selected = Counter()
 
     for key in sorted(groups):
-        category, level, terc, name = key
+        _category, level, terc, name = key
         group = sorted(groups[key], key=lambda r: (CASES.index(r["case"]), r["form"]))
         counts_full[level] += len(group)
 
