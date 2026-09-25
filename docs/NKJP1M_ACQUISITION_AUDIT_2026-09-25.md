@@ -76,3 +76,31 @@ retention tiers. The immutable 100k core remains unchanged and protected.
 The 76-form reviewed proper-noun pilot was an early runtime-test/anchor set, not a production category. It has been removed from active staging and preserved only as historical material at `sources/archive/reviewed_proper_nouns_pilot_2026-09-25.tsv`.
 
 Therefore the 76 forms and their 63/13 NKJP coverage are retained as an auditable historical result, but they must not be used in current module-capacity totals or retention-threshold calibration. A new frequency audit is required after active-module cleanup before setting any thresholds.
+
+## Clean active-module measurement after proper-noun pilot retirement
+
+Size-study #86 (run `36178666213`, commit `b28ef44c98069847ad6405655f7d164b67868cd0`) successfully repeated the NKJP + wordfreq audit with the early reviewed-proper-noun pilot excluded from active inputs.
+
+The clean active set contains 3,944 unique surface/lemma pairs across:
+- first-name forms: 1,759
+- official one-token city names: 844
+- selected city inflections: 1,218
+- reviewed morphology: 123
+
+Clean global surface-frequency distribution among nonzero NKJP surfaces:
+
+| Signal | P10 | P25 | P50 | P75 | P90 | P95 |
+|---|---:|---:|---:|---:|---:|---:|
+| NKJP1M count | 1 | 1 | 2 | 6 | 21 | 44 |
+| wordfreq Zipf | 1.49 | 2.00 | 2.56 | 3.09 | 3.776 | 4.13 |
+
+Coverage in the clean active set:
+
+| Module | NKJP seen | NKJP zero |
+|---|---:|---:|
+| first-name forms | 736 / 1,759 | 1,023 |
+| city names | 292 / 844 | 552 |
+| city inflections | 537 / 1,218 | 681 |
+| reviewed morphology | 46 / 123 | 77 |
+
+The historical 76-form reviewed-proper-noun measurements from #79 remain archived for traceability but are excluded from current retention calibration and capacity accounting.
