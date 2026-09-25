@@ -13,4 +13,7 @@ requests==2.34.2
 polish-inflection==0.7.3
 
 # PDF text extraction for the official KSNG/GUGiK country-capital source.
+# PDF text extraction for the official KSNG/GUGiK country-capital source.
 pypdf==6.19.0
+# fontTools enables pypdf to decode the CFF Type1 fonts used by the KSNG PDF.
+fonttools==4.66.0
