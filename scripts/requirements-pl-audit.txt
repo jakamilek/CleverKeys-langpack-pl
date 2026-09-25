@@ -17,3 +17,6 @@ polish-inflection==0.7.3
 pypdf==6.19.0
 # fontTools enables pypdf to decode the CFF Type1 fonts used by the KSNG PDF.
 fonttools==4.66.0
+
+# PyMuPDF is an independent PDF text-extraction path for the rotated/font-encoded KSNG PDF.
+pymupdf==1.28.2
