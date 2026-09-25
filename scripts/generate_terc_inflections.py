@@ -80,13 +80,16 @@ def main() -> int:
                     for a in analyses
                 ):
                     generated.add((case_tag, form[:1].upper() + form[1:]))
+        policy = names[lower_name].get("case_policy", "capitalized")
         for case_tag, surface in sorted(generated, key=lambda x: (CASES.index(x[0]), x[1])):
+            surface = surface.lower() if policy == "lowercase" else surface[:1].upper() + surface[1:]
             out.append({
                 "name": name,
                 "level": names[lower_name]["level"],
                 "terc": names[lower_name]["terc"],
                 "case": case_tag,
                 "form": surface,
+                "case_policy": policy,
                 "source": "Morfeusz 2 / SGJP generated from GUS TERYT TERC",
                 "morfeusz_version": str(morfeusz2.__version__),
             })
