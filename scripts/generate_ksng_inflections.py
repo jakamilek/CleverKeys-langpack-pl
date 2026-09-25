@@ -27,7 +27,7 @@ def tag_parts(tag: str) -> tuple[str,str,set[str]]:
         return "", "", set()
     return "subst", p[1], {x for x in p[2].split(".") if x in CASES}
 
-def gen_rows(rows: list[dict[str,str]], category: str) -> list[dict[str,str]]:
+def gen_rows(rows: list[dict[str,str]], category: str, rejected_official: list[dict[str,str]]) -> list[dict[str,str]]:
     out = []
     for row in rows:
         name = row["name"].strip()
@@ -40,9 +40,17 @@ def gen_rows(rows: list[dict[str,str]], category: str) -> list[dict[str,str]]:
         generated[("source","nom","source")] = name
         if row.get("official_ndm") != "yes":
             if row.get("official_genitive"):
-                generated[("source","gen","source")] = row["official_genitive"]
+                form = row["official_genitive"].strip()
+                if SURFACE_RE.fullmatch(form):
+                    generated[("source","gen","source")] = form
+                else:
+                    rejected_official.append({"category": category, "name": name, "case": "gen", "form": form, "reason": "official form is not a single dictionary token"})
             if row.get("official_locative"):
-                generated[("source","loc","source")] = row["official_locative"]
+                form = row["official_locative"].strip()
+                if SURFACE_RE.fullmatch(form):
+                    generated[("source","loc","source")] = form
+                else:
+                    rejected_official.append({"category": category, "name": name, "case": "loc", "form": form, "reason": "official form is not a single dictionary token"})
         for orth, lemma, tag, _names, _labels in morfeusz2.Morfeusz(
             expand_tags=True, expand_dot=True, expand_underscore=True
         ).generate(name):
@@ -77,8 +85,9 @@ def write(path: Path, rows: list[dict[str,str]]) -> None:
 
 def main() -> int:
     args = parse_args()
-    countries = gen_rows(load(args.countries), "country")
-    capitals = gen_rows(load(args.capitals), "capital")
+    rejected_official: list[dict[str,str]] = []
+    countries = gen_rows(load(args.countries), "country", rejected_official)
+    capitals = gen_rows(load(args.capitals), "capital", rejected_official)
     write(args.out_countries, countries)
     write(args.out_capitals, capitals)
     report = {
@@ -87,6 +96,7 @@ def main() -> int:
         "capital_forms": len(capitals),
         "countries_items": len({r["name"].lower() for r in countries}),
         "capital_items": len({r["name"].lower() for r in capitals}),
+        "rejected_official_source_forms": rejected_official,
     }
     args.out_report.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))
