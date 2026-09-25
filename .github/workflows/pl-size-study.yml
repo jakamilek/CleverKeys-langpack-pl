@@ -16,7 +16,6 @@ on:
       - "scripts/requirements-pl-audit.txt"
       - "scripts/fetch_nkjp1m.py"
       - "sources/staging/autocorrect_errors.tsv"
-      - "sources/staging/reviewed_morphology.tsv"
       - "sources/staging/historical_name_candidates.tsv"
       - "sources/staging/first_name_surface_policy.tsv"
       - "scripts/audit_name_history.py"
@@ -111,7 +110,7 @@ jobs:
 
           for limit in 50000 100000 125000 150000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --morphology sources/staging/reviewed_morphology.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
 
@@ -125,7 +124,7 @@ jobs:
 
       - name: Measure net module cost over immutable 100k core
         run: |
-          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --module reviewed_morphology=sources/staging/reviewed_morphology.tsv:__family_forms__             --out build/study/module-study-report.json
+          python3 scripts/analyze_dictionary_modules.py             --base build/base100k.txt             --module first_name_forms=build/pl-first-name-inflections.tsv:form             --module city_names=build/pl-city-source.tsv:name             --module city_inflections=build/pl-city-inflections.tsv:form             --out build/study/module-study-report.json
 
       - name: Audit module frequency with NKJP primary and wordfreq secondary
         run: |
@@ -158,12 +157,6 @@ jobs:
                   len(words[size]),
                   reports[size]["candidate_count"],
               )
-
-          reviewed = {
-              word
-              for forms in reports[50000]["reviewed_morphology"]["families"].values()
-              for word in forms
-          }
           city_names = {
               row["name"]
               for row in __import__("csv").DictReader(
@@ -228,8 +221,6 @@ jobs:
                   assert manifest["version"] == 2, (size, manifest)
                   assert manifest["wordCount"] == len(words[size]), (size, manifest)
                   assert manifest["hasPrefixBoost"] is False, (size, manifest)
-              missing = sorted(reviewed - ckdt[size])
-              assert not missing, f"{size}: missing reviewed forms: {', '.join(missing)}"
               missing_city = sorted({w.lower() for w in city_names} - ckdt[size])
               assert not missing_city, f"{size}: missing official city names: {', '.join(missing_city)}"
               missing_city_inflections = sorted({w.lower() for w in city_inflections} - ckdt[size])
@@ -273,13 +264,8 @@ jobs:
               result["variants"][str(size)] = {
                   "requested_limit": size,
                   "kept": report["kept"],
-                  "candidate_count": report["candidate_count"],
-                  "reviewed_morphology_forms": report["reviewed_morphology"]["form_count"],
-                  "supplemental_morphology_forms": report["reviewed_morphology"]["supplemental_form_count"],
-                  "drop_reasons": report["drop_reasons"],
-                  "dictionary_bytes": (root / str(size) / "dictionary.bin").stat().st_size,
-                  "reviewed_forms_present": len(reviewed),
-                  "city_names_present": len(city_names),
+                  "candidate_count": report["candidate_count"],                  "drop_reasons": report["drop_reasons"],
+                  "dictionary_bytes": (root / str(size) / "dictionary.bin").stat().st_size,                  "city_names_present": len(city_names),
                   "city_inflection_forms_present": len(city_inflections),
                   "regression_hits": regression_hits[size],
               }
