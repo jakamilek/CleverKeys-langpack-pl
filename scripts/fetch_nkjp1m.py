@@ -74,10 +74,7 @@ def raw_web_url() -> str:
 
 
 def archive_web_url() -> str:
-    return (
-        f"{project_web_url()}/-/archive/{REVISION}/"
-        f"ENIAM-{REVISION}.tar.gz"
-    )
+    return f"{project_web_url()}/repository/archive.tar.gz"
 
 
 def make_session() -> requests.Session:
@@ -140,7 +137,7 @@ def stream_to_path(response: requests.Response, target: Path) -> int:
 def attempt_archive(session: requests.Session, target: Path) -> str:
     with session.get(
         archive_web_url(),
-        params={"path": "resources/NKJP1M"},
+        params={"ref": REVISION, "path": "resources/NKJP1M"},
         timeout=TIMEOUT,
         stream=True,
         allow_redirects=True,
@@ -434,6 +431,7 @@ def main() -> int:
             {
                 "status": "validated",
                 "acquired_by": acquired_by,
+        "archive_route_note": "legacy GitLab repository/archive.tar.gz route",
                 "sha256": local_sha256,
                 "expected_sha256": expected_sha256,
                 "remote_content_sha256": provenance["metadata"].get("content_sha256"),
@@ -456,6 +454,7 @@ def main() -> int:
     except Exception as exc:
         provenance["status"] = "failed"
         provenance["validation_error"] = str(exc)
+        provenance["attempt_summary"] = provenance["attempts"]
         args.out_provenance.write_text(
             json.dumps(provenance, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
