@@ -172,6 +172,20 @@ jobs:
                   len(words[size]),
                   reports[size]["candidate_count"],
               )
+          terc_names = {
+              row["name"]
+              for row in __import__("csv").DictReader(
+                  Path("build/pl-terc-flat.tsv").open(encoding="utf-8", newline=""),
+                  delimiter="	",
+              )
+          }
+          terc_inflections = {
+              row["form"]
+              for row in __import__("csv").DictReader(
+                  Path("build/pl-terc-inflections.tsv").open(encoding="utf-8", newline=""),
+                  delimiter="	",
+              )
+          }
           city_names = {
               row["name"]
               for row in __import__("csv").DictReader(
@@ -236,6 +250,11 @@ jobs:
                   assert manifest["version"] == 2, (size, manifest)
                   assert manifest["wordCount"] == len(words[size]), (size, manifest)
                   assert manifest["hasPrefixBoost"] is False, (size, manifest)
+              missing_terc = sorted({w.lower() for w in terc_names} - ckdt[size])
+              assert not missing_terc, f"{size}: missing TERC names: {', '.join(missing_terc)}"
+              missing_terc_inflections = sorted({w.lower() for w in terc_inflections} - ckdt[size])
+              assert not missing_terc_inflections, f"{size}: missing TERC inflections: {', '.join(missing_terc_inflections)}"
+
               missing_city = sorted({w.lower() for w in city_names} - ckdt[size])
               assert not missing_city, f"{size}: missing official city names: {', '.join(missing_city)}"
               missing_city_inflections = sorted({w.lower() for w in city_inflections} - ckdt[size])
@@ -278,6 +297,8 @@ jobs:
               report = reports[size]
               result["variants"][str(size)] = {
                   "requested_limit": size,
+                  "terc_names_present": len(terc_names),
+                  "terc_inflection_forms_present": len(terc_inflections),
                   "kept": report["kept"],
                   "candidate_count": report["candidate_count"],                  "drop_reasons": report["drop_reasons"],
                   "dictionary_bytes": (root / str(size) / "dictionary.bin").stat().st_size,                  "city_names_present": len(city_names),
