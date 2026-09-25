@@ -785,7 +785,7 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms
+            if w in guards or w in custom_forms or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms
         }
         if len(protected) > args.limit:
             raise SystemExit(
