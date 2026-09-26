@@ -1116,27 +1116,37 @@ def main() -> int:
     for word in keep:
         register_surface(word, word, "lowercase", "ordinary-vocabulary")
     for key, surface in terc_inflection_surface_map.items():
-        register_surface(key, surface, terc_inflection_case_policy_map[key], "terc")
+        if key in keep:
+            register_surface(key, surface, terc_inflection_case_policy_map[key], "terc")
     for key, surface in country_surface_map.items():
-        register_surface(key, surface, country_case_policy_map[key], "country")
+        if key in keep:
+            register_surface(key, surface, country_case_policy_map[key], "country")
     for key, surface in country_inflection_surface_map.items():
-        register_surface(key, surface, country_inflection_case_policy_map[key], "country-inflection")
+        if key in keep:
+            register_surface(key, surface, country_inflection_case_policy_map[key], "country-inflection")
     for key, surface in capital_surface_map.items():
-        register_surface(key, surface, capital_case_policy_map[key], "capital")
+        if key in keep:
+            register_surface(key, surface, capital_case_policy_map[key], "capital")
     for key, surface in capital_inflection_surface_map.items():
-        register_surface(key, surface, capital_inflection_case_policy_map[key], "capital-inflection")
+        if key in keep:
+            register_surface(key, surface, capital_inflection_case_policy_map[key], "capital-inflection")
     for key, surface in custom_surface_map.items():
-        register_surface(key, surface, custom_case_policy_map[key], "custom-manual")
+        if key in keep:
+            register_surface(key, surface, custom_case_policy_map[key], "custom-manual")
     for key, surface in city_surface_map.items():
-        register_surface(key, surface, "capitalized", "city")
+        if key in keep:
+            register_surface(key, surface, "capitalized", "city")
     for key, surface in city_inflection_surface_map.items():
-        register_surface(key, surface, "capitalized", "city-inflection")
+        if key in keep:
+            register_surface(key, surface, "capitalized", "city-inflection")
     for key, surface in first_name_inflection_surface_map.items():
-        policy = "lowercase" if key in lowercase_first_name_inflection_surfaces else "capitalized"
-        register_surface(key, surface, policy, "first-name-inflection")
+        if key in keep:
+            policy = "lowercase" if key in lowercase_first_name_inflection_surfaces else "capitalized"
+            register_surface(key, surface, policy, "first-name-inflection")
     for key, surface in first_name_case_map.items():
-        policy = "lowercase" if key in lowercase_first_name_exceptions else "capitalized"
-        register_surface(key, surface, policy, "first-name")
+        if key in keep:
+            policy = "lowercase" if key in lowercase_first_name_exceptions else "capitalized"
+            register_surface(key, surface, policy, "first-name")
 
     registry_conflicts = []
     resolved_surface = {}
