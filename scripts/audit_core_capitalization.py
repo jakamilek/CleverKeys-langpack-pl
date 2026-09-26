@@ -289,10 +289,10 @@ def main() -> int:
                 result_surface = key[:1].upper() + key[1:]
                 result_policy = "capitalized"
                 reason = "first-name-category-capitalized-policy"
-            elif noun_matches:
-                # A common lexical reading overrides capitalization even when another
-                # source also requests a proper-name surface. The lower-case surface
-                # is the only safe canonical representation for a word-oriented CKDT.
+            elif any("nazwa_pospolita" in m.get("classes", []) for m in noun_matches):
+                # Only a verified common-noun reading overrides a proper-name surface.
+                # Other ordinary lexical analyses are not enough to erase capitalization
+                # in the word-oriented CKDT.
                 result_surface = key
                 result_policy = "lowercase"
                 reason = "common-lexical-homonym-default-lowercase"

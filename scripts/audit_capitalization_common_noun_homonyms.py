@@ -287,15 +287,15 @@ def main() -> int:
             # Common-noun homonymy does not erase their capitalization unless the
             # name has an audited lowercase-common-noun policy.
             resolution_reason = "first-name-category-capitalized-policy"
-        elif has_common_lexical:
-            resolution_reason = "common-lexical-homonym-default-lowercase"
+        elif has_common_noun:
+            resolution_reason = "common-noun-homonym-default-lowercase"
         elif policies == {"lowercase"}:
             resolution_reason = "lowercase-source-evidence"
         elif len(policies) > 1:
             resolved = False
             resolution_reason = "mixed-source-capitalization-policy-without-explicit-resolution"
         else:
-            resolution_reason = "capitalized-source-without-common-lexical-homonym"
+            resolution_reason = "capitalized-source-without-common-noun-homonym"
 
         if has_common_noun:
             common_noun_count += 1
@@ -324,7 +324,7 @@ def main() -> int:
                 resolution[0] if resolution is not None
                 else key if (
                     resolution_reason == "explicit-first-name-lowercase-common-noun-policy"
-                    or resolution_reason == "common-lexical-homonym-default-lowercase"
+                    or resolution_reason == "common-noun-homonym-default-lowercase"
                 )
                 else key[:1].upper() + key[1:]
             )
