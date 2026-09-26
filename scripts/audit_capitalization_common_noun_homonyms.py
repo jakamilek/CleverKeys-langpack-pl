@@ -177,6 +177,17 @@ def main() -> int:
     )
 
     policy = load_surface_policy(args.surface_registry_policy)
+    # Explicit global surface policies are themselves capitalization decisions and
+    # must also be audited, independently of whether the key is present in a module.
+    for key, (surface, case_policy) in policy.items():
+        candidates.setdefault(key, []).append(
+            {
+                "surface": surface,
+                "policy": case_policy,
+                "source": "surface-registry-policy",
+            }
+        )
+
     morfeusz = morfeusz2.Morfeusz()
 
     audited = []
