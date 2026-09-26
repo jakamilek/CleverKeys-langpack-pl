@@ -62,6 +62,10 @@ Przykład `Łódź` nie oznacza tylko poprawki dla jednego klucza. Uruchamia ana
 
 Testowanie ręczne służy do wykrywania zachowania silnika swipe („pisania gestem”), ale nie może być jedynym mechanizmem wykrywania błędów danych.
 
+## 6. Nazwy z końcowym apostrofowym \'s
+
+Tokenizer komponentów usuwa końcowe angielskie \'s z nazw międzynarodowych przed utworzeniem powierzchni słownikowych. Dzięki temu np. `John's` daje komponent `John`, a nie spurious token `s`. Pełna nazwa źródłowa nadal pozostaje zachowana dla pochodzenia i audytu. Apostrofy wewnętrzne pozostają separatorami komponentów.
+
 ## 6. Ograniczenie modelu CKDT
 
 CKDT przechowuje jedną kanoniczną powierzchnię dla jednego klucza case-insensitive.
