@@ -410,8 +410,15 @@ jobs:
           assert "łódź" in ckdt_raw
           assert "Łódź" not in ckdt_raw
           core_audit = json.loads(Path("build/pl-core-capitalization-audit.json").read_text(encoding="utf-8"))
+          # Every immutable-core key must be audited, not only keys touched by modules.
+          assert core_audit["core_keys"] == 100000
+          assert core_audit["core_keys_audited"] == 100000
+          assert core_audit["resolved_core_keys"] == 100000
           assert core_audit["unresolved_count"] == 0
           assert "tomaszów" not in core_audit["unresolved_keys"]
+          # Core membership is separate from canonical surface: TERC evidence must
+          # allow the shared resolver to correct bardo -> Bardo without changing the 100k key.
+          assert core_audit["resolved_surfaces"]["bardo"]["surface"] == "Bardo"
 
           audit = json.loads(Path("build/pl-capitalization-common-noun-audit.json").read_text(encoding="utf-8"))
           assert audit["unresolved_count"] == 0
