@@ -361,13 +361,20 @@ jobs:
           with Path("build/pl-city-source.tsv").open(encoding="utf-8", newline="") as handle:
               city_rows = list(csv.DictReader(handle, delimiter="\t"))
           city_names = {row["name"] for row in city_rows}
-          missing_city_names = sorted(city_names - ckdt_raw)
+          missing_city_names = sorted({w.lower() for w in city_names} - ckdt_words)
           assert not missing_city_names, (
               "official one-token city names missing from CKDT: "
               + ", ".join(missing_city_names)
           )
           assert "Gdynia" in city_names
           assert "Gdynia" in ckdt_raw
+
+          # Common-noun collision regression: the city Łódź and the ordinary noun
+          # łódź share the same case-insensitive key. The audited surface policy
+          # deliberately keeps the lexical/common-noun surface lowercase.
+          assert "łódź" in ckdt_words
+          assert "łódź" in ckdt_raw
+          assert "Łódź" not in ckdt_raw
 
           terc_inflection_rows = list(csv.DictReader(Path("build/pl-terc-inflections-selected.tsv").open(encoding="utf-8", newline=""), delimiter="\t"))
           terc_inflection_surfaces = {row["form"] for row in terc_inflection_rows}
@@ -388,7 +395,7 @@ jobs:
           selected_city_names = {row["name"].strip() for row in city_inflection_rows}
           assert priority_names <= selected_city_names
           city_inflection_surfaces = {row["form"] for row in city_inflection_rows}
-          missing_city_inflections = sorted(city_inflection_surfaces - ckdt_raw)
+          missing_city_inflections = sorted({w.lower() for w in city_inflection_surfaces} - ckdt_words)
           assert not missing_city_inflections, (
               "selected city inflection forms missing from CKDT: "
               + ", ".join(missing_city_inflections)
