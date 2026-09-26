@@ -1,3 +1,5 @@
 surface_key	canonical_surface	case_policy	basis	source
 miński	miński	lowercase	WSJP PAN: miński jest przymiotnikiem od Mińsk; zachowujemy wspólną powierzchnię słownikową z przymiotnikiem administracyjnym/geo	https://wsjp.pl/haslo/podglad/44984/minski
 łódź	łódź	lowercase	WSJP PAN: rzeczownik pospolity łódź jest pisany małą literą; przy wspólnym kluczu z nazwą miasta Łódź wybieramy powierzchnię leksykalną rzeczownika pospolitego	https://wsjp.pl/haslo/podglad/3513/lodz
+łodzi	łodzi	lowercase	WSJP PAN: forma „łodzi” należy do odmiany rzeczownika pospolitego „łódź”; kolizję z nazwą miasta Łódź rozstrzygamy na rzecz powierzchni leksykalnej rzeczownika	https://wsjp.pl/haslo/podglad/3513/lodz
+łodzią	łodzią	lowercase	WSJP PAN: forma „łodzią” należy do odmiany rzeczownika pospolitego „łódź”; kolizję z nazwą miasta Łódź rozstrzygamy na rzecz powierzchni leksykalnej rzeczownika	https://wsjp.pl/haslo/podglad/3513/lodz
