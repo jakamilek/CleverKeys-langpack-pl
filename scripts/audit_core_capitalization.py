@@ -274,24 +274,33 @@ def main() -> int:
                     "key": key,
                     "reason": "explicit-policy-key-mismatch",
                 })
-        elif len(policies) > 1:
-            unresolved.append({
-                "key": key,
-                "reason": "mixed-source-capitalization-policy-without-explicit-resolution",
-                "policies": sorted(policies),
-            })
         elif capitalized_rows:
             if key in name_policy and name_policy[key] == "lowercase_common_noun":
                 result_surface = key
                 result_policy = "lowercase"
                 reason = "explicit-first-name-lowercase-policy"
             elif noun_matches:
-                # A common lexical reading takes precedence over proper-name
-                # capitalization in the word-oriented CKDT unless an explicit
-                # auditable surface policy says otherwise.
+                # A common lexical reading overrides capitalization even when another
+                # source also requests a proper-name surface. The lower-case surface
+                # is the only safe canonical representation for a word-oriented CKDT.
                 result_surface = key
                 result_policy = "lowercase"
                 reason = "common-lexical-homonym-default-lowercase"
+            elif policies == {"lowercase"}:
+                result_surface = key
+                result_policy = "lowercase"
+                reason = "lowercase-source-evidence"
+            elif len(policies) > 1:
+                # Mixed evidence without lexical evidence is a genuine ambiguity and
+                # must remain auditable instead of being silently guessed.
+                unresolved.append({
+                    "key": key,
+                    "reason": "mixed-source-capitalization-policy-without-explicit-resolution",
+                    "policies": sorted(policies),
+                })
+                result_surface = base[key]
+                result_policy = "lowercase"
+                reason = "unresolved-mixed-policy"
             elif key in selected_first_names:
                 result_surface = key[:1].upper() + key[1:]
                 result_policy = "capitalized"
