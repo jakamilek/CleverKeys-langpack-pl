@@ -836,3 +836,50 @@ Po green CI obowiązuje dalsza kontrola:
 - selected/full TERC,
 - finalny audit capitalization,
 - paczka testowa telefonu dopiero po przejściu wszystkich bramek.
+
+
+## 27. Kontynuacja 2026-09-26 — pierwszeństwo audytowanej kapitalizacji imion
+
+Preview #236 (na cc073ea1...) przeszedł wszystkie wcześniejsze bramki, ale końcowa walidacja wykazała brak 48 wybranych imion w formie wielkiej litery, m.in. Albert, Daniel, Marek, Mikołaj, Paweł, Wiktor, Wiktoria.
+
+Diagnoza architektoniczna:
+- audit_first_name_homonyms.py jawnie klasyfikuje 48 nazw jako capitalized_homonym_names;
+- generate_first_name_inflections.py generuje formy selected first-name jako capitalized, poza 5 jawnie wskazanymi wyjątkami lowercase-common-noun;
+- ogólny audit kapitalizacji wykonywał jednak wcześniej regułę common-noun -> lowercase;
+- zmienna selected_first_names nie wystarczała dla form odmiany, ponieważ modułowy audyt pracuje na first-name-inflection.
+
+Naprawa:
+- commit 7601712915622521c9b0f52a896cec17445cc32e:
+  - core capitalization audit traktuje first-name-inflection z polityką wyłącznie capitalized jako jawnie audytowaną kategorię przed generic common-noun lowering;
+  - module capitalization audit stosuje tę samą zasadę dla form first-name inflection;
+  - lowercase_common_noun pozostaje wyjątkiem jawnie zdefiniowanym w first_name_surface_policy.tsv;
+  - mieszane źródła (lowercase + capitalized) nadal wymagają jawnego rozstrzygnięcia;
+- commit 52aa2abe5d6a7c48cc98288ffe2a382a083c0c5e doprecyzował kontrakt w nagłówku modułowego audytu i uruchomił nowe CI.
+
+Stan branch:
+- ostatni zapisany commit: 52aa2abe5d6a7c48cc98288ffe2a382a083c0c5e;
+- nie wykonano merge/promote;
+- CKDT 100k nie został automatycznie zmieniony.
+
+CI po tej zmianie:
+- preview #238 — 52aa2a..., in progress;
+- size-study #184 — 52aa2a..., in progress;
+- first-name audit #96 — cc073e..., success;
+- starszy size-study #182 na cc073e... zakończył się success i potwierdził budowę wariantów 50k/100k/125k/150k bez błędów pipeline;
+- starszy preview #236 na cc073e... jest failed wyłącznie na końcowej asercji 48 imion, którą adresuje powyższa poprawka.
+
+Zielony size-study #182 dał:
+- net_additions_over_100k_base = 5688;
+- warianty: 50k, 100k, 125k, 150k;
+- new_words_from_50k_to_100k_pct = 100.0;
+- new_words_from_100k_to_125k_pct = 25.0;
+- new_words_from_125k_to_150k_pct = 14.75;
+- pełna weryfikacja CKDT/paczki zakończyła się success.
+
+Nie traktować #182 jako ostatecznego audytu kapitalizacji po poprawce imion; ostateczna akceptacja wymaga green run na 52aa2a....
+
+Następny krok:
+1. sprawdzić wynik preview #238 i size-study #184;
+2. jeśli green, odczytać aktualne artefakty module-study-report.json, module-frequency-report.json, raport kapitalizacji i paczkę preview;
+3. dopiero potem przejść do testu telefonu/swipe;
+4. nie wykonywać merge/promote.
