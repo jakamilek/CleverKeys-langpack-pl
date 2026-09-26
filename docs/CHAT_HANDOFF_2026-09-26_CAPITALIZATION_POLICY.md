@@ -232,3 +232,10 @@ Po zakończeniu poprzedniej serii runów:
 - Ważny przypadek diagnostyczny: `bardo` występuje w 100k core. Sam fakt, że surowy core ma tę powierzchnię małą literą, nie może blokować korekty kapitalizacji przez audyt core. Przynależność do core jest niezmienna, ale canonical surface może zostać skorygowana przez audyt zgodnie z zasadami ortografii i evidence źródłowym.
 - `Bardo` jako nazwa miejscowości powinno być reprezentowane przez wspólny audyt jako `Bardo`, o ile nie wystąpi nadrzędna, udokumentowana kolizja leksykalna. Nie dodawać ręcznego wyjątku dla `Bardo`; najpierw potwierdzić wynik wspólnego resolvera w świeżym CI.
 - Aktualny preview #275 / run `36266428522` działa na SHA `e49ace6886899dc72bc1e0fcdf06fc6b0bc8423c`. Nie traktować go jako green do czasu rzeczywistego `conclusion=success` i kontroli artefaktu.
+
+
+## Aktualizacja ciągłości — regresja Bardo — 2026-09-26
+
+- Commit 85fa4b17728bc5891561931d51095f1a8299d3e8 dodał do preview jawny regression guard dla klucza bardo: wspólny audyt musi zwrócić dokładnie Bardo, a CKDT musi zawierać Bardo i nie może zawierać bardo.
+- Jest to wyłącznie test oczekiwanej reguły ortograficznej dla nazwy miejscowości; nie wolno implementować tego jako ręcznego wyjątku w resolverze.
+- Najnowszy preview: #276 / run 36266520815, SHA 85fa4b17728bc5891561931d51095f1a8299d3e8. W chwili rozpoczęcia wpisu status był pending; run #275 na poprzednim SHA powinien zostać zastąpiony przez concurrency.
