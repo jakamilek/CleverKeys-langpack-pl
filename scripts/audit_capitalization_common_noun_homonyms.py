@@ -212,20 +212,29 @@ def main() -> int:
         resolved = True
         resolution_reason = None
 
-        if has_common_noun:
+        if len({r["policy"] for r in capitalized}) > 1 and resolution is None:
+            resolved = False
+            resolution_reason = "mixed-source-capitalization-policy-without-explicit-resolution"
+        elif resolution is not None:
+            canonical, case_policy = resolution
+            if canonical.lower() != key:
+                resolved = False
+                resolution_reason = "policy-key-mismatch"
+            elif has_common_noun and (case_policy != "lowercase" or canonical != key):
+                resolved = False
+                resolution_reason = "policy-does-not-select-lowercase-common-noun-surface"
+            else:
+                resolution_reason = "explicit-surface-registry-policy"
+        elif has_common_noun:
             common_noun_count += 1
-            if resolution is not None:
-                canonical, case_policy = resolution
-                if case_policy != "lowercase" or canonical != key:
-                    resolved = False
-                    resolution_reason = "policy-does-not-select-lowercase-common-noun-surface"
-                else:
-                    resolution_reason = "explicit-surface-registry-policy"
-            elif key in lower_name_policies:
+            if key in lower_name_policies:
                 resolution_reason = "explicit-first-name-lowercase-common-noun-policy"
             else:
                 resolved = False
                 resolution_reason = "common-noun-homonym-without-explicit-lowercase-resolution"
+
+        if has_common_noun:
+            common_noun_count += 1 if resolution is not None and resolved else 0
 
         row = {
             "surface_key": key,
