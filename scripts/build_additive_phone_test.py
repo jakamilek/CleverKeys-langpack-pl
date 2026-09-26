@@ -8,6 +8,8 @@ import csv
 import json
 from pathlib import Path
 
+from surface_components import component_surfaces
+
 
 def read_base(path: Path) -> dict[str, str]:
     surfaces: dict[str, str] = {}
@@ -36,15 +38,31 @@ def load_first_name_policy(path: Path) -> set[str]:
 
 def add_records(registry, rows, surface_field, policy_field, source, lower_keys=frozenset()):
     for row in rows:
-        surface = row[surface_field].strip()
-        if not surface:
+        raw_surface = row[surface_field].strip()
+        if not raw_surface:
             continue
-        key = surface.lower()
-        policy = row[policy_field].strip() if policy_field else ("lowercase" if surface == surface.lower() else "capitalized")
-        if key in lower_keys:
-            surface = key
-            policy = "lowercase"
-        registry.setdefault(key, []).append({"surface": surface, "policy": policy, "source": source})
+        for surface in component_surfaces(raw_surface):
+            key = surface.lower()
+            source_policy = row[policy_field].strip() if policy_field else (
+                "lowercase" if surface == surface.lower() else "capitalized"
+            )
+            # Phrase-level capitalized policy still respects explicitly lowercase
+            # connector components such as "de"/"la" by preserving their source case.
+            policy = (
+                "lowercase"
+                if surface == surface.lower()
+                else source_policy
+            )
+            if key in lower_keys:
+                surface = key
+                policy = "lowercase"
+            registry.setdefault(key, []).append(
+                {
+                    "surface": surface,
+                    "policy": policy,
+                    "source": source,
+                }
+            )
 
 
 def read_rows(path: Path) -> list[dict[str, str]]:
@@ -70,6 +88,7 @@ def main() -> int:
     ap.add_argument("--capital-inflections", type=Path, required=True)
     ap.add_argument("--custom", type=Path, required=True)
     ap.add_argument("--surface-registry-policy", type=Path, required=True)
+    ap.add_argument("--core-capitalization-audit", type=Path, required=True)
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
@@ -78,7 +97,14 @@ def main() -> int:
     lowercase_names = load_first_name_policy(args.first_name_surface_policy)
 
     registry: dict[str, list[dict[str, str]]] = {
-        key: [{"surface": surface, "policy": "lowercase" if surface == surface.lower() else "capitalized", "source": "immutable-100k-core"}]
+        key: [{
+            "surface": core_resolved.get(key, surface),
+            "policy": (
+                core_audit.get("resolved_surfaces", {}).get(key, {}).get("policy", "")
+                or ("lowercase" if surface == surface.lower() else "capitalized")
+            ),
+            "source": "immutable-100k-core",
+        }]
         for key, surface in base.items()
     }
 
@@ -91,6 +117,17 @@ def main() -> int:
     add_records(registry, read_rows(args.capitals), "name", "case_policy", "capital")
     add_records(registry, read_rows(args.capital_inflections), "form", "case_policy", "capital-inflection")
     add_records(registry, read_rows(args.custom), "surface", "case_policy", "custom-manual")
+
+    core_audit = json.loads(args.core_capitalization_audit.read_text(encoding="utf-8"))
+    if core_audit.get("unresolved_count", 0):
+        raise SystemExit(
+            "Core capitalization audit contains unresolved keys: "
+            + ", ".join(core_audit.get("unresolved_keys", []))
+        )
+    core_resolved = {
+        key: value
+        for key, value in core_audit.get("resolved_surfaces", {}).items()
+    }
 
     overrides = {}
     with args.surface_registry_policy.open(encoding="utf-8", newline="") as handle:
@@ -128,6 +165,10 @@ def main() -> int:
             })
             continue
 
+        audited_core = core_resolved.get(key)
+        if audited_core is not None and not override:
+            resolved[key] = audited_core["surface"]
+            continue
         if explicit:
             policy = next(iter(explicit))["policy"]
             if policy == "lowercase":
@@ -169,6 +210,11 @@ def main() -> int:
             "capitalized_surfaces": capitalized_count,
             "violations": [],
         },
+        "core_capitalization_resolutions": [
+            {"key": key, "surface": value["surface"], "policy": value["policy"], "reason": value["reason"]}
+            for key, value in sorted(core_resolved.items())
+            if value["surface"] != base.get(key, value["surface"])
+        ],
         "explicit_surface_resolutions": [
             {"key": key, "surface": value[0], "policy": value[1]}
             for key, value in sorted(overrides.items())
