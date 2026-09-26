@@ -1025,12 +1025,17 @@ def main() -> int:
         for word in list(words):
             if any(ch in DIACRITICS for ch in word):
                 continue
-            if (
-                word in positive
-                or word in guards
-                or word in first_name_inflection_forms
-                or word in city_inflection_forms
-            ):
+            explicit_audited_forms = (
+                first_name_inflection_forms
+                | city_inflection_forms
+                | terc_inflection_forms
+                | country_forms
+                | country_inflection_forms
+                | capital_forms
+                | capital_inflection_forms
+                | custom_forms
+            )
+            if word in positive or word in guards or word in explicit_audited_forms:
                 continue
             best = max(accented, key=lambda w: zipf.get(w, 0.0))
             if best != word and best in positive:
