@@ -611,7 +611,7 @@ def main() -> int:
         "--terc",
         type=Path,
         default=None,
-        help="Current official GUS TERYT TERC source for audit only; selected TERC is the production surface input.",
+        help="Current official GUS TERYT TERC source; full names are retained and reduced to word components for the lexical surface layer.",
     )
     ap.add_argument(
         "--terc-inflections",
@@ -748,20 +748,31 @@ def main() -> int:
             terc_surface_map = {}
             for line_no, row in enumerate(reader, 2):
                 name = row["name"].strip()
-                if row["eligible_single_token"] != "yes":
-                    continue
-                if not is_inflection_surface(name):
-                    raise SystemExit(f"Invalid TERC source surface {args.terc}:{line_no}: {name!r}")
-                lower = name.lower()
-                prior = terc_surface_map.get(lower)
-                if prior is not None and prior != name:
-                    raise SystemExit(f"Conflicting TERC source casing {args.terc}:{line_no}: {prior!r} vs {name!r}")
-                terc_surface_map[lower] = name
                 policy = row["case_policy"].strip()
-                if policy not in {"lowercase", "capitalized"}:
-                    raise SystemExit(f"Invalid TERC case policy {args.terc}:{line_no}: {policy!r}")
-                terc_case_policy_map[lower] = policy
-                terc_forms.add(lower)
+                if not name or policy not in {"lowercase", "capitalized"}:
+                    raise SystemExit(f"Malformed TERC source row {args.terc}:{line_no}: {row!r}")
+                for component in component_surfaces(name):
+                    lower = component.lower()
+                    component_policy = (
+                        "lowercase"
+                        if policy == "lowercase" or component[:1].islower()
+                        else "capitalized"
+                    )
+                    canonical = component.lower() if component_policy == "lowercase" else component
+                    prior = terc_surface_map.get(lower)
+                    if prior is not None and prior != canonical:
+                        raise SystemExit(
+                            f"Conflicting TERC component casing {args.terc}:{line_no}: {prior!r} vs {canonical!r}"
+                        )
+                    prior_policy = terc_case_policy_map.get(lower)
+                    if prior_policy is not None and prior_policy != component_policy:
+                        raise SystemExit(
+                            f"Conflicting TERC component policy {args.terc}:{line_no}: "
+                            f"{prior_policy!r} vs {component_policy!r}"
+                        )
+                    terc_surface_map[lower] = canonical
+                    terc_case_policy_map[lower] = component_policy
+                    terc_forms.add(lower)
     terc_inflection_forms: set[str] = set()
     terc_inflection_surface_map: dict[str, str] = {}
     terc_inflection_case_policy_map: dict[str, str] = {}
@@ -1002,6 +1013,9 @@ def main() -> int:
         if word in guards:
             keep[word] = "guard"
             continue
+        if word in terc_forms:
+            keep[word] = "reviewed-terc-source"
+            continue
         if word in terc_inflection_forms:
             keep[word] = "reviewed-terc-inflection"
             continue
@@ -1159,6 +1173,9 @@ def main() -> int:
 
     for word in keep:
         register_surface(word, word, "lowercase", "ordinary-vocabulary")
+    for key, surface in terc_surface_map.items():
+        if key in keep:
+            register_surface(key, surface, terc_case_policy_map[key], "terc-source")
     for key, surface in terc_inflection_surface_map.items():
         if key in keep:
             register_surface(key, surface, terc_inflection_case_policy_map[key], "terc")
@@ -1329,7 +1346,8 @@ def main() -> int:
             "guard": sum(1 for r in keep.values() if r == "guard"),
             "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
             "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
-            "reviewed_terc": sum(1 for r in keep.values() if r == "reviewed-terc"),
+            "reviewed_terc": sum(1 for r in keep.values() if r == "reviewed-terc-source"),
+            "reviewed_terc_inflection": sum(1 for r in keep.values() if r == "reviewed-terc-inflection"),
             "reviewed_terc_inflection": sum(1 for r in keep.values() if r == "reviewed-terc-inflection"),
             "reviewed_country": sum(1 for r in keep.values() if r == "reviewed-country"),
             "reviewed_country_inflection": sum(1 for r in keep.values() if r == "reviewed-country-inflection"),
