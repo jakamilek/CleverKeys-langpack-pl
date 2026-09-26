@@ -13,6 +13,8 @@ on:
       - ".github/workflows/pl-size-study.yml"
       - "scripts/build_pl_preview.py"
       - "scripts/surface_components.py"
+      - "scripts/audit_core_capitalization.py"
+      - "scripts/audit_capitalization_common_noun_homonyms.py"
       - "scripts/analyze_dictionary_modules.py"
       - "scripts/requirements-pl-audit.txt"
       - "scripts/fetch_nkjp1m.py"
@@ -134,6 +136,18 @@ jobs:
           git -C build/CleverKeys-runtime checkout --detach 263bd0abc03dec420f60fa073a9d2c5e25a176b5
           test "$(git -C build/CleverKeys-runtime rev-parse HEAD)" = "263bd0abc03dec420f60fa073a9d2c5e25a176b5"
 
+      - name: Build immutable 100k frequency core for capitalization audit
+        run: |
+          python3 scripts/build_pl_preview.py               --base-only               --top 300000               --band 100000               --limit 100000               --aosp build/aosp/pl_wordlist.combined.gz               --out-wordlist build/base100k.txt               --out-report build/base100k-report.json
+
+      - name: Audit immutable core capitalization before module assembly
+        run: |
+          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
+
+      - name: Audit module capitalization against common-noun homonyms
+        run: |
+          python3 scripts/audit_capitalization_common_noun_homonyms.py             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-source build/pl-terc-source.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --out-json build/pl-capitalization-common-noun-audit.json             --out-tsv build/pl-capitalization-common-noun-audit.tsv
+
       - name: Build 50k, 100k, 125k and 150k variants from a common 300k candidate window
         run: |
           set -euo pipefail
@@ -141,17 +155,13 @@ jobs:
 
           for limit in 50000 100000 125000 150000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --terc build/pl-terc-source.tsv               --terc-inflections build/pl-terc-inflections-selected.tsv               --countries build/pl-country-source.tsv               --country-inflections build/pl-country-inflections.tsv               --capitals build/pl-capital-source.tsv               --capital-inflections build/pl-capital-inflections.tsv               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --terc build/pl-terc-source.tsv               --terc-inflections build/pl-terc-inflections-selected.tsv               --countries build/pl-country-source.tsv               --country-inflections build/pl-country-inflections.tsv               --capitals build/pl-capital-source.tsv               --capital-inflections build/pl-capital-inflections.tsv               --core-capitalization-audit build/pl-core-capitalization-audit.json               --module-capitalization-audit build/pl-capitalization-common-noun-audit.json               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
 
             python3 build/CleverKeys-runtime/scripts/build_langpack.py               --lang pl               --name "Polish $limit"               --dict "build/study/$limit/dictionary.bin"               --unigrams build/unigrams.txt               --version 2               --author "jakamilek/CleverKeys-langpack-pl"               --output "build/study/$limit/cleverkeys-langpack-pl-$limit.zip"
             sha256sum "build/study/$limit/cleverkeys-langpack-pl-$limit.zip" > "build/study/$limit/cleverkeys-langpack-pl-$limit.sha256"
           done
-
-      - name: Build immutable 100k frequency core
-        run: |
-          python3 scripts/build_pl_preview.py               --base-only               --top 300000               --band 100000               --limit 100000               --aosp build/aosp/pl_wordlist.combined.gz               --out-wordlist build/base100k.txt               --out-report build/base100k-report.json
 
       - name: Measure net module cost over immutable 100k core
         run: |

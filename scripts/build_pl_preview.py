@@ -654,6 +654,18 @@ def main() -> int:
         help="Explicit audited resolutions for cross-source canonical surface conflicts.",
     )
     ap.add_argument(
+        "--core-capitalization-audit",
+        type=Path,
+        default=None,
+        help="Optional audited capitalization resolutions for the immutable 100k core.",
+    )
+    ap.add_argument(
+        "--module-capitalization-audit",
+        type=Path,
+        default=None,
+        help="Optional audited capitalization resolutions for additive module surfaces.",
+    )
+    ap.add_argument(
         "--cities",
         type=Path,
         default=None,
@@ -670,6 +682,31 @@ def main() -> int:
     args = ap.parse_args()
 
     surface_registry_policy = load_surface_registry_policy(args.surface_registry_policy)
+
+    core_capitalization_resolved: dict[str, dict[str, str]] = {}
+    module_capitalization_resolved: dict[str, dict[str, str]] = {}
+
+    if args.core_capitalization_audit:
+        core_audit = json.loads(
+            args.core_capitalization_audit.read_text(encoding="utf-8")
+        )
+        if core_audit.get("unresolved_count", 0):
+            raise SystemExit(
+                "Core capitalization audit contains unresolved keys: "
+                + ", ".join(core_audit.get("unresolved_keys", []))
+            )
+        core_capitalization_resolved = core_audit.get("resolved_surfaces", {})
+
+    if args.module_capitalization_audit:
+        module_audit = json.loads(
+            args.module_capitalization_audit.read_text(encoding="utf-8")
+        )
+        if module_audit.get("unresolved_count", 0):
+            raise SystemExit(
+                "Module capitalization audit contains unresolved keys: "
+                + ", ".join(module_audit.get("unresolved_surface_keys", []))
+            )
+        module_capitalization_resolved = module_audit.get("resolved_surfaces", {})
 
     if args.base_only:
         # The base core is intentionally built only from frequency-ranked candidates
@@ -1262,7 +1299,31 @@ def main() -> int:
         explicit = [c for c in candidates if c["source"] != "ordinary-vocabulary"]
         variants = {(c["surface"], c["policy"]) for c in explicit}
         override = surface_registry_policy.get(key)
-        if override is not None:
+        audited = core_capitalization_resolved.get(key)
+        audit_basis = "core-capitalization-audit" if audited is not None else None
+        if audited is None:
+            audited = module_capitalization_resolved.get(key)
+            if audited is not None:
+                audit_basis = "module-capitalization-audit"
+
+        if audited is not None:
+            surface = audited.get("surface", "")
+            policy = audited.get("policy", "")
+            if not surface or surface.lower() != key or policy not in {"lowercase", "capitalized"}:
+                registry_conflicts.append({
+                    "key": key,
+                    "candidates": sorted(variants),
+                    "sources": sorted({c["source"] for c in explicit}),
+                    "audit": {"basis": audit_basis, "resolution": audited},
+                })
+                continue
+            registry_resolutions.append({
+                "key": key,
+                "surface": surface,
+                "policy": policy,
+                "basis": audit_basis,
+            })
+        elif override is not None:
             surface, policy = override
             if surface.lower() != key:
                 registry_conflicts.append({
