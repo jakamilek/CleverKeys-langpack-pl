@@ -443,9 +443,17 @@ jobs:
           )
           for expected_city_form in ("Gdynia", "Gdyni", "Gdynię", "Gdynią"):
               assert expected_city_form in ckdt_raw, expected_city_form
-          missing_terc_names = sorted(terc_names - ckdt_raw)
+          # TERC carries an explicit case_policy. Voivodeship/powiat-derived
+          # adjectival surfaces are intentionally lowercase, while city/gmina
+          # names retain capitalization. Verify the canonical surface implied by
+          # the audited source instead of assuming every TERC name is capitalized.
+          expected_terc_surfaces = {
+              (row["name"].lower() if row["case_policy"] == "lowercase" else row["name"])
+              for row in terc_rows
+          }
+          missing_terc_names = sorted(expected_terc_surfaces - ckdt_raw)
           assert not missing_terc_names, (
-              "official one-token TERC names missing from CKDT: "
+              "official TERC names missing from CKDT with audited case policy: "
               + ", ".join(missing_terc_names)
           )
           missing_terc_inflections = sorted(terc_inflection_surfaces - ckdt_raw)
