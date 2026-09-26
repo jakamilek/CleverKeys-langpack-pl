@@ -49,7 +49,11 @@ def add_records(registry, rows, surface_field, policy_field, source, lower_keys=
 
 def read_rows(path: Path) -> list[dict[str, str]]:
     with path.open(encoding="utf-8", newline="") as handle:
-        return list(csv.DictReader(handle, delimiter="\t"))
+        lines = (
+            line for line in handle
+            if line.strip() and not line.lstrip().startswith("#")
+        )
+        return list(csv.DictReader(lines, delimiter="\t"))
 
 
 def main() -> int:
