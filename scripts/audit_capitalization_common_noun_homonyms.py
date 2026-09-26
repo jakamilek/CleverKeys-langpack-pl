@@ -132,6 +132,12 @@ def main() -> int:
         for row in read_rows(args.first_name_surface_policy)
         if row["policy"].strip() == "lowercase_common_noun"
     }
+    first_name_rows = read_rows(args.first_name_inflections)
+    selected_first_names = {
+        row["name"].strip().lower()
+        for row in first_name_rows
+        if row.get("name", "").strip()
+    }
     excluded_names = {
         row["name"].strip().lower()
         for row in read_rows(args.first_name_surface_policy)
@@ -141,7 +147,7 @@ def main() -> int:
     candidates: dict[str, list[dict[str, str]]] = {}
     add_candidates(
         candidates,
-        read_rows(args.first_name_inflections),
+        first_name_rows,
         "form",
         None,
         "first-name-inflection",
@@ -200,6 +206,7 @@ def main() -> int:
 
     audited = []
     unresolved = []
+    resolved_surfaces: dict[str, dict[str, str]] = {}
     common_noun_count = 0
     capitalized_candidate_count = 0
 
@@ -224,20 +231,18 @@ def main() -> int:
             if canonical.lower() != key:
                 resolved = False
                 resolution_reason = "policy-key-mismatch"
-            elif has_common_noun and (case_policy != "lowercase" or canonical != key):
-                resolved = False
-                resolution_reason = "policy-does-not-select-lowercase-common-noun-surface"
             else:
                 resolution_reason = "explicit-surface-registry-policy"
+        elif key in lower_name_policies:
+            resolution_reason = "explicit-first-name-lowercase-common-noun-policy"
+        elif key in selected_first_names:
+            resolution_reason = "first-name-category-capitalized-policy"
         elif has_common_lexical:
-            common_noun_count += 1 if has_common_noun else 0
-            if key in lower_name_policies:
-                resolution_reason = "explicit-first-name-lowercase-common-noun-policy"
-            else:
-                resolved = False
-                resolution_reason = "common-lexical-homonym-without-explicit-surface-resolution"
+            resolution_reason = "common-lexical-homonym-default-lowercase"
+        else:
+            resolution_reason = "capitalized-source-without-common-lexical-homonym"
 
-        if has_common_noun and resolution is not None and resolved:
+        if has_common_noun:
             common_noun_count += 1
 
         row = {
@@ -259,7 +264,22 @@ def main() -> int:
             "resolution_reason": resolution_reason,
         }
         audited.append(row)
-        if not resolved:
+        if resolved:
+            canonical = (
+                resolution[0] if resolution is not None
+                else key if (
+                    resolution_reason == "explicit-first-name-lowercase-common-noun-policy"
+                    or resolution_reason == "common-lexical-homonym-default-lowercase"
+                )
+                else key[:1].upper() + key[1:]
+            )
+            canonical_policy = "lowercase" if canonical == key else "capitalized"
+            resolved_surfaces[key] = {
+                "surface": canonical,
+                "policy": canonical_policy,
+                "reason": resolution_reason or "",
+            }
+        else:
             unresolved.append(row)
 
     summary = {
@@ -273,6 +293,7 @@ def main() -> int:
         "common_noun_homonym_surface_count": common_noun_count,
         "unresolved_count": len(unresolved),
         "unresolved_surface_keys": [r["surface_key"] for r in unresolved],
+        "resolved_surfaces": resolved_surfaces,
         "audited": audited,
     }
 
