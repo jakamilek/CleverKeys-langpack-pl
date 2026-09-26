@@ -1240,6 +1240,11 @@ def main() -> int:
         "reviewed_error_rows": len(error_rows),
         "reviewed_error_forms_present_in_candidates": sorted(blocked_errors & set(ranked)),
         "kept": len(keep),
+        "surface_registry": {
+            "keys": len(surface_registry),
+            "conflicts": registry_conflicts,
+            "conflict_count": len(registry_conflicts),
+        },
         "capitalization_audit": capitalization_audit,
         "kept_reasons": {
             "spell_evidence": sum(1 for r in keep.values() if r == "spell-evidence"),
