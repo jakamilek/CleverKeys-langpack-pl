@@ -223,10 +223,7 @@ def main() -> int:
         resolved = True
         resolution_reason = None
 
-        if len(policies) > 1 and resolution is None:
-            resolved = False
-            resolution_reason = "mixed-source-capitalization-policy-without-explicit-resolution"
-        elif resolution is not None:
+        if resolution is not None:
             canonical, case_policy = resolution
             if canonical.lower() != key:
                 resolved = False
@@ -237,6 +234,11 @@ def main() -> int:
             resolution_reason = "explicit-first-name-lowercase-common-noun-policy"
         elif has_common_lexical:
             resolution_reason = "common-lexical-homonym-default-lowercase"
+        elif policies == {"lowercase"}:
+            resolution_reason = "lowercase-source-evidence"
+        elif len(policies) > 1:
+            resolved = False
+            resolution_reason = "mixed-source-capitalization-policy-without-explicit-resolution"
         elif key in selected_first_names:
             resolution_reason = "first-name-category-capitalized-policy"
         else:
