@@ -285,21 +285,17 @@ def main() -> int:
                 result_surface = key
                 result_policy = "lowercase"
                 reason = "explicit-first-name-lowercase-policy"
-            elif key in selected_first_names:
-                # Selected first names have an explicit category policy: preserve
-                # their proper-name capitalization unless the reviewed policy says
-                # the lexical/common-noun reading should win.
-                result_surface = key[:1].upper() + key[1:]
-                result_policy = "capitalized"
-                reason = "first-name-category-capitalized-policy"
             elif noun_matches:
-                # For word-oriented CKDT a common lexical reading is the safer
-                # canonical surface: the proper-name capitalization is retained
-                # in source evidence but does not override an ordinary lowercase
-                # lexical use without an explicit audited exception.
+                # A common lexical reading takes precedence over proper-name
+                # capitalization in the word-oriented CKDT unless an explicit
+                # auditable surface policy says otherwise.
                 result_surface = key
                 result_policy = "lowercase"
                 reason = "common-lexical-homonym-default-lowercase"
+            elif key in selected_first_names:
+                result_surface = key[:1].upper() + key[1:]
+                result_policy = "capitalized"
+                reason = "first-name-category-capitalized-policy"
             else:
                 result_surface = key[:1].upper() + key[1:]
                 result_policy = "capitalized"
