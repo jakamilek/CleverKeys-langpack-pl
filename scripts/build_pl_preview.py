@@ -1200,7 +1200,7 @@ def main() -> int:
         override = surface_registry_policy.get(key)
         if override is not None:
             surface, policy = override
-            offered = {c["surface"] for c in explicit}
+            offered = {c["surface"] for c in candidates}
             if surface not in offered:
                 registry_conflicts.append({
                     "key": key,
