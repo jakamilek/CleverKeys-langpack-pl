@@ -983,7 +983,8 @@ def main() -> int:
     # by wordfreq and therefore must not disappear merely because they fall outside
     # the frequency candidate window. Their actual net cost is measured separately.
     explicit_module_forms = (
-        terc_inflection_forms
+        terc_forms
+        | terc_inflection_forms
         | country_forms
         | country_inflection_forms
         | capital_forms
@@ -1119,7 +1120,7 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in custom_forms or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms or w in terc_inflection_forms or w in country_forms or w in country_inflection_forms or w in capital_forms or w in capital_inflection_forms
+            if w in guards or w in custom_forms or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms or w in terc_forms or w in terc_inflection_forms or w in country_forms or w in country_inflection_forms or w in capital_forms or w in capital_inflection_forms
         }
         if len(protected) > args.limit:
             raise SystemExit(
@@ -1347,7 +1348,6 @@ def main() -> int:
             "reviewed_first_name": sum(1 for r in keep.values() if r == "reviewed-first-name"),
             "reviewed_historical_first_name": sum(1 for r in keep.values() if r == "reviewed-historical-first-name"),
             "reviewed_terc": sum(1 for r in keep.values() if r == "reviewed-terc-source"),
-            "reviewed_terc_inflection": sum(1 for r in keep.values() if r == "reviewed-terc-inflection"),
             "reviewed_terc_inflection": sum(1 for r in keep.values() if r == "reviewed-terc-inflection"),
             "reviewed_country": sum(1 for r in keep.values() if r == "reviewed-country"),
             "reviewed_country_inflection": sum(1 for r in keep.values() if r == "reviewed-country-inflection"),
