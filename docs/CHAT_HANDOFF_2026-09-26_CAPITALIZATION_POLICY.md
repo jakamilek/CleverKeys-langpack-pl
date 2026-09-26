@@ -176,3 +176,14 @@ Stan CI:
 - size-study #200 na `3d583...`: in_progress.
 
 Nie uznawać projektu za green przed rzeczywistym `conclusion=success` nowych runów. Po green CI sprawdzić świeże artefakty, CKDT, net-new union i kapitalizację regresji. Nie wykonuj merge/promote.
+
+
+## Aktualizacja ciągłości — 2026-09-26 18:43 UTC
+
+- bieżący kod migracji kapitalizacji jest w commitcie `b188a614fb09917578307f026f55ac72598eb080`: modułowy audit przekazuje **każdy** module-only key przez wspólny `scripts/capitalization_rules.py`, także lowercase-only; builder nie posiada własnego fallbacku kapitalizacji;
+- commit `5657aca1bcbb7d8a00610fa40a89907eb94fd490` zmienia wyłącznie komentarz workflow i służy do ponownego wyzwolenia CI;
+- preview #263 działa na `b188a614...`; size-study #201 działa na `b188a614...`;
+- wyników tych runów nie wolno uznać za green przed rzeczywistym `conclusion=success` oraz kontrolą artefaktów;
+- błąd preview #261 (`aleksandrowski`: brak decyzji auditowej) został usunięty architektonicznie: audit modułowy nie pomija już lowercase-only keys.
+
+Po zakończeniu #263/#201 kolejny krok to kontrola świeżych raportów/artefaktów, CKDT i net-new union. Nie wykonuj merge/promote.
