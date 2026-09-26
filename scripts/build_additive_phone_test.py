@@ -78,9 +78,9 @@ def main() -> int:
         for key, surface in base.items()
     }
 
-    add_records(registry, read_rows(args.first_name_inflections), "form", "case_policy", "first-name-inflection", lowercase_names)
+    add_records(registry, read_rows(args.first_name_inflections), "form", None, "first-name-inflection", lowercase_names)
     add_records(registry, read_rows(args.cities), "name", None, "city")
-    add_records(registry, read_rows(args.city_inflections), "form", "case_policy", "city-inflection")
+    add_records(registry, read_rows(args.city_inflections), "form", None, "city-inflection")
     add_records(registry, read_rows(args.terc_inflections), "form", "case_policy", "terc")
     add_records(registry, read_rows(args.countries), "name", "case_policy", "country")
     add_records(registry, read_rows(args.country_inflections), "form", "case_policy", "country-inflection")
