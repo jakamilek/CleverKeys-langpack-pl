@@ -4,9 +4,10 @@
 This is a generic audit for all additive modules. It intentionally does not use
 membership in the immutable 100k core as evidence for or against capitalization.
 For every candidate surface whose module policy requires capitalization, Morfeusz
-2 / SGJP is queried on the lowercase spelling. If a common-noun (nazwa_pospolita)
-analysis exists, the final surface must have an explicit auditable resolution in
-surface_registry_policy.tsv or an explicit lowercase first-name policy.
+2 / SGJP is queried on the lowercase spelling. Common-noun evidence normally
+defaults to lowercase, except when an explicitly audited first-name surface is
+the source category or an explicit surface-registry policy resolves the key.
+Mixed source policies remain unresolved without an explicit resolution.
 """
 
 from __future__ import annotations
