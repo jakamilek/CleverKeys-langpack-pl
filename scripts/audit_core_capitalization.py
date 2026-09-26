@@ -146,16 +146,17 @@ def main() -> int:
     if len(base) != 100000:
         raise SystemExit(f"Immutable core must contain exactly 100000 keys, got {len(base)}")
 
+    evidence: dict[str, list[dict[str, object]]] = {}
+
+    def rows_or_empty(path: Path | None) -> list[dict[str, str]]:
+        return [] if path is None else read_rows(path)
+
     first_name_rows = rows_or_empty(args.first_name_inflections)
     selected_first_names = {
         row["name"].strip().lower()
         for row in first_name_rows
         if row.get("name", "").strip()
     }
-    evidence: dict[str, list[dict[str, object]]] = {}
-
-    def rows_or_empty(path: Path | None) -> list[dict[str, str]]:
-        return [] if path is None else read_rows(path)
 
     add_source(
         evidence,
