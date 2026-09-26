@@ -15,7 +15,8 @@ on:
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/surface_registry_policy.tsv"
       - "sources/staging/historical_name_candidates.tsv"
-      - "sources/staging/first_name_surface_policy.tsv"
+      - "sources/staging/first_name_source_exclusions.tsv"
+      - "scripts/capitalization_rules.py"
       - "scripts/audit_name_history.py"
       - "scripts/generate_first_name_inflections.py"
       - "scripts/fetch_teryt_simc.py"
@@ -111,14 +112,14 @@ jobs:
 
       - name: Audit first-name common-noun homonyms
         run: |
-          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --surface-policy sources/staging/first_name_surface_policy.tsv
+          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --exclusions sources/staging/first_name_source_exclusions.tsv
 
       - name: Generate selected first-name inflections
         run: |
           python3 scripts/generate_first_name_inflections.py \
             --history-report build/pl-name-history-report.json \
             --historical-first-names sources/staging/historical_name_candidates.tsv \
-            --surface-policy sources/staging/first_name_surface_policy.tsv \
+            --exclusions sources/staging/first_name_source_exclusions.tsv \
             --out-tsv build/pl-first-name-inflections.tsv \
             --out-report build/pl-first-name-inflections-report.json
 
@@ -138,7 +139,7 @@ jobs:
 
       - name: Build immutable 100k core for phone test
         run: |
-          python3 scripts/build_pl_preview.py             --base-only             --top 300000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --out-wordlist build/base100k.txt             --out-report build/base100k-report.json
+          python3 scripts/build_pl_preview.py             --base-only             --top 300000             --first-name-source-exclusions sources/staging/first_name_source_exclusions.tsv             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --out-wordlist build/base100k.txt             --out-report build/base100k-report.json
 
       - name: Validate global multiword surface tokenizer
         run: |
@@ -155,15 +156,15 @@ jobs:
 
       - name: Audit immutable core capitalization before module assembly
         run: |
-          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
+          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
 
       - name: Audit module capitalization against common-noun homonyms
         run: |
-          python3 scripts/audit_capitalization_common_noun_homonyms.py             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-source build/pl-terc-source.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --out-json build/pl-capitalization-common-noun-audit.json             --out-tsv build/pl-capitalization-common-noun-audit.tsv
+          python3 scripts/audit_capitalization_common_noun_homonyms.py             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-source build/pl-terc-source.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --out-json build/pl-capitalization-common-noun-audit.json             --out-tsv build/pl-capitalization-common-noun-audit.tsv
 
       - name: Build production-shaped additive module phone-test word list
         run: |
-          python3 scripts/build_additive_phone_test.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-source build/pl-terc-source.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --module-capitalization-audit build/pl-capitalization-common-noun-audit.json             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_additive_phone_test.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-source build/pl-terc-source.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --module-capitalization-audit build/pl-capitalization-common-noun-audit.json             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -222,12 +223,12 @@ jobs:
           assert all(row["case_policy"] in {"lowercase", "capitalized"} for row in country_inflection_rows + capital_inflection_rows)
           assert all(row["case_policy"] in {"lowercase", "capitalized"} for row in custom_rows)
           homonym_audit = json.loads(Path("build/pl-first-name-homonym-audit.json").read_text(encoding="utf-8"))
-          capitalized_homonyms = set(homonym_audit["capitalized_homonym_names"])
-          lowercase_homonyms = set(homonym_audit["lowercase_common_noun_names"])
+          homonym_names = set(homonym_audit["common_noun_homonym_names"])
           excluded_names = set(homonym_audit["excluded_names"])
-          assert len(capitalized_homonyms) == 48, sorted(capitalized_homonyms)
-          assert lowercase_homonyms == {"jagoda", "lilia", "malina", "melisa", "róża"}, sorted(lowercase_homonyms)
+          assert homonym_audit["selected_total"] == 470
           assert excluded_names == {"oleksandr"}, sorted(excluded_names)
+          core_audit_for_names = json.loads(Path("build/pl-core-capitalization-audit.json").read_text(encoding="utf-8"))
+          module_audit_for_names = json.loads(Path("build/pl-capitalization-common-noun-audit.json").read_text(encoding="utf-8"))
 
           forbidden = {
               "chopin", "chopina", "goebbels", "goebbelsa",
@@ -271,17 +272,16 @@ jobs:
 
           assert len(ckdt_words) == word_count, "duplicate words detected in CKDT"
           assert not found, "forbidden regression words in CKDT: " + ", ".join(sorted(found))
-          missing_capitalized_homonyms = sorted(
-              w for w in capitalized_homonyms
-              if w.capitalize() not in ckdt_raw
-          )
-          assert not missing_capitalized_homonyms, (
-              "capitalized homonym names missing from CKDT: "
-              + ", ".join(missing_capitalized_homonyms)
-          )
-          for lower in sorted(lowercase_homonyms):
-              assert lower in ckdt_words, "lowercase common noun missing from CKDT: " + lower
-              assert lower.capitalize() not in ckdt_raw, "lowercase exception was capitalized in CKDT: " + lower
+          for homonym in sorted(homonym_names):
+              resolution = (
+                  core_audit_for_names.get("resolved_surfaces", {}).get(homonym)
+                  or module_audit_for_names.get("resolved_surfaces", {}).get(homonym)
+              )
+              assert resolution is not None, "No unified capitalization resolution for first-name homonym: " + homonym
+              assert resolution["surface"] in ckdt_raw, (
+                  "Unified capitalization surface missing from CKDT: "
+                  + homonym + " -> " + resolution["surface"]
+              )
 
           # Orthographic regression: adjectives derived from geographic/proper names are
           # ordinary lexical words and must remain lowercase. These examples exercise the
@@ -319,7 +319,7 @@ jobs:
               history = json.load(handle)
           with Path("sources/staging/historical_name_candidates.tsv").open(encoding="utf-8", newline="") as handle:
               historical_rows_src = list(csv.DictReader(handle, delimiter="\t"))
-          with Path("sources/staging/first_name_surface_policy.tsv").open(encoding="utf-8", newline="") as handle:
+          with Path("sources/staging/first_name_source_exclusions.tsv").open(encoding="utf-8", newline="") as handle:
               surface_policy = {
                   row["name"].strip().lower(): row["policy"].strip()
                   for row in csv.DictReader(handle, delimiter="\t")
@@ -336,35 +336,42 @@ jobs:
           for row in historical_rows_src:
               canonical = row["name"].strip()
               lower = canonical.lower()
-              policy = surface_policy.get(lower, "capitalized_name")
-              if policy == "exclude":
+              if lower in excluded_names:
                   continue
-              expected_surfaces.append(lower if policy == "lowercase_common_noun" else canonical)
+              resolution = (
+                  core_audit_for_names.get("resolved_surfaces", {}).get(lower)
+                  or module_audit_for_names.get("resolved_surfaces", {}).get(lower)
+              )
+              expected_surfaces.append(resolution["surface"] if resolution is not None else canonical)
           assert len(expected_surfaces) == 469
           assert len(set(expected_surfaces)) == 469
           missing_first_names = sorted(set(expected_surfaces) - ckdt_raw)
           assert not missing_first_names, "selected first names missing from CKDT: " + ", ".join(missing_first_names)
 
           # First-name inflection gate: every generated singular surface for the
-          # selected, non-lowercase/non-excluded names must survive into CKDT exactly.
+          # selected first-name names must survive into CKDT exactly.
           inflection_rows = []
           with Path("build/pl-first-name-inflections.tsv").open(encoding="utf-8", newline="") as handle:
               inflection_rows = list(csv.DictReader(handle, delimiter="\t"))
           policy_map = {
               row["name"].strip().lower(): row["policy"].strip()
               for row in csv.DictReader(
-                  Path("sources/staging/first_name_surface_policy.tsv").open(
+                  Path("sources/staging/first_name_source_exclusions.tsv").open(
                       encoding="utf-8", newline=""
                   ),
                   delimiter="\t",
               )
           }
-          expected_inflection_surfaces = {
-              row["form"]
-              for row in inflection_rows
-              if policy_map.get(row["name"].strip().lower(), "capitalized_name")
-              not in {"lowercase_common_noun", "exclude"}
-          }
+          expected_inflection_surfaces = set()
+          for row in inflection_rows:
+              key = row["form"].strip().lower()
+              resolution = (
+                  core_audit_for_names.get("resolved_surfaces", {}).get(key)
+                  or module_audit_for_names.get("resolved_surfaces", {}).get(key)
+              )
+              expected_inflection_surfaces.add(
+                  resolution["surface"] if resolution is not None else row["form"].strip()
+              )
           missing_inflections = sorted(expected_inflection_surfaces - ckdt_raw)
           assert not missing_inflections, (
               "selected first-name inflection forms missing from CKDT: "

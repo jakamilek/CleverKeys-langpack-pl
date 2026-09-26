@@ -20,7 +20,8 @@ on:
       - "scripts/fetch_nkjp1m.py"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/historical_name_candidates.tsv"
-      - "sources/staging/first_name_surface_policy.tsv"
+      - "sources/staging/first_name_source_exclusions.tsv"
+      - "scripts/capitalization_rules.py"
       - "sources/staging/custom_manual.tsv"
       - "sources/staging/surface_registry_policy.tsv"
       - "scripts/audit_name_history.py"
@@ -107,14 +108,14 @@ jobs:
 
       - name: Audit first-name common-noun homonyms
         run: |
-          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --surface-policy sources/staging/first_name_surface_policy.tsv
+          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --exclusions sources/staging/first_name_source_exclusions.tsv
 
       - name: Generate selected first-name inflections
         run: |
           python3 scripts/generate_first_name_inflections.py \
             --history-report build/pl-name-history-report.json \
             --historical-first-names sources/staging/historical_name_candidates.tsv \
-            --surface-policy sources/staging/first_name_surface_policy.tsv \
+            --exclusions sources/staging/first_name_source_exclusions.tsv \
             --out-tsv build/pl-first-name-inflections.tsv \
             --out-report build/pl-first-name-inflections-report.json
           python3 scripts/generate_city_inflections.py \
@@ -142,11 +143,11 @@ jobs:
 
       - name: Audit immutable core capitalization before module assembly
         run: |
-          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
+          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-source-exclusions sources/staging/first_name_source_exclusions.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
 
       - name: Audit module capitalization against common-noun homonyms
         run: |
-          python3 scripts/audit_capitalization_common_noun_homonyms.py             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-source build/pl-terc-source.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --out-json build/pl-capitalization-common-noun-audit.json             --out-tsv build/pl-capitalization-common-noun-audit.tsv
+          python3 scripts/audit_capitalization_common_noun_homonyms.py             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-source-exclusions sources/staging/first_name_source_exclusions.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-source build/pl-terc-source.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --out-json build/pl-capitalization-common-noun-audit.json             --out-tsv build/pl-capitalization-common-noun-audit.tsv
 
       - name: Build 50k, 100k, 125k and 150k variants from a common 300k candidate window
         run: |
@@ -155,7 +156,7 @@ jobs:
 
           for limit in 50000 100000 125000 150000; do
             mkdir -p "build/study/$limit"
-            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-surface-policy sources/staging/first_name_surface_policy.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --terc build/pl-terc-source.tsv               --terc-inflections build/pl-terc-inflections-selected.tsv               --countries build/pl-country-source.tsv               --country-inflections build/pl-country-inflections.tsv               --capitals build/pl-capital-source.tsv               --capital-inflections build/pl-capital-inflections.tsv               --core-capitalization-audit build/pl-core-capitalization-audit.json               --module-capitalization-audit build/pl-capitalization-common-noun-audit.json               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
+            python3 scripts/build_pl_preview.py               --top 200000               --band "$limit"               --limit "$limit"               --aosp build/aosp/pl_wordlist.combined.gz               --first-name-history build/pl-name-history-report.json               --historical-first-names sources/staging/historical_name_candidates.tsv               --first-name-source-exclusions sources/staging/first_name_source_exclusions.tsv               --first-name-inflections build/pl-first-name-inflections.tsv               --cities build/pl-city-source.tsv               --city-inflections build/pl-city-inflections.tsv               --terc build/pl-terc-source.tsv               --terc-inflections build/pl-terc-inflections-selected.tsv               --countries build/pl-country-source.tsv               --country-inflections build/pl-country-inflections.tsv               --capitals build/pl-capital-source.tsv               --capital-inflections build/pl-capital-inflections.tsv               --core-capitalization-audit build/pl-core-capitalization-audit.json               --module-capitalization-audit build/pl-capitalization-common-noun-audit.json               --out-wordlist "build/study/$limit/pl_words_preview.txt"               --out-report "build/study/$limit/pl-preview-report.json"
 
             python3 build/CleverKeys-runtime/scripts/build_dictionary.py               --lang pl               --input "build/study/$limit/pl_words_preview.txt"               --output "build/study/$limit/dictionary.bin"               --use-wordfreq
 
