@@ -5,8 +5,8 @@ Modules provide evidence; this resolver decides the canonical surface for one
 case-insensitive dictionary key.
 
 Precedence:
-1. Any adjective analysis -> lowercase (absolute project rule).
-2. Explicit audited lexical surface policy, where independently documented.
+1. Explicit audited lexical surface policy for the exact key, when independently documented.
+2. Any adjective analysis -> lowercase when no explicit audited surface decision exists.
 3. Verified ordinary common-noun homonym -> lowercase.
 4. Lowercase-only source evidence -> lowercase.
 5. Mixed unresolved source policies -> unresolved.
