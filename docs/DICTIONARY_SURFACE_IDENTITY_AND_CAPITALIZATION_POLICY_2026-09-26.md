@@ -97,12 +97,22 @@ No module is allowed to bypass this model merely because its source is small.
 
 ## 5. Capitalization is lexical/surface-specific
 
-Capitalization must never be inferred solely from module membership.
+Capitalization must never be inferred solely from module membership or from the fact that a key belongs to the immutable 100k core.
+
+The capitalization audit runs on the core before module assembly. This is necessary because frequency sources may normalize all candidates to lowercase and can therefore lose proper-name capitalization.
+
+For every source surface, including multiword and hyphenated names, the pipeline preserves the full source record and also analyzes individual word components. Each component is evaluated independently for:
+- source capitalization;
+- ordinary lexical use, including common nouns and other ordinary parts of speech;
+- conflicts with other sources;
+- explicit surface policy.
+
+When a non-first-name capitalized candidate has an ordinary lexical homonym and no explicit audited exception, the context-free CKDT surface defaults to lowercase. A selected first name follows its explicit first-name policy. An unresolved mixed-source conflict blocks promotion.
 
 Examples of the general principle:
 - ordinary vocabulary: lowercase;
 - proper names: capitalized;
-- cities/localities: capitalized according to the audited official/linguistic form;
+- cities/localities: capitalized according to the audited official/linguistic form, after per-component lexical collision analysis;
 - first names: capitalized unless an explicitly audited common-noun homonym policy says otherwise;
 - geographic/administrative adjectives: lowercase;
 - countries and capitals: audited official Polish spelling;
@@ -139,6 +149,8 @@ CI should be able to demonstrate at minimum:
 4. canonical surface selection is deterministic and auditable;
 5. unresolved capitalization conflicts cannot enter CKDT;
 6. category-specific capitalization rules are enforced;
+10. core capitalization is audited before modules so absent modules cannot cause loss of capitalization evidence;
+11. multiword/hyphenated source names are preserved for provenance and audited component-by-component;
 7. generated inflections retain source and generator provenance;
 8. excluded forms remain available in audit artifacts where the category policy
    requires complete-paradigm retention for review;
