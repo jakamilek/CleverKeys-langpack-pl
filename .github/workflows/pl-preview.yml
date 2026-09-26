@@ -469,6 +469,12 @@ jobs:
               "official TERC names missing from CKDT after capitalization audit: "
               + ", ".join(missing_terc_names)
           )
+          # Regression: Bardo is a TERC locality name and must remain capitalized.
+          bardo_resolution = core_cap_resolved.get("bardo") or module_cap_resolved.get("bardo")
+          assert bardo_resolution is not None, "No unified capitalization resolution for Bardo"
+          assert bardo_resolution["surface"] == "Bardo", bardo_resolution
+          assert "Bardo" in ckdt_raw
+          assert "bardo" not in ckdt_raw
           missing_terc_inflections = sorted(expected_terc_inflection_surfaces - ckdt_raw)
           assert not missing_terc_inflections, (
               "generated TERC inflection forms missing from CKDT: "
