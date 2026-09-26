@@ -10,15 +10,17 @@ import re
 # the original full surface remains in the source artifact.
 #
 # Some international proper names contain an English possessive suffix, e.g.
-# `John's`. The trailing `'s` is not an independent dictionary word, so it must
-# not become a spurious one-letter component (`s`) in the Polish word surface
-# registry. Internal apostrophes such as `D'...` are preserved as separators.
+# `John's` or `John’s`. That suffix is not an independent dictionary word,
+# so it must not become a spurious one-letter component (`s`) in the Polish
+# word surface registry. The same rule applies to an uppercase possessive `'S`
+# / `’S`. Internal apostrophes such as `D'...` or `D’...` are preserved as
+# separators for component-level audit.
 WORD_COMPONENT_RE = re.compile(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+")
-TRAILING_ENGLISH_POSSESSIVE_RE = re.compile(r"(?i)'s\b")
+ENGLISH_POSSESSIVE_RE = re.compile(r"(?i)(?:'|’|＇)s\b")
 
 
 def component_surfaces(surface: str) -> list[str]:
-    normalized = TRAILING_ENGLISH_POSSESSIVE_RE.sub("", surface)
+    normalized = ENGLISH_POSSESSIVE_RE.sub("", surface)
     return WORD_COMPONENT_RE.findall(normalized)
 
 
