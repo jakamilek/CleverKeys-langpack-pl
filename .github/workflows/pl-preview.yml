@@ -6,6 +6,7 @@ on:
       - "ops/baseline-sync-2026-09-20"
     paths:
       - "scripts/build_pl_preview.py"
+      - "scripts/build_additive_phone_test.py"
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/surface_registry_policy.tsv"
@@ -131,9 +132,13 @@ jobs:
             --out-report build/pl-city-inflections-report.json \
             --overrides sources/staging/reviewed_city_inflection_overrides.tsv
 
-      - name: Preview Polish word list
+      - name: Build immutable 100k core for phone test
         run: |
-          python3 scripts/build_pl_preview.py             --top 300000             --band 150000             --limit 150000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-flat.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-flat.tsv             --capital-inflections build/pl-capital-inflections.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --base-only             --top 300000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --out-wordlist build/base100k.txt             --out-report build/base100k-report.json
+
+      - name: Build production-shaped additive module phone-test word list
+        run: |
+          python3 scripts/build_additive_phone_test.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-flat.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-flat.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
