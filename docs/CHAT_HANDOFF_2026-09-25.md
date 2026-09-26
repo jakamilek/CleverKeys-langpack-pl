@@ -916,3 +916,31 @@ Po green CI sprawdzić szczególnie:
 - 48 `capitalized_homonym_names` i 5 `lowercase_common_noun_names`;
 - rzeczywisty net-new union oraz raporty modułów;
 - dopiero potem paczkę do testu swipe.
+
+
+## 29. Kontynuacja 2026-09-26 — przymiotniki administracyjno-geograficzne
+
+Preview #240 i size-study #186 na `c9078c...` ujawniły 17 unresolved core capitalization collisions: `brzeski, chełmiński, gdański, jasielski, lubelski, lubelskie, lubuskie, mazowieckie, mazurskie, opolski, opolskie, pomorskie, sandomierski, wschodni, ząbkowicki, łukowski, łódzki`.
+
+Nie dodajemy tych 17 kluczy ręcznie do surface registry. Ich wzorzec jest zgodny z przyjętą zasadą językową: człony przymiotnikowe nazw administracyjnych/geograficznych mają podstawową powierzchnię lowercase.
+
+Diagnoza kodowa:
+- generic capitalization audit używał wcześniejszej kategorii `common_lexical` do obniżania tylko wtedy, gdy był to homonim; jednocześnie mixed source policies pozostawały unresolved;
+- dedykowany audyt imion definiuje homonimię wężej jako `nazwa_pospolita`;
+- zatem dla przymiotników potrzebna jest osobna, jawna reguła ortograficzna, a nie wymuszanie kolejnych wpisów ręcznych.
+
+Naprawa:
+- commit `9f0b45755289c260650c7d4cc2d2f67b4195e9d2`: core capitalization audit rozpoznaje zwykłe analizy `adj:` jako podstawę lowercase, przy zachowaniu ochrony przed innymi POS;
+- commit `88320090cb42cc38ba235c380566f160092925ef`: module capitalization audit stosuje tę samą regułę dla surface modułów i zapisuje analizę przymiotnikową w raporcie.
+
+Ważne:
+- `surface_registry_policy.tsv` nie został rozszerzony o te 17 pozycji;
+- `Tomaszów` pozostaje jawnie `capitalized`;
+- `mazowiecki`, `pomorski`, `śląski` itd. mają pozostać lowercase jako przymiotniki;
+- `łódź` pozostaje lowercase na podstawie jawnej polityki rzeczownika pospolitego.
+
+Ostatnie CI przed tą poprawką:
+- preview #240 — failed na 17 unresolved core capitalization collisions;
+- size-study #186 — failed na tym samym audycie core.
+
+Po commit `8832009...` oczekiwane są nowe runy. Następna bramka to sprawdzenie, czy unresolved core = 0 bez ręcznego dodawania 17 wyjątków.
