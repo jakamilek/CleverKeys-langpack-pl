@@ -767,3 +767,38 @@ Generator odmiany jednoczłonowej nadal pracuje tylko na nazwach jednoczłonowyc
 ### Aktualny etap CI
 
 Po tych zmianach trwają nowe przebiegi preview/size-study. Nie należy używać paczki #187 jako bieżącej wersji testowej kapitalizacji, ponieważ została zbudowana przed powyższymi zmianami.
+
+## 25. Kontynuacja 2026-09-26 — Unicode English possessive w tokenizerze surface components
+
+Na podstawie najnowszego CI wykryto problem architektoniczny w rozbijaniu zagranicznych nazw wieloczłonowych.
+
+Objaw:
+- preview #231 kończył się na `Unresolved common-noun capitalization collisions: s`;
+- size-study #178 kończył się na `Conflicting capital source component casing ...: 's' vs 'S'`.
+
+Źródłem był fałszywy komponent jednoliterowy `s` pochodzący z angielskiej konstrukcji possessive `'s` zapisanej także typograficznym apostrofem `’s`. Nie jest to niezależne słowo słownikowe CKDT i nie może trafiać do surface registry.
+
+Zmiana architektoniczna:
+- commit `78e80b4da950c40b688ac3023181fa1de6736bfa`;
+- `scripts/surface_components.py` używa teraz wspólnej reguły Unicode dla `'s`, `’s` i `＇s`, niezależnie od wielkości litery;
+- nie dodano wyjątku dla żadnej konkretnej stolicy ani nazwy;
+- provenance pełnej nazwy pozostaje nienaruszone.
+
+Regresja CI:
+- commit `0ff4276ca4871f70394f51d1a6d78b3859fd9c07`;
+- preview workflow otrzymał testy dla `Saint John’s`, `King’s College` i `D’Arcy`, obok istniejących testów ASCII.
+
+Stan CI przy zapisie:
+- size-study #179 na `78e80b4...` — in progress;
+- preview #232 na `78e80b4...` — in progress;
+- preview #233 na `0ff4276...` — pending;
+- wcześniejsze #178/#231 na `c6fdb1...` są historycznie failed i nie należy ich traktować jako stanu po poprawce.
+
+Kryterium akceptacji:
+1. tokenizer nie emituje `s` z angielskiego possessive;
+2. preview przechodzi audit capitalization;
+3. size-study przechodzi przez budowę 50k/100k/125k/150k;
+4. dopiero po green CI odczytać nowe `module-study-report.json`, `module-frequency-report.json` i artefakty;
+5. nie wykonywać automatycznego merge/promote.
+
+Nie zmieniono CKDT core ani zasad 100k.
