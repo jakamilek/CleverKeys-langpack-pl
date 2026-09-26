@@ -200,6 +200,36 @@ def load_blocked_errors(path: Path) -> tuple[set[str], list[dict[str, str]]]:
 
 
 
+def load_surface_registry_policy(
+    path: Path,
+) -> dict[str, tuple[str, str]]:
+    """Load explicit, auditable canonical resolutions for cross-source surface conflicts."""
+    out: dict[str, tuple[str, str]] = {}
+    if not path.exists():
+        return out
+    with path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        required = {"surface_key", "canonical_surface", "case_policy", "basis", "source"}
+        if set(reader.fieldnames or ()) != required:
+            raise SystemExit(
+                f"Malformed surface registry policy header {path}: expected {sorted(required)}"
+            )
+        for line_no, row in enumerate(reader, 2):
+            key = row["surface_key"].strip().lower()
+            surface = row["canonical_surface"].strip()
+            policy = row["case_policy"].strip()
+            if not key or not surface or surface.lower() != key:
+                raise SystemExit(f"Malformed surface registry policy key/surface {path}:{line_no}")
+            if policy not in {"lowercase", "capitalized"}:
+                raise SystemExit(f"Malformed surface registry policy case {path}:{line_no}: {policy!r}")
+            prior = out.get(key)
+            value = (surface, policy)
+            if prior is not None and prior != value:
+                raise SystemExit(f"Conflicting surface registry policy {path}:{line_no}: {key!r}")
+            out[key] = value
+    return out
+
+
 def load_custom_words(
     path: Path,
 ) -> tuple[set[str], dict[str, str], dict[str, str]]:
@@ -748,6 +778,8 @@ def main() -> int:
     if args.capital_inflections:
         capital_inflection_forms, capital_inflection_surface_map, capital_inflection_case_policy_map = load_geo_inflections(args.capital_inflections)
 
+    surface_registry_policy = load_surface_registry_policy(args.surface_registry_policy)
+
     custom_forms: set[str] = set()
     custom_surface_map: dict[str, str] = {}
     custom_case_policy_map: dict[str, str] = {}
@@ -1142,26 +1174,49 @@ def main() -> int:
     for key, surface in first_name_inflection_surface_map.items():
         if key in keep:
             policy = "lowercase" if key in lowercase_first_name_inflection_surfaces else "capitalized"
+            if policy == "lowercase":
+                surface = key
             register_surface(key, surface, policy, "first-name-inflection")
     for key, surface in first_name_case_map.items():
         if key in keep:
             policy = "lowercase" if key in lowercase_first_name_exceptions else "capitalized"
+            if policy == "lowercase":
+                surface = key
             register_surface(key, surface, policy, "first-name")
 
     registry_conflicts = []
+    registry_resolutions = []
     resolved_surface = {}
     resolved_policy = {}
     for key, candidates in sorted(surface_registry.items()):
         explicit = [c for c in candidates if c["source"] != "ordinary-vocabulary"]
         variants = {(c["surface"], c["policy"]) for c in explicit}
-        if len(variants) > 1:
+        override = surface_registry_policy.get(key)
+        if override is not None:
+            surface, policy = override
+            offered = {c["surface"] for c in explicit}
+            if surface not in offered:
+                registry_conflicts.append({
+                    "key": key,
+                    "candidates": sorted(variants),
+                    "sources": sorted({c["source"] for c in explicit}),
+                    "override": {"surface": surface, "policy": policy, "status": "not-a-contributing-candidate"},
+                })
+                continue
+            registry_resolutions.append({
+                "key": key,
+                "surface": surface,
+                "policy": policy,
+                "basis": "explicit surface_registry_policy.tsv",
+            })
+        elif len({c["policy"] for c in explicit}) > 1:
             registry_conflicts.append({
                 "key": key,
                 "candidates": sorted(variants),
                 "sources": sorted({c["source"] for c in explicit}),
             })
             continue
-        if variants:
+        elif variants:
             surface, policy = next(iter(variants))
         else:
             surface, policy = key, "lowercase"
@@ -1254,6 +1309,8 @@ def main() -> int:
             "keys": len(surface_registry),
             "conflicts": registry_conflicts,
             "conflict_count": len(registry_conflicts),
+            "explicit_resolutions": registry_resolutions,
+            "explicit_resolution_count": len(registry_resolutions),
         },
         "capitalization_audit": capitalization_audit,
         "kept_reasons": {
