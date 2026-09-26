@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-"""Audit capitalization candidates for common-noun homonym collisions.
+"""Audit and resolve capitalization for every active additive-module key.
 
-This is a generic audit for all additive modules. It intentionally does not use
-membership in the immutable 100k core as evidence for or against capitalization.
-For every candidate surface whose module policy requires capitalization, Morfeusz
-2 / SGJP is queried on the lowercase spelling. Common-noun evidence normally
-defaults to lowercase, except when an explicitly audited first-name surface is
-the source category or an explicit surface-registry policy resolves the key.
-Mixed source policies remain unresolved without an explicit resolution.
+This audit is the module-side decision layer built on the single project-wide
+capitalization resolver. It intentionally does not use immutable-core membership
+to decide casing. Every module key is resolved, including lowercase-only keys,
+so downstream builders never need their own capitalization fallback.
 """
 
 from __future__ import annotations
@@ -107,11 +104,6 @@ def main() -> int:
     import morfeusz2
 
     first_name_rows = read_rows(args.first_name_inflections)
-    selected_first_names = {
-        row["name"].strip().lower()
-        for row in first_name_rows
-        if row.get("name", "").strip()
-    }
     candidates: dict[str, list[dict[str, str]]] = {}
     add_candidates(
         candidates,
@@ -192,40 +184,77 @@ def main() -> int:
             authoritative = core_resolved[key]
             audited.append({
                 "surface_key": key,
-                "capitalized_candidates": sorted({(r["surface"], r["source"]) for r in rows if r["policy"] == "capitalized"}),
+                "capitalized_candidates": sorted({
+                    (r["surface"], r["source"])
+                    for r in rows
+                    if r["policy"] == "capitalized"
+                }),
                 "sources": sorted({r["source"] for r in rows}),
-                "common_lexical_homonym": None, "common_noun_homonym": None,
-                "common_lexical_matches": [], "common_adjective_matches": [], "common_noun_matches": [],
-                "explicit_surface_policy": ({"surface": policy[key][0], "policy": policy[key][1]} if key in policy else None),
-                "resolved": True, "resolution_reason": "core-authoritative",
-                "core_authoritative": True, "canonical_surface": authoritative["surface"], "canonical_policy": authoritative["policy"],
+                "common_lexical_homonym": None,
+                "common_noun_homonym": None,
+                "common_lexical_matches": [],
+                "common_adjective_matches": [],
+                "common_noun_matches": [],
+                "explicit_surface_policy": (
+                    {"surface": policy[key][0], "policy": policy[key][1]}
+                    if key in policy else None
+                ),
+                "resolved": True,
+                "resolution_reason": "core-authoritative",
+                "core_authoritative": True,
+                "canonical_surface": authoritative["surface"],
+                "canonical_policy": authoritative["policy"],
             })
             resolved_surfaces[key] = authoritative
             core_authoritative_count += 1
             continue
 
+        # Every module-only key goes through the same shared resolver, even when
+        # its source evidence is lowercase-only. This is what makes adjective
+        # -> lowercase and all other project-wide rules apply uniformly.
+        policies = {
+            r["policy"]
+            for r in rows
+            if r["policy"] in {"lowercase", "capitalized"}
+        }
+        resolution = resolve_capitalization(
+            key=key,
+            policies=policies,
+            morfeusz=morfeusz,
+            explicit_policy=policy.get(key),
+        )
         capitalized = [r for r in rows if r["policy"] == "capitalized"]
-        if not capitalized:
-            continue
-        capitalized_candidate_count += 1
-        policies = {r["policy"] for r in rows if r["policy"] in {"lowercase", "capitalized"}}
-        resolution = resolve_capitalization(key=key, policies=policies, morfeusz=morfeusz, explicit_policy=policy.get(key))
+        if capitalized:
+            capitalized_candidate_count += 1
+
         row = {
             "surface_key": key,
-            "capitalized_candidates": sorted({(r["surface"], r["source"]) for r in capitalized}),
+            "capitalized_candidates": sorted({
+                (r["surface"], r["source"]) for r in capitalized
+            }),
             "sources": sorted({r["source"] for r in rows}),
             "common_lexical_homonym": bool(resolution["common_lexical_matches"]),
             "common_noun_homonym": bool(resolution["common_noun_matches"]),
             "common_lexical_matches": resolution["common_lexical_matches"],
             "common_adjective_matches": resolution["common_adjective_matches"],
             "common_noun_matches": resolution["common_noun_matches"],
-            "explicit_surface_policy": ({"surface": policy[key][0], "policy": policy[key][1]} if key in policy else None),
+            "explicit_surface_policy": (
+                {"surface": policy[key][0], "policy": policy[key][1]}
+                if key in policy else None
+            ),
             "resolved": bool(resolution["resolved"]),
             "resolution_reason": str(resolution["reason"]),
+            "core_authoritative": False,
+            "canonical_surface": str(resolution["surface"]),
+            "canonical_policy": str(resolution["policy"]),
         }
         audited.append(row)
         if resolution["resolved"]:
-            resolved_surfaces[key] = {"surface": str(resolution["surface"]), "policy": str(resolution["policy"]), "reason": str(resolution["reason"])}
+            resolved_surfaces[key] = {
+                "surface": str(resolution["surface"]),
+                "policy": str(resolution["policy"]),
+                "reason": str(resolution["reason"]),
+            }
         else:
             unresolved.append(row)
         if resolution["common_noun_matches"]:
@@ -245,7 +274,14 @@ def main() -> int:
         "unresolved_surface_keys": [r["surface_key"] for r in unresolved],
         "resolved_surfaces": resolved_surfaces,
         "core_authoritative_keys": core_authoritative_count,
-        "module_only_keys_analyzed": sum(1 for row in audited if not row.get("core_authoritative")),
+        "module_only_keys_analyzed": sum(
+            1 for row in audited if not row.get("core_authoritative")
+        ),
+        "module_only_keys_resolved": sum(
+            1
+            for row in audited
+            if not row.get("core_authoritative") and row.get("resolved")
+        ),
         "audited": audited,
     }
 
