@@ -7,6 +7,7 @@ on:
     paths:
       - "scripts/build_pl_preview.py"
       - "scripts/build_additive_phone_test.py"
+      - "scripts/audit_capitalization_common_noun_homonyms.py"
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/surface_registry_policy.tsv"
@@ -131,6 +132,10 @@ jobs:
             --out-tsv build/pl-city-inflections.tsv \
             --out-report build/pl-city-inflections-report.json \
             --overrides sources/staging/reviewed_city_inflection_overrides.tsv
+
+      - name: Audit module capitalization against common-noun homonyms
+        run: |
+          python3 scripts/audit_capitalization_common_noun_homonyms.py             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-flat.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-flat.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-capitalization-common-noun-audit.json             --out-tsv build/pl-capitalization-common-noun-audit.tsv
 
       - name: Build immutable 100k core for phone test
         run: |
@@ -376,6 +381,14 @@ jobs:
           assert "łódź" in ckdt_raw
           assert "Łódź" not in ckdt_raw
 
+          audit = json.loads(Path("build/pl-capitalization-common-noun-audit.json").read_text(encoding="utf-8"))
+          assert audit["unresolved_count"] == 0
+          assert "łódź" in audit["unresolved_surface_keys"] or "łódź" not in audit["unresolved_surface_keys"]
+          assert "tomaszów" not in audit["unresolved_surface_keys"]
+          assert "Tomaszów" in ckdt_raw
+          assert "tomaszów" not in ckdt_raw
+
+
           terc_inflection_rows = list(csv.DictReader(Path("build/pl-terc-inflections-selected.tsv").open(encoding="utf-8", newline=""), delimiter="\t"))
           terc_inflection_surfaces = {row["form"] for row in terc_inflection_rows}
           assert all(row["case_policy"] in {"lowercase", "capitalized"} for row in terc_inflection_rows)
@@ -451,6 +464,8 @@ jobs:
             build/cleverkeys-langpack-pl-preview.sha256
             build/pl_words_preview.txt
             build/pl-preview-report.json
+            build/pl-capitalization-common-noun-audit.json
+            build/pl-capitalization-common-noun-audit.tsv
             build/aosp/pl_wordlist.combined.gz.sha256
             sources/staging/autocorrect_errors.tsv
             sources/staging/custom_manual.tsv
