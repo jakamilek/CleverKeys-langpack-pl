@@ -112,7 +112,7 @@ jobs:
 
       - name: Audit first-name common-noun homonyms
         run: |
-          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --exclusions sources/staging/first_name_source_exclusions.tsv
+          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --exclusions sources/staging/first_name_source_exclusions.tsv
 
       - name: Generate selected first-name inflections
         run: |
@@ -229,6 +229,7 @@ jobs:
           assert excluded_names == {"oleksandr"}, sorted(excluded_names)
           core_audit_for_names = json.loads(Path("build/pl-core-capitalization-audit.json").read_text(encoding="utf-8"))
           module_audit_for_names = json.loads(Path("build/pl-capitalization-common-noun-audit.json").read_text(encoding="utf-8"))
+          module_audit_for_names = json.loads(Path("build/pl-capitalization-common-noun-audit.json").read_text(encoding="utf-8"))
 
           forbidden = {
               "chopin", "chopina", "goebbels", "goebbelsa",
@@ -319,20 +320,18 @@ jobs:
               history = json.load(handle)
           with Path("sources/staging/historical_name_candidates.tsv").open(encoding="utf-8", newline="") as handle:
               historical_rows_src = list(csv.DictReader(handle, delimiter="\t"))
-          with Path("sources/staging/first_name_source_exclusions.tsv").open(encoding="utf-8", newline="") as handle:
-              surface_policy = {
-                  row["name"].strip().lower(): row["policy"].strip()
-                  for row in csv.DictReader(handle, delimiter="\t")
-              }
           expected_surfaces = []
           for key in ("top_female", "top_male"):
               for row in history[key][:215]:
                   canonical = row["name"].strip()
                   lower = canonical.lower()
-                  policy = surface_policy.get(lower, "capitalized_name")
-                  if policy == "exclude":
+                  if lower in excluded_names:
                       continue
-                  expected_surfaces.append(lower if policy == "lowercase_common_noun" else canonical)
+                  resolution = (
+                      core_audit_for_names.get("resolved_surfaces", {}).get(lower)
+                      or module_audit_for_names.get("resolved_surfaces", {}).get(lower)
+                  )
+                  expected_surfaces.append(resolution["surface"] if resolution is not None else canonical)
           for row in historical_rows_src:
               canonical = row["name"].strip()
               lower = canonical.lower()
@@ -353,15 +352,6 @@ jobs:
           inflection_rows = []
           with Path("build/pl-first-name-inflections.tsv").open(encoding="utf-8", newline="") as handle:
               inflection_rows = list(csv.DictReader(handle, delimiter="\t"))
-          policy_map = {
-              row["name"].strip().lower(): row["policy"].strip()
-              for row in csv.DictReader(
-                  Path("sources/staging/first_name_source_exclusions.tsv").open(
-                      encoding="utf-8", newline=""
-                  ),
-                  delimiter="\t",
-              )
-          }
           expected_inflection_surfaces = set()
           for row in inflection_rows:
               key = row["form"].strip().lower()

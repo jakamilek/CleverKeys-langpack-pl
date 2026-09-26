@@ -354,24 +354,6 @@ def validate_capitalization(
     raise SystemExit(f"Unknown capitalization policy {expected!r} for {context}")
 
 
-def load_lowercase_inflection_surfaces(
-    path: Path,
-    lowercase_names: set[str],
-) -> set[str]:
-    """Return generated inflection surfaces belonging to lowercase name homonyms."""
-    if not path.exists() or not lowercase_names:
-        return set()
-    forms: set[str] = set()
-    with path.open(encoding="utf-8", newline="") as handle:
-        reader = csv.DictReader(handle, delimiter="\t")
-        for row in reader:
-            name = row.get("name", "").strip().lower()
-            form = row.get("form", "").strip()
-            if name in lowercase_names and form:
-                forms.add(form.lower())
-    return forms
-
-
 def load_first_name_inflections(
     path: Path,
     surface_registry_policy: dict[str, tuple[str, str]] | None = None,
