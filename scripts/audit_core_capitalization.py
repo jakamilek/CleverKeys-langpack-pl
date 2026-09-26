@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Audit and resolve capitalization of immutable-core keys using source evidence.
 
-The immutable 100k membership is never changed here. Only the canonical surface
-(casing) may be corrected for a core key, based on independently retained source
-evidence. This audit runs before module assembly.
+The immutable 100k membership is never changed here. Every core key is audited.
+Only the canonical surface (casing) may be corrected; source modules provide
+additional evidence when available. The audit runs before module assembly.
 
 Rules:
 - source evidence is collected from all active module/source layers, including
@@ -240,8 +240,10 @@ def main() -> int:
     resolved: dict[str, dict[str, str]] = {}
     unresolved = []
 
-    for key in sorted(set(base) & set(evidence)):
-        rows = evidence[key]
+    # Every immutable-core key is audited. Source modules provide evidence when
+    # available, but their absence must never silently exclude a core key.
+    for key in sorted(base):
+        rows = evidence.get(key, [])
         policies = {str(r["policy"]) for r in rows if r["policy"] in {"lowercase", "capitalized"}}
         proper_lemmas = {
             lemma
@@ -271,6 +273,7 @@ def main() -> int:
             "resolved_policy": result_policy,
             "surface_changed": result_surface != base[key],
             "reason": reason,
+            "source_evidence_present": bool(rows),
             "source_policies": sorted(policies),
             "sources": sorted({str(r["source"]) for r in rows}),
             "common_lexical_homonym": bool(resolution["common_lexical_matches"]),
@@ -290,7 +293,9 @@ def main() -> int:
     summary = {
         "mode": "immutable-core-capitalization-audit",
         "core_keys": len(base),
-        "core_keys_with_source_capitalization_evidence": len(audited),
+        "core_keys_audited": len(audited),
+        "core_keys_with_source_capitalization_evidence": sum(1 for r in audited if r["source_evidence_present"]),
+        "core_keys_without_source_capitalization_evidence": sum(1 for r in audited if not r["source_evidence_present"]),
         "resolved_core_keys": len(resolved),
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
         "common_lexical_homonym_count": sum(1 for r in audited if r["common_lexical_homonym"]),
@@ -345,7 +350,9 @@ def main() -> int:
         return 1
 
     print(json.dumps({
-        "core_keys_with_source_capitalization_evidence": len(audited),
+        "core_keys_audited": len(audited),
+        "core_keys_with_source_capitalization_evidence": sum(1 for r in audited if r["source_evidence_present"]),
+        "core_keys_without_source_capitalization_evidence": sum(1 for r in audited if not r["source_evidence_present"]),
         "resolved_core_keys": len(resolved),
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
         "common_noun_homonym_count": sum(1 for r in audited if r["common_noun_homonym"]),
