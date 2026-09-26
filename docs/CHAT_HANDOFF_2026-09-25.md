@@ -962,3 +962,23 @@ Naprawa:
 Stan CI po tej poprawce należy odczytać ponownie na nowym SHA. Size-study #188 na `8832009...` pozostaje green.
 
 Następna bramka: sprawdzić nowy preview, a po green odczytać świeże artefakty i zweryfikować dokładnie kapitalizację TERC, miasta, `Łódź`, `Tomaszów`, imiona oraz net-new union. Dopiero potem paczka do testu swipe.
+
+
+## 31. Stan ciągłości po ponownym odczycie historii — 2026-09-26
+
+Przed dalszą pracą ponownie odczytano zapisane materiały wcześniejszych rozmów oraz zweryfikowano bieżący GitHub. Zachowane są w szczególności: zasady baseline GitHub, rozdzielenie membership/canonical casing/runtime ranking/swipe, historia proper-noun i morphology, testy 100k oraz zestaw swipe.
+
+Bieżący stan operacyjny:
+- branch: `ops/baseline-sync-2026-09-20`;
+- kodowa poprawka TERC: `345becc1fb2478a0d9a0273136ba0d033a277c3f`;
+- późniejszy commit techniczny tylko do ponownego wyzwolenia workflow: `8374dae9b97a5c7ec73f2b6eaa3e9440488ecdea`;
+- dokumentacyjne commity są późniejsze od kodu i nie należy ich mylić z wersją kodową używaną przez run #243.
+
+CI:
+- Preview #242: failed. Zdiagnozowany problem był w końcowej asercji CI, która wymagała oryginalnej kapitalizacji wszystkich nazw TERC mimo istniejącego `case_policy`.
+- Size-study #188: success na `88320090...`.
+- Preview #243: uruchomiony na `345becc...`; w chwili zapisu nadal `in_progress`.
+
+Nie uznawać preview za green przed rzeczywistym `conclusion=success` oraz kontrolą artefaktów.
+
+Najważniejsza ciągłość decyzji projektowych pozostaje niezmieniona: 100k core jest immutability baseline; systemowe reguły kapitalizacji mają pierwszeństwo przed ręcznym dopisywaniem wyjątków; TERC przymiotnikowy/powiatowy jest lowercase; miasta/gminy zachowują właściwą kapitalizację; `Łódź/łódź`, `Tomaszów/tomaszów`, 48 homonimów imiennych i 5 lowercase exceptions są osobnymi, audytowanymi przypadkami; dopiero po green preview i bezpośredniej kontroli CKDT wolno przejść do paczki telefonu/swipe.
