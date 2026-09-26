@@ -764,6 +764,7 @@ def main() -> int:
     terc_forms: set[str] = set()
     terc_surface_map: dict[str, str] = {}
     terc_case_policy_map: dict[str, str] = {}
+    terc_cross_level_lowercase_resolutions = 0
     if args.terc:
         with args.terc.open(encoding="utf-8", newline="") as handle:
             reader = csv.DictReader(handle, delimiter="\t")
@@ -789,16 +790,28 @@ def main() -> int:
                     else:
                         canonical = component.lower() if component_policy == "lowercase" else component
                     prior = terc_surface_map.get(lower)
-                    if prior is not None and prior != canonical:
-                        raise SystemExit(
-                            f"Conflicting TERC component casing {args.terc}:{line_no}: {prior!r} vs {canonical!r}"
-                        )
                     prior_policy = terc_case_policy_map.get(lower)
+                    if prior is not None and prior != canonical:
+                        if prior_policy == "lowercase" and component_policy == "capitalized":
+                            canonical = prior
+                            component_policy = prior_policy
+                            terc_cross_level_lowercase_resolutions += 1
+                        elif prior_policy == "capitalized" and component_policy == "lowercase":
+                            terc_cross_level_lowercase_resolutions += 1
+                        else:
+                            raise SystemExit(
+                                f"Conflicting TERC component casing {args.terc}:{line_no}: "
+                                f"{prior!r} vs {canonical!r}"
+                            )
                     if prior_policy is not None and prior_policy != component_policy:
-                        raise SystemExit(
-                            f"Conflicting TERC component policy {args.terc}:{line_no}: "
-                            f"{prior_policy!r} vs {component_policy!r}"
-                        )
+                        if {prior_policy, component_policy} == {"lowercase", "capitalized"}:
+                            component_policy = "lowercase"
+                            canonical = canonical.lower()
+                        else:
+                            raise SystemExit(
+                                f"Conflicting TERC component policy {args.terc}:{line_no}: "
+                                f"{prior_policy!r} vs {component_policy!r}"
+                            )
                     terc_surface_map[lower] = canonical
                     terc_case_policy_map[lower] = component_policy
                     terc_forms.add(lower)
@@ -1361,6 +1374,9 @@ def main() -> int:
         "reviewed_error_rows": len(error_rows),
         "reviewed_error_forms_present_in_candidates": sorted(blocked_errors & set(ranked)),
         "kept": len(keep),
+        "terc_component_casing": {
+            "cross_level_lowercase_resolutions": terc_cross_level_lowercase_resolutions,
+        },
         "surface_registry": {
             "keys": len(surface_registry),
             "conflicts": registry_conflicts,
