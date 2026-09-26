@@ -46,10 +46,8 @@ def add_source(
     surface_field: str,
     source: str,
     policy_field: str | None = None,
-    special_policy: dict[str, str] | None = None,
     context_fields: tuple[str, ...] = (),
 ) -> None:
-    special_policy = special_policy or {}
     for row in rows:
         raw = row.get(surface_field, "").strip()
         if not raw:
@@ -76,7 +74,7 @@ def add_source(
                 if base_policy == "lowercase" or component[:1].islower()
                 else "capitalized"
             )
-            policy = special_policy.get(key, source_component_policy)
+            policy = source_component_policy
             candidate = component
             if policy == "lowercase":
                 candidate = component.lower()
@@ -151,7 +149,6 @@ def main() -> int:
         first_name_rows,
         "form",
         "first-name-inflection",
-        special_policy=name_policy,
         context_fields=("name", "case"),
     )
     add_source(
