@@ -857,7 +857,8 @@ Naprawa:
 - commit 52aa2abe5d6a7c48cc98288ffe2a382a083c0c5e doprecyzował kontrakt w nagłówku modułowego audytu i uruchomił nowe CI.
 
 Stan branch:
-- ostatni zapisany commit: 52aa2abe5d6a7c48cc98288ffe2a382a083c0c5e;
+- ostatni commit zmieniający kod: 52aa2abe5d6a7c48cc98288ffe2a382a083c0c5e;
+- aktualny HEAD branch jest późniejszym commitem dokumentacyjnym; przed dalszą pracą zawsze odczytaj rzeczywisty HEAD z GitHub.
 - nie wykonano merge/promote;
 - CKDT 100k nie został automatycznie zmieniony.
 
