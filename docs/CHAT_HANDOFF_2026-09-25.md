@@ -589,3 +589,20 @@ Najpierw zweryfikować #170 i #146. Następnie sprawdzić rzeczywiste artefakty 
 Nie wolno używać historycznej wartości 2,611 jako aktualnego net-new kosztu, ponieważ obejmowała wycofany pilot. Po zakończeniu obecnego size-study należy odczytać nowy `module-study-report.json` i `module-frequency-report.json` oraz dopiero wtedy podejmować decyzję o kalibracji selekcji powiatów.
 
 Aktualny branch HEAD: `a5ff83b0a522293aec68c47f74a13277f624e2d4`.
+
+
+## 18. Decyzja architektoniczna 2026-09-26 — identity vs dictionary surface
+
+Rozróżniamy dwie warstwy:
+- tożsamość obiektu źródłowego: dla TERC `level + terc`, zachowywana w pełnym audycie;
+- tożsamość klucza słownikowego: case-insensitive `surface_key`, używana do unii i pojemności CKDT.
+
+W efekcie dwie różne gminy/powiaty o tej samej nazwie nie są dublowane w słowniku. Ich dwa identyfikatory i provenance pozostają w audycie, a CKDT dostaje jeden klucz powierzchniowy.
+
+Kapitalizacja nie może wynikać wyłącznie z kategorii modułu. Każda finalna powierzchnia musi mieć audytowaną politykę kapitalizacji. Dla TERC należy rozróżniać m.in. województwa i powiaty przymiotnikowe (mała litera), miasta (wielka litera) oraz gminy zależnie od tego, czy nazwa ma postać rzeczownikową/proprialną czy przymiotnikową. Konflikt kapitalizacji dla tego samego klucza case-insensitive nie może być rozstrzygany automatycznie.
+
+Nowa polityka została zapisana w:
+`docs/PL_MODULE_SURFACE_IDENTITY_AND_CAPITALIZATION_POLICY_2026-09-26.md`
+(commit `e246e849b51bc39dba382e3d3522f1bfe7ace520`).
+
+Przy dalszej implementacji nie cofać ochrony provenance przez `level + terc`, ale także nie pozwalać, aby identyfikator jednostki powodował duplikację kluczy w finalnym CKDT.
