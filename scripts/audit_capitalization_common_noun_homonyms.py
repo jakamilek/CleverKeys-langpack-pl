@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# CI trigger marker; logic unchanged.\n"""Audit and resolve capitalization for every active additive-module key.
+# CI trigger marker; logic unchanged.
+"""Audit and resolve capitalization for every active additive-module key.
 
 This audit is the module-side decision layer built on the single project-wide
 capitalization resolver. It intentionally does not use immutable-core membership
