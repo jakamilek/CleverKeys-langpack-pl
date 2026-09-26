@@ -252,7 +252,8 @@ Kontynuacja po synchronizacji schematu TERC:
 ## Aktualizacja 2026-09-26 — ostatnie decyzje kapitalizacji i pipeline
 
 Branch roboczy: ops/baseline-sync-2026-09-20
-Ostatni commit: 52aa2abe5d6a7c48cc98288ffe2a382a083c0c5e
+Ostatni commit zmieniający kod: 52aa2abe5d6a7c48cc98288ffe2a382a083c0c5e
+Aktualny HEAD branch zawiera późniejsze commity dokumentacyjne; przed pracą sprawdź rzeczywisty HEAD.
 
 Naprawione problemy architektoniczne:
 1. surface_components.py usuwa angielski possessive 's / ’s / ＇s jako niefaktyczny komponent CKDT.
