@@ -18,6 +18,7 @@ import json
 from pathlib import Path
 
 from surface_components import component_surfaces
+from capitalization_rules import resolve_capitalization
 
 COMMON_NOUN_CLASS = "nazwa_pospolita"
 
@@ -80,54 +81,9 @@ def load_surface_policy(path: Path) -> dict[str, tuple[str, str]]:
     return out
 
 
-def common_lexical_matches(morfeusz, surface: str) -> list[dict[str, object]]:
-    analyses = morfeusz.analyse(surface.lower())
-    matches: list[dict[str, object]] = []
-    ordinary_pos = {"subst", "adj", "adv", "verb", "part", "prep", "conj", "num", "ger", "ppron", "pron"}
-    for item in analyses:
-        if len(item) < 3:
-            continue
-        payload = item[2]
-        if not isinstance(payload, (tuple, list)) or len(payload) < 4:
-            continue
-        orth = str(payload[0])
-        lemma = str(payload[1])
-        tag = str(payload[2])
-        classes = payload[3] if isinstance(payload[3], (tuple, list)) else []
-        classes = [str(x) for x in classes]
-        pos = tag.split(":", 1)[0]
-        proper_classes = [cls for cls in classes if cls.startswith("nazwa_") and cls != COMMON_NOUN_CLASS]
-        if pos in ordinary_pos and not proper_classes:
-            matches.append(
-                {
-                    "orth": orth,
-                    "lemma": lemma,
-                    "tag": tag,
-                    "classes": classes,
-                }
-            )
-    return matches
-
-def common_adjective_matches(morfeusz, surface: str) -> list[dict[str, object]]:
-    """Return ordinary adjective analyses relevant to capitalization orthography."""
-    matches = []
-    for item in morfeusz.analyse(surface.lower()):
-        if len(item) < 3:
-            continue
-        payload = item[2]
-        if not isinstance(payload, (tuple, list)) or len(payload) < 4:
-            continue
-        orth, lemma, tag = str(payload[0]), str(payload[1]), str(payload[2])
-        classes = payload[3] if isinstance(payload[3], (tuple, list)) else []
-        classes = [str(x) for x in classes]
-        if tag.startswith("adj:") and "nazwa_pospolita" not in classes:
-            matches.append({"orth": orth, "lemma": lemma, "tag": tag, "classes": classes})
-    return matches
-
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--first-name-inflections", type=Path, required=True)
-    ap.add_argument("--first-name-surface-policy", type=Path, required=True)
     ap.add_argument("--cities", type=Path, required=True)
     ap.add_argument("--city-inflections", type=Path, required=True)
     ap.add_argument("--terc-source", type=Path, required=True)
@@ -150,11 +106,6 @@ def main() -> int:
 
     import morfeusz2
 
-    lower_name_policies = {
-        row["name"].strip().lower()
-        for row in read_rows(args.first_name_surface_policy)
-        if row["policy"].strip() == "lowercase_common_noun"
-    }
     first_name_rows = read_rows(args.first_name_inflections)
     selected_first_names = {
         row["name"].strip().lower()
@@ -249,26 +200,13 @@ def main() -> int:
             authoritative = core_resolved[key]
             audited.append({
                 "surface_key": key,
-                "capitalized_candidates": sorted({
-                    (r["surface"], r["source"])
-                    for r in rows
-                    if r["policy"] == "capitalized"
-                }),
+                "capitalized_candidates": sorted({(r["surface"], r["source"]) for r in rows if r["policy"] == "capitalized"}),
                 "sources": sorted({r["source"] for r in rows}),
-                "common_lexical_homonym": None,
-                "common_noun_homonym": None,
-                "common_lexical_matches": [],
-                "common_noun_matches": [],
-                "explicit_surface_policy": (
-                    {"surface": policy[key][0], "policy": policy[key][1]}
-                    if key in policy
-                    else None
-                ),
-                "resolved": True,
-                "resolution_reason": "core-authoritative",
-                "core_authoritative": True,
-                "canonical_surface": authoritative["surface"],
-                "canonical_policy": authoritative["policy"],
+                "common_lexical_homonym": None, "common_noun_homonym": None,
+                "common_lexical_matches": [], "common_adjective_matches": [], "common_noun_matches": [],
+                "explicit_surface_policy": ({"surface": policy[key][0], "policy": policy[key][1]} if key in policy else None),
+                "resolved": True, "resolution_reason": "core-authoritative",
+                "core_authoritative": True, "canonical_surface": authoritative["surface"], "canonical_policy": authoritative["policy"],
             })
             resolved_surfaces[key] = authoritative
             core_authoritative_count += 1
@@ -279,83 +217,27 @@ def main() -> int:
             continue
         capitalized_candidate_count += 1
         policies = {r["policy"] for r in rows if r["policy"] in {"lowercase", "capitalized"}}
-        matches = common_lexical_matches(morfeusz, key)
-        adjective_matches = common_adjective_matches(morfeusz, key)
-        has_common_lexical = bool(matches)
-        has_common_noun = any(COMMON_NOUN_CLASS in m.get("classes", []) for m in matches)
-        resolution = policy.get(key)
-        resolved = True
-        resolution_reason = None
-
-        if resolution is not None:
-            canonical, case_policy = resolution
-            if canonical.lower() != key:
-                resolved = False
-                resolution_reason = "policy-key-mismatch"
-            else:
-                resolution_reason = "explicit-surface-registry-policy"
-        elif key in lower_name_policies:
-            resolution_reason = "explicit-first-name-lowercase-common-noun-policy"
-        elif (
-            any(r["source"] == "first-name-inflection" for r in rows)
-            and policies == {"capitalized"}
-        ):
-            # First-name inflection surfaces are explicitly generated as name forms.
-            # Common-noun homonymy does not erase their capitalization unless the
-            # name has an audited lowercase-common-noun policy.
-            resolution_reason = "first-name-category-capitalized-policy"
-        elif adjective_matches and not has_common_noun:
-            resolution_reason = "verified-adjective-orthography-lowercase"
-        elif has_common_noun:
-            resolution_reason = "common-noun-homonym-default-lowercase"
-        elif policies == {"lowercase"}:
-            resolution_reason = "lowercase-source-evidence"
-        elif len(policies) > 1:
-            resolved = False
-            resolution_reason = "mixed-source-capitalization-policy-without-explicit-resolution"
-        else:
-            resolution_reason = "capitalized-source-without-common-noun-homonym"
-
-        if has_common_noun:
-            common_noun_count += 1
-
+        resolution = resolve_capitalization(key=key, policies=policies, morfeusz=morfeusz, explicit_policy=policy.get(key))
         row = {
             "surface_key": key,
-            "capitalized_candidates": sorted(
-                {(r["surface"], r["source"]) for r in capitalized}
-            ),
+            "capitalized_candidates": sorted({(r["surface"], r["source"]) for r in capitalized}),
             "sources": sorted({r["source"] for r in rows}),
-            "common_lexical_homonym": has_common_lexical,
-            "common_noun_homonym": any(COMMON_NOUN_CLASS in m.get("classes", []) for m in matches),
-            "common_lexical_matches": matches,
-            "common_adjective_matches": adjective_matches,
-            "common_noun_matches": [m for m in matches if COMMON_NOUN_CLASS in m.get("classes", [])],
-            "explicit_surface_policy": (
-                {"surface": resolution[0], "policy": resolution[1]}
-                if resolution is not None
-                else None
-            ),
-            "resolved": resolved,
-            "resolution_reason": resolution_reason,
+            "common_lexical_homonym": bool(resolution["common_lexical_matches"]),
+            "common_noun_homonym": bool(resolution["common_noun_matches"]),
+            "common_lexical_matches": resolution["common_lexical_matches"],
+            "common_adjective_matches": resolution["common_adjective_matches"],
+            "common_noun_matches": resolution["common_noun_matches"],
+            "explicit_surface_policy": ({"surface": policy[key][0], "policy": policy[key][1]} if key in policy else None),
+            "resolved": bool(resolution["resolved"]),
+            "resolution_reason": str(resolution["reason"]),
         }
         audited.append(row)
-        if resolved:
-            canonical = (
-                resolution[0] if resolution is not None
-                else key if (
-                    resolution_reason == "explicit-first-name-lowercase-common-noun-policy"
-                    or resolution_reason == "common-noun-homonym-default-lowercase"
-                )
-                else key[:1].upper() + key[1:]
-            )
-            canonical_policy = "lowercase" if canonical == key else "capitalized"
-            resolved_surfaces[key] = {
-                "surface": canonical,
-                "policy": canonical_policy,
-                "reason": resolution_reason or "",
-            }
+        if resolution["resolved"]:
+            resolved_surfaces[key] = {"surface": str(resolution["surface"]), "policy": str(resolution["policy"]), "reason": str(resolution["reason"])}
         else:
             unresolved.append(row)
+        if resolution["common_noun_matches"]:
+            common_noun_count += 1
 
     summary = {
         "mode": "generic-capitalization-common-noun-audit",
