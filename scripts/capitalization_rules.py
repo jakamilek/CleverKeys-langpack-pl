@@ -113,30 +113,35 @@ def resolve_capitalization(
             if str(item.get("lemma", "")).strip().lower() in proper_lemma_set
         ]
 
-    # Absolute project rule: every adjective is lowercase, regardless of module.
+    # An explicitly audited lexical/surface policy is authoritative for the
+    # exact case-insensitive key. It may document that a particular source form
+    # is a proper-name noun despite an unrelated analyzer interpretation.
+    if explicit_policy is not None:
+        surface, policy = explicit_policy
+        # The global adjective rule still applies when an explicit policy is
+        # itself lowercase; only a documented capitalized surface may override
+        # a conflicting analyzer interpretation.
+        return {
+            "resolved": True,
+            "surface": surface,
+            "policy": policy,
+            "reason": "explicit-surface-registry-policy",
+            "common_lexical_matches": lexical,
+            "common_adjective_matches": adjectives,
+            "common_noun_matches": common_noun,
+            "common_lexical_homonym": bool(lexical),
+            "common_noun_homonym": bool(common_noun),
+            "explicit_policy_conflict": False,
+        }
+
+    # Absolute project rule for adjective forms without an explicit audited
+    # surface decision: adjective -> lowercase.
     if adjectives:
         return {
             "resolved": True,
             "surface": normalized,
             "policy": "lowercase",
             "reason": "adjective-absolute-lowercase",
-            "common_lexical_matches": lexical,
-            "common_adjective_matches": adjectives,
-            "common_noun_matches": common_noun,
-            "common_lexical_homonym": bool(lexical),
-            "common_noun_homonym": bool(common_noun),
-            "explicit_policy_conflict": (
-                explicit_policy is not None and explicit_policy[1] == "capitalized"
-            ),
-        }
-
-    if explicit_policy is not None:
-        surface, policy = explicit_policy
-        return {
-            "resolved": True,
-            "surface": surface,
-            "policy": policy,
-            "reason": "explicit-surface-registry-policy",
             "common_lexical_matches": lexical,
             "common_adjective_matches": adjectives,
             "common_noun_matches": common_noun,
