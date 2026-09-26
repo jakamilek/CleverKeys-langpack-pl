@@ -684,3 +684,11 @@ Run #151 na `f0eb0d0b...` zakończył się sukcesem. Raport modułów wykazał:
 TERC w tym badaniu: 2263 unikalne powierzchnie w selected TERC; 755 już w rdzeniu. Źródłowy TERC nadal zawiera 2875 jednostek (16/380/2479), a 288 kluczy nazw występuje w więcej niż jednej jednostce źródłowej. Oznacza to, że rozdzielenie tożsamości jednostki i powierzchni działa zgodnie z przyjętą zasadą.
 
 Te liczby są ważnym pomiarem bieżącej architektury, ale po poprawce filtra aliasów oraz po wdrożeniu rejestru należy je potwierdzić w świeżym size-study przed decyzjami końcowymi.
+
+
+## 22. Doprecyzowanie rejestru powierzchni — 2026-09-26
+
+Rejestr powierzchni w budowniczym analizuje konflikty wyłącznie dla kluczy, które mają zostać zachowane w końcowym słowniku. Formy odrzucone wcześniej przez twarde blokady lub inne bramki nie powodują fałszywego zatrzymania budowy.
+
+Commit:
+`5ab8372a0446f81a3c08b61f3e302438454e56b5`
