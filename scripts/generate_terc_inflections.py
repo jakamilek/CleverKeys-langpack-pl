@@ -122,14 +122,14 @@ def main() -> int:
                 ):
                     generated.add((case_tag, form[:1].upper() + form[1:]))
 
-        policy = names[lower_name].get("case_policy", "capitalized")
+        policy = row_meta.get("case_policy", "capitalized")
         for case_tag, surface in sorted(generated, key=lambda x: (CASES.index(x[0]), x[1])):
             surface = surface.lower() if policy == "lowercase" else surface[:1].upper() + surface[1:]
             out.append({
                 "category": "terc",
                 "name": name,
-                "level": names[lower_name]["level"],
-                "terc": names[lower_name]["terc"],
+                "level": row_meta["level"],
+                "terc": row_meta["terc"],
                 "number": "sg",
                 "case": case_tag,
                 "form": surface,
