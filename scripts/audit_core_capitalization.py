@@ -162,11 +162,17 @@ def main() -> int:
         row["name"].strip().lower(): row["policy"].strip()
         for row in read_rows(args.first_name_surface_policy)
     }
+    first_name_rows = read_rows(args.first_name_inflections)
+    selected_first_names = {
+        row["name"].strip().lower()
+        for row in first_name_rows
+        if row.get("name", "").strip()
+    }
     evidence: dict[str, list[dict[str, object]]] = {}
 
     add_source(
         evidence,
-        read_rows(args.first_name_inflections),
+        first_name_rows,
         "form",
         "first-name-inflection",
         special_policy=name_policy,
@@ -269,17 +275,29 @@ def main() -> int:
                 "policies": sorted(policies),
             })
         elif capitalized_rows:
-            if noun_matches:
-                unresolved.append({
-                    "key": key,
-                    "reason": "common-lexical-homonym-requires-explicit-resolution",
-                    "common_noun_matches": noun_matches,
-                    "sources": sorted({str(r["source"]) for r in rows}),
-                })
+            if key in name_policy and name_policy[key] == "lowercase_common_noun":
+                result_surface = key
+                result_policy = "lowercase"
+                reason = "explicit-first-name-lowercase-policy"
+            elif key in selected_first_names:
+                # Selected first names have an explicit category policy: preserve
+                # their proper-name capitalization unless the reviewed policy says
+                # the lexical/common-noun reading should win.
+                result_surface = key[:1].upper() + key[1:]
+                result_policy = "capitalized"
+                reason = "first-name-category-capitalized-policy"
+            elif noun_matches:
+                # For word-oriented CKDT a common lexical reading is the safer
+                # canonical surface: the proper-name capitalization is retained
+                # in source evidence but does not override an ordinary lowercase
+                # lexical use without an explicit audited exception.
+                result_surface = key
+                result_policy = "lowercase"
+                reason = "common-lexical-homonym-default-lowercase"
             else:
                 result_surface = key[:1].upper() + key[1:]
                 result_policy = "capitalized"
-                reason = "capitalized-source-without-common-noun-homonym"
+                reason = "capitalized-source-without-common-lexical-homonym"
         elif policies == {"lowercase"}:
             result_surface = key
             result_policy = "lowercase"
