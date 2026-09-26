@@ -197,11 +197,6 @@ def main() -> int:
             for key, value in sorted(core_resolved.items())
             if value["surface"] != base.get(key, value["surface"])
         ],
-        "explicit_surface_resolutions": [
-            {"key": key, "surface": value[0], "policy": value[1]}
-            for key, value in sorted(overrides.items())
-            if key in registry
-        ],
     }
     args.out_wordlist.write_text(
         "# CleverKeys Polish production-shaped additive module phone-test list\n"
