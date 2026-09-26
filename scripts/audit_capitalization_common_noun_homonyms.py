@@ -112,12 +112,6 @@ def main() -> int:
         for row in first_name_rows
         if row.get("name", "").strip()
     }
-    excluded_names = {
-        row["name"].strip().lower()
-        for row in read_rows(args.first_name_surface_policy)
-        if row["policy"].strip() == "exclude"
-    }
-
     candidates: dict[str, list[dict[str, str]]] = {}
     add_candidates(
         candidates,
@@ -125,8 +119,6 @@ def main() -> int:
         "form",
         None,
         "first-name-inflection",
-        lower_name_policies,
-        "name",
     )
     add_candidates(candidates, read_rows(args.cities), "name", None, "city")
     add_candidates(
