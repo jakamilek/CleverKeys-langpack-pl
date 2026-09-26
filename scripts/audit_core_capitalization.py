@@ -279,6 +279,16 @@ def main() -> int:
                 result_surface = key
                 result_policy = "lowercase"
                 reason = "explicit-first-name-lowercase-policy"
+            elif (
+                any(r["source"] == "first-name-inflection" for r in rows)
+                and policies == {"capitalized"}
+            ):
+                # Selected first-name surfaces are explicitly audited as name forms.
+                # A common-noun analysis must not erase that capitalization; only an
+                # explicit lowercase name policy or a cross-source policy conflict can.
+                result_surface = key[:1].upper() + key[1:]
+                result_policy = "capitalized"
+                reason = "first-name-category-capitalized-policy"
             elif noun_matches:
                 # A common lexical reading overrides capitalization even when another
                 # source also requests a proper-name surface. The lower-case surface
@@ -301,10 +311,6 @@ def main() -> int:
                 result_surface = base[key]
                 result_policy = "lowercase"
                 reason = "unresolved-mixed-policy"
-            elif key in selected_first_names:
-                result_surface = key[:1].upper() + key[1:]
-                result_policy = "capitalized"
-                reason = "first-name-category-capitalized-policy"
             else:
                 result_surface = key[:1].upper() + key[1:]
                 result_policy = "capitalized"

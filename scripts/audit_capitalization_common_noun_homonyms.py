@@ -278,6 +278,14 @@ def main() -> int:
                 resolution_reason = "explicit-surface-registry-policy"
         elif key in lower_name_policies:
             resolution_reason = "explicit-first-name-lowercase-common-noun-policy"
+        elif (
+            any(r["source"] == "first-name-inflection" for r in rows)
+            and policies == {"capitalized"}
+        ):
+            # First-name inflection surfaces are explicitly generated as name forms.
+            # Common-noun homonymy does not erase their capitalization unless the
+            # name has an audited lowercase-common-noun policy.
+            resolution_reason = "first-name-category-capitalized-policy"
         elif has_common_lexical:
             resolution_reason = "common-lexical-homonym-default-lowercase"
         elif policies == {"lowercase"}:
@@ -285,8 +293,6 @@ def main() -> int:
         elif len(policies) > 1:
             resolved = False
             resolution_reason = "mixed-source-capitalization-policy-without-explicit-resolution"
-        elif key in selected_first_names:
-            resolution_reason = "first-name-category-capitalized-policy"
         else:
             resolution_reason = "capitalized-source-without-common-lexical-homonym"
 
@@ -335,7 +341,8 @@ def main() -> int:
         "oracle": "Morfeusz 2 / SGJP",
         "rule": (
             "Capitalization candidates are audited independently of immutable-core "
-            "membership; a common-noun homonym requires an explicit lowercase resolution."
+            "membership; common-noun homonymy defaults lowercase unless an explicitly "
+            "audited first-name surface or explicit surface policy resolves capitalization."
         ),
         "capitalized_candidate_surface_count": capitalized_candidate_count,
         "common_noun_homonym_surface_count": common_noun_count,
