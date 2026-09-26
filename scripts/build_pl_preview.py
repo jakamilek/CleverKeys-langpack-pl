@@ -958,6 +958,24 @@ def main() -> int:
             ranked.append(word)
             seen.add(word)
 
+    # Add all source-backed module surfaces before calculating frequency/spelling
+    # evidence. Every candidate that enters the common ranking/filtering pipeline must
+    # have a rank and Polish-frequency value, including TERC source names that are not
+    # present in the selected inflection layer.
+    explicit_module_forms = (
+        terc_forms
+        | terc_inflection_forms
+        | country_forms
+        | country_inflection_forms
+        | capital_forms
+        | capital_inflection_forms
+        | custom_forms
+    )
+    for word in sorted(explicit_module_forms):
+        if word not in seen:
+            ranked.append(word)
+            seen.add(word)
+
     # Capture the candidate universe before the explicit first-name/city layers are
     # appended. This lets the final capacity audit identify words displaced specifically
     # by those additions.
@@ -1017,24 +1035,6 @@ def main() -> int:
 
     keep: dict[str, str] = {}
     drop: dict[str, str] = {}
-
-    # Add source-backed category surfaces to the candidate universe before the
-    # common quality filters. These rows are additive modules: they are not ranked
-    # by wordfreq and therefore must not disappear merely because they fall outside
-    # the frequency candidate window. Their actual net cost is measured separately.
-    explicit_module_forms = (
-        terc_forms
-        | terc_inflection_forms
-        | country_forms
-        | country_inflection_forms
-        | capital_forms
-        | capital_inflection_forms
-        | custom_forms
-    )
-    for word in sorted(explicit_module_forms):
-        if word not in seen:
-            ranked.append(word)
-            seen.add(word)
 
     rank_of = {word: rank for rank, word in enumerate(ranked)}
 
