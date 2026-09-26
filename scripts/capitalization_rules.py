@@ -87,9 +87,11 @@ def resolve_capitalization(
     policies: Iterable[str],
     morfeusz,
     explicit_policy: tuple[str, str] | None = None,
+    proper_lemma_keys: Iterable[str] | None = None,
 ) -> dict[str, object]:
     """Resolve one key using the single project-wide precedence order."""
     normalized = key.lower()
+    proper_lemma_set = {str(value).strip().lower() for value in (proper_lemma_keys or ()) if str(value).strip()}
     policy_set = {
         value for value in policies if value in {"lowercase", "capitalized"}
     }
@@ -99,6 +101,17 @@ def resolve_capitalization(
         item for item in lexical
         if COMMON_NOUN_CLASS in item.get("classes", [])
     ]
+    # A source-backed proper-name inflection may share an orthographic form with
+    # an unrelated ordinary lexical analysis. Only a common-noun analysis whose
+    # lemma is the same as one of the source proper-name lemmas is a true
+    # source-level homonym conflict. Without lineage information, retain the
+    # historical conservative behaviour and treat any common noun analysis as
+    # a lowercase collision.
+    if proper_lemma_set:
+        common_noun = [
+            item for item in common_noun
+            if str(item.get("lemma", "")).strip().lower() in proper_lemma_set
+        ]
 
     # Absolute project rule: every adjective is lowercase, regardless of module.
     if adjectives:
