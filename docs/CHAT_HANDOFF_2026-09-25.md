@@ -982,3 +982,12 @@ CI:
 Nie uznawać preview za green przed rzeczywistym `conclusion=success` oraz kontrolą artefaktów.
 
 Najważniejsza ciągłość decyzji projektowych pozostaje niezmieniona: 100k core jest immutability baseline; systemowe reguły kapitalizacji mają pierwszeństwo przed ręcznym dopisywaniem wyjątków; TERC przymiotnikowy/powiatowy jest lowercase; miasta/gminy zachowują właściwą kapitalizację; `Łódź/łódź`, `Tomaszów/tomaszów`, 48 homonimów imiennych i 5 lowercase exceptions są osobnymi, audytowanymi przypadkami; dopiero po green preview i bezpośredniej kontroli CKDT wolno przejść do paczki telefonu/swipe.
+
+
+## 2026-09-26 — unified capitalization architecture
+
+The project now uses one capitalization resolver for all source modules: `scripts/capitalization_rules.py`. The absolute top rule is **any adjective -> lowercase**, even when the token originates in a first-name, locality, TERC, country, capital or custom module. Verified common-noun homonymy is likewise handled by the shared resolver, not by a first-name-specific exception.
+
+The former five lowercase first-name exceptions and 48/5 hard-coded CI assertions are retired. `Oleksandr` is retained only as a source-eligibility exclusion in `sources/staging/first_name_source_exclusions.tsv` because it is not accepted as a Polish first name.
+
+Do not restore `sources/staging/first_name_surface_policy.tsv`.

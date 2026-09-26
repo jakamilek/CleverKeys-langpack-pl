@@ -341,3 +341,12 @@ Najświeższy stan:
 - `8374dae9...` jest późniejszym technicznym commitem workflow, bez zmiany merytorycznej reguły TERC.
 
 Po zakończeniu #243 sprawdź najpierw rzeczywisty wynik i failing step, jeśli wystąpi. Następnie świeże artefakty. Nie traktuj żadnego starego ZIP-a jako finalnego po późniejszych zmianach. Nie wykonuj merge/promote.
+
+
+## Superseding decision — 2026-09-26: one capitalization rule for all modules
+
+Do not restore first-name-specific capitalization rules. Use `scripts/capitalization_rules.py` for first names and every other active source module.
+
+Absolute precedence: **adjective -> lowercase** regardless of source module. Then documented lexical policy, common-noun homonym -> lowercase, lowercase-only source evidence, mixed-source ambiguity -> unresolved, otherwise source-backed proper-name -> capitalized.
+
+`Oleksandr` is a source-eligibility exclusion only, stored in `sources/staging/first_name_source_exclusions.tsv`; it is not a casing exception. Never hard-code the former five lowercase names or 48 capitalized homonyms.

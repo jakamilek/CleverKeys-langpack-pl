@@ -59,7 +59,7 @@ Every data change should be committed in small atomic commits on a work branch. 
 Current snapshot: see `docs/BASELINE_SYNC_2026-09-20.md`.
 
 
-9. First-name collision policy — Morfeusz/SGJP common-noun homonym detection is an audit signal, not an automatic rejection rule. User-reviewed surface policy is authoritative: `Jagoda`, `Lilia`, `Malina`, `Melisa`, and `Róża` are emitted only in lowercase as ordinary-word surfaces; the other 48 detected common-noun homonyms remain capitalized as first names; `Oleksandr` is excluded completely. `Maila` is not a special-case first-name policy entry; the ordinary word form `maila` may remain through the normal vocabulary/morphology pipeline. The explicit decisions live in `sources/staging/first_name_surface_policy.tsv` and must be applied after candidate selection but before canonical proper-noun casing.
+9. First-name collision policy — Morfeusz/SGJP common-noun homonym detection is an audit signal, not an automatic rejection rule. The common-noun homonym signal is processed by the same shared capitalization resolver as every other source module. There is no first-name-specific casing exception.
 
 
 ### First-name homonym policy (2026-09-23)
@@ -72,3 +72,16 @@ The flat CKDT V2 runtime requires Polish first-name inflected forms to be explic
 ## City layer
 
 Official GUS TERYT/SIMC is the authoritative source for city names. The current flat CKDT layer accepts one-token Polish city names as canonical capitalized surfaces. Full singular inflection is generated for the top 300 one-token city names by Polish wordfreq frequency plus explicit reviewed priority cities such as Gdynia. Multiword and hyphenated city names are kept out of this one-token layer rather than being altered; they belong in the future phrase layer.
+
+
+## Superseding capitalization architecture — 2026-09-26
+
+First names are a normal source module. They do not have their own capitalization authority.
+
+The single resolver is `scripts/capitalization_rules.py`. Its precedence is: (1) any adjective analysis -> lowercase, absolutely; (2) documented explicit lexical policy; (3) verified ordinary common-noun homonym -> lowercase; (4) lowercase-only source evidence; (5) mixed source policies -> unresolved; (6) otherwise source-backed proper-name evidence -> capitalized.
+
+This applies equally to first names, cities, TERC, countries, capitals and custom module surfaces.
+
+`Oleksandr` remains excluded separately at source eligibility level because it is not accepted as a Polish first name. The exclusion is stored in `sources/staging/first_name_source_exclusions.tsv` and is not a capitalization rule.
+
+The former `first_name_surface_policy.tsv`, its five lowercase entries and the hard-coded 48/5 acceptance criteria are retired. Historical mentions of that design above are superseded by this section.
