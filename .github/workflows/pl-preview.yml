@@ -1,4 +1,5 @@
 name: Polish language pack preview
+# Keep artifact verification aligned with source case_policy; no promotion occurs in preview.
 
 on:
   push:
