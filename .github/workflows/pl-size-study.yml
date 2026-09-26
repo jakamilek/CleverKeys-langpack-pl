@@ -187,11 +187,16 @@ jobs:
                   len(words[size]),
                   reports[size]["candidate_count"],
               )
+          from scripts.surface_components import component_surfaces
           terc_rows = list(__import__("csv").DictReader(
-              Path("build/pl-terc-flat.tsv").open(encoding="utf-8", newline=""),
+              Path("build/pl-terc-source.tsv").open(encoding="utf-8", newline=""),
               delimiter="\t",
           ))
-          terc_names = {row["name"] for row in terc_rows}
+          terc_names = {
+              component.lower()
+              for row in terc_rows
+              for component in component_surfaces(row["name"])
+          }
           terc_full_rows = list(__import__("csv").DictReader(
               Path("build/pl-terc-inflections.tsv").open(encoding="utf-8", newline=""),
               delimiter="\t",
@@ -273,12 +278,13 @@ jobs:
                   assert manifest["version"] == 2, (size, manifest)
                   assert manifest["wordCount"] == len(words[size]), (size, manifest)
                   assert manifest["hasPrefixBoost"] is False, (size, manifest)
-              missing_terc = sorted({w.lower() for w in terc_names} - ckdt[size])
+              missing_terc = sorted(terc_names - ckdt[size])
               assert not missing_terc, f"{size}: missing TERC names: {', '.join(missing_terc)}"
               missing_terc_inflections = sorted({w.lower() for w in terc_inflections} - ckdt[size])
               assert not missing_terc_inflections, f"{size}: missing TERC inflections: {', '.join(missing_terc_inflections)}"
 
-              missing_city = sorted({w.lower() for w in city_names} - ckdt[size])
+              city_components = {component.lower() for city_name in city_names for component in component_surfaces(city_name)}
+              missing_city = sorted(city_components - ckdt[size])
               assert not missing_city, f"{size}: missing official city names: {', '.join(missing_city)}"
               missing_city_inflections = sorted({w.lower() for w in city_inflections} - ckdt[size])
               assert not missing_city_inflections, (
