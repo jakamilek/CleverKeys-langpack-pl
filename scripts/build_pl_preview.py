@@ -1200,13 +1200,12 @@ def main() -> int:
         override = surface_registry_policy.get(key)
         if override is not None:
             surface, policy = override
-            offered = {c["surface"] for c in candidates}
-            if surface not in offered:
+            if surface.lower() != key:
                 registry_conflicts.append({
                     "key": key,
                     "candidates": sorted(variants),
                     "sources": sorted({c["source"] for c in explicit}),
-                    "override": {"surface": surface, "policy": policy, "status": "not-a-contributing-candidate"},
+                    "override": {"surface": surface, "policy": policy, "status": "different-case-insensitive-key"},
                 })
                 continue
             registry_resolutions.append({
