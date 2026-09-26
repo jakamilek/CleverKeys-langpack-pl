@@ -19,6 +19,7 @@ on:
       - "sources/staging/historical_name_candidates.tsv"
       - "sources/staging/first_name_surface_policy.tsv"
       - "sources/staging/custom_manual.tsv"
+      - "sources/staging/surface_registry_policy.tsv"
       - "scripts/audit_name_history.py"
       - "scripts/fetch_teryt_simc.py"
       - "scripts/fetch_teryt_terc.py"
