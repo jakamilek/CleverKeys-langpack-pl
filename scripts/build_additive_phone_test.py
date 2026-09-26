@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build the production-shaped additive module preview over the immutable 100k core."""
-
+# Casing is consumed exclusively from shared capitalization-audit outputs; this builder never derives it.\n
 from __future__ import annotations
 
 import argparse
