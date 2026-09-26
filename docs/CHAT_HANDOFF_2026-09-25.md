@@ -802,3 +802,37 @@ Kryterium akceptacji:
 5. nie wykonywać automatycznego merge/promote.
 
 Nie zmieniono CKDT core ani zasad 100k.
+
+
+## 26. Kontynuacja 2026-09-26 — kompletność ranking/evidence dla modułów
+
+Po usunięciu fałszywego komponentu `s` size-study #179 ujawnił drugi problem pipeline:
+`KeyError: 'szulborze'` w `scripts/build_pl_preview.py`, w sortowaniu:
+`key=lambda w: (rank_of[w], -zipf[w], w)`.
+
+Przyczyna:
+- część `terc_forms` była dodawana do `ranked` dopiero po obliczeniu `zipf`, `spell` i po utworzeniu `rank_of`;
+- przez to legalna, jawna nazwa TERC mogła wejść do wspólnego zbioru kandydatów bez odpowiadającego wpisu metryki.
+
+Naprawa:
+- commit `cecf1e1f76182a3346c2e88dacaecf31e93cdc23`;
+- wszystkie source-backed module forms są dopisywane do `ranked` przed wyliczeniem `zipf`, `aosp`, `spell` i `rank_of`;
+- `base_candidate_words` nadal pozostaje wcześniejszym snapshotem czystego wordfreq i nie jest rozszerzany;
+- nie zmieniono immutable core ani zasady net-new union.
+
+CI po tej poprawce:
+- preview #234 — in progress;
+- size-study #180 — in progress;
+- first-name audit #94 — in progress;
+- wszystkie trzy są uruchomione na `cecf1e1f...`.
+
+Poprzedni preview #233 zakończył się błędem w kroku AOSP, niezwiązanym z kodem kapitalizacji.
+Poprzedni size-study #179 zakończył się `KeyError: szulborze`; ten błąd jest adresowany przez powyższą poprawkę.
+
+Po green CI obowiązuje dalsza kontrola:
+- rzeczywisty net-new union,
+- `module-study-report.json`,
+- `module-frequency-report.json`,
+- selected/full TERC,
+- finalny audit capitalization,
+- paczka testowa telefonu dopiero po przejściu wszystkich bramek.
