@@ -713,3 +713,57 @@ Plik testowy:
 SHA-256: `1615e64c6829bd3a8749133f27ae57000f2a007a38475d4c1cb7cb78cf0a17b9`.
 
 To jest **paczka do testu na telefonie**, nie promocja do produkcji. Po teście należy zebrać konkretne przypadki błędnych rankingów/przekształceń, szczególnie krótkie słowa, oraz osobno sprawdzić kapitalizację imion i nazw miejscowości.
+
+## 24. Zmiana architektury kapitalizacji i nazw wieloczłonowych — 2026-09-26
+
+Test telefonu wykazał konkretny problem: Łódź zostało zapisane wielką literą mimo kolizji z rzeczownikiem pospolitym łódź. Następnie wykryto tomaszów w rdzeniu 100k, mimo że źródłowa nazwa własna Tomaszów powinna być skapitalizowana.
+
+Przyjęto od tej chwili zasadę nadrzędną:
+- obecność klucza w immutable 100k nie rozstrzyga kapitalizacji;
+- rdzeń jest audytowany osobno zaraz po zbudowaniu, przed złożeniem modułów;
+- każda powierzchnia będąca kandydatem do kapitalizacji jest sprawdzana pod kątem zwykłego użycia leksykalnego, niezależnie od obecności w rdzeniu;
+- audyt obejmuje nie tylko rzeczowniki pospolite, ale także inne zwykłe części mowy;
+- jeśli istnieje zwykłe użycie leksykalne i brak jawnej decyzji właściwej dla danego przypadku, kanoniczna powierzchnia może zostać znormalizowana do lowercase;
+- wybrane imiona zachowują osobną, audytowaną politykę kapitalizacji, z istniejącymi wyjątkami lowercase/exclude;
+- konflikty polityk różnych źródeł wymagają jawnego wpisu w sources/staging/surface_registry_policy.tsv.
+
+### Nazwy wieloczłonowe
+
+Nie odrzucamy już nazw wieloczłonowych tylko dlatego, że nie są pojedynczym tokenem.
+- scripts/surface_components.py rozbija pełną nazwę na człony słowne.
+- Pełna nazwa pozostaje w warstwie źródłowej dla provenance („pochodzenia danych”).
+- Człony są osobno analizowane pod kątem kapitalizacji i kolizji leksykalnych.
+- Dotyczy to miast, TERC, państw, stolic i przyszłych modułów.
+- Dla CKDT człony są reprezentacją słownikową; pełna fraza pozostaje materiałem audytowym.
+- Nazwy z łącznikiem również są rozbijane na człony do audytu, bez utraty pełnej nazwy źródłowej.
+
+Przykład: Tomaszów Mazowiecki -> osobna analiza Tomaszów i Mazowiecki.
+
+### Nowe narzędzia
+
+- scripts/audit_core_capitalization.py — audyt i rozstrzyganie kapitalizacji dla kluczy rdzenia 100k przed złożeniem modułów.
+- scripts/audit_capitalization_common_noun_homonyms.py — wspólny audyt kapitalizacji modułów i emitowanie kanonicznych powierzchni.
+- scripts/surface_components.py — wspólne rozbijanie nazw wieloczłonowych na człony.
+- scripts/build_additive_phone_test.py — przyjmuje wyniki obu audytów i nie pozwala na rozbieżność między audytem rdzenia i modułów.
+
+### Znane przypadki zapisane w rejestrze
+
+- łódź -> łódź — wspólny klucz nazwy miasta Łódź i rzeczownika pospolitego łódź.
+- łodzi -> łodzi oraz łodzią -> łodzią — analogiczna kolizja form odmiany.
+- miński -> miński — kolizja z członem nazwy własnej i przymiotnikiem administracyjnym.
+- kłodzki -> kłodzki — kolizja między przymiotnikiem powiat kłodzki a członami nazw miejscowości typu Lewin Kłodzki.
+- tomaszów -> Tomaszów — powierzchnia właściwa dla nazwy własnej, której klucz wcześniej pochodził z rdzenia 100k.
+
+### Aktualizacja źródeł miast
+
+extract_teryt_cities.py nie ogranicza już warstwy źródłowej do nazw jednoczłonowych.
+Aktualny poprawny pomiar pokazał:
+- 1020 miast w źródle;
+- 844 nazw jednoczłonowych;
+- 176 nazw wieloczłonowych.
+
+Generator odmiany jednoczłonowej nadal pracuje tylko na nazwach jednoczłonowych, ale pełne nazwy wieloczłonowe pozostają dostępne dla audytu i składania warstwy powierzchniowej.
+
+### Aktualny etap CI
+
+Po tych zmianach trwają nowe przebiegi preview/size-study. Nie należy używać paczki #187 jako bieżącej wersji testowej kapitalizacji, ponieważ została zbudowana przed powyższymi zmianami.
