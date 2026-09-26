@@ -594,10 +594,10 @@ def main() -> int:
         help="Reviewed historical name staging TSV; injects 20 female + 20 male historical candidates.",
     )
     ap.add_argument(
-        "--first-name-surface-policy",
+        "--first-name-source-exclusions",
         type=Path,
         default=None,
-        help="Explicit user-reviewed surface policy for first names.",
+        help="Source-safety exclusions for selected first names; not a capitalization policy.",
     )
     ap.add_argument(
         "--first-name-inflections",
@@ -716,7 +716,6 @@ def main() -> int:
         # inputs are excluded from this pass so its 100k membership remains immutable.
         args.first_name_history = None
         args.historical_first_names = None
-        args.first_name_surface_policy = None
         args.first_name_inflections = None
         args.cities = None
         args.city_inflections = None
@@ -755,39 +754,29 @@ def main() -> int:
     # later capacity-displacement audit.
     base_candidate_words = set(ranked)
 
-    first_name_surface_policy: dict[str, str] = {}
-    if args.first_name_surface_policy:
-        with args.first_name_surface_policy.open(encoding="utf-8", newline="") as handle:
+    excluded_first_names: set[str] = set()
+    if args.first_name_source_exclusions:
+        with args.first_name_source_exclusions.open(encoding="utf-8", newline="") as handle:
             reader = csv.DictReader(handle, delimiter="\t")
+            required = {"name", "status", "reason"}
+            if set(reader.fieldnames or ()) != required:
+                raise SystemExit(
+                    f"Malformed first-name source exclusions header {args.first_name_source_exclusions}: expected {sorted(required)}"
+                )
             for row in reader:
-                name = row["name"].strip()
-                policy = row["policy"].strip()
+                name = row["name"].strip().lower()
                 if not is_candidate(name):
-                    raise SystemExit(f"Invalid first-name surface policy entry: {name!r}")
-                if policy not in {"lowercase_common_noun", "exclude"}:
-                    raise SystemExit(f"Invalid first-name surface policy for {name!r}: {policy!r}")
-                first_name_surface_policy[name.lower()] = policy
-
-    lowercase_first_name_exceptions = {
-        name for name, policy in first_name_surface_policy.items()
-        if policy == "lowercase_common_noun"
-    }
-    excluded_first_names = {
-        name for name, policy in first_name_surface_policy.items()
-        if policy == "exclude"
-    }
+                    raise SystemExit(f"Invalid first-name source exclusion: {name!r}")
+                if row["status"].strip() != "exclude":
+                    raise SystemExit(f"Invalid first-name source exclusion status for {name!r}")
+                excluded_first_names.add(name)
 
     first_name_inflection_forms: set[str] = set()
     first_name_inflection_surface_map: dict[str, str] = {}
-    lowercase_first_name_inflection_surfaces: set[str] = set()
     if args.first_name_inflections:
         first_name_inflection_forms, first_name_inflection_surface_map = load_first_name_inflections(
             args.first_name_inflections,
             surface_registry_policy,
-        )
-        lowercase_first_name_inflection_surfaces = load_lowercase_inflection_surfaces(
-            args.first_name_inflections,
-            lowercase_first_name_exceptions,
         )
 
     city_forms: set[str] = set()
@@ -900,15 +889,13 @@ def main() -> int:
             for row in selected:
                 canonical = str(row["name"]).strip()
                 lower = canonical.lower()
-                surface_policy = first_name_surface_policy.get(lower)
                 first_name_meta.append({
                     "gender": gender,
                     "name": canonical,
                     "rank_20y": row["cumulative_rank_20y"],
                     "count_20y": row["cumulative_count_20y"],
-                    "surface_policy": surface_policy or "capitalized_name",
                 })
-                if surface_policy == "exclude":
+                if lower in excluded_first_names:
                     continue
                 reviewed_first_names.add(lower)
                 prior = first_name_case_map.get(lower)
@@ -932,16 +919,14 @@ def main() -> int:
         for row in rows:
             canonical = row["name"].strip()
             lower = canonical.lower()
-            surface_policy = first_name_surface_policy.get(lower)
             historical_first_name_meta.append({
                 "gender": row["gender"],
                 "name": canonical,
                 "basis": row["basis"],
                 "source": row["source"],
                 "status": row["status"],
-                "surface_policy": surface_policy or "capitalized_name",
             })
-            if surface_policy == "exclude":
+            if lower in excluded_first_names:
                 continue
             historical_first_names.add(lower)
             prior = first_name_case_map.get(lower)
@@ -951,11 +936,6 @@ def main() -> int:
             if lower not in seen:
                 ranked.append(lower)
                 seen.add(lower)
-
-    for word in sorted(lowercase_first_name_exceptions):
-        if word not in seen:
-            ranked.append(word)
-            seen.add(word)
 
     # Official TERYT city names are explicit candidates. Multiword/hyphenated names are
     # intentionally kept out of this one-token CKDT layer and are tracked by the extractor.
@@ -973,7 +953,7 @@ def main() -> int:
     # Generated name inflections are explicit candidates. Lowercase homonym exceptions
     # are intentionally excluded from this layer because they are ordinary-word surfaces
     # and must remain governed by the normal Polish vocabulary/morphology pipeline.
-    for word in sorted(first_name_inflection_forms - lowercase_first_name_exceptions):
+    for word in sorted(first_name_inflection_forms):
         if word not in seen:
             ranked.append(word)
             seen.add(word)
@@ -1085,10 +1065,7 @@ def main() -> int:
             drop[word] = "swipe-regression-blocklist"
             continue
         if word in excluded_first_names:
-            drop[word] = "user-excluded-first-name"
-            continue
-        if word in lowercase_first_name_exceptions:
-            keep[word] = "user-lowercase-common-noun"
+            drop[word] = "source-excluded-first-name"
             continue
         if word in guards:
             keep[word] = "guard"
@@ -1114,7 +1091,7 @@ def main() -> int:
         if word in custom_forms:
             keep[word] = "custom-manual"
             continue
-        if word in first_name_inflection_forms and word not in lowercase_first_name_exceptions:
+        if word in first_name_inflection_forms:
             keep[word] = "reviewed-first-name-inflection"
             continue
         if word in city_inflection_forms:
@@ -1184,8 +1161,8 @@ def main() -> int:
     # genuinely absent from the pre-augmentation candidate universe; a city/name that was
     # already present in the base corpus does not consume an extra dictionary slot.
     name_city_augmented_words = (
-        (reviewed_first_names - lowercase_first_name_exceptions)
-        | (first_name_inflection_forms - lowercase_first_name_exceptions)
+        reviewed_first_names
+        | (first_name_inflection_forms)
         | city_forms
         | city_inflection_forms
     )
@@ -1282,16 +1259,10 @@ def main() -> int:
             register_surface(key, surface, "capitalized", "city-inflection")
     for key, surface in first_name_inflection_surface_map.items():
         if key in keep:
-            policy = "lowercase" if key in lowercase_first_name_inflection_surfaces else "capitalized"
-            if policy == "lowercase":
-                surface = key
-            register_surface(key, surface, policy, "first-name-inflection")
+            register_surface(key, surface, "capitalized", "first-name-inflection")
     for key, surface in first_name_case_map.items():
         if key in keep:
-            policy = "lowercase" if key in lowercase_first_name_exceptions else "capitalized"
-            if policy == "lowercase":
-                surface = key
-            register_surface(key, surface, policy, "first-name")
+            register_surface(key, surface, "capitalized", "first-name")
 
     registry_conflicts = []
     registry_resolutions = []
@@ -1361,7 +1332,6 @@ def main() -> int:
         "lowercase_surfaces": 0,
         "adjective_surfaces": 0,
         "capitalized_surfaces": 0,
-        "lowercase_first_name_inflection_surfaces": len(lowercase_first_name_inflection_surfaces),
         "violations": [],
         "surface_registry_keys": len(surface_registry),
         "surface_registry_conflicts": len(registry_conflicts),
@@ -1467,8 +1437,7 @@ def main() -> int:
         "reviewed_first_names": {
             "enabled": args.first_name_history is not None,
             "selected_total": len(first_name_meta) + len(historical_first_name_meta),
-            "lowercase_common_noun_exceptions": sorted(lowercase_first_name_exceptions),
-            "excluded_first_names": sorted(excluded_first_names),
+            "source_exclusions": sorted(excluded_first_names),
             "count": len(reviewed_first_names),
             "selected_per_gender": 215 if args.first_name_history else 0,
             "provenance": "official dane.gov.pl first-name statistics, 2006-2025" if args.first_name_history else None,
