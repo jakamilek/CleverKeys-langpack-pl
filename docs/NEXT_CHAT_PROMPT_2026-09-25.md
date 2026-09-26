@@ -327,3 +327,17 @@ To był błąd testu: źródłowe `pl-terc-flat.tsv` zawiera jawne `case_policy`
 Size-study #188 na `8832009...` jest green. Po commitcie `345becc...` trzeba sprawdzić nowy preview na bieżącym HEAD. Nie wolno uznawać projektu za gotowy tylko dlatego, że size-study jest green.
 
 Po green preview odczytaj świeże artefakty, zwłaszcza audyty kapitalizacji, raport modułów, raport TERC i finalny ZIP. Następnie przygotuj dopiero paczkę do testu swipe. Nie wykonuj automatycznego merge/promote.
+
+
+## Stan ciągłości po ponownym odczycie historii — 2026-09-26
+
+Przed kontynuacją kolejna instancja ma zachować pełną ciągłość z wcześniejszych rozmów: nie zaczynać od zera, nie wracać do starych liczb/runów i najpierw czytać aktualny GitHub. Wcześniejsze materiały potwierdzają m.in. pinned runtime CleverKeys `263bd0abc03dec420f60fa073a9d2c5e25a176b5`, CKDT V2, immutable core 100k, audytowane źródła, morphology/proper nouns, politykę 48 capitalized homonyms + 5 lowercase exceptions, rozdzielenie membership/casing/ranking/swipe oraz test swipe #187.
+
+Najświeższy stan:
+- poprawka błędnej asercji TERC: `345becc1fb2478a0d9a0273136ba0d033a277c3f`;
+- run size-study #188: success na `88320090...`;
+- preview #242: failure wyłącznie w końcowej bramce weryfikacyjnej, ponieważ test ignorował `case_policy` TERC;
+- preview #243: działa na `345becc...` i w chwili zapisu nie miał jeszcze konkluzji;
+- `8374dae9...` jest późniejszym technicznym commitem workflow, bez zmiany merytorycznej reguły TERC.
+
+Po zakończeniu #243 sprawdź najpierw rzeczywisty wynik i failing step, jeśli wystąpi. Następnie świeże artefakty. Nie traktuj żadnego starego ZIP-a jako finalnego po późniejszych zmianach. Nie wykonuj merge/promote.
