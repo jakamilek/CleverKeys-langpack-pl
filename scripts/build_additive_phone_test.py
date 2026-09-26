@@ -78,7 +78,6 @@ def main() -> int:
     ap.add_argument("--capitals", type=Path, required=True)
     ap.add_argument("--capital-inflections", type=Path, required=True)
     ap.add_argument("--custom", type=Path, required=True)
-    ap.add_argument("--surface-registry-policy", type=Path, required=True)
     ap.add_argument("--core-capitalization-audit", type=Path, required=True)
     ap.add_argument("--module-capitalization-audit", type=Path, required=True)
     ap.add_argument("--out-wordlist", type=Path, required=True)
@@ -125,12 +124,6 @@ def main() -> int:
     add_records(registry, read_rows(args.capital_inflections), "form", "case_policy", "capital-inflection")
     add_records(registry, read_rows(args.custom), "surface", "case_policy", "custom-manual")
 
-    overrides = {}
-    with args.surface_registry_policy.open(encoding="utf-8", newline="") as handle:
-        for row in csv.DictReader(handle, delimiter="\t"):
-            key = row["surface_key"].strip().lower()
-            overrides[key] = (row["canonical_surface"].strip(), row["case_policy"].strip())
-
     conflicts = []
     resolved: dict[str, str] = {}
     core_authoritative_keys = 0
@@ -152,27 +145,14 @@ def main() -> int:
 
         module_only_keys += 1
         audited = module_resolved.get(key)
-        override = overrides.get(key)
-
-        # For net-new module keys, the module capitalization audit is the decision layer.
-        # An explicit global surface policy remains the final deterministic override.
-        if override is not None:
-            resolved[key] = override[0]
-        elif audited is not None:
-            resolved[key] = audited["surface"]
-            module_audited_keys += 1
-        elif candidates:
-            explicit = [c for c in candidates if c["source"] != "immutable-100k-core"]
-            if explicit:
-                policy = next(iter({c["policy"] for c in explicit}))
-                surfaces = sorted({c["surface"] for c in explicit})
-                resolved[key] = key if policy == "lowercase" else next(
-                    (s for s in surfaces if s[:1].isupper()), surfaces[0]
-                )
-            else:
-                resolved[key] = base[key]
-        else:
-            raise SystemExit(f"No capitalization source for module key {key!r}")
+        if audited is None:
+            raise SystemExit(
+                f"No shared capitalization-resolver decision for module key {key!r}"
+            )
+        # The module capitalization audit is produced by the project-wide resolver.
+        # This builder applies that decision; it never derives or overrides casing.
+        resolved[key] = audited["surface"]
+        module_audited_keys += 1
 
     if conflicts:
         sample = "; ".join(
@@ -204,6 +184,7 @@ def main() -> int:
             "module_only_keys": module_only_keys,
             "module_audited_keys": module_audited_keys,
             "module_is_second_layer_for_core": True,
+            "module_casing_source": "shared-capitalization-resolver-module-audit",
         },
         "capitalization_audit": {
             "checked": len(resolved),

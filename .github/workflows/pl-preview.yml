@@ -156,7 +156,7 @@ jobs:
 
       - name: Audit immutable core capitalization before module assembly
         run: |
-          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
+          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
 
       - name: Audit module capitalization against common-noun homonyms
         run: |
