@@ -21,6 +21,8 @@ import argparse
 import json
 from pathlib import Path
 
+from surface_components import component_surfaces
+
 
 def load_lines(path: Path) -> set[str]:
     words: set[str] = set()
@@ -53,7 +55,7 @@ def load_column(path: Path, column: str) -> set[str]:
             for surface in fields[start].split(";"):
                 surface = surface.strip()
                 if surface:
-                    values.add(surface)
+                    values.update(component_surfaces(surface))
         return values
 
     with path.open(encoding="utf-8", newline="") as handle:
@@ -68,7 +70,7 @@ def load_column(path: Path, column: str) -> set[str]:
         for row in reader:
             value = row[column].strip()
             if value:
-                values.add(value)
+                values.update(component_surfaces(value))
         return values
 
 
