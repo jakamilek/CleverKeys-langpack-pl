@@ -119,8 +119,8 @@ def main():
         }
         if row["regression_blocked"]:
             row["audit_status"]="BLOCKED_REGRESSION"
-        elif row["surface_policy"] == "exclude":
-            row["audit_status"]="USER_EXCLUDED"
+        elif row["source_excluded"]:
+            row["audit_status"]="SOURCE_EXCLUDED"
         elif row["source_excluded"]:
             row["audit_status"]="SOURCE_EXCLUDED"
         elif not row["in_preview"]:
@@ -151,10 +151,10 @@ def main():
                   "common_word_signal":sum(r["common_word_signal"] for r in rows),
                   "foreign_dominant_signal":sum(r["foreign_dominant_signal"] for r in rows),
                   "regression_blocked":sum(r["regression_blocked"] for r in rows),
-                  "all_selected_in_preview":sum(r["in_preview"] for r in rows if r["surface_policy"] != "exclude")==469,
+                  "all_selected_in_preview":sum(r["in_preview"] for r in rows if not r["source_excluded"])==469,
                   "excluded_selected":sum(1 for r in rows if r["source_excluded"]),
                   "source_excluded_count":sum(1 for r in rows if r["source_excluded"]),
-                  "active_selected_in_preview":sum(r["in_preview"] for r in rows if r["surface_policy"] != "exclude"),
+                  "active_selected_in_preview":sum(r["in_preview"] for r in rows if not r["source_excluded"]),
                   "common_noun_homonym_count":sum(1 for r in rows if r["common_word_signal"]),
                   "status_counts":status_counts},
         "exceptions":exceptions,
