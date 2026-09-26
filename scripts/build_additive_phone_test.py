@@ -154,6 +154,7 @@ def main() -> int:
         "mode": "production-shaped-additive-phone-test",
         "immutable_core_keys": len(base),
         "final_keys": len(resolved),
+        "kept": len(resolved),
         "net_new_module_keys": len(module_keys),
         "formula": "100000 + union(net-new case-insensitive module keys)",
         "surface_registry_keys": len(registry),
