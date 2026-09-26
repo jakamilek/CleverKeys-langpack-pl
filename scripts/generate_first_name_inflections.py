@@ -25,8 +25,8 @@ CASES = ("nom", "gen", "dat", "acc", "inst", "loc", "voc")
 def load_selected_names(
     history_report: Path,
     historical_tsv: Path,
-    surface_policy: Path,
-) -> tuple[list[dict[str, str]], dict[str, str]]:
+    exclusions: Path,
+) -> tuple[list[dict[str, str]], set[str]]:
     report = json.loads(history_report.read_text(encoding="utf-8"))
     selected: list[dict[str, str]] = []
 
@@ -49,19 +49,16 @@ def load_selected_names(
     if len(selected) != 470:
         raise SystemExit(f"Expected 470 selected names, got {len(selected)}")
 
-    policy: dict[str, str] = {}
-    with surface_policy.open(encoding="utf-8", newline="") as handle:
+    excluded: set[str] = set()
+    with exclusions.open(encoding="utf-8", newline="") as handle:
         for row in csv.DictReader(handle, delimiter="\t"):
-            policy[row["name"].strip().lower()] = row["policy"].strip()
+            excluded.add(row["name"].strip().lower())
 
-    active = [
-        row for row in selected
-        if policy.get(row["name"].lower(), "capitalized_name") != "exclude"
-    ]
+    active = [row for row in selected if row["name"].lower() not in excluded]
     if len(active) != 469:
         raise SystemExit(f"Expected 469 active names, got {len(active)}")
 
-    return active, policy
+    return active, excluded
 
 
 def normalise_case(tag: str) -> set[str]:
@@ -81,7 +78,7 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--history-report", type=Path, required=True)
     ap.add_argument("--historical-first-names", type=Path, required=True)
-    ap.add_argument("--surface-policy", type=Path, required=True)
+    ap.add_argument("--exclusions", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
@@ -100,8 +97,8 @@ def main() -> int:
         podaj,
     )
 
-    active_names, policy = load_selected_names(
-        args.history_report, args.historical_first_names, args.surface_policy
+    active_names, excluded_names = load_selected_names(
+        args.history_report, args.historical_first_names, args.exclusions
     )
     morfeusz = morfeusz2.Morfeusz(
         expand_tags=True,
@@ -129,7 +126,7 @@ def main() -> int:
 
         # The selected-name source is authoritative for the nominative surface.
         # Morphology oracles are responsible for the additional cases.
-        canonical_nom = lower if policy.get(lower) == "lowercase_common_noun" else name
+        canonical_nom = name
         generated.add(("nom", canonical_nom))
 
         # Primary oracle: Morfeusz 2 / SGJP.
@@ -143,10 +140,7 @@ def main() -> int:
                     surface = str(orth).strip()
                     if not surface:
                         continue
-                    if policy.get(lower) == "lowercase_common_noun":
-                        surface = surface.lower()
-                    else:
-                        surface = surface[:1].upper() + surface[1:]
+                    surface = surface[:1].upper() + surface[1:]
                     generated.add((case_tag, surface))
 
         # Secondary oracle: polish-inflection's pinned SGJP index. It contains the
@@ -177,7 +171,7 @@ def main() -> int:
                         break
                 if not valid:
                     continue
-                surface = form.lower() if policy.get(lower) == "lowercase_common_noun" else form[:1].upper() + form[1:]
+                surface = form[:1].upper() + form[1:]
                 generated.add((case_tag, surface))
 
         by_name[name] = {surface for _case, surface in generated}
@@ -247,14 +241,7 @@ def main() -> int:
             1 for cases in coverage.values() if len(cases) > 1
         ),
         "coverage_by_name": coverage,
-        "surface_policy": {
-            "lowercase_common_noun_names": sorted(
-                k for k, v in policy.items() if v == "lowercase_common_noun"
-            ),
-            "excluded_names": sorted(
-                k for k, v in policy.items() if v == "exclude"
-            ),
-        },
+        "source_exclusions": sorted(excluded_names),
         "provenance": {
             "selected_names": "official dane.gov.pl first-name statistics 2006-2025 + reviewed historical staging",
             "inflection_oracle": "Morfeusz 2 / SGJP",
