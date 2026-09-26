@@ -65,7 +65,16 @@ def main() -> int:
         if row["eligible_single_token"] != "yes":
             continue
         lower = row["name"].strip().lower()
-        names.setdefault(lower, row)
+        unit_key = (row["level"], row["terc"])
+        # TERC code identifies the administrative unit. Do not collapse distinct
+        # units that happen to share the same Polish name.
+        prior = names.get(unit_key)
+        if prior is not None and prior["name"].strip().lower() != lower:
+            raise SystemExit(
+                f"Conflicting TERC identity for {row['level']}/{row['terc']}: "
+                f"{prior['name']!r} vs {row['name']!r}"
+            )
+        names[unit_key] = row
 
     import morfeusz2
     from polish_inflection import (
@@ -80,8 +89,10 @@ def main() -> int:
 
     out = []
     case_coverage = {}
-    for lower_name in sorted(names):
-        name = names[lower_name]["name"]
+    for unit_key in sorted(names):
+        row_meta = names[unit_key]
+        lower_name = row_meta["name"].strip().lower()
+        name = row_meta["name"]
         generated = {("nom", name)}
         for lemma_query in (name, lower_name):
             for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
@@ -126,7 +137,7 @@ def main() -> int:
                 "source": "Morfeusz 2 / SGJP generated from GUS TERYT TERC",
                 "morfeusz_version": str(morfeusz2.__version__),
             })
-        case_coverage[lower_name] = {case for case, _ in generated}
+        case_coverage[unit_key] = {case for case, _ in generated}
 
     args.out_tsv.parent.mkdir(parents=True, exist_ok=True)
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
@@ -144,7 +155,8 @@ def main() -> int:
         "morfeusz_version": str(morfeusz2.__version__),
         "category": "terc",
         "number": "sg",
-        "input_unique_one_token_names": len(names),
+        "input_identity": "level+terc",
+        "input_one_token_units": len(names),
         "inflection_record_count": len(out),
         "names_with_non_nominative": sum(
             1 for cases in case_coverage.values() if len(cases) > 1
