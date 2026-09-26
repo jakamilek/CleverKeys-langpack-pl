@@ -123,15 +123,15 @@ def load_surface_policy(path: Path) -> dict[str, tuple[str, str]]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", type=Path, required=True)
-    ap.add_argument("--first-name-inflections", type=Path, required=True)
-    ap.add_argument("--cities", type=Path, required=True)
-    ap.add_argument("--city-inflections", type=Path, required=True)
-    ap.add_argument("--terc", type=Path, required=True)
-    ap.add_argument("--countries", type=Path, required=True)
-    ap.add_argument("--country-inflections", type=Path, required=True)
-    ap.add_argument("--capitals", type=Path, required=True)
-    ap.add_argument("--capital-inflections", type=Path, required=True)
-    ap.add_argument("--custom", type=Path, required=True)
+    ap.add_argument("--first-name-inflections", type=Path, default=None)
+    ap.add_argument("--cities", type=Path, default=None)
+    ap.add_argument("--city-inflections", type=Path, default=None)
+    ap.add_argument("--terc", type=Path, default=None)
+    ap.add_argument("--countries", type=Path, default=None)
+    ap.add_argument("--country-inflections", type=Path, default=None)
+    ap.add_argument("--capitals", type=Path, default=None)
+    ap.add_argument("--capital-inflections", type=Path, default=None)
+    ap.add_argument("--custom", type=Path, default=None)
     ap.add_argument("--surface-registry-policy", type=Path, required=True)
     ap.add_argument("--out-json", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
@@ -146,13 +146,16 @@ def main() -> int:
     if len(base) != 100000:
         raise SystemExit(f"Immutable core must contain exactly 100000 keys, got {len(base)}")
 
-    first_name_rows = read_rows(args.first_name_inflections)
+    first_name_rows = rows_or_empty(args.first_name_inflections)
     selected_first_names = {
         row["name"].strip().lower()
         for row in first_name_rows
         if row.get("name", "").strip()
     }
     evidence: dict[str, list[dict[str, object]]] = {}
+
+    def rows_or_empty(path: Path | None) -> list[dict[str, str]]:
+        return [] if path is None else read_rows(path)
 
     add_source(
         evidence,
@@ -164,7 +167,7 @@ def main() -> int:
     )
     add_source(
         evidence,
-        read_rows(args.cities),
+        rows_or_empty(args.cities),
         "name",
         "city",
         context_fields=("simc", "stan_na"),
@@ -172,7 +175,7 @@ def main() -> int:
     )
     add_source(
         evidence,
-        read_rows(args.city_inflections),
+        rows_or_empty(args.city_inflections),
         "form",
         "city-inflection",
         context_fields=("name", "case"),
@@ -180,7 +183,7 @@ def main() -> int:
     )
     add_source(
         evidence,
-        read_rows(args.terc),
+        rows_or_empty(args.terc),
         "name",
         "terc",
         policy_field="case_policy",
@@ -189,7 +192,7 @@ def main() -> int:
     )
     add_source(
         evidence,
-        read_rows(args.countries),
+        rows_or_empty(args.countries),
         "name",
         "country",
         policy_field="case_policy",
@@ -198,7 +201,7 @@ def main() -> int:
     )
     add_source(
         evidence,
-        read_rows(args.country_inflections),
+        rows_or_empty(args.country_inflections),
         "form",
         "country-inflection",
         policy_field="case_policy",
@@ -207,7 +210,7 @@ def main() -> int:
     )
     add_source(
         evidence,
-        read_rows(args.capitals),
+        rows_or_empty(args.capitals),
         "name",
         "capital",
         policy_field="case_policy",
@@ -216,7 +219,7 @@ def main() -> int:
     )
     add_source(
         evidence,
-        read_rows(args.capital_inflections),
+        rows_or_empty(args.capital_inflections),
         "form",
         "capital-inflection",
         policy_field="case_policy",
@@ -225,7 +228,7 @@ def main() -> int:
     )
     add_source(
         evidence,
-        read_rows(args.custom),
+        rows_or_empty(args.custom),
         "surface",
         "custom-manual",
         policy_field="case_policy",
