@@ -299,3 +299,20 @@ Bieżące runy:
 - size-study #185 na ae7563... — in progress.
 
 Po green CI koniecznie sprawdź `Gdynia`, `Łódź`, `Tomaszów`, 48 capitalized first-name homonyms oraz 5 lowercase exceptions. Nie traktuj starego #238 jako aktualnego wyniku.
+
+
+## Aktualizacja 2026-09-26 — przymiotnikowe konflikty kapitalizacji
+
+Najnowszy błąd core audit na `c9078c...` obejmował 17 kluczy przymiotnikowych: `brzeski, chełmiński, gdański, jasielski, lubelski, lubelskie, lubuskie, mazowieckie, mazurskie, opolski, opolskie, pomorskie, sandomierski, wschodni, ząbkowicki, łukowski, łódzki`.
+
+Nie rozwiązywać ich przez 17 ręcznych wpisów. Została dodana architektoniczna reguła `verified-adjective-orthography-lowercase` w obu audytach kapitalizacji:
+- core: `adj:` zwykłej analizy Morfeusza może rozstrzygnąć lowercase, z ochroną przed innymi POS;
+- module: analogiczna reguła i raportowanie `common_adjective_matches`;
+- jawny surface registry pozostaje miejscem dla rzeczywistych konfliktów leksykalnych, nie dla systemowej reguły gramatycznej.
+
+Commity:
+- `9f0b45755289c260650c7d4cc2d2f67b4195e9d2` — core audit;
+- `88320090cb42cc38ba235c380566f160092925ef` — module audit;
+- `20078a8f7deb8246194b336cbc50df1332a55d7e` — handoff update.
+
+Po tych commitach sprawdź nowe CI i oczekuj `unresolved_count = 0` bez ręcznego dopisywania 17 nazw.
