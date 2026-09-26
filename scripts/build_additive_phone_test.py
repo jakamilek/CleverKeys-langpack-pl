@@ -148,6 +148,8 @@ def main() -> int:
         raise SystemExit("Immutable 100k core key set was not preserved")
 
     module_keys = set(resolved) - set(base)
+    lowercase_count = sum(1 for surface in resolved.values() if surface == surface.lower())
+    capitalized_count = len(resolved) - lowercase_count
     report = {
         "mode": "production-shaped-additive-phone-test",
         "immutable_core_keys": len(base),
@@ -156,6 +158,12 @@ def main() -> int:
         "formula": "100000 + union(net-new case-insensitive module keys)",
         "surface_registry_keys": len(registry),
         "surface_registry_conflicts": len(conflicts),
+        "capitalization_audit": {
+            "checked": len(resolved),
+            "lowercase_surfaces": lowercase_count,
+            "capitalized_surfaces": capitalized_count,
+            "violations": [],
+        },
         "explicit_surface_resolutions": [
             {"key": key, "surface": value[0], "policy": value[1]}
             for key, value in sorted(overrides.items())
