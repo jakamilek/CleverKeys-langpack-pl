@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-"""Audit selected first names for homonymy with Polish common nouns.
+"""Audit selected Polish first names for common-noun homonymy.
 
-This is an audit/gating tool only. It never copies Morfeusz/SGJP data into the
-distributable language pack. A selected first name is a common-noun homonym when
-its lowercase orthographic form receives at least one SGJP/Morfeusz analysis
-tagged as a noun (subst:...) and classified as `nazwa_pospolita`.
+This is an audit-only source-evidence tool. It never decides capitalization.
+Capitalization is resolved later by the shared project-wide resolver.
 """
 
 from __future__ import annotations
@@ -22,15 +20,23 @@ def selected_names(history_report: Path, historical_tsv: Path) -> list[dict[str,
     rows: list[dict[str, str]] = []
     for gender, key in (("F", "top_female"), ("M", "top_male")):
         for item in report[key][:215]:
-            rows.append({"gender": gender, "name": str(item["name"]).strip(), "layer": "modern"})
+            rows.append(
+                {"gender": gender, "name": str(item["name"]).strip(), "layer": "modern"}
+            )
     with historical_tsv.open(encoding="utf-8", newline="") as handle:
         for item in csv.DictReader(handle, delimiter="\t"):
-            rows.append({
-                "gender": item["gender"],
-                "name": item["name"].strip(),
-                "layer": "historical",
-            })
-    if len(rows) != 470 or sum(r["gender"] == "F" for r in rows) != 235 or sum(r["gender"] == "M" for r in rows) != 235:
+            rows.append(
+                {
+                    "gender": item["gender"],
+                    "name": item["name"].strip(),
+                    "layer": "historical",
+                }
+            )
+    if (
+        len(rows) != 470
+        or sum(r["gender"] == "F" for r in rows) != 235
+        or sum(r["gender"] == "M" for r in rows) != 235
+    ):
         raise SystemExit("Expected exactly 470 names: 235 F + 235 M")
     return rows
 
@@ -50,12 +56,14 @@ def analyse_name(morfeusz, name: str) -> list[dict]:
         classes = payload[3] if isinstance(payload[3], (tuple, list)) else []
         classes = [str(x) for x in classes]
         if tag.startswith("subst:") and COMMON_NOUN_CLASS in classes:
-            out.append({
-                "orth": orth,
-                "lemma": lemma,
-                "tag": tag,
-                "classes": classes,
-            })
+            out.append(
+                {
+                    "orth": orth,
+                    "lemma": lemma,
+                    "tag": tag,
+                    "classes": classes,
+                }
+            )
     return out
 
 
@@ -65,7 +73,6 @@ def main() -> int:
     ap.add_argument("--historical-first-names", type=Path, required=True)
     ap.add_argument("--out-json", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
-    ap.add_argument("--out-blocklist", type=Path, required=True)
     ap.add_argument("--exclusions", type=Path, required=True)
     args = ap.parse_args()
 
@@ -75,34 +82,61 @@ def main() -> int:
     exclusions: set[str] = set()
     with args.exclusions.open(encoding="utf-8", newline="") as handle:
         for row in csv.DictReader(handle, delimiter="\t"):
-            exclusions.add(row["name"].strip().lower())
+            name = row["name"].strip().lower()
+            status = row["status"].strip()
+            if status != "exclude":
+                raise SystemExit(f"Invalid first-name exclusion status for {name!r}: {status!r}")
+            exclusions.add(name)
+
     selected = selected_names(args.history_report, args.historical_first_names)
 
     rows: list[dict] = []
     for item in selected:
         lower = item["name"].lower()
         if lower in exclusions:
-            rows.append({**item, "source_excluded": True, "common_noun_homonym": False, "matches": []})
+            rows.append(
+                {
+                    **item,
+                    "source_excluded": True,
+                    "common_noun_homonym": False,
+                    "matches": [],
+                }
+            )
             continue
         matches = analyse_name(morfeusz, item["name"])
-        rows.append({**item, "source_excluded": False, "common_noun_homonym": bool(matches), "matches": matches})
+        rows.append(
+            {
+                **item,
+                "source_excluded": False,
+                "common_noun_homonym": bool(matches),
+                "matches": matches,
+            }
+        )
 
-    homonyms = [r for r in rows if r["common_noun_homonym"] and not r["source_excluded"]]
+    homonyms = [
+        r for r in rows if r["common_noun_homonym"] and not r["source_excluded"]
+    ]
     homonym_names = sorted({r["name"].lower() for r in homonyms})
     excluded = sorted({r["name"].lower() for r in rows if r["source_excluded"]})
 
     summary = {
         "mode": "audit-and-gate",
         "oracle": "Morfeusz 2 / SGJP",
-        "morfeusz_version": morfeusz2.Morfeusz().getVersion() if hasattr(morfeusz2.Morfeusz, "getVersion") else "unknown",
-        "rule": "lowercase selected-name form has a noun (subst:...) analysis classified as nazwa_pospolita",
+        "morfeusz_version": (
+            morfeusz2.Morfeusz().getVersion()
+            if hasattr(morfeusz2.Morfeusz, "getVersion")
+            else "unknown"
+        ),
+        "rule": (
+            "lowercase selected-name form has a noun (subst:...) analysis "
+            "classified as nazwa_pospolita"
+        ),
         "selected_total": len(rows),
         "selected_female": sum(r["gender"] == "F" for r in rows),
         "selected_male": sum(r["gender"] == "M" for r in rows),
         "common_noun_homonym_count": len(homonyms),
         "common_noun_homonym_female": sum(r["gender"] == "F" for r in homonyms),
         "common_noun_homonym_male": sum(r["gender"] == "M" for r in homonyms),
-        "homonym_names": homonym_names,
         "common_noun_homonym_names": homonym_names,
         "excluded_names": excluded,
         "non_homonym_count": len(rows) - len(homonyms),
@@ -115,37 +149,52 @@ def main() -> int:
         json.dumps(summary, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    args.out_blocklist.parent.mkdir(parents=True, exist_ok=True)
-    args.out_blocklist.write_text("\n".join(capitalized) + ("\n" if capitalized else ""), encoding="utf-8")
 
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.writer(handle, delimiter="\t")
-        writer.writerow([
-            "gender", "name", "layer", "common_noun_homonym",
-            "matches",
-        ])
-        for row in rows:
-            writer.writerow([
-                row["gender"],
-                row["name"],
-                row["layer"],
-                str(row["source_excluded"]).lower(),
-                json.dumps(row["matches"], ensure_ascii=False, separators=(",", ":")),
-            ])
-
-    print(json.dumps({
-        k: summary[k]
-        for k in (
-            "morfeusz_version",
-            "selected_total",
-            "selected_female",
-            "selected_male",
-            "common_noun_homonym_count",
-            "common_noun_homonym_female",
-            "common_noun_homonym_male",
-            "homonym_names",
+        writer.writerow(
+            [
+                "gender",
+                "name",
+                "layer",
+                "source_excluded",
+                "common_noun_homonym",
+                "matches",
+            ]
         )
-    }, ensure_ascii=False, indent=2))
+        for row in rows:
+            writer.writerow(
+                [
+                    row["gender"],
+                    row["name"],
+                    row["layer"],
+                    str(row["source_excluded"]).lower(),
+                    str(row["common_noun_homonym"]).lower(),
+                    json.dumps(
+                        row["matches"],
+                        ensure_ascii=False,
+                        separators=(",", ":"),
+                    ),
+                ]
+            )
+
+    print(
+        json.dumps(
+            {
+                "morfeusz_version": summary["morfeusz_version"],
+                "selected_total": summary["selected_total"],
+                "selected_female": summary["selected_female"],
+                "selected_male": summary["selected_male"],
+                "common_noun_homonym_count": summary["common_noun_homonym_count"],
+                "common_noun_homonym_female": summary["common_noun_homonym_female"],
+                "common_noun_homonym_male": summary["common_noun_homonym_male"],
+                "common_noun_homonym_names": summary["common_noun_homonym_names"],
+                "excluded_names": summary["excluded_names"],
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
     return 0
 
 
