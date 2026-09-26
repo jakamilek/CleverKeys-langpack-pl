@@ -27,15 +27,6 @@ def read_base(path: Path) -> dict[str, str]:
     return surfaces
 
 
-def load_first_name_policy(path: Path) -> set[str]:
-    lower: set[str] = set()
-    with path.open(encoding="utf-8", newline="") as handle:
-        for row in csv.DictReader(handle, delimiter="\t"):
-            if row["policy"].strip() == "lowercase_common_noun":
-                lower.add(row["name"].strip().lower())
-    return lower
-
-
 def add_records(registry, rows, surface_field, policy_field, source, lower_keys=frozenset()):
     for row in rows:
         raw_surface = row[surface_field].strip()
@@ -78,7 +69,6 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", type=Path, required=True)
     ap.add_argument("--first-name-inflections", type=Path, required=True)
-    ap.add_argument("--first-name-surface-policy", type=Path, required=True)
     ap.add_argument("--cities", type=Path, required=True)
     ap.add_argument("--city-inflections", type=Path, required=True)
     ap.add_argument("--terc-source", type=Path, required=True)
@@ -96,7 +86,6 @@ def main() -> int:
     args = ap.parse_args()
 
     base = read_base(args.base)
-    lowercase_names = load_first_name_policy(args.first_name_surface_policy)
 
     core_audit = json.loads(args.core_capitalization_audit.read_text(encoding="utf-8"))
     module_audit = json.loads(args.module_capitalization_audit.read_text(encoding="utf-8"))
@@ -125,7 +114,7 @@ def main() -> int:
         for key, surface in base.items()
     }
 
-    add_records(registry, read_rows(args.first_name_inflections), "form", None, "first-name-inflection", lowercase_names)
+    add_records(registry, read_rows(args.first_name_inflections), "form", None, "first-name-inflection")
     add_records(registry, read_rows(args.cities), "name", None, "city")
     add_records(registry, read_rows(args.city_inflections), "form", None, "city-inflection")
     add_records(registry, read_rows(args.terc_source), "name", "case_policy", "terc-source")
