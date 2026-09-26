@@ -146,7 +146,10 @@ jobs:
 
           assert component_surfaces("Tomaszów Mazowiecki") == ["Tomaszów", "Mazowiecki"]
           assert component_surfaces("Saint John's") == ["Saint", "John"]
+          assert component_surfaces("Saint John’s") == ["Saint", "John"]
+          assert component_surfaces("King’s College") == ["King", "College"]
           assert component_surfaces("D'Arcy") == ["D", "Arcy"]
+          assert component_surfaces("D’Arcy") == ["D", "Arcy"]
           PY
 
       - name: Audit immutable core capitalization before module assembly
