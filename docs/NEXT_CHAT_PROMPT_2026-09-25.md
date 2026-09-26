@@ -316,3 +316,14 @@ Commity:
 - `20078a8f7deb8246194b336cbc50df1332a55d7e` — handoff update.
 
 Po tych commitach sprawdź nowe CI i oczekuj `unresolved_count = 0` bez ręcznego dopisywania 17 nazw.
+
+
+## Aktualizacja 2026-09-26 — poprawka błędnej bramki TERC
+
+Preview #242 na `88320090cb42cc38ba235c380566f160092925ef` nie ujawnił nowego błędu CKDT. Wszystkie wcześniejsze etapy przeszły, a końcowa weryfikacja zatrzymała się na asercji wymagającej wszystkich nazw TERC w oryginalnej kapitalizacji.
+
+To był błąd testu: źródłowe `pl-terc-flat.tsv` zawiera jawne `case_policy`, więc nazwy przymiotnikowe/powiatowe mogą poprawnie występować lowercase. Poprawka jest w `345becc1fb2478a0d9a0273136ba0d033a277c3f`: końcowy test wylicza oczekiwaną powierzchnię z `case_policy`, zamiast zakładać kapitalizację każdej nazwy.
+
+Size-study #188 na `8832009...` jest green. Po commitcie `345becc...` trzeba sprawdzić nowy preview na bieżącym HEAD. Nie wolno uznawać projektu za gotowy tylko dlatego, że size-study jest green.
+
+Po green preview odczytaj świeże artefakty, zwłaszcza audyty kapitalizacji, raport modułów, raport TERC i finalny ZIP. Następnie przygotuj dopiero paczkę do testu swipe. Nie wykonuj automatycznego merge/promote.
