@@ -110,12 +110,11 @@ def main() -> int:
 
         if override:
             surface, policy = override
-            offered = {c["surface"] for c in candidates}
-            if surface not in offered:
+            if surface.lower() != key:
                 conflicts.append({
                     "key": key,
                     "candidates": sorted(variants),
-                    "reason": "override-is-not-a-contributing-surface",
+                    "reason": "override-surface-has-different-case-insensitive-key",
                 })
                 continue
             resolved[key] = surface
