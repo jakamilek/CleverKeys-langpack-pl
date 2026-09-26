@@ -236,3 +236,14 @@ Wykonaj kolejno:
 
 Najważniejsza zasada:
 **kontynuuj od rzeczywistego stanu GitHub, nie od starej pamięci z poprzedniego czatu.**
+
+
+## Aktualizacja 2026-09-26
+
+Kontynuacja po synchronizacji schematu TERC:
+- `2c7c22eb136ec323525cd4e3ad1ccf3d21d7887b`: selector wymaga teraz pełnego 10-polowego schematu TERC.
+- `c5cd8b9cf74331ec2e7c24eb2859e495acc7af2d`: preview builder został dostosowany do selected TERC.
+- `a5ff83b0a522293aec68c47f74a13277f624e2d4`: generator TERC przestał deduplikować jednostki po nazwie; tożsamość opiera się na `level + terc`.
+- preview #170 i size-study #146 działają/oczekują na SHA `a5ff83b0...`; sprawdź ich rzeczywisty wynik przed dalszą decyzją.
+- Nie używaj historycznego 2,611 jako aktualnego kosztu modułów.
+- Po green CI odczytaj aktualny `module-study-report.json`, `module-frequency-report.json` i artefakty TERC.
