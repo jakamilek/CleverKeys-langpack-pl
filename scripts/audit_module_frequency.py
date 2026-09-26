@@ -23,6 +23,8 @@ import json
 import statistics
 from pathlib import Path
 
+from surface_components import component_surfaces
+
 
 def sha256(path: Path) -> str:
     h = hashlib.sha256()
@@ -76,7 +78,11 @@ def load_module(path: Path, column: str) -> list[dict[str, str]]:
             for surface in fields[start].split(";"):
                 surface = surface.strip()
                 if surface:
-                    out.append({"surface": surface, "lemma": lemma})
+                    for component in component_surfaces(surface):
+                        out.append({
+                            "surface": component,
+                            "lemma": lemma if len(component_surfaces(surface)) == 1 else "",
+                        })
         return out
 
     with path.open(encoding="utf-8", newline="") as handle:
@@ -91,8 +97,13 @@ def load_module(path: Path, column: str) -> list[dict[str, str]]:
         for row in reader:
             value = row[column].strip()
             if value:
-                lemma = row.get("name", row.get("lemma", "")).strip()
-                out.append({"surface": value, "lemma": lemma})
+                components = component_surfaces(value)
+                source_lemma = row.get("name", row.get("lemma", "")).strip()
+                for component in components:
+                    out.append({
+                        "surface": component,
+                        "lemma": source_lemma if len(components) == 1 else "",
+                    })
         return out
 
 
