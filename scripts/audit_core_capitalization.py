@@ -105,8 +105,9 @@ def load_surface_policy(path: Path) -> dict[str, tuple[str, str]]:
     return out
 
 
-def common_noun_matches(morfeusz, surface: str) -> list[dict[str, object]]:
+def common_lexical_matches(morfeusz, surface: str) -> list[dict[str, object]]:
     matches = []
+    ordinary_pos = {"subst", "adj", "adv", "verb", "part", "prep", "conj", "num", "ger", "ppron", "pron"}
     for item in morfeusz.analyse(surface.lower()):
         if len(item) < 3:
             continue
@@ -116,7 +117,9 @@ def common_noun_matches(morfeusz, surface: str) -> list[dict[str, object]]:
         orth, lemma, tag = str(payload[0]), str(payload[1]), str(payload[2])
         classes = payload[3] if isinstance(payload[3], (tuple, list)) else []
         classes = [str(x) for x in classes]
-        if tag.startswith("subst:") and "nazwa_pospolita" in classes:
+        pos = tag.split(":", 1)[0]
+        proper_classes = [cls for cls in classes if cls.startswith("nazwa_") and cls != "nazwa_pospolita"]
+        if pos in ordinary_pos and not proper_classes:
             matches.append(
                 {
                     "orth": orth,
@@ -244,7 +247,7 @@ def main() -> int:
         rows = evidence[key]
         policies = {str(r["policy"]) for r in rows if r["policy"] in {"lowercase", "capitalized"}}
         capitalized_rows = [r for r in rows if r["policy"] == "capitalized"]
-        noun_matches = common_noun_matches(morfeusz, key) if capitalized_rows else []
+        noun_matches = common_lexical_matches(morfeusz, key) if capitalized_rows else []
         override = explicit.get(key)
 
         result_surface = base[key]
@@ -269,7 +272,7 @@ def main() -> int:
             if noun_matches:
                 unresolved.append({
                     "key": key,
-                    "reason": "common-noun-homonym-requires-explicit-lowercase-resolution",
+                    "reason": "common-lexical-homonym-requires-explicit-resolution",
                     "common_noun_matches": noun_matches,
                     "sources": sorted({str(r["source"]) for r in rows}),
                 })
@@ -292,8 +295,10 @@ def main() -> int:
             "reason": reason,
             "source_policies": sorted(policies),
             "sources": sorted({str(r["source"]) for r in rows}),
-            "common_noun_homonym": bool(noun_matches),
-            "common_noun_matches": noun_matches,
+            "common_lexical_homonym": bool(noun_matches),
+            "common_lexical_matches": noun_matches,
+            "common_noun_homonym": any("nazwa_pospolita" in m.get("classes", []) for m in noun_matches),
+            "common_noun_matches": [m for m in noun_matches if "nazwa_pospolita" in m.get("classes", [])],
             "evidence": rows,
         })
         if not any(item.get("key") == key for item in unresolved):
@@ -309,6 +314,7 @@ def main() -> int:
         "core_keys_with_source_capitalization_evidence": len(audited),
         "resolved_core_keys": len(resolved),
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
+        "common_lexical_homonym_count": sum(1 for r in audited if r["common_lexical_homonym"]),
         "common_noun_homonym_count": sum(1 for r in audited if r["common_noun_homonym"]),
         "unresolved_count": len(unresolved),
         "unresolved_keys": [r["key"] for r in unresolved],
