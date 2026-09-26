@@ -25,6 +25,7 @@ import shutil
 import subprocess
 import unicodedata
 from pathlib import Path
+from surface_components import component_surfaces
 
 POLISH_ALPHABET = set("aąbcćdeęfghijklłmnńoóprsśtuwyzźż")
 WORD_RE = re.compile(r"^[a-ząćęłńóśźż]+$", re.IGNORECASE)
@@ -297,18 +298,15 @@ def load_city_source(
             name = row["name"].strip()
             if not name or row["rm"].strip() != "96":
                 raise SystemExit(f"Malformed city source row {path}:{line_no}")
-            if not is_candidate(name.lower()):
-                raise SystemExit(
-                    f"City source contains non-single-token form {path}:{line_no}: {name!r}"
-                )
-            lower = name.lower()
-            forms.add(lower)
-            prior = surface_map.get(lower)
-            if prior is not None and prior != name:
-                raise SystemExit(
-                    f"Conflicting city capitalization {path}:{line_no}: {prior!r} vs {name!r}"
-                )
-            surface_map[lower] = name
+            for component in component_surfaces(name):
+                lower = component.lower()
+                forms.add(lower)
+                prior = surface_map.get(lower)
+                if prior is not None and prior != component:
+                    raise SystemExit(
+                        f"Conflicting city component capitalization {path}:{line_no}: {prior!r} vs {component!r}"
+                    )
+                surface_map[lower] = component
     return forms, surface_map
 
 
@@ -475,22 +473,30 @@ def load_geo_source(
             policy = row["case_policy"].strip()
             if not name or policy not in {"lowercase", "capitalized"}:
                 raise SystemExit(f"Malformed {expected_category} source row {path}:{line_no}")
-            if not is_inflection_surface(name):
-                raise SystemExit(f"Non-single-token {expected_category} source surface {path}:{line_no}: {name!r}")
-            lower = name.lower()
-            prior = surface_map.get(lower)
-            if prior is not None and prior != name:
-                raise SystemExit(
-                    f"Conflicting {expected_category} source casing {path}:{line_no}: {prior!r} vs {name!r}"
+            components = component_surfaces(name)
+            if not components:
+                raise SystemExit(f"Empty {expected_category} source surface {path}:{line_no}: {name!r}")
+            for component in components:
+                lower = component.lower()
+                component_policy = (
+                    "lowercase"
+                    if policy == "lowercase" or component[:1].islower()
+                    else "capitalized"
                 )
-            prior_policy = case_policy_map.get(lower)
-            if prior_policy is not None and prior_policy != policy:
-                raise SystemExit(
-                    f"Conflicting {expected_category} case policy {path}:{line_no}: {prior_policy!r} vs {policy!r}"
-                )
-            forms.add(lower)
-            surface_map[lower] = name
-            case_policy_map[lower] = policy
+                prior = surface_map.get(lower)
+                if prior is not None and prior != component:
+                    raise SystemExit(
+                        f"Conflicting {expected_category} source component casing {path}:{line_no}: {prior!r} vs {component!r}"
+                    )
+                prior_policy = case_policy_map.get(lower)
+                if prior_policy is not None and prior_policy != component_policy:
+                    raise SystemExit(
+                        f"Conflicting {expected_category} component case policy {path}:{line_no}: "
+                        f"{prior_policy!r} vs {component_policy!r}"
+                    )
+                forms.add(lower)
+                surface_map[lower] = component.lower() if component_policy == "lowercase" else component
+                case_policy_map[lower] = component_policy
     return forms, surface_map, case_policy_map
 
 
