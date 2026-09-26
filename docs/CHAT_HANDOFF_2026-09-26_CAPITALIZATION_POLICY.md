@@ -248,3 +248,12 @@ Po zakończeniu poprzedniej serii runów:
 - Commit 15c071d93fff855517c2ef936b2412531234ab4a dodał do preview wymaganie: core_audyt musi raportować 100000 core_keys_audited i 100000 resolved_core_keys, a rozstrzygnięcie klucza bardo musi mieć powierzchnię Bardo.
 - Zasada architektoniczna: członkostwo w 100k pozostaje niezmienne, ale canonical surface każdego klucza core podlega temu samemu audytowi kapitalizacji co powierzchnie modułowe.
 - Najnowszy preview #280 / run 36267146528 działa na SHA e9efaa0f87aedcb8e02fc35c75a09c3afef67b55; wynik nie jest jeszcze green.
+
+
+## Aktualizacja ciągłości — jawna polityka powierzchni a niejednoznaczność analizatora — 2026-09-26
+
+- Preview #280 / run 36267146528 ujawnił, że po objęciu wszystkich 100000 kluczy pełnym audytem core klucz tomaszów został rozstrzygnięty inaczej niż dotychczasowy modułowy przebieg. Bramka zatrzymała się na oczekiwanej powierzchni Tomaszów.
+- W repozytorium istnieje jawnie audytowana polityka `tomaszów -> Tomaszów` w `sources/staging/surface_registry_policy.tsv`, oparta na WSJP PAN. To nie jest wyjątek first-name ani ręczna poprawka wynikająca z przypadku CI.
+- Wspólny resolver został zmieniony w commicie `8ed618b61cd72db0140302115281c6fdf3aad4d0`, tak aby jawna, niezależnie udokumentowana polityka powierzchni dla dokładnego klucza była stosowana przed rozstrzyganiem niejednoznaczności analizatora. Reguła przymiotnik -> lowercase pozostaje domyślną regułą dla powierzchni bez takiej jawnej decyzji.
+- Uzasadnienie dla Tomaszów: WSJP PAN opisuje `Tomaszów` jako rzeczownik będący nazwą wsi, z przymiotnikiem pochodnym `tomaszowski`; sama nazwa nie jest przymiotnikiem. citeturn552037search3
+- Nie wolno wykorzystywać tej zmiany do tworzenia wyjątków dla pojedynczych słów poza audytowaną polityką powierzchni. Nadal obowiązuje `jakubowi -> jakubowi`, ponieważ brak dla niego takiej jawnej polityki, a analiza przymiotnikowa daje regułę lowercase.
