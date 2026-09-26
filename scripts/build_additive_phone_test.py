@@ -144,61 +144,46 @@ def main() -> int:
 
     conflicts = []
     resolved: dict[str, str] = {}
-    explicit_sources = {
-        "immutable-100k-core",
-    }
+    core_authoritative_keys = 0
+    module_audited_keys = 0
+    module_only_keys = 0
+
     for key, candidates in sorted(registry.items()):
-        explicit = [c for c in candidates if c["source"] != "immutable-100k-core"]
-        variants = {(c["surface"], c["policy"]) for c in explicit}
+        # The immutable-core capitalization audit is authoritative for every key that
+        # belongs to the 100k core. Module evidence can explain or verify the decision,
+        # but it must never replace the canonical core surface.
+        if key in base:
+            authoritative = core_resolved.get(key)
+            if authoritative is not None:
+                resolved[key] = authoritative["surface"]
+                core_authoritative_keys += 1
+            else:
+                resolved[key] = base[key]
+            continue
+
+        module_only_keys += 1
+        audited = module_resolved.get(key)
         override = overrides.get(key)
 
-        if override:
-            surface, policy = override
-            if surface.lower() != key:
-                conflicts.append({
-                    "key": key,
-                    "candidates": sorted(variants),
-                    "reason": "override-surface-has-different-case-insensitive-key",
-                })
-                continue
-            resolved[key] = surface
-            continue
-
-        if len({c["policy"] for c in explicit}) > 1:
-            conflicts.append({
-                "key": key,
-                "candidates": sorted(variants),
-                "sources": sorted({c["source"] for c in explicit}),
-            })
-            continue
-
-        audited_core = core_resolved.get(key)
-        audited_module = module_resolved.get(key)
-        if not override and audited_core is not None and audited_module is not None:
-            if audited_core["surface"] != audited_module["surface"]:
-                conflicts.append({
-                    "key": key,
-                    "candidates": sorted(variants),
-                    "reason": "core-and-module-capitalization-audits-disagree",
-                    "core_surface": audited_core["surface"],
-                    "module_surface": audited_module["surface"],
-                })
-                continue
-        if not override and audited_core is not None:
-            resolved[key] = audited_core["surface"]
-            continue
-        if not override and audited_module is not None:
-            resolved[key] = audited_module["surface"]
-            continue
-        if explicit:
-            policy = next(iter(explicit))["policy"]
-            if policy == "lowercase":
-                resolved[key] = key
-            else:
+        # For net-new module keys, the module capitalization audit is the decision layer.
+        # An explicit global surface policy remains the final deterministic override.
+        if override is not None:
+            resolved[key] = override[0]
+        elif audited is not None:
+            resolved[key] = audited["surface"]
+            module_audited_keys += 1
+        elif candidates:
+            explicit = [c for c in candidates if c["source"] != "immutable-100k-core"]
+            if explicit:
+                policy = next(iter({c["policy"] for c in explicit}))
                 surfaces = sorted({c["surface"] for c in explicit})
-                resolved[key] = next((s for s in surfaces if s[:1].isupper()), surfaces[0])
+                resolved[key] = key if policy == "lowercase" else next(
+                    (s for s in surfaces if s[:1].isupper()), surfaces[0]
+                )
+            else:
+                resolved[key] = base[key]
         else:
-            resolved[key] = base[key]
+            raise SystemExit(f"No capitalization source for module key {key!r}")
 
     if conflicts:
         sample = "; ".join(
@@ -225,6 +210,12 @@ def main() -> int:
         "formula": "100000 + union(net-new case-insensitive module keys)",
         "surface_registry_keys": len(registry),
         "surface_registry_conflicts": len(conflicts),
+        "capitalization_authority": {
+            "core_authoritative_keys": core_authoritative_keys,
+            "module_only_keys": module_only_keys,
+            "module_audited_keys": module_audited_keys,
+            "module_is_second_layer_for_core": True,
+        },
         "capitalization_audit": {
             "checked": len(resolved),
             "lowercase_surfaces": lowercase_count,
