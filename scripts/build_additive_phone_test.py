@@ -90,6 +90,7 @@ def main() -> int:
     ap.add_argument("--custom", type=Path, required=True)
     ap.add_argument("--surface-registry-policy", type=Path, required=True)
     ap.add_argument("--core-capitalization-audit", type=Path, required=True)
+    ap.add_argument("--module-capitalization-audit", type=Path, required=True)
     ap.add_argument("--out-wordlist", type=Path, required=True)
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
@@ -121,14 +122,24 @@ def main() -> int:
     add_records(registry, read_rows(args.custom), "surface", "case_policy", "custom-manual")
 
     core_audit = json.loads(args.core_capitalization_audit.read_text(encoding="utf-8"))
+    module_audit = json.loads(args.module_capitalization_audit.read_text(encoding="utf-8"))
     if core_audit.get("unresolved_count", 0):
         raise SystemExit(
             "Core capitalization audit contains unresolved keys: "
             + ", ".join(core_audit.get("unresolved_keys", []))
         )
+    if module_audit.get("unresolved_count", 0):
+        raise SystemExit(
+            "Module capitalization audit contains unresolved keys: "
+            + ", ".join(module_audit.get("unresolved_surface_keys", []))
+        )
     core_resolved = {
         key: value
         for key, value in core_audit.get("resolved_surfaces", {}).items()
+    }
+    module_resolved = {
+        key: value
+        for key, value in module_audit.get("resolved_surfaces", {}).items()
     }
 
     overrides = {}
@@ -168,8 +179,22 @@ def main() -> int:
             continue
 
         audited_core = core_resolved.get(key)
-        if audited_core is not None and not override:
+        audited_module = module_resolved.get(key)
+        if not override and audited_core is not None and audited_module is not None:
+            if audited_core["surface"] != audited_module["surface"]:
+                conflicts.append({
+                    "key": key,
+                    "candidates": sorted(variants),
+                    "reason": "core-and-module-capitalization-audits-disagree",
+                    "core_surface": audited_core["surface"],
+                    "module_surface": audited_module["surface"],
+                })
+                continue
+        if not override and audited_core is not None:
             resolved[key] = audited_core["surface"]
+            continue
+        if not override and audited_module is not None:
+            resolved[key] = audited_module["surface"]
             continue
         if explicit:
             policy = next(iter(explicit))["policy"]
