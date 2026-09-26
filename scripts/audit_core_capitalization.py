@@ -26,7 +26,7 @@ import csv
 import json
 from pathlib import Path
 
-from surface_components import component_records
+from surface_components import component_records, component_surfaces
 from capitalization_rules import resolve_capitalization
 
 
@@ -47,6 +47,7 @@ def add_source(
     source: str,
     policy_field: str | None = None,
     context_fields: tuple[str, ...] = (),
+    lemma_field: str | None = None,
 ) -> None:
     for row in rows:
         raw = row.get(surface_field, "").strip()
@@ -76,6 +77,14 @@ def add_source(
             )
             policy = source_component_policy
             candidate = component
+            proper_lemma_keys = (
+                sorted({
+                    part.lower()
+                    for part in component_surfaces(row.get(lemma_field, ""))
+                })
+                if lemma_field and row.get(lemma_field, "").strip()
+                else []
+            )
             if policy == "lowercase":
                 candidate = component.lower()
             elif policy == "capitalized":
@@ -92,6 +101,7 @@ def add_source(
                         for field in context_fields
                         if row.get(field, "")
                     },
+                    "proper_lemma_keys": proper_lemma_keys,
                 }
             )
 
@@ -150,6 +160,7 @@ def main() -> int:
         "form",
         "first-name-inflection",
         context_fields=("name", "case"),
+        lemma_field="name",
     )
     add_source(
         evidence,
@@ -157,6 +168,7 @@ def main() -> int:
         "name",
         "city",
         context_fields=("simc", "stan_na"),
+        lemma_field="name",
     )
     add_source(
         evidence,
@@ -164,6 +176,7 @@ def main() -> int:
         "form",
         "city-inflection",
         context_fields=("name", "case"),
+        lemma_field="name",
     )
     add_source(
         evidence,
@@ -172,6 +185,7 @@ def main() -> int:
         "terc",
         policy_field="case_policy",
         context_fields=("level", "terc", "nazdod"),
+        lemma_field="name",
     )
     add_source(
         evidence,
@@ -180,6 +194,7 @@ def main() -> int:
         "country",
         policy_field="case_policy",
         context_fields=("official_long_name",),
+        lemma_field="name",
     )
     add_source(
         evidence,
@@ -188,6 +203,7 @@ def main() -> int:
         "country-inflection",
         policy_field="case_policy",
         context_fields=("name", "case"),
+        lemma_field="name",
     )
     add_source(
         evidence,
@@ -196,6 +212,7 @@ def main() -> int:
         "capital",
         policy_field="case_policy",
         context_fields=("country",),
+        lemma_field="name",
     )
     add_source(
         evidence,
@@ -204,6 +221,7 @@ def main() -> int:
         "capital-inflection",
         policy_field="case_policy",
         context_fields=("name", "case"),
+        lemma_field="name",
     )
     add_source(
         evidence,
@@ -225,11 +243,17 @@ def main() -> int:
     for key in sorted(set(base) & set(evidence)):
         rows = evidence[key]
         policies = {str(r["policy"]) for r in rows if r["policy"] in {"lowercase", "capitalized"}}
+        proper_lemmas = {
+            lemma
+            for row in rows
+            for lemma in row.get("proper_lemma_keys", [])
+        }
         resolution = resolve_capitalization(
             key=key,
             policies=policies,
             morfeusz=morfeusz,
             explicit_policy=explicit.get(key),
+            proper_lemma_keys=proper_lemmas,
         )
         if not resolution["resolved"]:
             unresolved.append({
