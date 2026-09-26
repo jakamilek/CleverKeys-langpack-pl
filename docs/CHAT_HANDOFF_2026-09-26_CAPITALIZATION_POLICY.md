@@ -214,3 +214,11 @@ Po zakończeniu poprzedniej serii runów:
   - `e4053d0d8b5037897d697538810f5a0033144f9c`: audit modułowy przekazuje tę samą informację; wszystkie moduły nadal korzystają z jednego resolvera, bez wyjątków dla konkretnych imion.
 - Po `e4053d0d...` wystartował size-study run `36264971952`; najnowsza kontrola wykazała, że nadal jest `in_progress` na pobieraniu/validacji NKJP1M. Preview dla tego SHA nie miał jeszcze widocznego check-runa w momencie ostatniej kontroli.
 - Nie uznawać `e4053d0d...` za zweryfikowany. Po green należy pobrać świeże artefakty i sprawdzić co najmniej: CKDT 100000 dla core, 105688/5688 net-new, `Jakub/Jakuba/Jakubowi/Jakubem/Jakubie`, `Wrocław/Wrocławia/Wrocławiem/Wrocławiu`, `Toruń/Torunia/Toruniem/Toruniu`, lowercase adjectives oraz `Łódź` vs `łódź`. Nie wykonuj merge/promote.
+
+
+## Aktualizacja ciągłości — korekta testu `Jakubowi` — 2026-09-26
+
+- Przypadek `Jakubowi` nie jest błędem resolvera. Ta sama powierzchnia występuje jako odmiana imienia w konstrukcji typu „dałem Jakubowi” oraz jako przymiotnik w konstrukcji typu „synowie jakubowi”.
+- Obowiązująca nadrzędna reguła projektu mówi: każda analiza przymiotnikowa -> lowercase, niezależnie od modułu źródłowego. Dlatego dla wspólnego, case-insensitive klucza `jakubowi` kanoniczna powierzchnia CKDT może i powinna być `jakubowi`.
+- Poprzednia bramka preview wymagała błędnie `Jakubowi` z wielkiej litery. Została poprawiona w commicie `7ed6c2a1510fb611c571ae0087bcfa5cc223b43`: oczekiwane są `Jakub`, `Jakuba`, `jakubowi`, `Jakubem`, `Jakubie`, a `Jakubowi` z wielkiej litery jest jawnie odrzucane.
+- Nie należy dodawać wyjątku imiennego. To zastosowanie wspólnego resolvera, a nie reguła first-name-specific.
