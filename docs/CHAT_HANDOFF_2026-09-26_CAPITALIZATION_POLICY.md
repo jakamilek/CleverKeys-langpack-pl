@@ -239,3 +239,12 @@ Po zakończeniu poprzedniej serii runów:
 - Commit 85fa4b17728bc5891561931d51095f1a8299d3e8 dodał do preview jawny regression guard dla klucza bardo: wspólny audyt musi zwrócić dokładnie Bardo, a CKDT musi zawierać Bardo i nie może zawierać bardo.
 - Jest to wyłącznie test oczekiwanej reguły ortograficznej dla nazwy miejscowości; nie wolno implementować tego jako ręcznego wyjątku w resolverze.
 - Najnowszy preview: #276 / run 36266520815, SHA 85fa4b17728bc5891561931d51095f1a8299d3e8. W chwili rozpoczęcia wpisu status był pending; run #275 na poprzednim SHA powinien zostać zastąpiony przez concurrency.
+
+
+## Aktualizacja ciągłości — pełny audyt kapitalizacji core — 2026-09-26
+
+- Commit e9efaa0f87aedcb8e02fc35c75a09c3afef67b55 poprawił audyt core tak, aby każdy z 100 000 kluczy był przepuszczany przez wspólny resolver, niezależnie od tego, czy istnieje dla niego evidence z modułów.
+- Commit 03e6640e2beacc0a1c2fcbef7042127b7ece7555 dodatkowo umożliwił uruchomienie audytu core bez dostarczania modułów; brak modułu nie może już powodować pominięcia klucza core.
+- Commit 15c071d93fff855517c2ef936b2412531234ab4a dodał do preview wymaganie: core_audyt musi raportować 100000 core_keys_audited i 100000 resolved_core_keys, a rozstrzygnięcie klucza bardo musi mieć powierzchnię Bardo.
+- Zasada architektoniczna: członkostwo w 100k pozostaje niezmienne, ale canonical surface każdego klucza core podlega temu samemu audytowi kapitalizacji co powierzchnie modułowe.
+- Najnowszy preview #280 / run 36267146528 działa na SHA e9efaa0f87aedcb8e02fc35c75a09c3afef67b55; wynik nie jest jeszcze green.
