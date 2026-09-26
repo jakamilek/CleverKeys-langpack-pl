@@ -884,3 +884,35 @@ Następny krok:
 2. jeśli green, odczytać aktualne artefakty module-study-report.json, module-frequency-report.json, raport kapitalizacji i paczkę preview;
 3. dopiero potem przejść do testu telefonu/swipe;
 4. nie wykonywać merge/promote.
+
+
+## 28. Kontynuacja 2026-09-26 — `Gdynia` i zawężenie definicji homonimu
+
+Preview #238 na 52aa2a... zakończył się końcową asercją `assert "Gdynia" in ckdt_raw`. Wszystkie wcześniejsze bramki przeszły, w tym audyty kapitalizacji. Oznaczało to, że problem leżał na granicy `core audit -> final CKDT surface`.
+
+Analiza kodu wykazała, że audyt core i modułowy używały szerokiej kategorii `common_lexical` do decyzji lowercase. Dedykowany `audit_first_name_homonyms.py` stosuje natomiast węższą i audytowalną definicję: homonim wymaga rzeczownikowej analizy z klasą `nazwa_pospolita`.
+
+Naprawa architektoniczna:
+- commit `ae7563140232d7e091d4c95a67288822b9c10ae7`:
+  - core capitalization audit: lowercase override następuje tylko dla zweryfikowanej klasy `nazwa_pospolita`;
+  - module capitalization audit: `common_noun` jest podstawą decyzji lowercase, a nie samo `common_lexical`;
+  - zachowano pełne informacje `common_lexical_matches` do audytu, ale nie używa się ich samodzielnie jako autorytetu kapitalizacji;
+- commit `c9078c6e007e91a768c7f7e7813661c3b6dc2c9c`: normalny push komentarza/kontraktu do uruchomienia CI na zmianie `ae7563...`.
+
+Bieżący kod do testowania: `c9078c6e...` (zawiera `ae7563...` oraz komentarz; bez zmian semantycznych po `ae7563...`).
+
+Stan CI przy zapisie:
+- preview #240 — SHA `c9078c...`, pending;
+- preview #239 — SHA `ae7563...`, in progress;
+- size-study #186 — SHA `c9078c...`, in progress;
+- size-study #185 — SHA `ae7563...`, in progress.
+Starszy preview #238 (`52aa2a...`) failed tylko na `Gdynia`; ta asercja ma teraz zostać przetestowana przez nową regułę.
+
+Ważne: `Gdynia` nie jest poprawiana przez wpis do `surface_registry_policy.tsv`. Źródłem decyzji ma być poprawna klasyfikacja wspólnego audytu; ręczny wyjątek dla nazwy byłby obejściem problemu.
+
+Po green CI sprawdzić szczególnie:
+- `Gdynia` i inne oficjalne nazwy geograficzne pokrywające się z bazą 100k;
+- `Tomaszów` oraz lowercase `łódź`;
+- 48 `capitalized_homonym_names` i 5 `lowercase_common_noun_names`;
+- rzeczywisty net-new union oraz raporty modułów;
+- dopiero potem paczkę do testu swipe.
