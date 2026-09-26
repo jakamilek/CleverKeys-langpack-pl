@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Extract official one-token city names (SIMC RM=96) from the TERYT archive."""
+"""Extract all official city names (SIMC RM=96) from the TERYT archive.
+
+The source layer preserves full multiword/hyphenated names. CKDT admission and
+capitalization audit operate on their word components; downstream one-token
+morphology generation may intentionally select only single-token names.
+"""
 from __future__ import annotations
 
 import argparse
@@ -50,7 +55,7 @@ def main() -> int:
 
     rows: list[dict[str, str]] = []
     all_city_rows = 0
-    skipped_multitoken = 0
+    skipped_non_word_surface = 0
 
     for elem in root.iter():
         if strip_tag(elem.tag) != "ROW":
@@ -64,9 +69,6 @@ def main() -> int:
         stan_na = text_of(elem, "STAN_NA")
         if not name or not sym:
             raise SystemExit("SIMC city row missing NAZWA or SYM")
-        if not POLISH_WORD_RE.fullmatch(name):
-            skipped_multitoken += 1
-            continue
         rows.append({
             "name": name,
             "simc": sym,
@@ -88,6 +90,9 @@ def main() -> int:
             )
 
     final_rows = sorted(unique.values(), key=lambda r: (r["name"].lower(), r["simc"]))
+    for row in final_rows:
+        if not POLISH_WORD_RE.fullmatch(row["name"]):
+            skipped_non_word_surface += 1
 
     with args.out_tsv.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(
@@ -102,9 +107,11 @@ def main() -> int:
     report = {
         "source": "GUS TERYT SIMC",
         "rm_city_rows": all_city_rows,
-        "one_token_city_rows": len(rows),
-        "unique_one_token_city_names": len(final_rows),
-        "skipped_non_single_token_names": skipped_multitoken,
+        "city_rows": len(rows),
+        "unique_city_names": len(final_rows),
+        "single_token_city_names": sum(1 for r in final_rows if POLISH_WORD_RE.fullmatch(r["name"])),
+        "multi_component_city_names": sum(1 for r in final_rows if len(__import__("re").findall(r"[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+", r["name"])) > 1),
+        "non_word_surface_city_names": skipped_non_word_surface,
         "deduplicated_lowercase_names": len(rows) - len(final_rows),
     }
     args.out_report.write_text(
