@@ -421,8 +421,15 @@ jobs:
 
 
           terc_inflection_rows = list(csv.DictReader(Path("build/pl-terc-inflections-selected.tsv").open(encoding="utf-8", newline=""), delimiter="\t"))
-          terc_inflection_surfaces = {row["form"] for row in terc_inflection_rows}
           assert all(row["case_policy"] in {"lowercase", "capitalized"} for row in terc_inflection_rows)
+          # Like TERC lemmas, generated inflection case_policy is source evidence only.
+          # The canonical CKDT surface is the final shared capitalization-audit result.
+          expected_terc_inflection_surfaces = set()
+          for row in terc_inflection_rows:
+              key = row["form"].strip().lower()
+              resolution = core_cap_resolved.get(key) or module_cap_resolved.get(key)
+              assert resolution is not None, "No unified capitalization resolution for TERC inflection key: " + key
+              expected_terc_inflection_surfaces.add(resolution["surface"])
 
           city_inflection_rows = []
           with Path("build/pl-city-inflections.tsv").open(encoding="utf-8", newline="") as handle:
@@ -462,7 +469,7 @@ jobs:
               "official TERC names missing from CKDT after capitalization audit: "
               + ", ".join(missing_terc_names)
           )
-          missing_terc_inflections = sorted(terc_inflection_surfaces - ckdt_raw)
+          missing_terc_inflections = sorted(expected_terc_inflection_surfaces - ckdt_raw)
           assert not missing_terc_inflections, (
               "generated TERC inflection forms missing from CKDT: "
               + ", ".join(missing_terc_inflections)
@@ -477,7 +484,7 @@ jobs:
           print(json.dumps({
               "word_count": expected,
               "terc_names": len(terc_names),
-              "terc_inflection_forms": len(terc_inflection_surfaces),
+              "terc_inflection_forms": len(expected_terc_inflection_surfaces),
               "zip_entries": names,
               "ckdt_version": version,
               "has_prefix_boost": False,
