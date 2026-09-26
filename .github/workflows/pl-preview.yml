@@ -8,6 +8,8 @@ on:
       - "scripts/build_pl_preview.py"
       - "scripts/build_additive_phone_test.py"
       - "scripts/audit_capitalization_common_noun_homonyms.py"
+      - "scripts/audit_core_capitalization.py"
+      - "scripts/surface_components.py"
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
       - "sources/staging/surface_registry_policy.tsv"
@@ -133,6 +135,10 @@ jobs:
             --out-report build/pl-city-inflections-report.json \
             --overrides sources/staging/reviewed_city_inflection_overrides.tsv
 
+      - name: Audit immutable core capitalization before module assembly
+        run: |
+          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
+
       - name: Audit module capitalization against common-noun homonyms
         run: |
           python3 scripts/audit_capitalization_common_noun_homonyms.py             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-flat.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-flat.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-capitalization-common-noun-audit.json             --out-tsv build/pl-capitalization-common-noun-audit.tsv
@@ -143,7 +149,7 @@ jobs:
 
       - name: Build production-shaped additive module phone-test word list
         run: |
-          python3 scripts/build_additive_phone_test.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-flat.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-flat.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_additive_phone_test.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-flat.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-flat.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Pin CleverKeys runtime
         run: |
@@ -366,7 +372,9 @@ jobs:
           with Path("build/pl-city-source.tsv").open(encoding="utf-8", newline="") as handle:
               city_rows = list(csv.DictReader(handle, delimiter="\t"))
           city_names = {row["name"] for row in city_rows}
-          missing_city_names = sorted({w.lower() for w in city_names} - ckdt_words)
+          from scripts.surface_components import component_surfaces
+          city_components = {component.lower() for city_name in city_names for component in component_surfaces(city_name)}
+          missing_city_names = sorted(city_components - ckdt_words)
           assert not missing_city_names, (
               "official one-token city names missing from CKDT: "
               + ", ".join(missing_city_names)
@@ -380,6 +388,9 @@ jobs:
           assert "łódź" in ckdt_words
           assert "łódź" in ckdt_raw
           assert "Łódź" not in ckdt_raw
+          core_audit = json.loads(Path("build/pl-core-capitalization-audit.json").read_text(encoding="utf-8"))
+          assert core_audit["unresolved_count"] == 0
+          assert "tomaszów" not in core_audit["unresolved_keys"]
 
           audit = json.loads(Path("build/pl-capitalization-common-noun-audit.json").read_text(encoding="utf-8"))
           assert audit["unresolved_count"] == 0
