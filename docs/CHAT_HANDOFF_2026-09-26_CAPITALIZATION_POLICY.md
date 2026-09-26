@@ -187,3 +187,15 @@ Nie uznawać projektu za green przed rzeczywistym `conclusion=success` nowych ru
 - błąd preview #261 (`aleksandrowski`: brak decyzji auditowej) został usunięty architektonicznie: audit modułowy nie pomija już lowercase-only keys.
 
 Po zakończeniu #263/#201 kolejny krok to kontrola świeżych raportów/artefaktów, CKDT i net-new union. Nie wykonuj merge/promote.
+
+
+## Aktualizacja ciągłości — 2026-09-26 18:49 UTC
+
+Weryfikacja runów po migracji kapitalizacji:
+- preview #263 na `b188a614...` zakończył się failure w `build_additive_phone_test.py` przez pozostałe odwołanie do nieistniejącego `overrides`; nie był to błąd resolvera.
+- size-study #201 na `b188a614...` zakończył się success i potwierdził `net_additions_over_100k_base = 5688`, `final_unique_keys = 105688`.
+- poprawka `a1592d927f4d40632ffdeb6c3201f4633c0afe21` usunęła ostatnie odwołanie do `overrides` w builderze.
+- aktualny branch HEAD: `6d9ce9d635e9975c57b617977e6237ddbbd08343`; jedyne wystąpienie słowa `override` w builderze jest komentarzem opisującym, że builder nie wyprowadza ani nie nadpisuje kapitalizacji.
+- po triggerze przez ścieżkę objętą workflow działają teraz: preview #267 oraz size-study #202, oba na `6d9ce9d...`; na tę chwilę bez konkluzji.
+
+Nie traktuj #263 ani #201 jako wyników ostatecznego buildera po `a1592d9...`. Po green #267/#202 należy odczytać świeże artefakty i sprawdzić CKDT, kapitalizację regresji oraz net-new union. Nie wykonuj merge/promote.
