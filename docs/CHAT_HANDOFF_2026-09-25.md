@@ -944,3 +944,21 @@ Ostatnie CI przed tą poprawką:
 - size-study #186 — failed na tym samym audycie core.
 
 Po commit `8832009...` oczekiwane są nowe runy. Następna bramka to sprawdzenie, czy unresolved core = 0 bez ręcznego dodawania 17 wyjątków.
+
+
+## 30. Kontynuacja 2026-09-26 — test TERC respektuje `case_policy`
+
+Preview #242 na `88320090cb42cc38ba235c380566f160092925ef` przeszedł wszystkie wcześniejsze kroki, w tym oba audyty kapitalizacji, budowę CKDT/ZIP i generowanie paczki. Zatrzymał się dopiero w końcowej weryfikacji artefaktu.
+
+Przyczyna była błędem samej bramki CI: test robił `terc_names = {row["name"]}` i wymagał każdego źródłowego TERC name w dokładnie tej samej, kapitalizowanej postaci. To łamało przyjętą politykę, ponieważ `extract_teryt_terc.py` jawnie zapisuje `case_policy=lowercase` dla nazw przymiotnikowych/powiatowych.
+
+Naprawa:
+- commit `345becc1fb2478a0d9a0273136ba0d033a277c3f`;
+- końcowa bramka preview wylicza teraz oczekiwaną powierzchnię TERC z pola `case_policy`:
+  - `lowercase` → `name.lower()`,
+  - `capitalized` → źródłowe `name`;
+- nie zmieniono CKDT core ani źródeł danych; poprawiono wyłącznie błędne założenie testu weryfikacyjnego.
+
+Stan CI po tej poprawce należy odczytać ponownie na nowym SHA. Size-study #188 na `8832009...` pozostaje green.
+
+Następna bramka: sprawdzić nowy preview, a po green odczytać świeże artefakty i zweryfikować dokładnie kapitalizację TERC, miasta, `Łódź`, `Tomaszów`, imiona oraz net-new union. Dopiero potem paczka do testu swipe.
