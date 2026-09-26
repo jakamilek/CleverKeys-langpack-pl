@@ -561,3 +561,31 @@ Dodatkowo utworzono osobny, gotowy do wklejenia prompt:
 (commit `820816fee84173bb8e2ec14c0768866fd02f1a8d`).
 
 Ten handoff i powyższy prompt są trwałym źródłem kontekstu przy zmianie okna/instancji. Najpierw sprawdzać aktualny GitHub/CI, dopiero potem kontynuować pracę.
+
+
+## 17. Kontynuacja 2026-09-26 — TERC schema synchronization
+
+Po ponownym uruchomieniu CI wykryto dwa kolejne, zależne od siebie problemy ze zmianą kontraktu TERC.
+
+1. Commit `2c7c22eb136ec323525cd4e3ad1ccf3d21d7887b` rozszerzył walidację selektora do 10 pól: `category, name, level, terc, number, case, form, case_policy, source, morfeusz_version`.
+2. Commit `c5cd8b9cf74331ec2e7c24eb2859e495acc7af2d` dostosował `scripts/build_pl_preview.py` do tego 10-polowego selected-TERC TSV.
+3. Commit `a5ff83b0a522293aec68c47f74a13277f624e2d4` naprawił ważniejszy problem generatora: jednostki TERC nie mogą być deduplikowane po nazwie, ponieważ różne kody TERC mogą mieć tę samą nazwę. Tożsamość jednostki jest teraz oparta na `level + terc`.
+
+Runy:
+- preview #168 i size-study #144 na SHA `2c7c22e...` przeszły krok 14, ale zatrzymały się później na krokach zależnych od starego kontraktu buildera.
+- po `c5cd8b9...` uruchomiono preview #170 oraz size-study #146 na SHA `a5ff83b0...`.
+- preview #170 jest oczekujący, size-study #146 jest uruchomiony; wynik końcowy należy zweryfikować bez założeń.
+- first-name audit #77 na `c5cd8b9...` zakończył się błędem wyłącznie przy pobraniu przypiętego AOSP; nie traktować tego jako błędu danych językowych.
+
+### Obowiązkowa kontrola po zakończeniu CI
+
+Najpierw zweryfikować #170 i #146. Następnie sprawdzić rzeczywiste artefakty TERC i policzyć:
+- 16 województw z pełną odmianą,
+- 380 powiatów z selektywną retencją,
+- 2479 gmin z mianownikiem w warstwie produkcyjnej,
+- pełną odmianę zachowaną jako audit artifact,
+- selected TERC jako produkcyjny input.
+
+Nie wolno używać historycznej wartości 2,611 jako aktualnego net-new kosztu, ponieważ obejmowała wycofany pilot. Po zakończeniu obecnego size-study należy odczytać nowy `module-study-report.json` i `module-frequency-report.json` oraz dopiero wtedy podejmować decyzję o kalibracji selekcji powiatów.
+
+Aktualny branch HEAD: `a5ff83b0a522293aec68c47f74a13277f624e2d4`.
