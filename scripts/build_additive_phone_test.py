@@ -110,7 +110,8 @@ def main() -> int:
 
         if override:
             surface, policy = override
-            if surface not in {c["surface"] for c in explicit}:
+            offered = {c["surface"] for c in candidates}
+            if surface not in offered:
                 conflicts.append({
                     "key": key,
                     "candidates": sorted(variants),
