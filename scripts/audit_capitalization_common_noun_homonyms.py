@@ -121,6 +121,12 @@ def main() -> int:
     ap.add_argument("--capital-inflections", type=Path, required=True)
     ap.add_argument("--custom", type=Path, required=True)
     ap.add_argument("--surface-registry-policy", type=Path, required=True)
+    ap.add_argument(
+        "--core-capitalization-audit",
+        type=Path,
+        default=None,
+        help="Optional authoritative core audit. Core-overlapping surfaces are verified, not re-resolved here.",
+    )
     ap.add_argument("--out-json", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
     args = ap.parse_args()
@@ -191,6 +197,16 @@ def main() -> int:
     )
 
     policy = load_surface_policy(args.surface_registry_policy)
+    core_resolved: dict[str, dict[str, str]] = {}
+    if args.core_capitalization_audit:
+        core_audit = json.loads(args.core_capitalization_audit.read_text(encoding="utf-8"))
+        if core_audit.get("unresolved_count", 0):
+            raise SystemExit(
+                "Authoritative core capitalization audit is unresolved: "
+                + ", ".join(core_audit.get("unresolved_keys", []))
+            )
+        core_resolved = core_audit.get("resolved_surfaces", {})
+    core_keys = set(core_resolved)
     # Explicit global surface policies are themselves capitalization decisions and
     # must also be audited, independently of whether the key is present in a module.
     for key, (surface, case_policy) in policy.items():
@@ -209,8 +225,38 @@ def main() -> int:
     resolved_surfaces: dict[str, dict[str, str]] = {}
     common_noun_count = 0
     capitalized_candidate_count = 0
+    core_authoritative_count = 0
 
     for key, rows in sorted(candidates.items()):
+        if key in core_keys:
+            authoritative = core_resolved[key]
+            audited.append({
+                "surface_key": key,
+                "capitalized_candidates": sorted({
+                    (r["surface"], r["source"])
+                    for r in rows
+                    if r["policy"] == "capitalized"
+                }),
+                "sources": sorted({r["source"] for r in rows}),
+                "common_lexical_homonym": None,
+                "common_noun_homonym": None,
+                "common_lexical_matches": [],
+                "common_noun_matches": [],
+                "explicit_surface_policy": (
+                    {"surface": policy[key][0], "policy": policy[key][1]}
+                    if key in policy
+                    else None
+                ),
+                "resolved": True,
+                "resolution_reason": "core-authoritative",
+                "core_authoritative": True,
+                "canonical_surface": authoritative["surface"],
+                "canonical_policy": authoritative["policy"],
+            })
+            resolved_surfaces[key] = authoritative
+            core_authoritative_count += 1
+            continue
+
         capitalized = [r for r in rows if r["policy"] == "capitalized"]
         if not capitalized:
             continue
@@ -296,6 +342,8 @@ def main() -> int:
         "unresolved_count": len(unresolved),
         "unresolved_surface_keys": [r["surface_key"] for r in unresolved],
         "resolved_surfaces": resolved_surfaces,
+        "core_authoritative_keys": core_authoritative_count,
+        "module_only_keys_analyzed": sum(1 for row in audited if not row.get("core_authoritative")),
         "audited": audited,
     }
 
@@ -316,6 +364,9 @@ def main() -> int:
                 "explicit_surface_policy",
                 "resolved",
                 "resolution_reason",
+                "core_authoritative",
+                "canonical_surface",
+                "canonical_policy",
             ]
         )
         for row in audited:
