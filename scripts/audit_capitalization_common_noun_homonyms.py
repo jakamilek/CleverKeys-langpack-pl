@@ -79,9 +79,10 @@ def load_surface_policy(path: Path) -> dict[str, tuple[str, str]]:
     return out
 
 
-def common_noun_matches(morfeusz, surface: str) -> list[dict[str, object]]:
+def common_lexical_matches(morfeusz, surface: str) -> list[dict[str, object]]:
     analyses = morfeusz.analyse(surface.lower())
     matches: list[dict[str, object]] = []
+    ordinary_pos = {"subst", "adj", "adv", "verb", "part", "prep", "conj", "num", "ger", "ppron", "pron"}
     for item in analyses:
         if len(item) < 3:
             continue
@@ -93,7 +94,9 @@ def common_noun_matches(morfeusz, surface: str) -> list[dict[str, object]]:
         tag = str(payload[2])
         classes = payload[3] if isinstance(payload[3], (tuple, list)) else []
         classes = [str(x) for x in classes]
-        if tag.startswith("subst:") and COMMON_NOUN_CLASS in classes:
+        pos = tag.split(":", 1)[0]
+        proper_classes = [cls for cls in classes if cls.startswith("nazwa_") and cls != COMMON_NOUN_CLASS]
+        if pos in ordinary_pos and not proper_classes:
             matches.append(
                 {
                     "orth": orth,
@@ -103,7 +106,6 @@ def common_noun_matches(morfeusz, surface: str) -> list[dict[str, object]]:
                 }
             )
     return matches
-
 
 def main() -> int:
     ap = argparse.ArgumentParser()
@@ -207,8 +209,9 @@ def main() -> int:
             continue
         capitalized_candidate_count += 1
         policies = {r["policy"] for r in rows if r["policy"] in {"lowercase", "capitalized"}}
-        matches = common_noun_matches(morfeusz, key)
+        matches = common_lexical_matches(morfeusz, key)
         has_common_noun = bool(matches)
+        has_common_lexical = bool(matches)
         resolution = policy.get(key)
         resolved = True
         resolution_reason = None
@@ -243,8 +246,10 @@ def main() -> int:
                 {(r["surface"], r["source"]) for r in capitalized}
             ),
             "sources": sorted({r["source"] for r in rows}),
-            "common_noun_homonym": has_common_noun,
-            "common_noun_matches": matches,
+            "common_lexical_homonym": has_common_lexical,
+            "common_noun_homonym": any(COMMON_NOUN_CLASS in m.get("classes", []) for m in matches),
+            "common_lexical_matches": matches,
+            "common_noun_matches": [m for m in matches if COMMON_NOUN_CLASS in m.get("classes", [])],
             "explicit_surface_policy": (
                 {"surface": resolution[0], "policy": resolution[1]}
                 if resolution is not None
