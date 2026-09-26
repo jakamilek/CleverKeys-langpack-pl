@@ -247,3 +247,33 @@ Kontynuacja po synchronizacji schematu TERC:
 - preview #170 i size-study #146 działają/oczekują na SHA `a5ff83b0...`; sprawdź ich rzeczywisty wynik przed dalszą decyzją.
 - Nie używaj historycznego 2,611 jako aktualnego kosztu modułów.
 - Po green CI odczytaj aktualny `module-study-report.json`, `module-frequency-report.json` i artefakty TERC.
+
+
+## Aktualizacja 2026-09-26 — ostatnie decyzje kapitalizacji i pipeline
+
+Branch roboczy: ops/baseline-sync-2026-09-20
+Ostatni commit: 52aa2abe5d6a7c48cc98288ffe2a382a083c0c5e
+
+Naprawione problemy architektoniczne:
+1. surface_components.py usuwa angielski possessive 's / ’s / ＇s jako niefaktyczny komponent CKDT.
+2. build_pl_preview.py dodaje source-backed module forms do ranked przed wyliczeniem zipf, spell i rank_of, więc nie ma już KeyError dla prawidłowych nazw modułowych spoza wordfreq.
+3. size-study używa tych samych audytów kapitalizacji core/module co production-shaped additive path.
+4. audyty kapitalizacji zachowują jawnie audytowaną kapitalizację first-name-inflection przed ogólną regułą common-noun -> lowercase; lowercase_common_noun pozostaje jawnie zdefiniowanym wyjątkiem.
+
+Najważniejszy ostatni błąd:
+preview #236 wykazał, że 48 capitalized_homonym_names było obecnych w audycie imion, ale generic capitalization audit obniżał je do lowercase. Nie wolno naprawiać tego 48 ręcznymi wyjątkami. Prawidłowa zasada to pierwszeństwo źródła first-name-inflection przy polityce wyłącznie capitalized.
+
+Nowe CI na bieżącym SHA 52aa2a...:
+- preview #238 — in progress;
+- size-study #184 — in progress.
+
+First-name audit #96 na poprzednim SHA cc073e... — success.
+Size-study #182 na cc073e... — success; net_additions_over_100k_base = 5688. Nie jest to jednak ostateczny wynik kapitalizacji po poprawce imion.
+
+Po otwarciu nowego czatu:
+- sprawdź rzeczywisty HEAD branch;
+- sprawdź najnowsze CI na 52aa2a...;
+- jeżeli którykolwiek run jest failed, analizuj przyczynę architektonicznie;
+- jeżeli preview i size-study są green, pobierz/odczytaj aktualne raporty i artefakty;
+- następnie zweryfikuj CKDT, net-new union oraz przygotuj dopiero wtedy paczkę do testu swipe;
+- nie wykonuj merge/promote.
