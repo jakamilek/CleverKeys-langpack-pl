@@ -606,3 +606,12 @@ Nowa polityka została zapisana w:
 (commit `e246e849b51bc39dba382e3d3522f1bfe7ace520`).
 
 Przy dalszej implementacji nie cofać ochrony provenance przez `level + terc`, ale także nie pozwalać, aby identyfikator jednostki powodował duplikację kluczy w finalnym CKDT.
+
+
+### Doprecyzowanie 2026-09-26 — selected TERC jako jedyny production surface layer
+
+Nowa polityka powierzchni modułów została rozszerzona: `build/pl-terc-inflections.tsv` i `build/pl-terc-flat.tsv` są wyłącznie materiałem źródłowym/audytowym. Jedynym kontraktem produkcyjnym warstwy TERC ma być `build/pl-terc-inflections-selected.tsv`.
+
+Builder CKDT nie powinien równolegle dodawać nazw z pełnego TERC i nazw z selected TERC. Pełna warstwa pozostaje do provenance, audytu wykluczeń i kontroli tożsamości jednostek; selected layer jest jedynym źródłem powierzchni produkcyjnych TERC.
+
+Polityka została zapisana w `docs/PL_MODULE_SURFACE_IDENTITY_AND_CAPITALIZATION_POLICY_2026-09-26.md`, commit `41c2f2847349d98bd66df3b9e8bfe0d0e410f8e9`.
