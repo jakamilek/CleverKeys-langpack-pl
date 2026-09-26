@@ -210,8 +210,8 @@ def main() -> int:
         capitalized_candidate_count += 1
         policies = {r["policy"] for r in rows if r["policy"] in {"lowercase", "capitalized"}}
         matches = common_lexical_matches(morfeusz, key)
-        has_common_noun = bool(matches)
         has_common_lexical = bool(matches)
+        has_common_noun = any(COMMON_NOUN_CLASS in m.get("classes", []) for m in matches)
         resolution = policy.get(key)
         resolved = True
         resolution_reason = None
@@ -229,16 +229,16 @@ def main() -> int:
                 resolution_reason = "policy-does-not-select-lowercase-common-noun-surface"
             else:
                 resolution_reason = "explicit-surface-registry-policy"
-        elif has_common_noun:
-            common_noun_count += 1
+        elif has_common_lexical:
+            common_noun_count += 1 if has_common_noun else 0
             if key in lower_name_policies:
                 resolution_reason = "explicit-first-name-lowercase-common-noun-policy"
             else:
                 resolved = False
-                resolution_reason = "common-noun-homonym-without-explicit-lowercase-resolution"
+                resolution_reason = "common-lexical-homonym-without-explicit-surface-resolution"
 
-        if has_common_noun:
-            common_noun_count += 1 if resolution is not None and resolved else 0
+        if has_common_noun and resolution is not None and resolved:
+            common_noun_count += 1
 
         row = {
             "surface_key": key,
