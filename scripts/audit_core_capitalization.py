@@ -9,7 +9,7 @@ Rules:
 - source evidence is collected from all active module/source layers, including
   multi-component names;
 - capitalization is never inferred from 100k membership;
-- a capitalized source candidate is checked independently for a common-noun
+- a capitalized source candidate is checked independently for a verified common-noun
   homonym using Morfeusz 2 / SGJP;
 - capitalized-vs-lowercase source conflicts require explicit surface policy;
 - a capitalized candidate with a common-noun homonym requires an explicit
