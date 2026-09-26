@@ -108,6 +108,22 @@ def common_lexical_matches(morfeusz, surface: str) -> list[dict[str, object]]:
             )
     return matches
 
+def common_adjective_matches(morfeusz, surface: str) -> list[dict[str, object]]:
+    """Return ordinary adjective analyses relevant to capitalization orthography."""
+    matches = []
+    for item in morfeusz.analyse(surface.lower()):
+        if len(item) < 3:
+            continue
+        payload = item[2]
+        if not isinstance(payload, (tuple, list)) or len(payload) < 4:
+            continue
+        orth, lemma, tag = str(payload[0]), str(payload[1]), str(payload[2])
+        classes = payload[3] if isinstance(payload[3], (tuple, list)) else []
+        classes = [str(x) for x in classes]
+        if tag.startswith("adj:") and "nazwa_pospolita" not in classes:
+            matches.append({"orth": orth, "lemma": lemma, "tag": tag, "classes": classes})
+    return matches
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--first-name-inflections", type=Path, required=True)
@@ -264,6 +280,7 @@ def main() -> int:
         capitalized_candidate_count += 1
         policies = {r["policy"] for r in rows if r["policy"] in {"lowercase", "capitalized"}}
         matches = common_lexical_matches(morfeusz, key)
+        adjective_matches = common_adjective_matches(morfeusz, key)
         has_common_lexical = bool(matches)
         has_common_noun = any(COMMON_NOUN_CLASS in m.get("classes", []) for m in matches)
         resolution = policy.get(key)
@@ -287,6 +304,8 @@ def main() -> int:
             # Common-noun homonymy does not erase their capitalization unless the
             # name has an audited lowercase-common-noun policy.
             resolution_reason = "first-name-category-capitalized-policy"
+        elif adjective_matches and not has_common_noun:
+            resolution_reason = "verified-adjective-orthography-lowercase"
         elif has_common_noun:
             resolution_reason = "common-noun-homonym-default-lowercase"
         elif policies == {"lowercase"}:
@@ -309,6 +328,7 @@ def main() -> int:
             "common_lexical_homonym": has_common_lexical,
             "common_noun_homonym": any(COMMON_NOUN_CLASS in m.get("classes", []) for m in matches),
             "common_lexical_matches": matches,
+            "common_adjective_matches": adjective_matches,
             "common_noun_matches": [m for m in matches if COMMON_NOUN_CLASS in m.get("classes", [])],
             "explicit_surface_policy": (
                 {"surface": resolution[0], "policy": resolution[1]}
