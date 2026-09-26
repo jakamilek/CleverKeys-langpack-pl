@@ -67,9 +67,15 @@ def add_source(
             continue
         for index, component in component_records(raw):
             key = component.lower()
-            policy = special_policy.get(key, base_policy)
-            # Preserve the source casing of this component unless a source-level
-            # policy explicitly normalizes it.
+            # Phrase-level capitalization is not inherited mechanically. A component
+            # written lowercase in the official source remains lowercase even when
+            # another component of the same phrase starts with a capital letter.
+            source_component_policy = (
+                "lowercase"
+                if base_policy == "lowercase" or component[:1].islower()
+                else "capitalized"
+            )
+            policy = special_policy.get(key, source_component_policy)
             candidate = component
             if policy == "lowercase":
                 candidate = component.lower()
