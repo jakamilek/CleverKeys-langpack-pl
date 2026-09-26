@@ -168,6 +168,23 @@ jobs:
         run: |
           python3 scripts/build_additive_phone_test.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-source build/pl-terc-source.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --module-capitalization-audit build/pl-capitalization-common-noun-audit.json             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
+      - name: Verify canonical core surfaces before CKDT build
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          words = {
+              line.strip()
+              for line in Path("build/pl_words_preview.txt").read_text(encoding="utf-8").splitlines()
+              if line.strip() and not line.startswith("#")
+          }
+          assert "Bardo" in words, "canonical preview surface missing before CKDT: Bardo"
+          assert "bardo" not in words, "lowercase preview surface still present: bardo"
+          assert "Tomaszów" in words, "canonical preview surface missing before CKDT: Tomaszów"
+          assert "tomaszów" not in words, "lowercase preview surface still present: tomaszów"
+          print("Core canonical surface sentinels present before CKDT: Bardo, Tomaszów")
+          PY
+
       - name: Pin CleverKeys runtime
         run: |
           git clone --filter=blob:none --no-checkout https://github.com/tribixbite/CleverKeys.git build/CleverKeys-runtime
