@@ -1102,9 +1102,62 @@ def main() -> int:
     if missing_guards:
         raise SystemExit("Guard words lost: " + ", ".join(missing_guards))
 
-    # Final capitalization gate: every retained word is checked immediately before it
-    # becomes a dictionary surface. Ordinary vocabulary stays lowercase; only audited
-    # proper-name/city mappings may intentionally restore an initial capital.
+    # Common surface registry: source categories contribute audited candidate surfaces,
+    # while ordinary vocabulary supplies only the default lowercase policy. The registry
+    # resolves compatible duplicates and blocks unresolved explicit cross-module conflicts.
+    surface_registry = {}
+    def register_surface(key, surface, policy, source):
+        surface_registry.setdefault(key, []).append({
+            "surface": surface,
+            "policy": policy,
+            "source": source,
+        })
+
+    for word in keep:
+        register_surface(word, word, "lowercase", "ordinary-vocabulary")
+    for key, surface in terc_inflection_surface_map.items():
+        register_surface(key, surface, terc_inflection_case_policy_map[key], "terc")
+    for key, surface in country_surface_map.items():
+        register_surface(key, surface, country_case_policy_map[key], "country")
+    for key, surface in country_inflection_surface_map.items():
+        register_surface(key, surface, country_inflection_case_policy_map[key], "country-inflection")
+    for key, surface in capital_surface_map.items():
+        register_surface(key, surface, capital_case_policy_map[key], "capital")
+    for key, surface in capital_inflection_surface_map.items():
+        register_surface(key, surface, capital_inflection_case_policy_map[key], "capital-inflection")
+    for key, surface in custom_surface_map.items():
+        register_surface(key, surface, custom_case_policy_map[key], "custom-manual")
+    for key, surface in city_surface_map.items():
+        register_surface(key, surface, "capitalized", "city")
+    for key, surface in city_inflection_surface_map.items():
+        register_surface(key, surface, "capitalized", "city-inflection")
+    for key, surface in first_name_inflection_surface_map.items():
+        policy = "lowercase" if key in lowercase_first_name_inflection_surfaces else "capitalized"
+        register_surface(key, surface, policy, "first-name-inflection")
+    for key, surface in first_name_case_map.items():
+        policy = "lowercase" if key in lowercase_first_name_exceptions else "capitalized"
+        register_surface(key, surface, policy, "first-name")
+
+    registry_conflicts = []
+    resolved_surface = {}
+    resolved_policy = {}
+    for key, candidates in sorted(surface_registry.items()):
+        explicit = [c for c in candidates if c["source"] != "ordinary-vocabulary"]
+        variants = {(c["surface"], c["policy"]) for c in explicit}
+        if len(variants) > 1:
+            registry_conflicts.append({
+                "key": key,
+                "candidates": sorted(variants),
+                "sources": sorted({c["source"] for c in explicit}),
+            })
+            continue
+        if variants:
+            surface, policy = next(iter(variants))
+        else:
+            surface, policy = key, "lowercase"
+        resolved_surface[key] = surface
+        resolved_policy[key] = policy
+
     surface_keep = {}
     capitalization_audit = {
         "checked": 0,
@@ -1113,53 +1166,19 @@ def main() -> int:
         "capitalized_surfaces": 0,
         "lowercase_first_name_inflection_surfaces": len(lowercase_first_name_inflection_surfaces),
         "violations": [],
+        "surface_registry_keys": len(surface_registry),
+        "surface_registry_conflicts": len(registry_conflicts),
     }
+    if registry_conflicts:
+        sample = "; ".join(
+            f"{row['key']}={row['candidates']}" for row in registry_conflicts[:20]
+        )
+        raise SystemExit("Unresolved surface registry conflicts: " + sample)
+
     for word, reason in keep.items():
-        expected_surface = word
-        capitalization_policy = "lowercase"
+        expected_surface = resolved_surface.get(word, word)
+        capitalization_policy = resolved_policy.get(word, "lowercase")
         context = f"{reason}:{word}"
-
-        # Derived adjectives are ordinary lexical surfaces. The current pipeline does not
-        # generate them in the proper-name/city inflection maps, so they stay lowercase.
-        # Future category generators should tag their adjective outputs as "adjective"
-        # rather than routing them through proper-name capitalization.
-
-        if word in lowercase_first_name_exceptions:
-            expected_surface = word
-            capitalization_policy = "lowercase"
-        elif word in lowercase_first_name_inflection_surfaces:
-            expected_surface = word
-            capitalization_policy = "lowercase"
-        elif word in terc_inflection_surface_map:
-            expected_surface = terc_inflection_surface_map[word]
-            capitalization_policy = terc_inflection_case_policy_map[word]
-        elif word in country_surface_map:
-            expected_surface = country_surface_map[word]
-            capitalization_policy = country_case_policy_map[word]
-        elif word in capital_surface_map:
-            expected_surface = capital_surface_map[word]
-            capitalization_policy = capital_case_policy_map[word]
-        elif word in country_inflection_surface_map:
-            expected_surface = country_inflection_surface_map[word]
-            capitalization_policy = country_inflection_case_policy_map[word]
-        elif word in capital_inflection_surface_map:
-            expected_surface = capital_inflection_surface_map[word]
-            capitalization_policy = capital_inflection_case_policy_map[word]
-        elif word in custom_surface_map:
-            expected_surface = custom_surface_map[word]
-            capitalization_policy = custom_case_policy_map[word]
-        elif word in city_surface_map:
-            expected_surface = city_surface_map[word]
-            capitalization_policy = "capitalized"
-        elif word in city_inflection_surface_map:
-            expected_surface = city_inflection_surface_map[word]
-            capitalization_policy = "capitalized"
-        elif word in first_name_inflection_surface_map:
-            expected_surface = first_name_inflection_surface_map[word]
-            capitalization_policy = "capitalized"
-        elif word in first_name_case_map:
-            expected_surface = first_name_case_map[word]
-            capitalization_policy = "capitalized"
 
         try:
             validate_capitalization(
