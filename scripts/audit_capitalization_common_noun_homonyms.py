@@ -56,11 +56,20 @@ def add_candidates(
             surface = surface.lower()
         for component in component_surfaces(surface):
             component_policy = policy if component[:1].isupper() else "lowercase"
+            proper_lemma_keys = (
+                sorted({
+                    part.lower()
+                    for part in component_surfaces(row.get(name_field, ""))
+                })
+                if name_field and row.get(name_field, "").strip()
+                else []
+            )
             out.setdefault(component.lower(), []).append(
                 {
                     "surface": component,
                     "policy": component_policy,
                     "source": source,
+                    "proper_lemma_keys": proper_lemma_keys,
                 }
             )
 
@@ -112,38 +121,39 @@ def main() -> int:
         "form",
         None,
         "first-name-inflection",
+        name_field="name",
     )
-    add_candidates(candidates, read_rows(args.cities), "name", None, "city")
+    add_candidates(candidates, read_rows(args.cities), "name", None, "city", name_field="name")
     add_candidates(
-        candidates, read_rows(args.city_inflections), "form", None, "city-inflection"
+        candidates, read_rows(args.city_inflections), "form", None, "city-inflection", name_field="name"
     )
-    add_candidates(candidates, read_rows(args.terc_source), "name", "case_policy", "terc-source")
+    add_candidates(candidates, read_rows(args.terc_source), "name", "case_policy", "terc-source", name_field="name")
     add_candidates(
         candidates,
         read_rows(args.terc_inflections),
         "form",
         "case_policy",
-        "terc",
+        "terc", name_field="name",
     )
     add_candidates(
-        candidates, read_rows(args.countries), "name", "case_policy", "country"
+        candidates, read_rows(args.countries), "name", "case_policy", "country", name_field="name"
     )
     add_candidates(
         candidates,
         read_rows(args.country_inflections),
         "form",
         "case_policy",
-        "country-inflection",
+        "country-inflection", name_field="name",
     )
     add_candidates(
-        candidates, read_rows(args.capitals), "name", "case_policy", "capital"
+        candidates, read_rows(args.capitals), "name", "case_policy", "capital", name_field="name"
     )
     add_candidates(
         candidates,
         read_rows(args.capital_inflections),
         "form",
         "case_policy",
-        "capital-inflection",
+        "capital-inflection", name_field="name",
     )
     add_candidates(
         candidates, read_rows(args.custom), "surface", "case_policy", "custom-manual"
@@ -218,11 +228,17 @@ def main() -> int:
             for r in rows
             if r["policy"] in {"lowercase", "capitalized"}
         }
+        proper_lemmas = {
+            lemma
+            for row in rows
+            for lemma in row.get("proper_lemma_keys", [])
+        }
         resolution = resolve_capitalization(
             key=key,
             policies=policies,
             morfeusz=morfeusz,
             explicit_policy=policy.get(key),
+            proper_lemma_keys=proper_lemmas,
         )
         capitalized = [r for r in rows if r["policy"] == "capitalized"]
         if capitalized:
