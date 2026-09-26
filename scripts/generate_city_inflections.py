@@ -14,6 +14,7 @@ import argparse
 import csv
 import json
 from pathlib import Path
+import re
 
 CASES = ("nom", "gen", "dat", "acc", "inst", "loc", "voc")
 
@@ -43,7 +44,8 @@ def case_from_tag(tag: str) -> set[str]:
 
 def main() -> int:
     args = parse_args()
-    cities = load_tsv(args.cities)
+    all_cities = load_tsv(args.cities)
+    cities = [row for row in all_cities if re.fullmatch(r"^[a-ząćęłńóśźż]+$", row["name"], re.IGNORECASE)]
     priorities = {row["name"].strip().lower() for row in load_tsv(args.priorities) if row.get("name", "").strip()}
     if not cities:
         raise SystemExit("No cities supplied")
@@ -202,7 +204,9 @@ def main() -> int:
     report = {
         "oracle": "Morfeusz 2 / SGJP",
         "morfeusz_version": str(morfeusz2.__version__),
+        "all_city_names_in_source": len(all_cities),
         "all_one_token_city_names": len(cities),
+        "multi_component_city_names_excluded_from_one_token_inflection": len(all_cities) - len(cities),
         "top_n": args.top_n,
         "priority_names": sorted(priorities),
         "selected_city_names": len(selected),
