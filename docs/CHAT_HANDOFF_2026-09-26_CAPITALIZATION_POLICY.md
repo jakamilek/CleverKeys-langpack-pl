@@ -222,3 +222,13 @@ Po zakończeniu poprzedniej serii runów:
 - Obowiązująca nadrzędna reguła projektu mówi: każda analiza przymiotnikowa -> lowercase, niezależnie od modułu źródłowego. Dlatego dla wspólnego, case-insensitive klucza `jakubowi` kanoniczna powierzchnia CKDT może i powinna być `jakubowi`.
 - Poprzednia bramka preview wymagała błędnie `Jakubowi` z wielkiej litery. Została poprawiona w commicie `7ed6c2a1510fb611c571ae0087bcfa5cc223b43`: oczekiwane są `Jakub`, `Jakuba`, `jakubowi`, `Jakubem`, `Jakubie`, a `Jakubowi` z wielkiej litery jest jawnie odrzucane.
 - Nie należy dodawać wyjątku imiennego. To zastosowanie wspólnego resolvera, a nie reguła first-name-specific.
+
+
+## Aktualizacja ciągłości — TERC jako dowód, nie finalna powierzchnia — 2026-09-26
+
+- Preview #274 / SHA `ee6286002eebc0f5d5c0d286518e7030a6446e28` zakończył się failure nie z powodu samej zasady kapitalizacji, lecz dlatego, że bramka końcowa porównywała powierzchnie wygenerowanych odmian TERC bezpośrednio z `ckdt_raw`, zamiast z końcowym wynikiem wspólnego audytu.
+- Dotyczyło to zarówno nazw TERC, jak i wygenerowanych odmian. `case_policy` w TERC jest wyłącznie evidencją źródłową; oczekiwana powierzchnia CKDT musi pochodzić z `core-capitalization-audit` lub `module-capitalization-audit`.
+- Commit `e49ace6886899dc72bc1e0fcdf06fc6b0bc8423c` poprawił bramkę tak, aby odmiany TERC były również sprawdzane względem finalnej decyzji resolvera.
+- Ważny przypadek diagnostyczny: `bardo` występuje w 100k core. Sam fakt, że surowy core ma tę powierzchnię małą literą, nie może blokować korekty kapitalizacji przez audyt core. Przynależność do core jest niezmienna, ale canonical surface może zostać skorygowana przez audyt zgodnie z zasadami ortografii i evidence źródłowym.
+- `Bardo` jako nazwa miejscowości powinno być reprezentowane przez wspólny audyt jako `Bardo`, o ile nie wystąpi nadrzędna, udokumentowana kolizja leksykalna. Nie dodawać ręcznego wyjątku dla `Bardo`; najpierw potwierdzić wynik wspólnego resolvera w świeżym CI.
+- Aktualny preview #275 / run `36266428522` działa na SHA `e49ace6886899dc72bc1e0fcdf06fc6b0bc8423c`. Nie traktować go jako green do czasu rzeczywistego `conclusion=success` i kontroli artefaktu.
