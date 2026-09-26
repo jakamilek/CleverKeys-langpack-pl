@@ -1,4 +1,5 @@
 name: Polish language pack preview
+# CI retrigger: validate latest capitalization-resolver-only builder.
 # Keep artifact verification aligned with source case_policy; no promotion occurs in preview.
 
 on:
