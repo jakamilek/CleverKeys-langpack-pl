@@ -153,3 +153,21 @@ This policy is an architectural clarification, not a change to the immutable 100
 - 16 voivodeships — full inflection;
 - 380 powiats — selective inflection;
 - 2479 gminas — nominative only in production.
+
+
+## TERC production boundary
+
+The complete `build/pl-terc-inflections.tsv` / `build/pl-terc-flat.tsv` material is audit/source material.
+
+The production TERC surface layer should be represented by `build/pl-terc-inflections-selected.tsv` only. It contains the nominative records needed for all retained units plus the retained inflection forms according to the 16/380/2479 policy.
+
+The preview/CKDT builder should not independently inject TERC names from the full audit layer in addition to the selected production layer. This prevents two TERC representations from becoming competing capitalization authorities.
+
+The full TERC artifact remains available for:
+- provenance;
+- excluded-form audit;
+- source-unit identity;
+- retention review;
+- regression testing.
+
+The selected TERC artifact is the single production contract for the TERC module.
