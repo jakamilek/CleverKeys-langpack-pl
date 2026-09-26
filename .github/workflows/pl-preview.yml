@@ -551,3 +551,4 @@ jobs:
             build/pl-terc-retention-report.json
 
 # Trigger after unified capitalization architecture migration; no semantic rule change.
+# Push-trigger synchronization after first-name policy retirement.
