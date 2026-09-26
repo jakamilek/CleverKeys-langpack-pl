@@ -98,11 +98,26 @@ def main() -> int:
     base = read_base(args.base)
     lowercase_names = load_first_name_policy(args.first_name_surface_policy)
 
+    core_audit = json.loads(args.core_capitalization_audit.read_text(encoding="utf-8"))
+    module_audit = json.loads(args.module_capitalization_audit.read_text(encoding="utf-8"))
+    if core_audit.get("unresolved_count", 0):
+        raise SystemExit(
+            "Core capitalization audit contains unresolved keys: "
+            + ", ".join(core_audit.get("unresolved_keys", []))
+        )
+    if module_audit.get("unresolved_count", 0):
+        raise SystemExit(
+            "Module capitalization audit contains unresolved keys: "
+            + ", ".join(module_audit.get("unresolved_surface_keys", []))
+        )
+    core_resolved = core_audit.get("resolved_surfaces", {})
+    module_resolved = module_audit.get("resolved_surfaces", {})
+
     registry: dict[str, list[dict[str, str]]] = {
         key: [{
-            "surface": core_resolved.get(key, surface),
+            "surface": core_resolved.get(key, {}).get("surface", surface),
             "policy": (
-                core_audit.get("resolved_surfaces", {}).get(key, {}).get("policy", "")
+                core_resolved.get(key, {}).get("policy", "")
                 or ("lowercase" if surface == surface.lower() else "capitalized")
             ),
             "source": "immutable-100k-core",
@@ -120,27 +135,6 @@ def main() -> int:
     add_records(registry, read_rows(args.capitals), "name", "case_policy", "capital")
     add_records(registry, read_rows(args.capital_inflections), "form", "case_policy", "capital-inflection")
     add_records(registry, read_rows(args.custom), "surface", "case_policy", "custom-manual")
-
-    core_audit = json.loads(args.core_capitalization_audit.read_text(encoding="utf-8"))
-    module_audit = json.loads(args.module_capitalization_audit.read_text(encoding="utf-8"))
-    if core_audit.get("unresolved_count", 0):
-        raise SystemExit(
-            "Core capitalization audit contains unresolved keys: "
-            + ", ".join(core_audit.get("unresolved_keys", []))
-        )
-    if module_audit.get("unresolved_count", 0):
-        raise SystemExit(
-            "Module capitalization audit contains unresolved keys: "
-            + ", ".join(module_audit.get("unresolved_surface_keys", []))
-        )
-    core_resolved = {
-        key: value
-        for key, value in core_audit.get("resolved_surfaces", {}).items()
-    }
-    module_resolved = {
-        key: value
-        for key, value in module_audit.get("resolved_surfaces", {}).items()
-    }
 
     overrides = {}
     with args.surface_registry_policy.open(encoding="utf-8", newline="") as handle:
