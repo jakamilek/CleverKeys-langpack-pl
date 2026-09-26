@@ -206,13 +206,14 @@ def main() -> int:
         if not capitalized:
             continue
         capitalized_candidate_count += 1
+        policies = {r["policy"] for r in rows if r["policy"] in {"lowercase", "capitalized"}}
         matches = common_noun_matches(morfeusz, key)
         has_common_noun = bool(matches)
         resolution = policy.get(key)
         resolved = True
         resolution_reason = None
 
-        if len({r["policy"] for r in capitalized}) > 1 and resolution is None:
+        if len(policies) > 1 and resolution is None:
             resolved = False
             resolution_reason = "mixed-source-capitalization-policy-without-explicit-resolution"
         elif resolution is not None:
