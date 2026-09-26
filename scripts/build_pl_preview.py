@@ -573,7 +573,7 @@ def main() -> int:
         "--terc",
         type=Path,
         default=None,
-        help="Current official GUS TERYT TERC three-level administrative source.",
+        help="Current official GUS TERYT TERC source for audit only; selected TERC is the production surface input.",
     )
     ap.add_argument(
         "--terc-inflections",
@@ -844,7 +844,7 @@ def main() -> int:
 
     # Official three-level TERC names are explicit candidates. Lower-level TERC rows are
     # retained in the source audit but are not mixed into this flat administrative layer.
-    for word in sorted(terc_forms | terc_inflection_forms):
+    for word in sorted(terc_inflection_forms):
         if word not in seen:
             ranked.append(word)
             seen.add(word)
@@ -926,8 +926,7 @@ def main() -> int:
     # by wordfreq and therefore must not disappear merely because they fall outside
     # the frequency candidate window. Their actual net cost is measured separately.
     explicit_module_forms = (
-        terc_forms
-        | terc_inflection_forms
+        terc_inflection_forms
         | country_forms
         | country_inflection_forms
         | capital_forms
@@ -959,9 +958,6 @@ def main() -> int:
             continue
         if word in terc_inflection_forms:
             keep[word] = "reviewed-terc-inflection"
-            continue
-        if word in terc_forms:
-            keep[word] = "reviewed-terc"
             continue
         if word in country_inflection_forms:
             keep[word] = "reviewed-country-inflection"
@@ -1058,7 +1054,7 @@ def main() -> int:
     if len(keep) > args.limit:
         protected = {
             w for w in keep
-            if w in guards or w in custom_forms or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms or w in terc_forms or w in terc_inflection_forms or w in country_forms or w in country_inflection_forms or w in capital_forms or w in capital_inflection_forms
+            if w in guards or w in custom_forms or w in reviewed_first_names or w in first_name_inflection_forms or w in city_forms or w in city_inflection_forms or w in terc_inflection_forms or w in country_forms or w in country_inflection_forms or w in capital_forms or w in capital_inflection_forms
         }
         if len(protected) > args.limit:
             raise SystemExit(
@@ -1127,9 +1123,6 @@ def main() -> int:
         elif word in lowercase_first_name_inflection_surfaces:
             expected_surface = word
             capitalization_policy = "lowercase"
-        elif word in terc_surface_map:
-            expected_surface = terc_surface_map[word]
-            capitalization_policy = terc_case_policy_map[word]
         elif word in terc_inflection_surface_map:
             expected_surface = terc_inflection_surface_map[word]
             capitalization_policy = terc_inflection_case_policy_map[word]
