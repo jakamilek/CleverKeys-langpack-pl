@@ -658,7 +658,6 @@ def main() -> int:
         args.capitals = None
         args.capital_inflections = None
         args.custom = None
-        args.surface_registry_policy = None
 
     from wordfreq import iter_wordlist, zipf_frequency
     try:
