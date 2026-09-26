@@ -393,9 +393,11 @@ def load_terc_inflections(
     with path.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
         expected_fields = {"category", "name", "level", "terc", "number", "case", "form", "case_policy", "source", "morfeusz_version"}
-        if set(reader.fieldnames or ()) != expected_fields:
+        fields = set(reader.fieldnames or ())
+        allowed_fields = expected_fields | {"retention"}
+        if not expected_fields.issubset(fields) or not fields.issubset(allowed_fields):
             raise SystemExit(
-                f"Malformed TERC inflection header {path}: expected {sorted(expected_fields)}"
+                f"Malformed TERC inflection header {path}: expected {sorted(expected_fields)} with optional retention audit field"
             )
         for line_no, row in enumerate(reader, 2):
             form = row["form"].strip()
