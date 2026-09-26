@@ -64,7 +64,7 @@ Testowanie ręczne służy do wykrywania zachowania silnika swipe („pisania ge
 
 ## 6. Nazwy z końcowym apostrofowym \'s
 
-Tokenizer komponentów usuwa końcowe angielskie \'s z nazw międzynarodowych przed utworzeniem powierzchni słownikowych. Dzięki temu np. `John's` daje komponent `John`, a nie spurious token `s`. Pełna nazwa źródłowa nadal pozostaje zachowana dla pochodzenia i audytu. Apostrofy wewnętrzne pozostają separatorami komponentów.
+Tokenizer komponentów usuwa końcowe angielskie \'s z nazw międzynarodowych przed utworzeniem powierzchni słownikowych. Dzięki temu np. `John's` daje komponent `John`, a nie pozorny token `s`. Pełna nazwa źródłowa nadal pozostaje zachowana dla pochodzenia i audytu. Apostrofy wewnętrzne pozostają separatorami komponentów.
 
 ## 6. Ograniczenie modelu CKDT
 
