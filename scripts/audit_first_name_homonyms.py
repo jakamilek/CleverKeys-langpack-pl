@@ -66,42 +66,30 @@ def main() -> int:
     ap.add_argument("--out-json", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
     ap.add_argument("--out-blocklist", type=Path, required=True)
-    ap.add_argument("--surface-policy", type=Path, required=True)
+    ap.add_argument("--exclusions", type=Path, required=True)
     args = ap.parse_args()
 
     import morfeusz2
 
     morfeusz = morfeusz2.Morfeusz()
-    surface_policy: dict[str, str] = {}
-    with args.surface_policy.open(encoding="utf-8", newline="") as handle:
+    exclusions: set[str] = set()
+    with args.exclusions.open(encoding="utf-8", newline="") as handle:
         for row in csv.DictReader(handle, delimiter="\t"):
-            surface_policy[row["name"].strip().lower()] = row["policy"].strip()
+            exclusions.add(row["name"].strip().lower())
     selected = selected_names(args.history_report, args.historical_first_names)
 
     rows: list[dict] = []
     for item in selected:
+        lower = item["name"].lower()
+        if lower in exclusions:
+            rows.append({**item, "source_excluded": True, "common_noun_homonym": False, "matches": []})
+            continue
         matches = analyse_name(morfeusz, item["name"])
-        rows.append({
-            **item,
-            "common_noun_homonym": bool(matches),
-            "surface_policy": surface_policy.get(item["name"].lower(), "capitalized_name"),
-            "matches": matches,
-        })
+        rows.append({**item, "source_excluded": False, "common_noun_homonym": bool(matches), "matches": matches})
 
-    homonyms = [r for r in rows if r["common_noun_homonym"]]
+    homonyms = [r for r in rows if r["common_noun_homonym"] and not r["source_excluded"]]
     homonym_names = sorted({r["name"].lower() for r in homonyms})
-    lowercase = sorted(
-        r["name"].lower() for r in homonyms
-        if r["surface_policy"] == "lowercase_common_noun"
-    )
-    capitalized = sorted(
-        r["name"].lower() for r in homonyms
-        if r["surface_policy"] == "capitalized_name"
-    )
-    excluded = sorted(
-        r["name"].lower() for r in selected
-        if r["name"].lower() in surface_policy and surface_policy[r["name"].lower()] == "exclude"
-    )
+    excluded = sorted({r["name"].lower() for r in rows if r["source_excluded"]})
 
     summary = {
         "mode": "audit-and-gate",
@@ -115,8 +103,7 @@ def main() -> int:
         "common_noun_homonym_female": sum(r["gender"] == "F" for r in homonyms),
         "common_noun_homonym_male": sum(r["gender"] == "M" for r in homonyms),
         "homonym_names": homonym_names,
-        "lowercase_common_noun_names": lowercase,
-        "capitalized_homonym_names": capitalized,
+        "common_noun_homonym_names": homonym_names,
         "excluded_names": excluded,
         "non_homonym_count": len(rows) - len(homonyms),
         "rows": rows,
@@ -142,7 +129,7 @@ def main() -> int:
                 row["gender"],
                 row["name"],
                 row["layer"],
-                str(row["common_noun_homonym"]).lower(),
+                str(row["source_excluded"]).lower(),
                 json.dumps(row["matches"], ensure_ascii=False, separators=(",", ":")),
             ])
 
