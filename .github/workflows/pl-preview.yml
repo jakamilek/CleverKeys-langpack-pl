@@ -139,6 +139,16 @@ jobs:
         run: |
           python3 scripts/build_pl_preview.py             --base-only             --top 300000             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --out-wordlist build/base100k.txt             --out-report build/base100k-report.json
 
+      - name: Validate global multiword surface tokenizer
+        run: |
+          python3 - <<'PY'
+          from scripts.surface_components import component_surfaces
+
+          assert component_surfaces("Tomaszów Mazowiecki") == ["Tomaszów", "Mazowiecki"]
+          assert component_surfaces("Saint John's") == ["Saint", "John"]
+          assert component_surfaces("D'Arcy") == ["D", "Arcy"]
+          PY
+
       - name: Audit immutable core capitalization before module assembly
         run: |
           python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
