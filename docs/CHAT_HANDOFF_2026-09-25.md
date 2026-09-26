@@ -615,3 +615,45 @@ Nowa polityka powierzchni modułów została rozszerzona: `build/pl-terc-inflect
 Builder CKDT nie powinien równolegle dodawać nazw z pełnego TERC i nazw z selected TERC. Pełna warstwa pozostaje do provenance, audytu wykluczeń i kontroli tożsamości jednostek; selected layer jest jedynym źródłem powierzchni produkcyjnych TERC.
 
 Polityka została zapisana w `docs/PL_MODULE_SURFACE_IDENTITY_AND_CAPITALIZATION_POLICY_2026-09-26.md`, commit `41c2f2847349d98bd66df3b9e8bfe0d0e410f8e9`.
+
+
+## 19. Uogólnienie architektury — 2026-09-26
+
+Przyjęta zasada identity-vs-surface obowiązuje projektowo dla **całego pakietu**, nie tylko dla TERC.
+
+- Tożsamość źródłowa pozostaje granularna i audytowalna.
+- Tożsamość słownikowa jest globalnym, case-insensitive `surface_key = Unicode-lowercase(surface)`.
+- Wszystkie moduły i immutable core uczestniczą w tej samej logice unii kluczy.
+- Jeden klucz CKDT może wystąpić tylko raz, ale może mieć wielu kontrybutorów/provenance.
+- Kapitalizacja jest decyzją dla konkretnej powierzchni, a nie cechą całego modułu.
+- Niezgodne polityki kapitalizacji dla tego samego klucza są konfliktem audytowym i blokują promocję; system nie wybiera automatycznie zwycięzcy.
+- Ogólny docelowy przepływ: `source records -> validated forms -> surface registry -> CKDT`.
+
+Dokument nadrzędny:
+`docs/DICTIONARY_SURFACE_IDENTITY_AND_CAPITALIZATION_POLICY_2026-09-26.md`
+(commit `2224036550eba4b752624862cdb143ee9e9e16a2`).
+
+Dokument szczegółowy TERC pozostaje dokumentem implementacyjnym dla tego modułu.
+
+### 19a. Naprawy pipeline TERC
+
+Po błędzie preview #170 wykryto, że rozdzielenie tożsamości źródłowej od surface identity odsłoniło błąd w generatorze: po przejściu na klucz `level+terc` kod nadal pobierał metadane przez `names[lower_name]`, co powodowało `KeyError: 'bolesławiec'`.
+
+Naprawiono kolejno:
+- `f7a9173a5991512022c14c4793d6476fc53c3aee` — generator korzysta z bieżącego rekordu jednostki;
+- `ff667a7fb66794bd9684d07d0f7775940dfbaf15` — builder przestał dodawać pełny TERC równolegle z selected TERC;
+- `a439f0c3e07cd6251f9c249c405400d9bb5273fa` — preview workflow przekazuje TERC do buildera przez selected layer;
+- `d9a74bb5eec2f9b8b6b22b6dbeb50c9f93364b2d` — size-study i frequency audit mierzą produkcyjny selected TERC, bez pełnego TERC jako osobnego modułu;
+- `c0fd25634f736d96d04c795f4ea1061c3bd2563a` — builder akceptuje opcjonalną kolumnę auditową `retention` w selected TERC;
+- `f0eb0d0b2422b75d9cf8061270868ffa5aec0e34` — voivodeship TERC jest generowany jako lowercase zgodnie z przyjętą polityką ortograficzną.
+
+Pełny TERC pozostaje materiałem audit/source; selected TERC jest jedyną produkcyjną warstwą surface dla TERC.
+
+### 19b. Otwarte zadanie kapitalizacji gmin
+
+Nie uznajemy jeszcze problemu kapitalizacji gmin za zakończony. Obecny extractor nadal nie implementuje rozstrzygnięcia językowego „rzeczownik/proper-name vs przymiotnik” dla każdej gminy. Jest to kolejny etap audytu surface registry; nie wolno zastąpić go prostą regułą „wszystkie gminy wielką literą”.
+
+### 19c. CI
+
+Preview #170 zakończył się błędem na generatorze TERC z `KeyError: 'bolesławiec'` — był to błąd implementacyjny, nie błąd źródła TERC.
+Po zmianach od `f7a9173...` do `f0eb0d0...` powinny zostać sprawdzone nowe runy preview/size-study od najnowszego HEAD przed użyciem jakichkolwiek liczb końcowych.
