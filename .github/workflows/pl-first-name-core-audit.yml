@@ -14,7 +14,8 @@ on:
       - "sources/staging/reviewed_morphology.tsv"
       - "sources/staging/reviewed_proper_nouns.tsv"
       - "sources/staging/historical_name_candidates.tsv"
-      - "sources/staging/first_name_surface_policy.tsv"
+      - "sources/staging/first_name_source_exclusions.tsv"
+      - "scripts/capitalization_rules.py"
       - "docs/PL_NAME_HISTORY_SOURCE_POLICY_2026-09-23.md"
   workflow_dispatch:
 
@@ -47,15 +48,15 @@ jobs:
       - name: Build modern name history core and preview
         run: |
           python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-215-each-gender.txt             --out-buffer build/pl-name-history-buffer-216-300.tsv             --workdir build/pl-name-history-sources             --core-per-gender 215             --buffer-end-rank 300
-          python3 scripts/build_pl_preview.py             --top 200000 --band 100000 --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
+          python3 scripts/build_pl_preview.py             --top 200000 --band 100000 --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-history build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv --first-name-source-exclusions sources/staging/first_name_source_exclusions.tsv             --out-wordlist build/pl_words_preview.txt             --out-report build/pl-preview-report.json
 
       - name: Audit first-name common-noun homonyms
         run: |
-          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --out-blocklist build/pl-first-name-capitalized-homonyms.txt --surface-policy sources/staging/first_name_surface_policy.tsv
+          python3 scripts/audit_first_name_homonyms.py             --history-report build/pl-name-history-report.json             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-homonym-audit.json             --out-tsv build/pl-first-name-homonym-audit.tsv             --exclusions sources/staging/first_name_source_exclusions.tsv
 
       - name: Audit 470 selected first names
         run: |
-          python3 scripts/audit_first_name_core.py             --history-report build/pl-name-history-report.json             --preview-wordlist build/pl_words_preview.txt             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-surface-policy sources/staging/first_name_surface_policy.tsv             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-core-audit.json             --out-tsv build/pl-first-name-core-audit.tsv
+          python3 scripts/audit_first_name_core.py             --history-report build/pl-name-history-report.json             --preview-wordlist build/pl_words_preview.txt             --aosp build/aosp/pl_wordlist.combined.gz             --first-name-source-exclusions sources/staging/first_name_source_exclusions.tsv             --historical-first-names sources/staging/historical_name_candidates.tsv             --out-json build/pl-first-name-core-audit.json             --out-tsv build/pl-first-name-core-audit.tsv
 
       - name: Verify core size and no regression blocklisted names
         run: |
@@ -71,7 +72,6 @@ jobs:
           assert r["counts"]["regression_blocked"] == 0
           assert r["counts"]["active_selected_in_preview"] == 469
           assert r["counts"]["excluded_selected"] == 1
-          assert r["counts"]["lowercase_surface_selected"] == 5
           assert r["counts"]["all_selected_in_preview"] is True
           print(json.dumps(r["counts"], ensure_ascii=False, indent=2))
           PY
@@ -84,11 +84,10 @@ jobs:
             build/pl-first-name-core-audit.json
             build/pl-first-name-core-audit.tsv
             sources/staging/historical_name_candidates.tsv
-            sources/staging/first_name_surface_policy.tsv
+            sources/staging/first_name_source_exclusions.tsv
             build/pl-name-history-report.json
             build/pl-name-history-core-215-each-gender.txt
             build/pl-name-history-buffer-216-300.tsv
             build/pl-preview-report.json
             build/pl-first-name-homonym-audit.json
             build/pl-first-name-homonym-audit.tsv
-            build/pl-first-name-capitalized-homonyms.txt
