@@ -46,7 +46,23 @@ Każdy człon jest rozpatrywany osobno pod kątem:
 
 Przykład `Tomaszów Mazowiecki`: pełna nazwa pozostaje w źródle, a `Tomaszów` i `Mazowiecki` są osobno analizowane. Pozwala to wykryć błąd `tomaszów` w rdzeniu nawet wtedy, gdy osobny moduł nie zostałby nigdy dodany do finalnego słownika.
 
-## 4. Wszystkie moduły korzystają z tej samej zasady
+## 4. Hierarchia prawdy dla kapitalizacji
+
+### 4.1 Rdzeń jest autorytetem
+
+Po zakończeniu scripts/audit_core_capitalization.py rdzeń wyznacza kanoniczną powierzchnię dla każdego klucza należącego do 100 000. Jest to pierwsza i nadrzędna prawda dotycząca kapitalizacji tego klucza w finalnym CKDT.
+
+Jeżeli klucz modułowy już należy do rdzenia, moduł nie może ponownie ustalać jego pierwszej litery ani nadpisywać decyzji rdzenia. Podczas składania słownika moduł przejmuje powierzchnię ustaloną przez rdzeń.
+
+### 4.2 Audyt modułów jest drugą warstwą ochronną
+
+Audyt scripts/audit_capitalization_common_noun_homonyms.py działa po audycie rdzenia. Dla kluczy obecnych w rdzeniu pełni funkcję kontrolną („second layer” — „druga warstwa ochronna”) i zapisuje fakt, że kanon pochodzi z rdzenia; nie wykonuje konkurencyjnego rozstrzygnięcia kapitalizacji.
+
+Dla kluczy net-new („nowych względem rdzenia”) modułowy audyt pozostaje właściwą warstwą rozstrzygającą. Jawny rejestr surface_registry_policy.tsv może nadal dostarczać bezpieczne, audytowalne wyjątki.
+
+Taka hierarchia daje jeden kanon i eliminuje sytuację, w której ten sam klucz ma dwie niezależne decyzje kapitalizacyjne.
+
+### 4.3 Wszystkie moduły korzystają z tej samej zasady
 
 Dotyczy to imion, miast, TERC, państw, stolic i przyszłych modułów.
 
