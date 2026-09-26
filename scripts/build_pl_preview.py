@@ -392,7 +392,7 @@ def load_terc_inflections(
         return forms, surface_map, case_policy_map
     with path.open(encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
-        expected_fields = {"name", "level", "terc", "case", "form", "case_policy", "source", "morfeusz_version"}
+        expected_fields = {"category", "name", "level", "terc", "number", "case", "form", "case_policy", "source", "morfeusz_version"}
         if set(reader.fieldnames or ()) != expected_fields:
             raise SystemExit(
                 f"Malformed TERC inflection header {path}: expected {sorted(expected_fields)}"
