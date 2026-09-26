@@ -383,7 +383,6 @@ jobs:
 
           audit = json.loads(Path("build/pl-capitalization-common-noun-audit.json").read_text(encoding="utf-8"))
           assert audit["unresolved_count"] == 0
-          assert "łódź" in audit["unresolved_surface_keys"] or "łódź" not in audit["unresolved_surface_keys"]
           assert "tomaszów" not in audit["unresolved_surface_keys"]
           assert "Tomaszów" in ckdt_raw
           assert "tomaszów" not in ckdt_raw
