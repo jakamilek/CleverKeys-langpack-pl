@@ -282,6 +282,7 @@ def load_custom_words(
 
 def load_city_source(
     path: Path,
+    surface_registry_policy: dict[str, tuple[str, str]] | None = None,
 ) -> tuple[set[str], dict[str, str]]:
     forms: set[str] = set()
     surface_map: dict[str, str] = {}
@@ -300,13 +301,15 @@ def load_city_source(
                 raise SystemExit(f"Malformed city source row {path}:{line_no}")
             for component in component_surfaces(name):
                 lower = component.lower()
+                override = (surface_registry_policy or {}).get(lower)
+                canonical = override[0] if override is not None else component
                 forms.add(lower)
                 prior = surface_map.get(lower)
-                if prior is not None and prior != component:
+                if prior is not None and prior != canonical:
                     raise SystemExit(
-                        f"Conflicting city component capitalization {path}:{line_no}: {prior!r} vs {component!r}"
+                        f"Conflicting city component capitalization {path}:{line_no}: {prior!r} vs {canonical!r}"
                     )
-                surface_map[lower] = component
+                surface_map[lower] = canonical
     return forms, surface_map
 
 
@@ -371,6 +374,7 @@ def load_lowercase_inflection_surfaces(
 
 def load_first_name_inflections(
     path: Path,
+    surface_registry_policy: dict[str, tuple[str, str]] | None = None,
 ) -> tuple[set[str], dict[str, str]]:
     forms: set[str] = set()
     surface_map: dict[str, str] = {}
@@ -391,6 +395,9 @@ def load_first_name_inflections(
             if not is_inflection_surface(form):
                 raise SystemExit(f"Invalid first-name inflection form {path}:{line_no}: {form!r}")
             lower = form.lower()
+            override = (surface_registry_policy or {}).get(lower)
+            if override is not None:
+                form = override[0]
             prior = surface_map.get(lower)
             if prior is not None and prior != form:
                 # One CKDT lowercase key can have only one canonical surface. Prefer the
@@ -412,6 +419,7 @@ def load_first_name_inflections(
 
 def load_terc_inflections(
     path: Path,
+    surface_registry_policy: dict[str, tuple[str, str]] | None = None,
 ) -> tuple[set[str], dict[str, str], dict[str, str]]:
     forms: set[str] = set()
     surface_map: dict[str, str] = {}
@@ -435,6 +443,9 @@ def load_terc_inflections(
             if not is_inflection_surface(form):
                 raise SystemExit(f"Invalid TERC inflection form {path}:{line_no}: {form!r}")
             lower = form.lower()
+            override = (surface_registry_policy or {}).get(lower)
+            if override is not None:
+                form = override[0]
             prior = surface_map.get(lower)
             if prior is not None and prior != form:
                 raise SystemExit(
@@ -442,6 +453,9 @@ def load_terc_inflections(
                 )
             surface_map[lower] = form
             policy = row["case_policy"].strip()
+            override = (surface_registry_policy or {}).get(lower)
+            if override is not None:
+                form, policy = override
             if policy not in {"lowercase", "capitalized"}:
                 raise SystemExit(f"Invalid TERC inflection case policy {path}:{line_no}: {policy!r}")
             prior_policy = case_policy_map.get(lower)
@@ -455,6 +469,7 @@ def load_terc_inflections(
 def load_geo_source(
     path: Path,
     expected_category: str,
+    surface_registry_policy: dict[str, tuple[str, str]] | None = None,
 ) -> tuple[set[str], dict[str, str], dict[str, str]]:
     forms: set[str] = set()
     surface_map: dict[str, str] = {}
@@ -483,6 +498,9 @@ def load_geo_source(
                     if policy == "lowercase" or component[:1].islower()
                     else "capitalized"
                 )
+                override = (surface_registry_policy or {}).get(lower)
+                if override is not None:
+                    component, component_policy = override
                 prior = surface_map.get(lower)
                 if prior is not None and prior != component:
                     raise SystemExit(
@@ -502,6 +520,7 @@ def load_geo_source(
 
 def load_geo_inflections(
     path: Path,
+    surface_registry_policy: dict[str, tuple[str, str]] | None = None,
 ) -> tuple[set[str], dict[str, str], dict[str, str]]:
     forms: set[str] = set()
     surface_map: dict[str, str] = {}
@@ -527,6 +546,9 @@ def load_geo_inflections(
             if not is_inflection_surface(form):
                 raise SystemExit(f"Invalid geo inflection surface {path}:{line_no}: {form!r}")
             lower = form.lower()
+            override = (surface_registry_policy or {}).get(lower)
+            if override is not None:
+                form, policy = override
             prior = surface_map.get(lower)
             if prior is not None and prior != form:
                 raise SystemExit(
@@ -647,6 +669,8 @@ def main() -> int:
     ap.add_argument("--out-report", type=Path, required=True)
     args = ap.parse_args()
 
+    surface_registry_policy = load_surface_registry_policy(args.surface_registry_policy)
+
     if args.base_only:
         # The base core is intentionally built only from frequency-ranked candidates
         # plus the normal linguistic evidence/quality gates. All additive category
@@ -719,7 +743,8 @@ def main() -> int:
     lowercase_first_name_inflection_surfaces: set[str] = set()
     if args.first_name_inflections:
         first_name_inflection_forms, first_name_inflection_surface_map = load_first_name_inflections(
-            args.first_name_inflections
+            args.first_name_inflections,
+            surface_registry_policy,
         )
         lowercase_first_name_inflection_surfaces = load_lowercase_inflection_surfaces(
             args.first_name_inflections,
@@ -729,12 +754,12 @@ def main() -> int:
     city_forms: set[str] = set()
     city_surface_map: dict[str, str] = {}
     if args.cities:
-        city_forms, city_surface_map = load_city_source(args.cities)
+        city_forms, city_surface_map = load_city_source(args.cities, surface_registry_policy)
 
     city_inflection_forms: set[str] = set()
     city_inflection_surface_map: dict[str, str] = {}
     if args.city_inflections:
-        city_inflection_forms, city_inflection_surface_map = load_first_name_inflections(args.city_inflections)
+        city_inflection_forms, city_inflection_surface_map = load_first_name_inflections(args.city_inflections, surface_registry_policy)
 
     terc_forms: set[str] = set()
     terc_surface_map: dict[str, str] = {}
@@ -758,7 +783,11 @@ def main() -> int:
                         if policy == "lowercase" or component[:1].islower()
                         else "capitalized"
                     )
-                    canonical = component.lower() if component_policy == "lowercase" else component
+                    override = surface_registry_policy.get(lower)
+                    if override is not None:
+                        canonical, component_policy = override
+                    else:
+                        canonical = component.lower() if component_policy == "lowercase" else component
                     prior = terc_surface_map.get(lower)
                     if prior is not None and prior != canonical:
                         raise SystemExit(
@@ -777,7 +806,7 @@ def main() -> int:
     terc_inflection_surface_map: dict[str, str] = {}
     terc_inflection_case_policy_map: dict[str, str] = {}
     if args.terc_inflections:
-        terc_inflection_forms, terc_inflection_surface_map, terc_inflection_case_policy_map = load_terc_inflections(args.terc_inflections)
+        terc_inflection_forms, terc_inflection_surface_map, terc_inflection_case_policy_map = load_terc_inflections(args.terc_inflections, surface_registry_policy)
 
     country_forms: set[str] = set()
     country_surface_map: dict[str, str] = {}
@@ -786,9 +815,9 @@ def main() -> int:
     capital_surface_map: dict[str, str] = {}
     capital_case_policy_map: dict[str, str] = {}
     if args.countries:
-        country_forms, country_surface_map, country_case_policy_map = load_geo_source(args.countries, "country")
+        country_forms, country_surface_map, country_case_policy_map = load_geo_source(args.countries, "country", surface_registry_policy)
     if args.capitals:
-        capital_forms, capital_surface_map, capital_case_policy_map = load_geo_source(args.capitals, "capital")
+        capital_forms, capital_surface_map, capital_case_policy_map = load_geo_source(args.capitals, "capital", surface_registry_policy)
 
     country_inflection_forms: set[str] = set()
     country_inflection_surface_map: dict[str, str] = {}
@@ -797,11 +826,9 @@ def main() -> int:
     capital_inflection_surface_map: dict[str, str] = {}
     capital_inflection_case_policy_map: dict[str, str] = {}
     if args.country_inflections:
-        country_inflection_forms, country_inflection_surface_map, country_inflection_case_policy_map = load_geo_inflections(args.country_inflections)
+        country_inflection_forms, country_inflection_surface_map, country_inflection_case_policy_map = load_geo_inflections(args.country_inflections, surface_registry_policy)
     if args.capital_inflections:
-        capital_inflection_forms, capital_inflection_surface_map, capital_inflection_case_policy_map = load_geo_inflections(args.capital_inflections)
-
-    surface_registry_policy = load_surface_registry_policy(args.surface_registry_policy)
+        capital_inflection_forms, capital_inflection_surface_map, capital_inflection_case_policy_map = load_geo_inflections(args.capital_inflections, surface_registry_policy)
 
     custom_forms: set[str] = set()
     custom_surface_map: dict[str, str] = {}
