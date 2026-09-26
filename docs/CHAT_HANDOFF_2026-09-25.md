@@ -1031,3 +1031,18 @@ Weryfikacja runów po migracji kapitalizacji:
 - po triggerze przez ścieżkę objętą workflow działają teraz: preview #267 oraz size-study #202, oba na `6d9ce9d...`; na tę chwilę bez konkluzji.
 
 Nie traktuj #263 ani #201 jako wyników ostatecznego buildera po `a1592d9...`. Po green #267/#202 należy odczytać świeże artefakty i sprawdzić CKDT, kapitalizację regresji oraz net-new union. Nie wykonuj merge/promote.
+
+
+## Aktualizacja ciągłości — 2026-09-26 19:xx UTC
+
+Po zakończeniu poprzedniej serii runów:
+- preview #267 / SHA `6d9ce9d...` zakończył się failure z powodu składni w skrypcie weryfikacji; poprawki newline zostały zapisane w `e815df35...` i `56835bd9...`.
+- size-study #202 / SHA `6d9ce9d...` zakończył się failure z tym samym problemem składniowym.
+- preview na `56835bd980184470344a7c62b7df14e887a11fc1` przeszedł audyty kapitalizacji i zbudował CKDT/ZIP, ale końcowa bramka zatrzymała się na `assert "Jakubowi" in expected_inflection_surfaces`. To nie był błąd CKDT: wcześniejszy audyt core rozstrzygał klucz `jakubowi` jako lowercase mimo źródłowej powierzchni `Jakubowi`.
+- size-study #202? No — świeży sukces po poprawce newline to run `36264286627` na SHA `e815df35...`: `success`, a świeży raport potwierdził 100000 core i 105688 końcowych kluczy / 5688 net-new.
+- Diagnostyczna poprawka architektoniczna:
+  - `71cd49823f56560bff6f2a1497fd8fa9b2a967fb`: wspólny resolver otrzymuje `proper_lemma_keys`; wspólna reguła common-noun nie traktuje niezwiązanej analizy leksykalnej jako kolizji.
+  - `cb1d6ced738955beb59cf5629a740509d313f59e`: audit core przekazuje lineage lematów źródłowych.
+  - `e4053d0d8b5037897d697538810f5a0033144f9c`: audit modułowy przekazuje tę samą informację; wszystkie moduły nadal korzystają z jednego resolvera, bez wyjątków dla konkretnych imion.
+- Po `e4053d0d...` wystartował size-study run `36264971952`; najnowsza kontrola wykazała, że nadal jest `in_progress` na pobieraniu/validacji NKJP1M. Preview dla tego SHA nie miał jeszcze widocznego check-runa w momencie ostatniej kontroli.
+- Nie uznawać `e4053d0d...` za zweryfikowany. Po green należy pobrać świeże artefakty i sprawdzić co najmniej: CKDT 100000 dla core, 105688/5688 net-new, `Jakub/Jakuba/Jakubowi/Jakubem/Jakubie`, `Wrocław/Wrocławia/Wrocławiem/Wrocławiu`, `Toruń/Torunia/Toruniem/Toruniu`, lowercase adjectives oraz `Łódź` vs `łódź`. Nie wykonuj merge/promote.
