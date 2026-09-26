@@ -16,6 +16,8 @@ import csv
 import json
 from pathlib import Path
 
+from surface_components import component_surfaces
+
 COMMON_NOUN_CLASS = "nazwa_pospolita"
 
 
@@ -52,13 +54,15 @@ def add_candidates(
         if name_field and row.get(name_field, "").strip().lower() in lower_names:
             policy = "lowercase"
             surface = surface.lower()
-        out.setdefault(surface.lower(), []).append(
-            {
-                "surface": surface,
-                "policy": policy,
-                "source": source,
-            }
-        )
+        for component in component_surfaces(surface):
+            component_policy = policy if component[:1].isupper() else "lowercase"
+            out.setdefault(component.lower(), []).append(
+                {
+                    "surface": component,
+                    "policy": component_policy,
+                    "source": source,
+                }
+            )
 
 
 def load_surface_policy(path: Path) -> dict[str, tuple[str, str]]:
@@ -107,6 +111,7 @@ def main() -> int:
     ap.add_argument("--first-name-surface-policy", type=Path, required=True)
     ap.add_argument("--cities", type=Path, required=True)
     ap.add_argument("--city-inflections", type=Path, required=True)
+    ap.add_argument("--terc-source", type=Path, required=True)
     ap.add_argument("--terc-inflections", type=Path, required=True)
     ap.add_argument("--countries", type=Path, required=True)
     ap.add_argument("--country-inflections", type=Path, required=True)
@@ -145,6 +150,7 @@ def main() -> int:
     add_candidates(
         candidates, read_rows(args.city_inflections), "form", None, "city-inflection"
     )
+    add_candidates(candidates, read_rows(args.terc_source), "name", "case_policy", "terc-source")
     add_candidates(
         candidates,
         read_rows(args.terc_inflections),
