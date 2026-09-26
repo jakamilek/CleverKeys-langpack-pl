@@ -665,6 +665,8 @@ def main() -> int:
         default=None,
         help="Optional audited capitalization resolutions for additive module surfaces.",
     )
+    # Optional audit inputs let diagnostic size variants reuse the same
+    # audited capitalization decisions as the production-shaped phone-test path.
     ap.add_argument(
         "--cities",
         type=Path,
