@@ -620,6 +620,12 @@ def main() -> int:
         help="Explicit hand-reviewed manual/custom dictionary surfaces.",
     )
     ap.add_argument(
+        "--surface-registry-policy",
+        type=Path,
+        default=Path("sources/staging/surface_registry_policy.tsv"),
+        help="Explicit audited resolutions for cross-source canonical surface conflicts.",
+    )
+    ap.add_argument(
         "--cities",
         type=Path,
         default=None,
@@ -652,6 +658,7 @@ def main() -> int:
         args.capitals = None
         args.capital_inflections = None
         args.custom = None
+        args.surface_registry_policy = None
 
     from wordfreq import iter_wordlist, zipf_frequency
     try:
