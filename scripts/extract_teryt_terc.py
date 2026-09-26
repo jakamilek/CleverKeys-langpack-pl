@@ -20,9 +20,9 @@ def canonical_surface(name: str, level: str, kind: str) -> tuple[str, str]:
     """Return the CKDT surface and explicit casing policy for an admin unit name."""
     value = name.strip()
     if level == "voivodeship":
-        # TERYT stores voivodeship names in uppercase; ordinary Polish usage writes
-        # the standalone adjective with an initial capital only in a name-like layer.
-        return value[:1].upper() + value[1:].lower(), "capitalized"
+        # Contemporary Polish orthography writes administrative voivodeship
+        # names in lowercase, including the standalone adjectival name element.
+        return value.lower(), "lowercase"
     if level == "powiat" and kind == "powiat":
         # Powiat names are adjectival: powiat cieszyński -> cieszyński.
         return value.lower(), "lowercase"
