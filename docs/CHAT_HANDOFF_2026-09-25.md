@@ -657,3 +657,30 @@ Nie uznajemy jeszcze problemu kapitalizacji gmin za zakończony. Obecny extracto
 
 Preview #170 zakończył się błędem na generatorze TERC z `KeyError: 'bolesławiec'` — był to błąd implementacyjny, nie błąd źródła TERC.
 Po zmianach od `f7a9173...` do `f0eb0d0...` powinny zostać sprawdzone nowe runy preview/size-study od najnowszego HEAD przed użyciem jakichkolwiek liczb końcowych.
+
+
+## 20. Rejestr powierzchni wdrożony w budowaniu — 2026-09-26
+
+Zasada identity-vs-surface została zastosowana na poziomie wspólnego etapu przed CKDT, a nie tylko w dokumentacji TERC.
+
+- `scripts/build_pl_preview.py` buduje wspólny rejestr powierzchni dla zwykłego słownictwa i aktywnych modułów.
+- Klucz słownikowy jest case-insensitive (`Unicode-lowercase`).
+- Zwykłe słownictwo ma domyślną politykę lowercase; moduły źródłowe dostarczają jawne polityki kapitalizacji.
+- Kompatybilne duplikaty są łączone pod jednym kluczem.
+- Sprzeczne jawne powierzchnie/polityki dla jednego klucza są konfliktem i zatrzymują budowę.
+- Raport preview zawiera `surface_registry` z liczbą kluczy i konfliktów.
+
+Commit wdrażający rejestr:
+`2297c97e83aa8586848f2bd84b6e0f9b60c22ca9`
+
+## 21. Wynik size-study #151 — punkt odniesienia przed kolejną zmianą
+
+Run #151 na `f0eb0d0b...` zakończył się sukcesem. Raport modułów wykazał:
+- 6975 unikalnych kluczy modułowych przed porównaniem z rdzeniem;
+- 1531 kluczy modułowych już obecnych w immutable 100k;
+- 5444 klucze netto ponad rdzeń;
+- 105444 klucze jako `100000 + 5444` po unii case-insensitive.
+
+TERC w tym badaniu: 2263 unikalne powierzchnie w selected TERC; 755 już w rdzeniu. Źródłowy TERC nadal zawiera 2875 jednostek (16/380/2479), a 288 kluczy nazw występuje w więcej niż jednej jednostce źródłowej. Oznacza to, że rozdzielenie tożsamości jednostki i powierzchni działa zgodnie z przyjętą zasadą.
+
+Te liczby są ważnym pomiarem bieżącej architektury, ale po poprawce filtra aliasów oraz po wdrożeniu rejestru należy je potwierdzić w świeżym size-study przed decyzjami końcowymi.
