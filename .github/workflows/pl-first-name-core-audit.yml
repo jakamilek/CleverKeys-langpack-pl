@@ -91,3 +91,5 @@ jobs:
             build/pl-preview-report.json
             build/pl-first-name-homonym-audit.json
             build/pl-first-name-homonym-audit.tsv
+
+# Trigger after unified capitalization architecture migration; no semantic rule change.

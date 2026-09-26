@@ -445,3 +445,5 @@ jobs:
             build/pl-country-inflections.tsv
             build/pl-capital-inflections.tsv
             build/pl-country-capital-inflections-report.json
+
+# Trigger after unified capitalization architecture migration; no semantic rule change.
