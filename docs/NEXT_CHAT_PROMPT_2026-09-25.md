@@ -350,3 +350,20 @@ Do not restore first-name-specific capitalization rules. Use `scripts/capitaliza
 Absolute precedence: **adjective -> lowercase** regardless of source module. Then documented lexical policy, common-noun homonym -> lowercase, lowercase-only source evidence, mixed-source ambiguity -> unresolved, otherwise source-backed proper-name -> capitalized.
 
 `Oleksandr` is a source-eligibility exclusion only, stored in `sources/staging/first_name_source_exclusions.tsv`; it is not a casing exception. Never hard-code the former five lowercase names or 48 capitalized homonyms.
+
+
+## Aktualizacja ciągłości — 2026-09-26 18:36 UTC
+
+Stan po wznowieniu migracji kapitalizacji:
+- bieżący HEAD branch: `ac169ba3c3d2b591f5f8c29ecea0bdbffaa7a191`;
+- commit `3d583b45ad6d401729ece1644dcb25591c136eb3`: usunięto pozostały odwołujący się do nieistniejącej polityki imion parametr `special_policy/name_policy` z `scripts/audit_core_capitalization.py`;
+- commit `8de68ba49f0b8ebdd69f6320a850c3adc3b9dddd`: `scripts/build_additive_phone_test.py` stał się resolver-only — nie czyta registry kapitalizacji i nie ma własnego fallbacku lowercase/capitalized; dla klucza module-only wymaga decyzji z `module_capitalization_audit`;
+- commit `ac169ba3c3d2b591f5f8c29ecea0bdbffaa7a191`: poprawiono wiring workflow, tak aby registry pozostało wejściem do audytów core/module, ale nie do phone-test buildera.
+
+Stan CI:
+- preview #258 na `fb9ce...`: failure; bezpośrednia przyczyna: `NameError: name_policy is not defined` w `audit_core_capitalization.py:154`;
+- preview #260 na `8de68...`: cancelled;
+- preview #261 na `ac169...`: in_progress;
+- size-study #200 na `3d583...`: in_progress.
+
+Nie uznawać projektu za green przed rzeczywistym `conclusion=success` nowych runów. Po green CI sprawdzić świeże artefakty, CKDT, net-new union i kapitalizację regresji. Nie wykonuj merge/promote.
