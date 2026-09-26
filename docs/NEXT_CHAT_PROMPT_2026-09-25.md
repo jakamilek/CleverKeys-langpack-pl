@@ -355,7 +355,7 @@ Absolute precedence: **adjective -> lowercase** regardless of source module. The
 ## Aktualizacja ciągłości — 2026-09-26 18:36 UTC
 
 Stan po wznowieniu migracji kapitalizacji:
-- bieżący HEAD branch: `ac169ba3c3d2b591f5f8c29ecea0bdbffaa7a191`;
+- bieżący HEAD branch: `1261f675cbfb8902cb76c604f0a32ce5690312c3`;
 - commit `3d583b45ad6d401729ece1644dcb25591c136eb3`: usunięto pozostały odwołujący się do nieistniejącej polityki imion parametr `special_policy/name_policy` z `scripts/audit_core_capitalization.py`;
 - commit `8de68ba49f0b8ebdd69f6320a850c3adc3b9dddd`: `scripts/build_additive_phone_test.py` stał się resolver-only — nie czyta registry kapitalizacji i nie ma własnego fallbacku lowercase/capitalized; dla klucza module-only wymaga decyzji z `module_capitalization_audit`;
 - commit `ac169ba3c3d2b591f5f8c29ecea0bdbffaa7a191`: poprawiono wiring workflow, tak aby registry pozostało wejściem do audytów core/module, ale nie do phone-test buildera.
