@@ -111,6 +111,23 @@ def load_surface_policy(path: Path) -> dict[str, tuple[str, str]]:
     return out
 
 
+def common_adjective_matches(morfeusz, surface: str) -> list[dict[str, object]]:
+    """Return ordinary adjective analyses used by the orthographic capitalization gate."""
+    matches = []
+    for item in morfeusz.analyse(surface.lower()):
+        if len(item) < 3:
+            continue
+        payload = item[2]
+        if not isinstance(payload, (tuple, list)) or len(payload) < 4:
+            continue
+        orth, lemma, tag = str(payload[0]), str(payload[1]), str(payload[2])
+        classes = payload[3] if isinstance(payload[3], (tuple, list)) else []
+        classes = [str(x) for x in classes]
+        if tag.startswith("adj:") and "nazwa_pospolita" not in classes:
+            matches.append({"orth": orth, "lemma": lemma, "tag": tag, "classes": classes})
+    return matches
+
+
 def common_lexical_matches(morfeusz, surface: str) -> list[dict[str, object]]:
     matches = []
     ordinary_pos = {"subst", "adj", "adv", "verb", "part", "prep", "conj", "num", "ger", "ppron", "pron"}
@@ -260,6 +277,7 @@ def main() -> int:
         policies = {str(r["policy"]) for r in rows if r["policy"] in {"lowercase", "capitalized"}}
         capitalized_rows = [r for r in rows if r["policy"] == "capitalized"]
         noun_matches = common_lexical_matches(morfeusz, key) if capitalized_rows else []
+        adjective_matches = common_adjective_matches(morfeusz, key) if capitalized_rows else []
         override = explicit.get(key)
 
         result_surface = base[key]
@@ -289,6 +307,14 @@ def main() -> int:
                 result_surface = key[:1].upper() + key[1:]
                 result_policy = "capitalized"
                 reason = "first-name-category-capitalized-policy"
+            elif adjective_matches and not any(
+                m["tag"].split(":", 1)[0] in {"subst", "verb", "adv"}
+                for m in common_lexical_matches(morfeusz, key)
+                if m.get("classes")
+            ):
+                result_surface = key
+                result_policy = "lowercase"
+                reason = "verified-adjective-orthography-lowercase"
             elif any("nazwa_pospolita" in m.get("classes", []) for m in noun_matches):
                 # Only a verified common-noun reading overrides a proper-name surface.
                 # Other ordinary lexical analyses are not enough to erase capitalization
@@ -332,6 +358,7 @@ def main() -> int:
             "sources": sorted({str(r["source"]) for r in rows}),
             "common_lexical_homonym": bool(noun_matches),
             "common_lexical_matches": noun_matches,
+            "common_adjective_matches": adjective_matches,
             "common_noun_homonym": any("nazwa_pospolita" in m.get("classes", []) for m in noun_matches),
             "common_noun_matches": [m for m in noun_matches if "nazwa_pospolita" in m.get("classes", [])],
             "evidence": rows,
