@@ -229,7 +229,6 @@ jobs:
           assert excluded_names == {"oleksandr"}, sorted(excluded_names)
           core_audit_for_names = json.loads(Path("build/pl-core-capitalization-audit.json").read_text(encoding="utf-8"))
           module_audit_for_names = json.loads(Path("build/pl-capitalization-common-noun-audit.json").read_text(encoding="utf-8"))
-          module_audit_for_names = json.loads(Path("build/pl-capitalization-common-noun-audit.json").read_text(encoding="utf-8"))
 
           forbidden = {
               "chopin", "chopina", "goebbels", "goebbelsa",
