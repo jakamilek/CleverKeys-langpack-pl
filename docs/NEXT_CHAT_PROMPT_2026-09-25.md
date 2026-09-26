@@ -278,3 +278,24 @@ Po otwarciu nowego czatu:
 - jeżeli preview i size-study są green, pobierz/odczytaj aktualne raporty i artefakty;
 - następnie zweryfikuj CKDT, net-new union oraz przygotuj dopiero wtedy paczkę do testu swipe;
 - nie wykonuj merge/promote.
+
+
+## Aktualizacja 2026-09-26 — poprawka `Gdynia`
+
+Preview #238 na SHA 52aa2a... zatrzymał się na końcowej asercji `Gdynia`. Diagnoza: ogólny audyt kapitalizacji używał `common_lexical` zbyt szeroko jako podstawy lowercase override.
+
+Naprawa w commit `ae7563140232d7e091d4c95a67288822b9c10ae7`:
+- core audit obniża powierzchnię tylko przy rzeczywistej analizie rzeczownikowej z klasą `nazwa_pospolita`;
+- module audit analogicznie używa `common_noun` jako podstawy decyzji;
+- `common_lexical_matches` pozostaje w raporcie, ale nie jest samodzielnym autorytetem kapitalizacji;
+- bez ręcznego wpisu dla Gdynia.
+
+Commit `c9078c6e007e91a768c7f7e7813661c3b6dc2c9c` uruchomił CI na tej zmianie.
+
+Bieżące runy:
+- preview #240 na c9078c... — pending;
+- preview #239 na ae7563... — in progress;
+- size-study #186 na c9078c... — in progress;
+- size-study #185 na ae7563... — in progress.
+
+Po green CI koniecznie sprawdź `Gdynia`, `Łódź`, `Tomaszów`, 48 capitalized first-name homonyms oraz 5 lowercase exceptions. Nie traktuj starego #238 jako aktualnego wyniku.
