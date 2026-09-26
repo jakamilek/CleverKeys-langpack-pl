@@ -8,6 +8,7 @@ on:
       - "scripts/build_pl_preview.py"
       - "scripts/requirements-pl-audit.txt"
       - "sources/staging/autocorrect_errors.tsv"
+      - "sources/staging/surface_registry_policy.tsv"
       - "sources/staging/historical_name_candidates.tsv"
       - "sources/staging/first_name_surface_policy.tsv"
       - "scripts/audit_name_history.py"
