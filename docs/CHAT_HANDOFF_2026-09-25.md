@@ -692,3 +692,24 @@ Rejestr powierzchni w budowniczym analizuje konflikty wyłącznie dla kluczy, kt
 
 Commit:
 `5ab8372a0446f81a3c08b61f3e302438454e56b5`
+
+
+## 23. Paczka testowa do telefonu — 2026-09-26
+
+Preview #187 na commit `6901c0841273ed78c26882656e14146a478da931` zakończył się sukcesem.
+
+Powstała paczka produkcyjna w kształcie testowym:
+- immutable core: 100000;
+- net-new module keys: 5444;
+- final CKDT keys: 105444;
+- rejestr powierzchni: 105444 klucze, 0 nierozstrzygniętych konfliktów;
+- kontrola kapitalizacji: 105444 sprawdzonych powierzchni, 0 naruszeń;
+- CKDT: wersja 2;
+- zawartość ZIP: `dictionary.bin`, `manifest.json`, `unigrams.txt`;
+- `hasPrefixBoost=false`.
+
+Plik testowy:
+`CleverKeys-PL-phone-test-187.zip`
+SHA-256: `1615e64c6829bd3a8749133f27ae57000f2a007a38475d4c1cb7cb78cf0a17b9`.
+
+To jest **paczka do testu na telefonie**, nie promocja do produkcji. Po teście należy zebrać konkretne przypadki błędnych rankingów/przekształceń, szczególnie krótkie słowa, oraz osobno sprawdzić kapitalizację imion i nazw miejscowości.
