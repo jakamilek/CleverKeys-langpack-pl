@@ -189,7 +189,13 @@ jobs:
           m = morfeusz2.Morfeusz()
           for word in ["absorbuje", "abidżan", "kowalski", "bardo", "łódź", "tomaszów", "nazwisko", "Jakub"]:
               print("WORD", word)
-              for item in m.analyse(word):
+              variants = [word.lower()]
+              capitalized = word[:1].upper() + word[1:].lower() if word else word
+              if capitalized != variants[0]:
+                  variants.append(capitalized)
+              for variant in variants:
+                  print("PROBE", variant)
+                  for item in m.analyse(variant):
                   payload = item[2]
                   print("  RAW", repr(item))
                   print("  ORTH", repr(payload[0]))
