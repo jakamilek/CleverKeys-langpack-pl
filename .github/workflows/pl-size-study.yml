@@ -66,7 +66,7 @@ jobs:
           set -euo pipefail
           mkdir -p build/aosp
           expected_sha="75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
-          expected_tree="2b550379fe38213f9b1dcb75478ef2133682685"
+          expected_tree="2b550379fe38213f9b01dcb75478ef2133682685"
           selected_ref=""
           for ref in "refs/tags/aml_doc_351311000" "refs/heads/main"; do
             echo "Trying official AOSP Gitiles ref: ${ref}"
