@@ -24,6 +24,7 @@ import argparse
 import csv
 import json
 from pathlib import Path
+from collections import Counter, defaultdict
 
 from surface_components import component_records, component_surfaces
 from capitalization_rules import resolve_capitalization
@@ -37,6 +38,129 @@ def read_rows(path: Path) -> list[dict[str, str]]:
             if line.strip() and not line.lstrip().startswith("#")
         )
         return list(csv.DictReader(lines, delimiter="\t"))
+
+
+def load_nkjp_capitalization(path: Path) -> dict[str, dict[str, object]]:
+    """Aggregate pinned NKJP1M word-form casing/classification evidence."""
+    out: dict[str, dict[str, object]] = defaultdict(
+        lambda: {
+            "forms": Counter(),
+            "classes": Counter(),
+            "tags": Counter(),
+        }
+    )
+    with path.open(encoding="utf-8", errors="strict") as handle:
+        for line in handle:
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            fields = line.rstrip("\n").split("\t")
+            if len(fields) < 7:
+                continue
+            form = fields[0].strip()
+            tag = fields[2].strip()
+            classification = fields[6].strip()
+            if not form or not classification:
+                continue
+            try:
+                frequency = int(fields[3])
+            except ValueError:
+                continue
+            if frequency <= 0:
+                continue
+            key = form.lower()
+            row = out[key]
+            row["forms"][form] += frequency
+            row["classes"][classification] += frequency
+            if tag:
+                row["tags"][tag] += frequency
+    return dict(out)
+
+
+def resolve_nkjp_capitalization(
+    key: str, record: dict[str, object] | None
+) -> dict[str, object] | None:
+    """Resolve capitalization only when the Morfeusz oracle has a lexical gap.
+
+    CW (common word) evidence forces lowercase. PN/ACRO/WEB use the
+    frequency-weighted observed first-letter casing. Other NKJP classifications
+    are lowercase lexical evidence; NCH alone remains unresolved.
+    """
+    if not record:
+        return None
+
+    normalized = key.lower()
+    classes = record["classes"]
+    forms = record["forms"]
+
+    if classes.get("CW", 0) > 0:
+        return {
+            "resolved": True,
+            "surface": normalized,
+            "policy": "lowercase",
+            "reason": "nkjp-common-word-lowercase-fallback",
+            "linguistic_basis": "nkjp-common-word",
+            "explicit_policy_conflict": False,
+            "common_lexical_matches": [],
+            "common_adjective_matches": [],
+            "common_noun_matches": [],
+            "proper_name_matches": [],
+            "proper_name_classes": [],
+            "linguistic_analysis_count": 0,
+        }
+
+    proper_classes = {"PN", "ACRO", "WEB"}
+    if any(classes.get(value, 0) > 0 for value in proper_classes):
+        lowercase_frequency = sum(
+            count for form, count in forms.items()
+            if str(form)[:1].islower()
+        )
+        uppercase_frequency = sum(
+            count for form, count in forms.items()
+            if str(form)[:1].isupper()
+        )
+        if uppercase_frequency > 0 and uppercase_frequency >= lowercase_frequency:
+            surface = normalized[:1].upper() + normalized[1:]
+            policy = "capitalized"
+            reason = "nkjp-proper-name-observed-casing-fallback"
+        else:
+            surface = normalized
+            policy = "lowercase"
+            reason = "nkjp-proper-name-lowercase-observed-fallback"
+        return {
+            "resolved": True,
+            "surface": surface,
+            "policy": policy,
+            "reason": reason,
+            "linguistic_basis": "nkjp-proper-name",
+            "explicit_policy_conflict": False,
+            "common_lexical_matches": [],
+            "common_adjective_matches": [],
+            "common_noun_matches": [],
+            "proper_name_matches": [],
+            "proper_name_classes": sorted(
+                value for value in classes if value in proper_classes
+            ),
+            "linguistic_analysis_count": 0,
+        }
+
+    lexical_classes = {"SPEC", "NEOL", "EXT", "SYMB", "COMPD"}
+    if any(classes.get(value, 0) > 0 for value in lexical_classes):
+        return {
+            "resolved": True,
+            "surface": normalized,
+            "policy": "lowercase",
+            "reason": "nkjp-lexical-lowercase-fallback",
+            "linguistic_basis": "nkjp-lexical",
+            "explicit_policy_conflict": False,
+            "common_lexical_matches": [],
+            "common_adjective_matches": [],
+            "common_noun_matches": [],
+            "proper_name_matches": [],
+            "proper_name_classes": [],
+            "linguistic_analysis_count": 0,
+        }
+
+    return None
 
 
 def add_source(
@@ -132,6 +256,7 @@ def main() -> int:
     ap.add_argument("--capital-inflections", type=Path, default=None)
     ap.add_argument("--custom", type=Path, default=None)
     ap.add_argument("--surface-registry-policy", type=Path, required=True)
+    ap.add_argument("--nkjp", type=Path, required=True)
     ap.add_argument("--out-json", type=Path, required=True)
     ap.add_argument("--out-tsv", type=Path, required=True)
     args = ap.parse_args()
@@ -235,6 +360,7 @@ def main() -> int:
     )
 
     explicit = load_surface_policy(args.surface_registry_policy)
+    nkjp = load_nkjp_capitalization(args.nkjp)
 
     import morfeusz2
     morfeusz = morfeusz2.Morfeusz()
@@ -262,6 +388,10 @@ def main() -> int:
             explicit_policy=explicit.get(key),
             proper_lemma_keys=(),
         )
+        if not resolution["resolved"]:
+            nkjp_resolution = resolve_nkjp_capitalization(key, nkjp.get(key))
+            if nkjp_resolution is not None:
+                resolution = {**resolution, **nkjp_resolution}
 
         resolved_policy = (
             str(resolution["policy"])
@@ -341,7 +471,9 @@ def main() -> int:
     summary = {
         "mode": "immutable-core-capitalization-audit",
         "authority": "independent-linguistic-oracle",
-        "oracle": "Morfeusz 2 / SGJP",
+        "oracle": "Morfeusz 2 / SGJP + pinned NKJP1M",
+        "oracle_primary": "Morfeusz 2 / SGJP",
+        "oracle_secondary": "pinned NKJP1M",
         "core_keys": len(base),
         "core_keys_audited": len(audited),
         "core_keys_with_source_capitalization_evidence": sum(1 for r in audited if r["source_evidence_present"]),
@@ -351,6 +483,9 @@ def main() -> int:
         "core_keys_with_linguistic_adjective_evidence": sum(1 for r in audited if r["linguistic_basis"] == "adjective"),
         "core_keys_with_linguistic_ordinary_lexical_evidence": sum(1 for r in audited if r["linguistic_basis"] == "ordinary-lexical"),
         "core_keys_using_explicit_fallback": sum(1 for r in audited if r["linguistic_basis"] == "explicit-fallback"),
+        "core_keys_with_nkjp_proper_name_evidence": sum(1 for r in audited if r["linguistic_basis"] == "nkjp-proper-name"),
+        "core_keys_with_nkjp_common_word_evidence": sum(1 for r in audited if r["linguistic_basis"] == "nkjp-common-word"),
+        "core_keys_with_nkjp_lexical_evidence": sum(1 for r in audited if r["linguistic_basis"] == "nkjp-lexical"),
         "core_keys_with_no_linguistic_evidence": sum(1 for r in audited if r["linguistic_basis"] == "unresolved"),
         "resolved_core_keys": len(resolved),
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
