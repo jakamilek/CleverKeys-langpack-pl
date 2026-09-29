@@ -228,7 +228,7 @@ jobs:
           PY
       - name: Audit immutable core capitalization before module assembly
         run: |
-          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
+          python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
 
       - name: Verify independent core capitalization oracle
         run: |
@@ -238,7 +238,9 @@ jobs:
 
           audit = json.loads(Path("build/pl-core-capitalization-audit.json").read_text(encoding="utf-8"))
           assert audit["authority"] == "independent-linguistic-oracle"
-          assert audit["oracle"] == "Morfeusz 2 / SGJP"
+          assert audit["oracle"] == "Morfeusz 2 / SGJP + pinned NKJP1M"
+          assert audit["oracle_primary"] == "Morfeusz 2 / SGJP"
+          assert audit["oracle_secondary"] == "pinned NKJP1M"
           assert audit["core_keys"] == 100000
           assert audit["core_keys_audited"] == 100000
           assert audit["resolved_core_keys"] == 100000
