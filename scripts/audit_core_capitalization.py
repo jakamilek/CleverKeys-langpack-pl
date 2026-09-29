@@ -40,9 +40,17 @@ def read_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(lines, delimiter="\t"))
 
 
-def load_nkjp_capitalization(path: Path) -> dict[str, dict[str, object]]:
+def load_nkjp_capitalization(path: Path) -> tuple[dict[str, dict[str, object]], dict[str, dict[str, object]]]:
     """Aggregate pinned NKJP1M word-form casing/classification evidence."""
     out: dict[str, dict[str, object]] = defaultdict(
+        lambda: {
+            "forms": Counter(),
+            "classes": Counter(),
+            "tags": Counter(),
+            "lemmas": Counter(),
+        }
+    )
+    by_lemma: dict[str, dict[str, object]] = defaultdict(
         lambda: {
             "forms": Counter(),
             "classes": Counter(),
@@ -57,6 +65,7 @@ def load_nkjp_capitalization(path: Path) -> dict[str, dict[str, object]]:
             if len(fields) < 7:
                 continue
             form = fields[0].strip()
+            lemma = fields[1].strip()
             tag = fields[2].strip()
             classification = fields[6].strip()
             if not form or not classification:
@@ -73,11 +82,21 @@ def load_nkjp_capitalization(path: Path) -> dict[str, dict[str, object]]:
             row["classes"][classification] += frequency
             if tag:
                 row["tags"][tag] += frequency
-    return dict(out)
+            if lemma:
+                lemma_key = lemma.lower()
+                lemma_row = by_lemma[lemma_key]
+                lemma_row["forms"][form] += frequency
+                lemma_row["classes"][classification] += frequency
+                if tag:
+                    lemma_row["tags"][tag] += frequency
+    return dict(out), dict(by_lemma)
 
 
 def resolve_nkjp_capitalization(
-    key: str, record: dict[str, object] | None
+    key: str,
+    record: dict[str, object] | None,
+    *,
+    basis: str = "surface",
 ) -> dict[str, object] | None:
     """Resolve capitalization only when the Morfeusz oracle has a lexical gap.
 
@@ -97,8 +116,16 @@ def resolve_nkjp_capitalization(
             "resolved": True,
             "surface": normalized,
             "policy": "lowercase",
-            "reason": "nkjp-common-word-lowercase-fallback",
-            "linguistic_basis": "nkjp-common-word",
+            "reason": (
+                "nkjp-common-word-lowercase-fallback"
+                if basis == "surface"
+                else "nkjp-common-word-lemma-lowercase-fallback"
+            ),
+            "linguistic_basis": (
+                "nkjp-common-word"
+                if basis == "surface"
+                else "nkjp-common-word-lemma"
+            ),
             "explicit_policy_conflict": False,
             "common_lexical_matches": [],
             "common_adjective_matches": [],
@@ -121,17 +148,29 @@ def resolve_nkjp_capitalization(
         if uppercase_frequency > 0 and uppercase_frequency >= lowercase_frequency:
             surface = normalized[:1].upper() + normalized[1:]
             policy = "capitalized"
-            reason = "nkjp-proper-name-observed-casing-fallback"
+            reason = (
+                "nkjp-proper-name-observed-casing-fallback"
+                if basis == "surface"
+                else "nkjp-proper-name-lemma-observed-casing-fallback"
+            )
         else:
             surface = normalized
             policy = "lowercase"
-            reason = "nkjp-proper-name-lowercase-observed-fallback"
+            reason = (
+                "nkjp-proper-name-lowercase-observed-fallback"
+                if basis == "surface"
+                else "nkjp-proper-name-lemma-lowercase-observed-fallback"
+            )
         return {
             "resolved": True,
             "surface": surface,
             "policy": policy,
             "reason": reason,
-            "linguistic_basis": "nkjp-proper-name",
+            "linguistic_basis": (
+                "nkjp-proper-name"
+                if basis == "surface"
+                else "nkjp-proper-name-lemma"
+            ),
             "explicit_policy_conflict": False,
             "common_lexical_matches": [],
             "common_adjective_matches": [],
@@ -149,8 +188,16 @@ def resolve_nkjp_capitalization(
             "resolved": True,
             "surface": normalized,
             "policy": "lowercase",
-            "reason": "nkjp-lexical-lowercase-fallback",
-            "linguistic_basis": "nkjp-lexical",
+            "reason": (
+                "nkjp-lexical-lowercase-fallback"
+                if basis == "surface"
+                else "nkjp-lexical-lemma-lowercase-fallback"
+            ),
+            "linguistic_basis": (
+                "nkjp-lexical"
+                if basis == "surface"
+                else "nkjp-lexical-lemma"
+            ),
             "explicit_policy_conflict": False,
             "common_lexical_matches": [],
             "common_adjective_matches": [],
@@ -360,7 +407,7 @@ def main() -> int:
     )
 
     explicit = load_surface_policy(args.surface_registry_policy)
-    nkjp = load_nkjp_capitalization(args.nkjp)
+    nkjp, nkjp_lemmas = load_nkjp_capitalization(args.nkjp)
 
     import morfeusz2
     morfeusz = morfeusz2.Morfeusz()
@@ -389,7 +436,15 @@ def main() -> int:
             proper_lemma_keys=(),
         )
         if not resolution["resolved"]:
-            nkjp_resolution = resolve_nkjp_capitalization(key, nkjp.get(key))
+            nkjp_resolution = resolve_nkjp_capitalization(
+                key, nkjp.get(key), basis="surface"
+            )
+            if nkjp_resolution is None:
+                nkjp_resolution = resolve_nkjp_capitalization(
+                    key,
+                    nkjp_lemmas.get(key),
+                    basis="lemma",
+                )
             if nkjp_resolution is not None:
                 resolution = {**resolution, **nkjp_resolution}
 
@@ -483,9 +538,18 @@ def main() -> int:
         "core_keys_with_linguistic_adjective_evidence": sum(1 for r in audited if r["linguistic_basis"] == "adjective"),
         "core_keys_with_linguistic_ordinary_lexical_evidence": sum(1 for r in audited if r["linguistic_basis"] == "ordinary-lexical"),
         "core_keys_using_explicit_fallback": sum(1 for r in audited if r["linguistic_basis"] == "explicit-fallback"),
-        "core_keys_with_nkjp_proper_name_evidence": sum(1 for r in audited if r["linguistic_basis"] == "nkjp-proper-name"),
-        "core_keys_with_nkjp_common_word_evidence": sum(1 for r in audited if r["linguistic_basis"] == "nkjp-common-word"),
-        "core_keys_with_nkjp_lexical_evidence": sum(1 for r in audited if r["linguistic_basis"] == "nkjp-lexical"),
+        "core_keys_with_nkjp_proper_name_evidence": sum(
+            1 for r in audited
+            if r["linguistic_basis"] in {"nkjp-proper-name", "nkjp-proper-name-lemma"}
+        ),
+        "core_keys_with_nkjp_common_word_evidence": sum(
+            1 for r in audited
+            if r["linguistic_basis"] in {"nkjp-common-word", "nkjp-common-word-lemma"}
+        ),
+        "core_keys_with_nkjp_lexical_evidence": sum(
+            1 for r in audited
+            if r["linguistic_basis"] in {"nkjp-lexical", "nkjp-lexical-lemma"}
+        ),
         "core_keys_with_no_linguistic_evidence": sum(1 for r in audited if r["linguistic_basis"] == "unresolved"),
         "resolved_core_keys": len(resolved),
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
