@@ -1,21 +1,20 @@
 #!/usr/bin/env python3
-"""Audit and resolve capitalization of immutable-core keys using source evidence.
+"""Audit and resolve capitalization of immutable-core keys from an independent linguistic oracle.
 
 The immutable 100k membership is never changed here. Every core key is audited.
-Only the canonical surface (casing) may be corrected; source modules provide
-additional evidence when available. The audit runs before module assembly.
+The capitalization decision is made from Morfeusz 2 / SGJP lexical analysis,
+not from category-module membership. Active modules are loaded only to verify
+the independent decision and to expose coverage/conflict gaps.
 
 Rules:
-- source evidence is collected from all active module/source layers, including
-  multi-component names;
 - capitalization is never inferred from 100k membership;
-- a capitalized source candidate is checked independently for a verified common-noun
-  homonym using Morfeusz 2 / SGJP;
-- capitalized-vs-lowercase source conflicts require explicit surface policy;
-- a capitalized candidate with a common-noun homonym requires an explicit
-  lowercase resolution;
-- a capitalized candidate without a common-noun homonym may resolve
-  deterministically to capitalized;
+- verified common noun -> lowercase, absolutely;
+- ordinary adjective -> lowercase;
+- any SGJP proper-name classification -> capitalized;
+- other ordinary lexical analysis -> lowercase;
+- explicit surface policy is a human-audited fallback only for linguistic gaps;
+- module source capitalization is verification evidence only for core keys;
+- a core key with neither linguistic nor explicit fallback evidence is unresolved;
 - resolved surfaces are emitted for the additive builder to apply to core keys.
 """
 
@@ -254,13 +253,48 @@ def main() -> int:
             for row in rows
             for lemma in row.get("proper_lemma_keys", [])
         }
+        # CORE AUTHORITY: module capitalization policies and module lemma lineage
+        # are verification evidence only. They must never decide a core surface.
         resolution = resolve_capitalization(
             key=key,
-            policies=policies,
+            policies=(),
             morfeusz=morfeusz,
             explicit_policy=explicit.get(key),
-            proper_lemma_keys=proper_lemmas,
+            proper_lemma_keys=(),
         )
+
+        resolved_policy = (
+            str(resolution["policy"])
+            if resolution["resolved"]
+            else None
+        )
+        module_verification = {
+            "present": bool(rows),
+            "policies": sorted(policies),
+            "sources": sorted({str(r["source"]) for r in rows}),
+            "agrees_with_linguistic_decision": (
+                not policies
+                or resolved_policy is None
+                or policies == {resolved_policy}
+            ),
+            "conflict": bool(
+                policies
+                and resolved_policy is not None
+                and policies != {resolved_policy}
+            ),
+            "status": (
+                "no-module-evidence"
+                if not rows
+                else (
+                    "agree"
+                    if not policies or (
+                        resolved_policy is not None
+                        and policies == {resolved_policy}
+                    )
+                    else "module-vs-oracle-conflict"
+                )
+            ),
+        }
         if not resolution["resolved"]:
             unresolved.append({
                 "key": key,
@@ -280,11 +314,16 @@ def main() -> int:
             "source_evidence_present": bool(rows),
             "source_policies": sorted(policies),
             "sources": sorted({str(r["source"]) for r in rows}),
+            "linguistic_basis": resolution.get("linguistic_basis"),
+            "linguistic_analysis_count": resolution.get("linguistic_analysis_count", 0),
+            "proper_name_classes": resolution.get("proper_name_classes", []),
+            "proper_name_matches": resolution.get("proper_name_matches", []),
             "common_lexical_homonym": bool(resolution["common_lexical_matches"]),
             "common_lexical_matches": resolution["common_lexical_matches"],
             "common_adjective_matches": resolution["common_adjective_matches"],
             "common_noun_homonym": bool(resolution["common_noun_matches"]),
             "common_noun_matches": resolution["common_noun_matches"],
+            "module_verification": module_verification,
             "evidence": rows,
         })
         if resolution["resolved"]:
@@ -294,16 +333,31 @@ def main() -> int:
                 "reason": reason,
             }
 
+    module_conflicts = [
+        row["surface_key"]
+        for row in audited
+        if row["module_verification"]["conflict"]
+    ]
     summary = {
         "mode": "immutable-core-capitalization-audit",
+        "authority": "independent-linguistic-oracle",
+        "oracle": "Morfeusz 2 / SGJP",
         "core_keys": len(base),
         "core_keys_audited": len(audited),
         "core_keys_with_source_capitalization_evidence": sum(1 for r in audited if r["source_evidence_present"]),
         "core_keys_without_source_capitalization_evidence": sum(1 for r in audited if not r["source_evidence_present"]),
+        "core_keys_with_linguistic_proper_name_evidence": sum(1 for r in audited if r["linguistic_basis"] == "proper-name"),
+        "core_keys_with_linguistic_common_noun_evidence": sum(1 for r in audited if r["linguistic_basis"] == "common-noun"),
+        "core_keys_with_linguistic_adjective_evidence": sum(1 for r in audited if r["linguistic_basis"] == "adjective"),
+        "core_keys_with_linguistic_ordinary_lexical_evidence": sum(1 for r in audited if r["linguistic_basis"] == "ordinary-lexical"),
+        "core_keys_using_explicit_fallback": sum(1 for r in audited if r["linguistic_basis"] == "explicit-fallback"),
+        "core_keys_with_no_linguistic_evidence": sum(1 for r in audited if r["linguistic_basis"] == "unresolved"),
         "resolved_core_keys": len(resolved),
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
         "common_lexical_homonym_count": sum(1 for r in audited if r["common_lexical_homonym"]),
         "common_noun_homonym_count": sum(1 for r in audited if r["common_noun_homonym"]),
+        "module_verification_conflict_count": len(module_conflicts),
+        "module_verification_conflict_keys": module_conflicts,
         "unresolved_count": len(unresolved),
         "unresolved_keys": [r["key"] for r in unresolved],
         "resolved_surfaces": resolved,
@@ -355,11 +409,14 @@ def main() -> int:
 
     print(json.dumps({
         "core_keys_audited": len(audited),
+        "authority": "independent-linguistic-oracle",
         "core_keys_with_source_capitalization_evidence": sum(1 for r in audited if r["source_evidence_present"]),
         "core_keys_without_source_capitalization_evidence": sum(1 for r in audited if not r["source_evidence_present"]),
+        "core_keys_with_linguistic_proper_name_evidence": sum(1 for r in audited if r["linguistic_basis"] == "proper-name"),
+        "core_keys_with_no_linguistic_evidence": sum(1 for r in audited if r["linguistic_basis"] == "unresolved"),
         "resolved_core_keys": len(resolved),
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
-        "common_noun_homonym_count": sum(1 for r in audited if r["common_noun_homonym"]),
+        "module_verification_conflict_count": len(module_conflicts),
         "unresolved_count": 0,
     }, ensure_ascii=False, indent=2))
     return 0
