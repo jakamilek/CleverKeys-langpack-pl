@@ -5,11 +5,11 @@ Modules provide evidence; this resolver decides the canonical surface for one
 case-insensitive dictionary key.
 
 Precedence:
-1. Explicit audited lexical surface policy for the exact key, when independently documented.
-2. Any adjective analysis -> lowercase when no explicit audited surface decision exists.
-3. Verified ordinary common-noun homonym -> lowercase.
+1. Verified ordinary common-noun analysis -> lowercase, unconditionally.
+2. Explicit audited lexical surface policy for the exact key, when no common-noun analysis applies.
+3. Any adjective analysis -> lowercase when no common-noun analysis or explicit policy applies.
 4. Lowercase-only source evidence -> lowercase.
-5. Mixed unresolved source policies -> unresolved.
+5. Mixed source policies -> unresolved.
 6. Otherwise source-backed proper-name evidence -> capitalized.
 
 There is deliberately no first-name-specific capitalization branch.
@@ -101,26 +101,31 @@ def resolve_capitalization(
         item for item in lexical
         if COMMON_NOUN_CLASS in item.get("classes", [])
     ]
-    # A source-backed proper-name inflection may share an orthographic form with
-    # an unrelated ordinary lexical analysis. Only a common-noun analysis whose
-    # lemma is the same as one of the source proper-name lemmas is a true
-    # source-level homonym conflict. Without lineage information, retain the
-    # historical conservative behaviour and treat any common noun analysis as
-    # a lowercase collision.
-    if proper_lemma_set:
-        common_noun = [
-            item for item in common_noun
-            if str(item.get("lemma", "")).strip().lower() in proper_lemma_set
-        ]
+    # Source lineage is retained for provenance and diagnostics, but it never
+    # suppresses a verified common-noun analysis. The project-wide rule is absolute:
+    # a common noun has precedence over every proper-name, module, or explicit-surface
+    # capitalization rule for the same case-insensitive key.
+    if common_noun:
+        return {
+            "resolved": True,
+            "surface": normalized,
+            "policy": "lowercase",
+            "reason": "common-noun-homonym-absolute-lowercase",
+            "common_lexical_matches": lexical,
+            "common_adjective_matches": adjectives,
+            "common_noun_matches": common_noun,
+            "common_lexical_homonym": bool(lexical),
+            "common_noun_homonym": True,
+            "explicit_policy_conflict": bool(
+                explicit_policy is not None
+                and explicit_policy[1] != "lowercase"
+            ),
+        }
 
-    # An explicitly audited lexical/surface policy is authoritative for the
-    # exact case-insensitive key. It may document that a particular source form
-    # is a proper-name noun despite an unrelated analyzer interpretation.
+    # An explicitly audited lexical/surface policy is authoritative when there is
+    # no common-noun analysis for the exact case-insensitive key.
     if explicit_policy is not None:
         surface, policy = explicit_policy
-        # The global adjective rule still applies when an explicit policy is
-        # itself lowercase; only a documented capitalized surface may override
-        # a conflicting analyzer interpretation.
         return {
             "resolved": True,
             "surface": surface,
@@ -130,7 +135,7 @@ def resolve_capitalization(
             "common_adjective_matches": adjectives,
             "common_noun_matches": common_noun,
             "common_lexical_homonym": bool(lexical),
-            "common_noun_homonym": bool(common_noun),
+            "common_noun_homonym": False,
             "explicit_policy_conflict": False,
         }
 
