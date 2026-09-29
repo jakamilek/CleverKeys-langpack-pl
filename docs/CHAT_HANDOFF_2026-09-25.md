@@ -1246,3 +1246,30 @@ Jedyny czerwony krok to `Diagnose Morfeusz capitalization fields`. Log wykazał 
 Poprawka została zapisana w commit `546f25a27adaf133d98674d3490836083eb4fa0c` jako: `fix: correct Morfeusz diagnostic indentation`.
 
 Po tej poprawce należy oczekiwać nowego Preview uruchomionego dla aktualnego HEAD. Dopiero rzeczywisty `conclusion=success` może potwierdzić przejście dalej do audytu 100k i budowy artefaktu.
+
+### Aktualizacja ciągłości — 2026-09-29 — czerwony Preview #304 i naprawa oracle kapitalizacji rdzenia
+
+Preview #304 (run 36625427630, commit 266bd00e31a769b69bbf8de23126c2f6c46e4ef5) zakończył się FAILURE w kroku Audit immutable core capitalization before module assembly. Diagnostyka Morfeusza i probe'y lowercase/capitalized były zielone. Błąd polegał już nie na teście Abidżanu, lecz na dużej liczbie kluczy immutable 100k, których sam Morfeusz 2 / SGJP nie potrafił rozstrzygnąć.
+
+Wynik audytu #304 obejmował bardzo dużą listę unresolved, m.in. nazwy własne, skróty, marki, formy obce i wiele innych luk leksykalnych. Nie wolno rozwiązywać tych kluczy przez obecność w modułach, ponieważ moduły pozostają tylko cross-checkiem dla immutable core.
+
+Naprawa została wykonana dwoma małymi commitami:
+- bd10c175ae02c3f644438bb4199a01734ba13178 — feat: use NKJP1M as secondary core capitalization oracle; scripts/audit_core_capitalization.py otrzymał niezależną warstwę NKJP1M uruchamianą dopiero dla kluczy nierozstrzygniętych przez Morfeusz.
+- 756cb3d685dad0287446b782355456bf38ac66f2 — ci: wire NKJP1M into core capitalization audit; Preview przekazuje do audytu zweryfikowany build/nkjp/NKJP1M-tagged-frequency.tab i sprawdza obecność obu poziomów oracle.
+
+Zasady nowej warstwy NKJP1M:
+- CW (common word / „wyraz pospolity”) -> lowercase;
+- PN / ACRO / WEB -> decyzja na podstawie częstości obserwowanych powierzchni z wielką/małą pierwszą literą;
+- pozostałe klasy leksykalne -> lowercase;
+- samo NCH (not checked / „nie sprawdzono”) nie wystarcza do automatycznej decyzji i nadal pozostaje unresolved.
+
+Najważniejsze: PN z NKJP nie jest traktowane jako automatyczne uppercase. Dokumentacja NKJP wskazuje, że PN obejmuje także przypadki pisane zgodnie z normą małą literą, m.in. nazwy mieszkańców i przymiotniki od nazw miejsc/narodów oraz część nazw marek, gatunków i walut. Dlatego warstwa NKJP wykorzystuje jednocześnie klasyfikację i rzeczywiście obserwowane powierzchnie. Źródło NKJP1M jest pinowane do rewizji be02836cf3aa0286ad8961d2e4528cdc2f72d044 i SHA-256 fee31b1d6a682970b4e8ca68b593aea8dadbc8541e875e2d287480d83601e79c.
+
+Zmiana nie zmienia membership immutable 100k, nie zmienia rankingu runtime ani geometrii swipe; dotyczy wyłącznie niezależnego ustalenia canonical surface dla kluczy rdzenia.
+
+Po zmianie:
+- Preview #305 (run 36626544141, HEAD bd10...) był uruchomiony na kodzie z nowym parametrem i może zostać zastąpiony nowszym runem;
+- Preview #306 (run 36626583285, HEAD 756cb3d685dad0287446b782355456bf38ac66f2) działa już z właściwym workflowem;
+- Size-study #227 (run 36626629348, HEAD f12fcb02166f6cc8f9457ea9b29ed41ef2ea2e80) działa już z właściwym parametrem NKJP.
+
+Nie uznawać żadnego z tych runów za green bez rzeczywistego conclusion=success i późniejszej kontroli artefaktu. Nadal nie wykonywać merge/promote do main.
