@@ -1160,3 +1160,41 @@ Nie odbudowywać architektury od zera.
 Najpierw odczytać ten handoff oraz `docs/PL_DICTIONARY_MODULE_ARCHITECTURE_2026-09-25.md`.
 Każdą istotną zmianę zapisywać w małym, atomowym commicie.
 Zawsze rozdzielać: membership rdzenia / canonical casing / runtime ranking / swipe-geometric.
+
+
+## Aktualizacja ciągłości — 2026-09-29 — ostatni stan przed migracją
+
+Od poprzedniego wpisu zakończyły się kolejne runy:
+
+- **First-name audit #110** — run ID `36607096239`, SHA `3c291cf1a416d527ea2820357cbe26eb4d692357`, **SUCCESS**.
+- **Preview #287** — run ID `36607068640`, SHA `8c322a56c0e5f3c46592441ed8dcf163e936d437`, **FAILURE** w końcowej weryfikacji CKDT.
+- Następnie commit `5be16eab319f7b5f2efba625981c9c5c64d390cd` zmienił regresję Preview zgodnie z regułą common-noun precedence (`Bardo` -> `bardo`).
+- **Preview #288** — run ID `36608080464`, SHA `5be16eab319f7b5f2efba625981c9c5c64d390cd`, **FAILURE** w tym samym kroku `Verify CKDT and pack contents`, ale z konkretnym błędem programistycznym CI:
+  `NameError: name 'core_cap_resolved' is not defined` na linii 244 skryptu weryfikacyjnego.
+- Z logu wynika, że `core_cap_resolved` i `module_cap_resolved` są przypisywane dopiero później w tym samym bloku `python3 - <<'PY'`. Należy przenieść te dwie definicje przed pierwsze użycie. To jest błąd końcowej bramki CI, nie błąd resolvera ani CKDT.
+- **Size-study #218** — run ID `36604331160`, SHA `c166cc8679ef724792d8190746602c613d4d7a8d`, **SUCCESS** i pełny pipeline zweryfikowany.
+- **First-name audit #110** przeszedł po wdrożeniu oficjalnego transportu Git AOSP; nie ma obecnie sygnału o błędzie w audycie imion.
+
+Najnowszy znany commit projektu przed kolejną zmianą naprawczą:
+- `5be16eab319f7b5f2efba625981c9c5c64d390cd` — `Align Preview Bardo regression with common-noun precedence`.
+
+### Dokładna kolejność dalszej pracy
+
+1. Nie zmieniać żadnej reguły językowej na podstawie #288.
+2. Poprawić wyłącznie kolejność lokalnych definicji `core_cap_resolved` / `module_cap_resolved` w końcowym skrypcie weryfikacyjnym Preview.
+3. Zapisz zmianę jako mały, atomowy commit.
+4. Poczekać na rzeczywisty `conclusion=success` Preview.
+5. Po green Preview pobrać świeży artefakt i sprawdzić rzeczywisty CKDT/ZIP oraz wszystkie regresje.
+6. Potwierdzić, że `wordCount=105688`, `bardo` jest obecne, `Bardo` nieobecne, `Tomaszów` jest obecne, `tomaszów` nieobecne, `łódź` pozostaje lowercase, oraz sprawdzić pełny zestaw odmian imion i miast wymieniony wcześniej w tym handoffie.
+7. Dopiero po pełnym green i kontroli artefaktu przejść do testu na telefonie/swipe.
+8. **Nie wykonywać merge/promote do `main`.**
+
+### Aktualna zasada techniczna do zapamiętania
+
+AOSP:
+- Gitiles może zwracać losowe `HTTP 503`;
+- oficjalny Git transport działa i został już potwierdzony w #218;
+- akceptowany jest wyłącznie plik z SHA-256 `75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45`;
+- hash drzewa `dictionaries`: `2b550379fe38213f9b01dcb75478ef2133682685`.
+
+Nie wracaj do zwykłego retry-only Gitiles jako jedynego transportu.
