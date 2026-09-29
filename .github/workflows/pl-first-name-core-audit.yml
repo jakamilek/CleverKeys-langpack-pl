@@ -41,7 +41,7 @@ jobs:
       - name: Acquire pinned AOSP Polish dictionary
         run: |
           mkdir -p build/aosp
-          curl --fail --location 'https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/refs/heads/main/dictionaries/pl_wordlist.combined.gz?format=TEXT' -o build/aosp/pl_wordlist.combined.gz.base64
+          curl --fail --retry 12 --retry-delay 5 --retry-max-time 180 --retry-all-errors --user-agent 'CleverKeys-PL-CI/1.0' --location 'https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/refs/heads/main/dictionaries/pl_wordlist.combined.gz?format=TEXT' -o build/aosp/pl_wordlist.combined.gz.base64
           base64 --decode build/aosp/pl_wordlist.combined.gz.base64 > build/aosp/pl_wordlist.combined.gz
           test "$(sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}')" = "75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
 
