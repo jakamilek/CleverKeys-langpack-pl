@@ -1236,3 +1236,13 @@ Naprawa została zapisana w trzech małych commitach:
 Dodatkowo commit `fbb553f9d5ecabdb18604252b36d4e0cd63d5154` rozszerzył diagnostykę workflow tak, aby osobno wypisywała probe lowercase i probe capitalized dla `absorbuje`, `abidżan`, `kowalski`, `bardo`, `łódź`, `tomaszów`, `nazwisko`, `Jakub`.
 
 Po tej zmianie branch nadal jest `ops/baseline-sync-2026-09-20`; nie wykonywać merge/promote do `main`. Zieleni CI nie wolno deklarować bez rzeczywistego `conclusion=success` oraz kontroli świeżego artefaktu.
+
+## Aktualizacja 2026-09-29 — Preview #300: błąd diagnostyczny CI
+
+Preview #300, run ID `36622778563`, commit `7f49d52181569717de6f4e10bb906e0c6b448988`, zakończył się `failure` przed audytem immutable 100k. Wszystkie wcześniejsze kroki pozostały zielone.
+
+Jedyny czerwony krok to `Diagnose Morfeusz capitalization fields`. Log wykazał `IndentationError: expected an indented block after 'for' statement`; przyczyną było błędne wcięcie jednej linii w świeżo dodanej diagnostyce probe'ów lowercase/capitalized. Nie był to błąd resolvera ani danych językowych.
+
+Poprawka została zapisana w commit `546f25a27adaf133d98674d3490836083eb4fa0c` jako: `fix: correct Morfeusz diagnostic indentation`.
+
+Po tej poprawce należy oczekiwać nowego Preview uruchomionego dla aktualnego HEAD. Dopiero rzeczywisty `conclusion=success` może potwierdzić przejście dalej do audytu 100k i budowy artefaktu.
