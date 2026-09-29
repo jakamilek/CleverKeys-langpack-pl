@@ -127,7 +127,13 @@ def proper_name_matches(morfeusz, surface: str) -> list[dict[str, object]]:
 
 
 def ordinary_lexical_matches(morfeusz, surface: str) -> list[dict[str, object]]:
-    """Return ordinary lexical analyses without proper-name classification."""
+    """Return any known lexical analysis without proper-name classification.
+
+    Morfeusz uses a broad tagset (fin, impt, praet, inf, subst, adj, etc.).
+    Restricting this gate to a short hand-written POS list falsely turns many
+    perfectly known Polish forms into "unresolved". Unknown-word (ign) and
+    punctuation (interp) analyses are excluded.
+    """
     return [
         {
             "orth": item["orth"],
@@ -136,7 +142,7 @@ def ordinary_lexical_matches(morfeusz, surface: str) -> list[dict[str, object]]:
             "classes": item["classes"],
         }
         for item in _analyses(morfeusz, surface)
-        if item["pos"] in ORDINARY_POS
+        if item["pos"] not in {"ign", "interp"}
         and not item["proper_name_classes"]
     ]
 
