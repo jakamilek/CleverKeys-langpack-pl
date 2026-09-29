@@ -247,3 +247,23 @@ Wspólny resolver kapitalizacji (`scripts/capitalization_rules.py`) stosuje obec
 `proper_lemma_keys` pozostaje informacją provenance/diagnostyczną; nie może wyłączać rzeczywistej analizy rzeczownika pospolitego z decyzji kapitalizacyjnej.
 
 Praktyczna konsekwencja: `Bardo` jako nazwa miejscowości nie może przebić wspólnego klucza rzeczownika pospolitego `bardo`; kanoniczną powierzchnią CKDT jest `bardo`. `Tomaszów` pozostaje wielką literą, o ile dla tego klucza nie istnieje zweryfikowana analiza rzeczownika pospolitego.
+
+
+## Aktualizacja 2026-09-29 — niezależny audyt kapitalizacji immutable 100k
+
+Dotychczasowy audyt rdzenia przechodził przez wszystkie 100 000 kluczy, ale wykorzystywał dane modułów jako podstawowy sygnał rozpoznania kapitalizacji. To nie zapewniało kompletności: klucz będący nazwiskiem, którego nie było w aktywnym module, mógł pozostać lowercase.
+
+Docelowa zasada została zmieniona:
+
+- kapitalizacja immutable 100k jest decyzją niezależnego lingwistycznego oracle opartego na Morfeusz 2 / SGJP;
+- moduły imion, miast, TERC, państw, stolic, własnych itd. nie decydują o kapitalizacji klucza należącego do rdzenia;
+- informacje modułowe pozostają w raporcie jako weryfikacja krzyżowa (cross-check), umożliwiająca wykrywanie rozbieżności i braków pokrycia;
+- explicit surface-registry policy może być użyte tylko jako jawny, ręcznie audytowany fallback dla luki słownikowej i nie może przebić sprzecznej analizy językowej;
+- brak analizy językowej i brak jawnego fallbacku dla klucza rdzenia nie jest już automatycznie traktowany jako lowercase — jest raportowany jako unresolved;
+- każdy klucz rdzenia musi nadal zostać zbadany.
+
+Wspólny resolver (scripts/capitalization_rules.py) interpretuje klasyfikację pospolitości/nazwy własnej przekazywaną przez Morfeusz 2 / SGJP ogólnie. Poza nazwa_pospolita rozpoznawane są wszystkie niepuste klasy klasyfikacyjne z tego pola jako dowód nazwy własnej, dzięki czemu reguła obejmuje m.in. imiona, nazwiska, nazwy geograficzne, marki, firmy, organizacje i inne klasy bez tworzenia osobnych gałęzi dla każdej kategorii.
+
+Precedencja pozostaje następująca: zweryfikowany rzeczownik pospolity -> lowercase, następnie zwykła forma przymiotnikowa -> lowercase, następnie zweryfikowana klasyfikacja nazwy własnej -> capitalized, następnie zwykła analiza leksykalna -> lowercase. To zapewnia, że rzeczownik pospolity nadal zawsze wygrywa z nazwą własną dla tego samego klucza case-insensitive.
+
+Źródło Morfeusz 2: https://morfeusz.sgjp.pl/doc/about/ oraz dokumentacja interfejsu: https://download.sgjp.pl/morfeusz/Morfeusz2.pdf
