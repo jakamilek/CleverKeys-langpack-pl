@@ -1061,3 +1061,102 @@ Implementacja resolvera: `d2dca7e0361504123543ebe2e59a72c2fdb8e4f2`.
 Kontrakt CI dla tej reguły znajduje się w commitcie `5dbe013c2b7b613fc003ca9911a89df24bc856a7`.
 Dokumentacja architektury: `a5e93ed3ab344f93c5b170731454eb1c8ce66dfa`.
 Następny wymagany stan akceptacyjny: green preview + size-study na aktualnym HEAD oraz bezpośrednia weryfikacja CKDT.
+
+
+## Aktualizacja ciągłości — 2026-09-29 wieczór
+
+### Stan AOSP / CI — rozwiązana blokada transportowa
+
+Powtarzające się błędy HTTP 503 z Gitiles blokowały Preview i First-name audit, mimo że źródło AOSP oraz przypięty SHA były poprawne.
+
+Potwierdzony stan:
+- wymagany plik: `dictionaries/pl_wordlist.combined.gz`;
+- wymagany SHA-256: `75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45`;
+- wymagany hash drzewa `dictionaries`: `2b550379fe38213f9b01dcb75478ef2133682685`;
+- źródło: oficjalne `android.googlesource.com/platform/packages/inputmethods/LatinIME`.
+
+Nowy mechanizm w workflowach:
+1. próba pobrania przez oficjalny Gitiles;
+2. jeśli Gitiles jest niedostępny, fallback do oficjalnego transportu Git;
+3. fallback pobiera `refs/heads/main` przez `git fetch`, sprawdza hash drzewa `dictionaries`, następnie pobiera plik z rewizji i sprawdza jego SHA-256;
+4. żaden inny plik nie jest akceptowany.
+
+WAŻNE: wcześniejszy commit `dd4e8ee949fdde48e3425f90c8e4abd01b657508` miał literówkę w hashu drzewa. Zostało to poprawione w:
+- `c166cc8679ef724792d8190746602c613d4d7a8d` — poprawny pinned AOSP dictionary tree hash.
+
+Wcześniejszy test `size-study #217` zakończył się błędem wyłącznie dlatego, że błędny hash drzewa odrzucił poprawnie pobrany AOSP. Nie był to problem z transportem Git.
+
+### Potwierdzony zielony pełny pipeline
+
+**Size-study #218**
+- run ID: `36604331160`;
+- HEAD użyty przez run: `c166cc8679ef724792d8190746602c613d4d7a8d`;
+- conclusion: **success**;
+- pełny pipeline przeszedł od źródeł przez audyty, warianty słownika i raporty aż do publikacji artefaktów.
+
+Potwierdzone z raportu #218:
+- immutable core: **100000**;
+- net-new unique module keys: **5688**;
+- final unique keys: **105688**;
+- size-study obejmował warianty 50k / 75k / 100k / 125k / 150k;
+- zielony run potwierdza przejście audytów kapitalizacji oraz analizy modułowej.
+
+Artefakty #218:
+- `cleverkeys-pl-size-study`, artifact ID `11050673517`;
+- `cleverkeys-pl-aosp-source`, artifact ID `11050673508`;
+- artefakt AOSP zawiera zweryfikowany plik, SHA oraz `source-ref.txt`.
+
+### Nowe runy po przeniesieniu poprawionego transportu AOSP
+
+Po wdrożeniu tego samego mechanizmu do pozostałych workflowów:
+- Preview **#287**, run ID `36607068640`, HEAD `8c322a56c0e5f3c46592441ed8dcf163e936d437`;
+- First-name audit **#110**, run ID `36607096239`, HEAD `3c291cf1a416d527ea2820357cbe26eb4d692357`.
+
+W chwili zapisu tego handoffu oba runy zostały uruchomione i należy sprawdzić ich rzeczywiste `conclusion`; nie traktować ich jako green bez `success`.
+
+Zmiany workflow:
+- `8c322a56c0e5f3c46592441ed8dcf163e936d437` — Preview: oficjalny AOSP Git transport fallback;
+- `3c291cf1a416d527ea2820357cbe26eb4d692357` — First-name audit: ten sam fallback;
+- oba rozwiązania zachowują ten sam pinned SHA i hash drzewa; nie zmieniają danych językowych ani zasad kapitalizacji.
+
+### Najważniejsza decyzja kapitalizacyjna nadal obowiązuje
+
+Dla tego samego klucza case-insensitive:
+**zweryfikowany rzeczownik pospolity zawsze wygrywa i wymusza lowercase**.
+
+Przykłady:
+- `bardo` — lowercase; `Bardo` ma być odrzucone;
+- `Tomaszów` — uppercase, ponieważ brak zweryfikowanej analizy rzeczownika pospolitego;
+- `łódź` — lowercase;
+- przymiotniki typu `mazowiecki`, `pomorski`, `śląski`, `krakowski`, `warszawski` — lowercase.
+
+Wspólny resolver: `scripts/capitalization_rules.py`.
+Implementacja absolutnego pierwszeństwa rzeczownika pospolitego: `d2dca7e0361504123543ebe2e59a72c2fdb8e4f2`.
+
+### Najbliższe kroki po migracji
+
+1. Sprawdzić conclusion Preview #287 i First-name audit #110.
+2. Jeżeli Preview #287 jest green, pobrać świeży artefakt Preview i zweryfikować:
+   - wordCount / final unique keys = **105688**;
+   - brak duplikatów;
+   - `bardo` obecne i `Bardo` nieobecne;
+   - `Tomaszów` obecne i `tomaszów` nieobecne;
+   - `łódź` lowercase;
+   - `Jakub`, `Jakuba`, `jakubowi`, `Jakubem`, `Jakubie`;
+   - `Wrocław`, `Wrocławia`, `Wrocławiem`, `Wrocławiu`;
+   - `Toruń`, `Torunia`, `Toruniem`, `Toruniu`;
+   - `Gdynia` i jej sprawdzone odmiany;
+   - lowercase adjectives;
+   - zgodność audytów core/module z finalnym CKDT.
+3. Jeżeli First-name audit #110 jest green, pobrać jego artefakt i sprawdzić 470 rekordów oraz oczekiwane `469 active / 1 excluded`.
+4. Dopiero po potwierdzeniu świeżego Preview i audytów przejść do bezpośredniego testu CKDT / paczki na telefonie i swipe.
+5. Nadal **nie wykonywać merge/promote do `main`**.
+
+### Zasady migracji kontekstu
+
+GitHub branch `ops/baseline-sync-2026-09-20` jest jedynym źródłem prawdy.
+Nie zakładać żadnych zmian poza GitHub.
+Nie odbudowywać architektury od zera.
+Najpierw odczytać ten handoff oraz `docs/PL_DICTIONARY_MODULE_ARCHITECTURE_2026-09-25.md`.
+Każdą istotną zmianę zapisywać w małym, atomowym commicie.
+Zawsze rozdzielać: membership rdzenia / canonical casing / runtime ranking / swipe-geometric.
