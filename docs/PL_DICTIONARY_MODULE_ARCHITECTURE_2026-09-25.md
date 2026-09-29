@@ -267,3 +267,26 @@ Wspólny resolver (scripts/capitalization_rules.py) interpretuje klasyfikację p
 Precedencja pozostaje następująca: zweryfikowany rzeczownik pospolity -> lowercase, następnie zwykła forma przymiotnikowa -> lowercase, następnie zweryfikowana klasyfikacja nazwy własnej -> capitalized, następnie zwykła analiza leksykalna -> lowercase. To zapewnia, że rzeczownik pospolity nadal zawsze wygrywa z nazwą własną dla tego samego klucza case-insensitive.
 
 Źródło Morfeusz 2: https://morfeusz.sgjp.pl/doc/about/ oraz dokumentacja interfejsu: https://download.sgjp.pl/morfeusz/Morfeusz2.pdf
+
+## Aktualizacja 2026-09-29 — case-sensitive probing w niezależnym oracle kapitalizacji
+
+Diagnostyka Preview #295 wykazała, że analiza Morfeusza musi zachować wielkość liter zapytania. Przykładowo zapis lowercase może otrzymać `ign`, podczas gdy pierwsza litera zapisana wielką literą może ujawnić klasyfikację nazwy własnej. Dlatego resolver nie wykonuje już wyłącznie zapytania lowercase.
+
+Nowy mechanizm dla każdego klucza immutable 100k:
+1. normalizuje klucz do lowercase;
+2. wykonuje osobne zapytanie Morfeusz 2 / SGJP dla lowercase;
+3. wykonuje drugie zapytanie dla wariantu z pierwszą literą wielką;
+4. scala wyniki morfologiczne bez duplikowania identycznych analiz;
+5. rozstrzyga kapitalizację wyłącznie z tych niezależnych analiz, przed użyciem modułów jako cross-checku.
+
+Precedencja resolvera jest teraz:
+- zweryfikowana `nazwa_pospolita` -> lowercase, absolutnie;
+- dowolna niepusta klasyfikacja nazwy własnej poza `nazwa_pospolita`, znaleziona w jednym z obu probe -> capitalized;
+- analiza przymiotnikowa bez konkurencyjnej klasyfikacji nazwy własnej -> lowercase;
+- inna znana analiza leksykalna -> lowercase;
+- jawna, ręcznie audytowana surface-registry policy -> fallback dla luki;
+- brak dowodu -> unresolved.
+
+Ta kolejność zachowuje kluczową zasadę projektu: `bardo` pozostaje lowercase mimo istnienia miejscowości Bardo. Jednocześnie pozwala wykryć nazwisko lub nazwę geograficzną, która przy lowercase wygląda jak zwykłe słowo lub `ign`, ale przy poprawnej kapitalizacji ma klasyfikację własną.
+
+Moduły nadal nie podejmują decyzji dla immutable 100k. Ich polityki pozostają wyłącznie w raporcie jako niezależny cross-check konfliktów i pokrycia.
