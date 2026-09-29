@@ -12,8 +12,8 @@ module-only keys; they are not used to decide capitalization of core keys.
 
 Project precedence:
 1. verified common-noun analysis -> lowercase, absolutely;
-2. adjective analysis -> lowercase;
-3. verified proper-name classification -> capitalized;
+2. proper-name classification from either case probe -> capitalized;
+3. adjective analysis without competing proper-name evidence -> lowercase;
 4. other ordinary Polish lexical analysis -> lowercase;
 5. explicit audited surface policy -> fallback only when linguistic evidence
    does not determine the surface;
@@ -102,7 +102,7 @@ def _collect_analyses(morfeusz, surface: str) -> list[dict[str, object]]:
     return out
 
 def adjective_matches(morfeusz, surface: str) -> list[dict[str, object]]:
-    """Return every adjective analysis; adjective forms are lowercase."""
+    """Return every adjective analysis from the lowercase/capitalized probes."""
     return [
         {
             "orth": item["orth"],
@@ -110,7 +110,7 @@ def adjective_matches(morfeusz, surface: str) -> list[dict[str, object]]:
             "tag": item["tag"],
             "classes": item["classes"],
         }
-        for item in _analyses(morfeusz, surface)
+        for item in _collect_analyses(morfeusz, surface)
         if item["pos"] == "adj"
     ]
 
@@ -146,7 +146,7 @@ def proper_name_matches(morfeusz, surface: str) -> list[dict[str, object]]:
             "classes": item["classes"],
             "proper_name_classes": item["proper_name_classes"],
         }
-        for item in _analyses(morfeusz, surface)
+        for item in _collect_analyses(morfeusz, surface)
         if item["pos"] in ORDINARY_POS
         and item["proper_name_classes"]
     ]
@@ -278,19 +278,19 @@ def resolve_capitalization(
             **base,
         }
 
-    # Proper-name evidence from the capitalized probe must outrank an adjective
-    # reading of the lowercase surface (for example a surname vs. an adjective).
-    # A common noun was already handled above.
+    # Proper-name evidence from the correctly-capitalized probe outranks an
+    # adjective reading of the lowercase surface (for example, a surname vs.
+    # an adjective). The absolute common-noun rule was handled above.
     if proper_names:
         return {
             "resolved": True,
-            "surface": normalized,
-            "policy": "lowercase",
-            "reason": "adjective-absolute-lowercase",
-            "linguistic_basis": "adjective",
+            "surface": normalized[:1].upper() + normalized[1:],
+            "policy": "capitalized",
+            "reason": "proper-name-classification-from-linguistic-oracle",
+            "linguistic_basis": "proper-name",
             "explicit_policy_conflict": bool(
                 explicit_policy is not None
-                and explicit_policy[1] != "lowercase"
+                and explicit_policy[1] != "capitalized"
             ),
             **base,
         }
@@ -310,8 +310,6 @@ def resolve_capitalization(
             ),
             **base,
         }
-
-
     # Ordinary Polish lexical evidence independently establishes lowercase.
     if lexical:
         return {
