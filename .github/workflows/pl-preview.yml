@@ -186,6 +186,47 @@ jobs:
         run: |
           python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
 
+      - name: Verify independent core capitalization oracle
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          audit = json.loads(Path("build/pl-core-capitalization-audit.json").read_text(encoding="utf-8"))
+          assert audit["authority"] == "independent-linguistic-oracle"
+          assert audit["oracle"] == "Morfeusz 2 / SGJP"
+          assert audit["core_keys"] == 100000
+          assert audit["core_keys_audited"] == 100000
+          assert audit["resolved_core_keys"] == 100000
+          assert audit["unresolved_count"] == 0
+
+          for row in audit["audited"]:
+              basis = row["linguistic_basis"]
+              policy = row["resolved_policy"]
+              if row["common_noun_homonym"]:
+                  assert policy == "lowercase", row
+              elif basis == "adjective":
+                  assert policy == "lowercase", row
+              elif basis == "proper-name":
+                  assert policy == "capitalized", row
+              elif basis == "ordinary-lexical":
+                  assert policy == "lowercase", row
+
+          # Modules are a cross-check, not the core capitalization authority.
+          # A module disagreement is retained in the report for diagnosis and
+          # must never silently replace the independent core decision.
+          conflicts = audit.get("module_verification_conflict_count", 0)
+          print(json.dumps({
+              "authority": audit["authority"],
+              "oracle": audit["oracle"],
+              "core_keys": audit["core_keys"],
+              "proper_name_keys": audit["core_keys_with_linguistic_proper_name_evidence"],
+              "no_linguistic_evidence": audit["core_keys_with_no_linguistic_evidence"],
+              "explicit_fallbacks": audit["core_keys_using_explicit_fallback"],
+              "module_verification_conflicts": conflicts,
+          }, ensure_ascii=False, indent=2))
+          PY
+
       - name: Audit module capitalization against common-noun homonyms
         run: |
           python3 scripts/audit_capitalization_common_noun_homonyms.py             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc-source build/pl-terc-source.tsv             --terc-inflections build/pl-terc-inflections-selected.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --core-capitalization-audit build/pl-core-capitalization-audit.json             --out-json build/pl-capitalization-common-noun-audit.json             --out-tsv build/pl-capitalization-common-noun-audit.tsv
