@@ -1198,3 +1198,28 @@ AOSP:
 - hash drzewa `dictionaries`: `2b550379fe38213f9b01dcb75478ef2133682685`.
 
 Nie wracaj do zwykłego retry-only Gitiles jako jedynego transportu.
+
+
+## Aktualizacja 2026-09-29 — kapitalizacja rdzenia uniezależniona od modułów
+
+Użytkownik wykrył realny błąd w Preview #289: część nazwisk z immutable 100k była przechowywana małą literą. Przyczyną nie był brak audytu 100k — audyt przechodził wszystkie 100 000 kluczy — lecz niekompletna metoda ustalania kapitalizacji: decyzja mogła zależeć od obecności wyrazu w aktywnych modułach.
+
+Nowa decyzja architektoniczna:
+- immutable 100k kapitalizuje się na podstawie niezależnego lingwistycznego oracle Morfeusz 2 / SGJP;
+- moduły imion, miast, TERC, państw, stolic, custom itd. są wyłącznie cross-checkiem dla kluczy rdzenia;
+- brak modułowego wpisu nie może powodować lowercase;
+- resolver nie dostaje modułowych polityk przy decyzji dla core;
+- klasyfikacja Morfeusz/SGJP jest interpretowana ogólnie: nazwa_pospolita = lowercase absolutnie; zwykły adj = lowercase; dowolna niepusta klasyfikacja nazwy własnej poza nazwa_pospolita = capitalized; zwykła analiza leksykalna = lowercase;
+- jawna surface-registry policy jest jedynie ręcznie audytowanym fallbackiem dla luki lingwistycznej;
+- brak dowodu lingwistycznego i brak jawnego fallbacku daje unresolved, a nie automatyczne lowercase;
+- modułowy audit może używać własnej polityki dopiero jako fallbacku dla module-only, gdy oracle nie ma analizy; core pozostaje pod decyzją core audit.
+
+Zmiany kodowe:
+- 3cf5da4e607c85bc333861529202d47538778aeb — shared resolver rozpoznaje ogólnie klasy nazw własnych Morfeusz/SGJP i daje im autorytet nad modułami;
+- 2e476a4c6d4438d27882714e2bada607548570d4 — core audit nie przekazuje modułowych polityk do resolvera i zapisuje cross-check/conflicts;
+- df0cfdd4411e21a021cf59fa02a1d34aa1ceae1b — dokumentacja kontraktu modułowego audytu;
+- 1ba53a5003757d82b34b444eea6d142e67c61ca0 — CI wymaga niezależnego core capitalization oracle i sprawdza, że proper-name evidence prowadzi do capitalized, common-noun/adjective/ordinary lexical do lowercase.
+
+Dokument architektury został uzupełniony o ten kontrakt.
+Nowe runy CI zostały uruchomione po tych zmianach; wynik należy zawsze potwierdzić przez rzeczywiste conclusion=success i kontrolę artefaktów.
+Nie wykonywać merge/promote do main.
