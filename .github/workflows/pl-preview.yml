@@ -178,11 +178,23 @@ jobs:
               for line in Path("build/pl_words_preview.txt").read_text(encoding="utf-8").splitlines()
               if line.strip() and not line.startswith("#")
           }
-          assert "Bardo" in words, "canonical preview surface missing before CKDT: Bardo"
-          assert "bardo" not in words, "lowercase preview surface still present: bardo"
+          assert "bardo" in words, "canonical preview surface missing before CKDT: bardo"
+          assert "Bardo" not in words, "capitalized preview surface still present: Bardo"
           assert "Tomaszów" in words, "canonical preview surface missing before CKDT: Tomaszów"
           assert "tomaszów" not in words, "lowercase preview surface still present: tomaszów"
-          print("Core canonical surface sentinels present before CKDT: Bardo, Tomaszów")
+
+          from scripts.capitalization_rules import resolve_capitalization
+          import morfeusz2
+          resolver_bardo = resolve_capitalization(
+              key="bardo",
+              policies={"capitalized"},
+              morfeusz=morfeusz2.Morfeusz(),
+              explicit_policy=("Bardo", "capitalized"),
+          )
+          assert resolver_bardo["resolved"]
+          assert resolver_bardo["common_noun_homonym"] is True
+          assert resolver_bardo["surface"] == "bardo"
+          print("Common-noun precedence verified before CKDT: bardo wins over capitalized evidence and explicit policy")
           PY
 
       - name: Pin CleverKeys runtime

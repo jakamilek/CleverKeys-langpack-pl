@@ -150,21 +150,6 @@ def resolve_capitalization(
             "explicit_policy_conflict": False,
         }
 
-    # General lexical rule shared by all modules.
-    if common_noun:
-        return {
-            "resolved": True,
-            "surface": normalized,
-            "policy": "lowercase",
-            "reason": "common-noun-homonym-default-lowercase",
-            "common_lexical_matches": lexical,
-            "common_adjective_matches": adjectives,
-            "common_noun_matches": common_noun,
-            "common_lexical_homonym": bool(lexical),
-            "common_noun_homonym": True,
-            "explicit_policy_conflict": False,
-        }
-
     if policy_set == {"lowercase"}:
         return {
             "resolved": True,
