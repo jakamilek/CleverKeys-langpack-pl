@@ -405,3 +405,71 @@ Po zakończeniu poprzedniej serii runów:
   - `e4053d0d8b5037897d697538810f5a0033144f9c`: audit modułowy przekazuje tę samą informację; wszystkie moduły nadal korzystają z jednego resolvera, bez wyjątków dla konkretnych imion.
 - Po `e4053d0d...` wystartował size-study run `36264971952`; najnowsza kontrola wykazała, że nadal jest `in_progress` na pobieraniu/validacji NKJP1M. Preview dla tego SHA nie miał jeszcze widocznego check-runa w momencie ostatniej kontroli.
 - Nie uznawać `e4053d0d...` za zweryfikowany. Po green należy pobrać świeże artefakty i sprawdzić co najmniej: CKDT 100000 dla core, 105688/5688 net-new, `Jakub/Jakuba/Jakubowi/Jakubem/Jakubie`, `Wrocław/Wrocławia/Wrocławiem/Wrocławiu`, `Toruń/Torunia/Toruniem/Toruniu`, lowercase adjectives oraz `Łódź` vs `łódź`. Nie wykonuj merge/promote.
+
+
+## AKTUALNY BLOK MIGRACYJNY — 2026-09-29 22:41 CEST
+
+Jesteś kolejną instancją kontynuującą projekt CleverKeys Polish Language Pack. Nie zaczynaj od zera. Oficjalnym źródłem prawdy jest repozytorium GitHub `jakamilek/CleverKeys-langpack-pl`, gałąź `ops/baseline-sync-2026-09-20`. Nigdy nie zakładaj niepotwierdzonych zmian lokalnych. Nie wykonuj merge/promote do `main`.
+
+## 1. Cel projektu
+Budujemy praktyczny polski pakiet językowy dla CleverKeys, z immutable core dokładnie 100 000 kluczy case-insensitive oraz dodatkowymi modułami: imiona, polskie miejscowości/miasta, TERC, państwa, stolice i `custom_manual` (`własna`). Oddzielaj zawsze: membership słownika, canonical casing, ranking runtime i zachowanie swipe/geometric.
+
+Finalnie: 100 000 immutable core + suma unii net-new kluczy modułów, liczonych case-insensitive. Moduły są addytywne. Pruning częstotliwościowy stosujemy tylko przy rzeczywistym nacisku pojemnościowym.
+
+## 2. Kluczowe reguły kapitalizacji
+Najważniejsza reguła projektu: zweryfikowany rzeczownik pospolity zawsze wygrywa i wymusza lowercase dla tego samego klucza case-insensitive.
+Przykłady i regresje: `bardo` lowercase mimo TERC Bardo; `łódź` lowercase mimo miasta Łódź; `Tomaszów` uppercase; przymiotniki `mazowiecki`, `pomorski`, `śląski`, `krakowski`, `warszawski` lowercase.
+Multiword names są analizowane komponentowo: `Tomaszów Mazowiecki` -> `Tomaszów` + `mazowiecki`.
+Nie przywracaj starych wyjątków per imię/nazwisko. Wspólny resolver to `scripts/capitalization_rules.py`.
+Resolver: 1) common noun -> lowercase absolutnie; 2) proper-name classification -> capitalized; 3) adjective bez konkurencyjnej nazwy własnej -> lowercase; 4) zwykła analiza leksykalna -> lowercase; 5) jawny audited surface registry jako fallback; 6) dla module-only dopiero na końcu polityka modułu; core nie używa polityki modułu jako autorytetu.
+Morfeusz 2 jest case-sensitive w praktyce: resolver wykonuje probe lowercase i probe pierwszą literą uppercase oraz scala analizy. `Abidżan` nie może być wymaganym smoke testem Morfeusza, ponieważ Morfeusz może zwrócić `ign` bez klasyfikacji.
+
+## 3. Najnowsza przyczyna czerwonych runów
+Preview #304 (`36625427630`, commit `266bd00e...`) przeszedł diagnostykę case-sensitive, ale audyt immutable 100k wykazał setki/tysiące nierozstrzygniętych kluczy. Problemem był brak kompletności samego Morfeusz/SGJP jako jedynego oracle, nie syntax i nie dane modułów.
+Pierwsza próba dodania NKJP1M jako drugiego oracle (`bd10c175...`, następnie `756cb3d...`) pozostawiła praktycznie tę samą ogromną listę unresolved w Preview #306 (`36626583285`) i Size-study #227 (`36626629348`). Przyczyna: pierwsza implementacja czytała tylko dokładną powierzchnię.
+
+## 4. Najnowsza poprawka — obecny HEAD
+Commit `474575e30e67638a4e884423f58431844e029c37` (`fix: extend NKJP fallback to lemma evidence`) rozszerzył `scripts/audit_core_capitalization.py`, aby dla kluczy nierozstrzygniętych przez Morfeusz używać NKJP1M nie tylko po exact surface, ale także po lemma.
+Wbudowany NKJP fallback agreguje: formy, klasyfikacje i tagi z przypiętej tabeli. Kolejność dla fallbacku: dokładna powierzchnia, potem lemma.
+Konserwatywne zasady fallbacku: `CW` -> lowercase; `PN` / `ACRO` / `WEB` -> rozstrzygnięcie na podstawie częstości obserwowanej kapitalizacji powierzchni; klasy czysto leksykalne -> lowercase; samo `NCH` pozostaje unresolved.
+WAŻNE: `PN` z NKJP nie znaczy automatycznie uppercase. Dokumentacja NKJP zaznacza, że PN może zawierać przypadki normatywnie pisane małą literą, np. nazwy mieszkańców, przymiotniki od nazw geograficznych/narodów i niektóre inne klasy. Nie wolno więc robić `PN => uppercase` bez sprawdzenia powierzchni/częstości.
+NKJP1M jest przypięte do rewizji `be02836cf3aa0286ad8961d2e4528cdc2f72d044`, SHA-256 `fee31b1d6a682970b4e8ca68b593aea8dadbc8541e875e2d287480d83601e79c`.
+
+## 5. Obecne runy CI
+Po commicie `474575e...` uruchomiły się:
+- Preview #307, run ID `36627533071` — `in_progress` w ostatniej potwierdzonej kontroli;
+- Size-study #228, run ID `36627532986` — `in_progress` w ostatniej potwierdzonej kontroli.
+Poprzednie #306 i #227 są już potwierdzone jako `failure`, oba na kroku `Audit immutable core capitalization before module assembly`.
+Najpierw sprawdź rzeczywiste `conclusion`, potem failing step i log. Nie uznawaj `in_progress` za sukces.
+
+## 6. Sources / pinned dependencies
+- wordfreq 3.2.0: commit `912caf64b657478d1dff1138efdc078947d54bb1`;
+- NKJP1M: revision `be02836cf3aa0286ad8961d2e4528cdc2f72d044`, SHA `fee31b1d6a682970b4e8ca68b593aea8dadbc8541e875e2d287480d83601e79c`;
+- AOSP Polish dictionary SHA `75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45`, dictionaries tree `2b550379fe38213f9b1dcb75478ef2133682685`;
+- CleverKeys runtime SHA `263bd0abc03dec420f60fa073a9d2c5e25a176b5`;
+- historical language-main SHA `e1a136ea84d4365a36e9ba4fc405d1c6d27a71c8`;
+- Morfeusz2 `1.99.15`.
+AOSP Gitiles bywa niestabilny. Akceptowany jest fallback przez oficjalny Git transport z kontrolą drzewa i SHA pliku. Nie wracaj do retry-only Gitiles.
+
+## 7. Architektura modułów
+Aktywne: first names, cities/localities, TERC, countries, capitals, `custom_manual` / `własna`. Dawne `reviewed_proper_nouns` i `reviewed_morphology` są archive-only.
+TERC: 16 województw — pełna odmiana; 380 powiatów — selektywna/frequency weighted; 2479 gmin — nominative-only. Używamy NKJP jako primary frequency signal i wordfreq secondary, bez sztucznego combined score.
+Miasta: oficjalny GUS TERYT/SIMC; około 844 unikalnych jednoczłonowych nazw, wieloczłonowe/hyphenated odłożone. Selektywna odmiana top 300 wg wordfreq + reviewed priorities.
+Imiona: audited core 470 rekordów (235F/235M), aktywne 469 po wykluczeniu `oleksandr` jako source-eligibility exclusion.
+
+## 8. Znane regresje i wymagane kontrole końcowe
+Hard regression blocklist pozostaje: `chopin, chopina, goebbels, goebbelsa, catherine, catalina, cameron, carli, carlo, castillo, cali, celli, casino, calli, carrillo, caroli, cassino, compos, gourami, celastial`.
+Po green Preview świeży artefakt trzeba sprawdzić pod kątem: wordCount/final unique keys, brak duplikatów, `bardo` obecne i `Bardo` nieobecne, `Tomaszów` obecne i `tomaszów` nieobecne, `łódź` lowercase, `Jakub/Jakuba/Jakubowi/Jakubem/Jakubie`, `Gdynia` i sprawdzone odmiany, `Wrocław/Wrocławia/Wrocławiem/Wrocławiu`, `Toruń/Torunia/Toruniem/Toruniu`, lowercase adjectives oraz brak hard blocklist.
+Green size-study #218 wcześniej potwierdził 100000 core + 5688 net-new = 105688 końcowych unikalnych kluczy. Po późniejszych zmianach nie traktuj tej liczby jako świeżego artefaktu; potwierdź ją ponownie po green obecnych runów.
+
+## 9. Zasady pracy kolejnej instancji
+Najpierw czytaj `docs/CHAT_HANDOFF_2026-09-25.md` i `docs/PL_DICTIONARY_MODULE_ARCHITECTURE_2026-09-25.md`, potem ten prompt i bieżący GitHub HEAD.
+Każdą zmianę zapisuj jako mały, atomowy commit. Nie rób dużych, połączonych refaktorów bez potrzeby.
+Nie zmieniaj membership immutable 100k tylko dlatego, że audyt kapitalizacji jest trudny. Najpierw popraw oracle/audyt.
+Nie używaj modułów jako autorytetu kapitalizacji dla core. Moduły są cross-checkiem.
+Nie wprowadzaj reguł typu `surname => uppercase`, `PN => uppercase` ani osobnych wyjątków dla pojedynczych nazw.
+Nie uznawaj CI za zielone bez rzeczywistego `conclusion=success`. Po sukcesie zawsze sprawdź świeży artefakt.
+Nie wykonuj merge/promote do `main`.
+
+## 10. Polecenie startowe dla kolejnej instancji
+Kontynuuj projekt od dokładnie tego stanu. Najpierw sprawdź Preview #307 i Size-study #228 na GitHubie. Jeżeli są czerwone, znajdź pierwszy failing step i pokaż konkretną przyczynę z logu. Nie zgaduj. Jeżeli czerwone będą nadal w audycie core, zbadaj rzeczywiste rekordy NKJP1M (surface, lemma, tag, frequency, classification) dla representative unresolved keys i dopiero wtedy popraw fallback. Zachowaj absolutne pierwszeństwo rzeczownika pospolitego, niezależność core od modułów i pełną proweniencję.
