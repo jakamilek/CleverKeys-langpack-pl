@@ -205,6 +205,27 @@ jobs:
                   print("  LABELS", repr(payload[4]) if len(payload) > 4 else None)
           PY
 
+      - name: Verify case-sensitive core capitalization probes
+        run: |
+          python3 - <<'PY'
+          import morfeusz2
+          from scripts.capitalization_rules import resolve_capitalization
+
+          m = morfeusz2.Morfeusz()
+          expected = {
+              "absorbuje": "absorbuje",
+              "abidżan": "Abidżan",
+              "bardo": "bardo",
+              "łódź": "łódź",
+              "tomaszów": "Tomaszów",
+              "Jakub": "Jakub",
+          }
+          for word, surface in expected.items():
+              result = resolve_capitalization(key=word, morfeusz=m)
+              assert result["resolved"], (word, result)
+              assert result["surface"] == surface, (word, result)
+          print("case-sensitive capitalization probes: OK")
+          PY
       - name: Audit immutable core capitalization before module assembly
         run: |
           python3 scripts/audit_core_capitalization.py             --base build/base100k.txt             --first-name-inflections build/pl-first-name-inflections.tsv             --cities build/pl-city-source.tsv             --city-inflections build/pl-city-inflections.tsv             --terc build/pl-terc-source.tsv             --countries build/pl-country-source.tsv             --country-inflections build/pl-country-inflections.tsv             --capitals build/pl-capital-source.tsv             --capital-inflections build/pl-capital-inflections.tsv             --custom sources/staging/custom_manual.tsv             --surface-registry-policy sources/staging/surface_registry_policy.tsv             --out-json build/pl-core-capitalization-audit.json             --out-tsv build/pl-core-capitalization-audit.tsv
