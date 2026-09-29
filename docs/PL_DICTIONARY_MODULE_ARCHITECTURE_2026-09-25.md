@@ -236,3 +236,14 @@ The two measurements are stored separately. They are not silently combined into 
 Retention tiers are not hard-coded before measurement. First the observed distribution of module-form frequencies is recorded; only then are retention thresholds calibrated together with grammatical usefulness and source confidence. A rare module item therefore does not automatically disappear merely because it falls outside the 100k core, and a frequent module item can remain fully inflected even when all of its forms are net-new keys.
 
 For names and places, source-specific importance (for example official name statistics or controlled geographic status) is treated as a separate evidence dimension, not as a substitute for linguistic corpus frequency.
+
+
+## Aktualizacja 2026-09-29 — absolutne pierwszeństwo rzeczownika pospolitego
+
+Wspólny resolver kapitalizacji (`scripts/capitalization_rules.py`) stosuje obecnie bezwarunkową regułę:
+
+**Jeżeli dla danego klucza case-insensitive istnieje zweryfikowana analiza rzeczownikowa z klasą `nazwa_pospolita`, powierzchnia słownikowa musi być lowercase. Rzeczownik pospolity ma pierwszeństwo przed nazwą własną, dowodem modułowym, jawną polityką surface registry i innymi regułami kapitalizacji.**
+
+`proper_lemma_keys` pozostaje informacją provenance/diagnostyczną; nie może wyłączać rzeczywistej analizy rzeczownika pospolitego z decyzji kapitalizacyjnej.
+
+Praktyczna konsekwencja: `Bardo` jako nazwa miejscowości nie może przebić wspólnego klucza rzeczownika pospolitego `bardo`; kanoniczną powierzchnią CKDT jest `bardo`. `Tomaszów` pozostaje wielką literą, o ile dla tego klucza nie istnieje zweryfikowana analiza rzeczownika pospolitego.
