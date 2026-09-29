@@ -210,6 +210,48 @@ def resolve_nkjp_capitalization(
     return None
 
 
+def resolve_nkjp_lemma_capitalization(
+    key: str,
+    surface_record: dict[str, object] | None,
+    by_lemma: dict[str, dict[str, object]],
+) -> dict[str, object] | None:
+    """Resolve via lemmas linked to the exact NKJP surface.
+
+    The lemma index is keyed by lemma, not by inflected surface. Therefore an
+    unresolved form such as "batmana" must first use the exact-surface record
+    to discover its observed lemma ("batman"), and only then consult the
+    aggregated lemma evidence.
+    """
+    if not surface_record:
+        return None
+
+    lemmas = surface_record.get("lemmas", {})
+    if not isinstance(lemmas, Counter):
+        return None
+
+    candidates = sorted(
+        (
+            (str(lemma).strip().lower(), int(frequency))
+            for lemma, frequency in lemmas.items()
+            if str(lemma).strip() and int(frequency) > 0
+        ),
+        key=lambda item: (-item[1], item[0]),
+    )
+    for lemma, frequency in candidates:
+        resolution = resolve_nkjp_capitalization(
+            key,
+            by_lemma.get(lemma),
+            basis="lemma",
+        )
+        if resolution is None:
+            continue
+        return {
+            **resolution,
+            "nkjp_linked_lemma": lemma,
+            "nkjp_lemma_link_frequency": frequency,
+        }
+    return None
+
 def add_source(
     out: dict[str, list[dict[str, object]]],
     rows: list[dict[str, str]],
@@ -440,6 +482,14 @@ def main() -> int:
                 key, nkjp.get(key), basis="surface"
             )
             if nkjp_resolution is None:
+                nkjp_resolution = resolve_nkjp_lemma_capitalization(
+                    key,
+                    nkjp.get(key),
+                    nkjp_lemmas,
+                )
+            if nkjp_resolution is None:
+                # Preserve direct lemma-key coverage for base forms that have
+                # lemma evidence even when no exact-surface record is available.
                 nkjp_resolution = resolve_nkjp_capitalization(
                     key,
                     nkjp_lemmas.get(key),
@@ -503,6 +553,8 @@ def main() -> int:
             "linguistic_analysis_count": resolution.get("linguistic_analysis_count", 0),
             "proper_name_classes": resolution.get("proper_name_classes", []),
             "proper_name_matches": resolution.get("proper_name_matches", []),
+            "nkjp_linked_lemma": resolution.get("nkjp_linked_lemma"),
+            "nkjp_lemma_link_frequency": resolution.get("nkjp_lemma_link_frequency"),
             "common_lexical_homonym": bool(resolution["common_lexical_matches"]),
             "common_lexical_matches": resolution["common_lexical_matches"],
             "common_adjective_matches": resolution["common_adjective_matches"],
