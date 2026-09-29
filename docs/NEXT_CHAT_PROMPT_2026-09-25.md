@@ -473,3 +473,20 @@ Nie wykonuj merge/promote do `main`.
 
 ## 10. Polecenie startowe dla kolejnej instancji
 Kontynuuj projekt od dokładnie tego stanu. Najpierw sprawdź Preview #307 i Size-study #228 na GitHubie. Jeżeli są czerwone, znajdź pierwszy failing step i pokaż konkretną przyczynę z logu. Nie zgaduj. Jeżeli czerwone będą nadal w audycie core, zbadaj rzeczywiste rekordy NKJP1M (surface, lemma, tag, frequency, classification) dla representative unresolved keys i dopiero wtedy popraw fallback. Zachowaj absolutne pierwszeństwo rzeczownika pospolitego, niezależność core od modułów i pełną proweniencję.
+
+## Aktualizacja 2026-09-29 — poprawka rzeczywistego fallbacku NKJP przez lemat
+
+Po weryfikacji Preview #307 / Size-study #228 ustalono konkretną lukę w pierwszym wdrożeniu fallbacku NKJP: indeks `by_lemma` był poprawnie budowany po lemacie, ale dla nierozstrzygniętej formy fleksyjnej kod wykonywał `nkjp_lemmas.get(key)`, czyli szukał formy (`batmana`) jako lematu, zamiast najpierw odczytać lemat z rekordu dokładnej powierzchni (`batmana -> batman`) i dopiero wtedy pobrać agregację dla `batman`.
+
+Atomiczna poprawka w commitcie `6abd31f6f27cb585e69fc91ebf552e23b5033824`:
+- exact surface pozostaje pierwszym fallbackiem;
+- następnie resolver śledzi `surface -> observed lemma` i odpytuje `by_lemma` po rzeczywistym lemacie;
+- bezpośredni lookup `by_lemma[key]` pozostaje awaryjnie zachowany dla form bazowych;
+- raport audytu zapisuje `nkjp_linked_lemma` oraz `nkjp_lemma_link_frequency`;
+- nie zmieniono membership immutable 100k ani żadnej polityki modułów.
+
+Stan CI po poprawce:
+- Preview #308, run `36628928267`, HEAD `6abd31f6f27cb585e69fc91ebf552e23b5033824` — in_progress;
+- Size-study #229, run `36628928339`, HEAD `6abd31f6f27cb585e69fc91ebf552e23b5033824` — in_progress.
+
+Nie uznawać tych runów za green przed rzeczywistym `conclusion=success`. Po green sprawdzić świeże artefakty i pełny zestaw regresji. Jeżeli audyt core nadal będzie czerwony, analizować reprezentatywne rekordy NKJP po ścieżce surface -> lemma (surface, lemma, tag, frequency, classification), bez ręcznych wyjątków i bez zmiany rdzenia.
