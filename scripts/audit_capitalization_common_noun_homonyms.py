@@ -2,10 +2,11 @@
 # CI trigger marker; logic unchanged.
 """Audit and resolve capitalization for every active additive-module key.
 
-This audit is the module-side decision layer built on the single project-wide
-capitalization resolver. It intentionally does not use immutable-core membership
-to decide casing. Every module key is resolved, including lowercase-only keys,
-so downstream builders never need their own capitalization fallback.
+The shared linguistic capitalization oracle is the primary decision layer.
+For keys already present in the immutable core, the core audit is authoritative
+and module information is verification-only. For module-only keys, the module
+source policy is permitted only as a final fallback when the linguistic oracle
+has no lexical evidence. Downstream builders never derive capitalization.
 """
 
 from __future__ import annotations
