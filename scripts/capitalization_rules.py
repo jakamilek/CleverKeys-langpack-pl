@@ -54,7 +54,7 @@ def _payload(item):
 def _analyses(morfeusz, surface: str) -> list[dict[str, object]]:
     """Return normalized single-token Morfeusz/SGJP analyses."""
     out: list[dict[str, object]] = []
-    for item in morfeusz.analyse(surface.lower()):
+    for item in morfeusz.analyse(surface):
         payload = _payload(item)
         if payload is None:
             continue
