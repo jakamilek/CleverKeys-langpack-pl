@@ -75,6 +75,32 @@ def _analyses(morfeusz, surface: str) -> list[dict[str, object]]:
     return out
 
 
+def _surface_variants(surface: str) -> list[str]:
+    normalized = surface.lower()
+    capitalized = normalized[:1].upper() + normalized[1:] if normalized else normalized
+    if capitalized == normalized:
+        return [normalized]
+    return [normalized, capitalized]
+
+
+def _collect_analyses(morfeusz, surface: str) -> list[dict[str, object]]:
+    """Probe lowercase and first-letter-capitalized forms."""
+    out: list[dict[str, object]] = []
+    seen: set[tuple[str, str, str, tuple[str, ...]]] = set()
+    for variant in _surface_variants(surface):
+        for item in _analyses(morfeusz, variant):
+            identity = (
+                str(item["orth"]),
+                str(item["lemma"]),
+                str(item["tag"]),
+                tuple(str(x) for x in item["classes"]),
+            )
+            if identity in seen:
+                continue
+            seen.add(identity)
+            out.append(item)
+    return out
+
 def adjective_matches(morfeusz, surface: str) -> list[dict[str, object]]:
     """Return every adjective analysis; adjective forms are lowercase."""
     return [
@@ -98,7 +124,7 @@ def common_noun_matches(morfeusz, surface: str) -> list[dict[str, object]]:
             "tag": item["tag"],
             "classes": item["classes"],
         }
-        for item in _analyses(morfeusz, surface)
+        for item in _collect_analyses(morfeusz, surface)
         if item["pos"] in ORDINARY_POS
         and COMMON_NOUN_CLASS in item["classes"]
     ]
@@ -176,11 +202,51 @@ def resolve_capitalization(
         if str(value).strip()
     }
 
-    analyses = _analyses(morfeusz, normalized)
-    adjectives = adjective_matches(morfeusz, normalized)
-    common_noun = common_noun_matches(morfeusz, normalized)
-    proper_names = proper_name_matches(morfeusz, normalized)
-    lexical = ordinary_lexical_matches(morfeusz, normalized)
+    analyses = _collect_analyses(morfeusz, normalized)
+    adjectives = [
+        {
+            "orth": item["orth"],
+            "lemma": item["lemma"],
+            "tag": item["tag"],
+            "classes": item["classes"],
+        }
+        for item in analyses
+        if item["pos"] == "adj"
+    ]
+    common_noun = [
+        {
+            "orth": item["orth"],
+            "lemma": item["lemma"],
+            "tag": item["tag"],
+            "classes": item["classes"],
+        }
+        for item in analyses
+        if item["pos"] in ORDINARY_POS
+        and COMMON_NOUN_CLASS in item["classes"]
+    ]
+    proper_names = [
+        {
+            "orth": item["orth"],
+            "lemma": item["lemma"],
+            "tag": item["tag"],
+            "classes": item["classes"],
+            "proper_name_classes": item["proper_name_classes"],
+        }
+        for item in analyses
+        if item["pos"] in ORDINARY_POS
+        and item["proper_name_classes"]
+    ]
+    lexical = [
+        {
+            "orth": item["orth"],
+            "lemma": item["lemma"],
+            "tag": item["tag"],
+            "classes": item["classes"],
+        }
+        for item in analyses
+        if item["pos"] not in {"ign", "interp"}
+        and not item["proper_name_classes"]
+    ]
 
     base = {
         "common_lexical_matches": lexical,
@@ -212,7 +278,25 @@ def resolve_capitalization(
             **base,
         }
 
-    # Existing project rule: ordinary adjective forms are lowercase.
+    # Proper-name evidence from the capitalized probe must outrank an adjective
+    # reading of the lowercase surface (for example a surname vs. an adjective).
+    # A common noun was already handled above.
+    if proper_names:
+        return {
+            "resolved": True,
+            "surface": normalized,
+            "policy": "lowercase",
+            "reason": "adjective-absolute-lowercase",
+            "linguistic_basis": "adjective",
+            "explicit_policy_conflict": bool(
+                explicit_policy is not None
+                and explicit_policy[1] != "lowercase"
+            ),
+            **base,
+        }
+
+    # Ordinary adjective forms are lowercase when no competing proper-name
+    # interpretation exists in the case-sensitive oracle.
     if adjectives:
         return {
             "resolved": True,
@@ -227,22 +311,6 @@ def resolve_capitalization(
             **base,
         }
 
-    # Independent proper-name classification is now the generic capitalization
-    # authority for names, surnames, geographic names, brands, organizations,
-    # and other classified proper nouns.
-    if proper_names:
-        return {
-            "resolved": True,
-            "surface": normalized[:1].upper() + normalized[1:],
-            "policy": "capitalized",
-            "reason": "proper-name-classification-from-linguistic-oracle",
-            "linguistic_basis": "proper-name",
-            "explicit_policy_conflict": bool(
-                explicit_policy is not None
-                and explicit_policy[1] != "capitalized"
-            ),
-            **base,
-        }
 
     # Ordinary Polish lexical evidence independently establishes lowercase.
     if lexical:
