@@ -197,13 +197,13 @@ jobs:
               for variant in variants:
                   print("PROBE", variant)
                   for item in m.analyse(variant):
-                  payload = item[2]
-                  print("  RAW", repr(item))
-                  print("  ORTH", repr(payload[0]))
-                  print("  LEMMA", repr(payload[1]))
-                  print("  TAG", repr(payload[2]))
-                  print("  NAME", repr(payload[3]))
-                  print("  LABELS", repr(payload[4]) if len(payload) > 4 else None)
+                      payload = item[2]
+                      print("  RAW", repr(item))
+                      print("  ORTH", repr(payload[0]))
+                      print("  LEMMA", repr(payload[1]))
+                      print("  TAG", repr(payload[2]))
+                      print("  NAME", repr(payload[3]))
+                      print("  LABELS", repr(payload[4]) if len(payload) > 4 else None)
           PY
 
       - name: Verify case-sensitive core capitalization probes
