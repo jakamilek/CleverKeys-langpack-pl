@@ -385,6 +385,16 @@ jobs:
           print(json.dumps(result["marginal_gain"], ensure_ascii=False, indent=2))
           PY
 
+      - name: Publish pinned AOSP transport artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleverkeys-pl-aosp-source
+          retention-days: 90
+          path: |
+            build/aosp/pl_wordlist.combined.gz
+            build/aosp/pl_wordlist.combined.gz.sha256
+            build/aosp/source-ref.txt
+
       - name: Publish size-study artifacts
         uses: actions/upload-artifact@v4
         with:
