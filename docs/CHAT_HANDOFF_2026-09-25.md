@@ -1223,3 +1223,16 @@ Zmiany kodowe:
 Dokument architektury został uzupełniony o ten kontrakt.
 Nowe runy CI zostały uruchomione po tych zmianach; wynik należy zawsze potwierdzić przez rzeczywiste conclusion=success i kontrolę artefaktów.
 Nie wykonywać merge/promote do main.
+
+## Aktualizacja 2026-09-29 — przyczyna #295 i poprawka case-sensitive Morfeusz
+
+Preview #295 (run `36621593852`, commit `4460ab4b7d15b1fe31a8e0140b916f6bcb5a13e3`) wykonał poprawnie pobranie Morfeusz, wordfreq, NKJP, AOSP oraz źródeł TERYT/KSNG i zatrzymał się na audycie immutable 100k. Diagnostyka pokazała konkretną przyczynę: dla `abidżan` lowercase Morfeusz zwracał `ign`, a dla `tomaszów` / `Jakub` ujawniał klasy nazw własnych; pola `NAME` są rzeczywistą klasyfikacją typu `nazwa_geograficzna`, `imię`, `nazwisko`. Samo pytanie lowercase nie wystarcza więc jako oracle kapitalizacji.
+
+Naprawa została zapisana w trzech małych commitach:
+- `47e0437b75a8482d742398d67bb8470b4e39b353` — Morfeusz zachowuje dokładną wielkość liter wejścia zamiast wymuszać lowercase;
+- `15ec82532a374db1852bc2e243c3abab1a35152a` — shared resolver wykonuje dwa probe'y: lowercase i pierwsza litera uppercase, scala ich analizy i rozpoznaje nazwę własną także wtedy, gdy ujawnia się dopiero przy poprawnej kapitalizacji;
+- `1a29aa9cf7ae97e0b215250df8209d53146eb892` — przywrócona poprawna precedencja: common noun -> absolutne lowercase; następnie proper-name evidence -> capitalized; następnie adjective bez konkurencyjnego proper-name -> lowercase; następnie zwykła analiza leksykalna -> lowercase.
+
+Dodatkowo commit `fbb553f9d5ecabdb18604252b36d4e0cd63d5154` rozszerzył diagnostykę workflow tak, aby osobno wypisywała probe lowercase i probe capitalized dla `absorbuje`, `abidżan`, `kowalski`, `bardo`, `łódź`, `tomaszów`, `nazwisko`, `Jakub`.
+
+Po tej zmianie branch nadal jest `ops/baseline-sync-2026-09-20`; nie wykonywać merge/promote do `main`. Zieleni CI nie wolno deklarować bez rzeczywistego `conclusion=success` oraz kontroli świeżego artefaktu.
