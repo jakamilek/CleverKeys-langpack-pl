@@ -1046,3 +1046,18 @@ Po zakończeniu poprzedniej serii runów:
   - `e4053d0d8b5037897d697538810f5a0033144f9c`: audit modułowy przekazuje tę samą informację; wszystkie moduły nadal korzystają z jednego resolvera, bez wyjątków dla konkretnych imion.
 - Po `e4053d0d...` wystartował size-study run `36264971952`; najnowsza kontrola wykazała, że nadal jest `in_progress` na pobieraniu/validacji NKJP1M. Preview dla tego SHA nie miał jeszcze widocznego check-runa w momencie ostatniej kontroli.
 - Nie uznawać `e4053d0d...` za zweryfikowany. Po green należy pobrać świeże artefakty i sprawdzić co najmniej: CKDT 100000 dla core, 105688/5688 net-new, `Jakub/Jakuba/Jakubowi/Jakubem/Jakubie`, `Wrocław/Wrocławia/Wrocławiem/Wrocławiu`, `Toruń/Torunia/Toruniem/Toruniu`, lowercase adjectives oraz `Łódź` vs `łódź`. Nie wykonuj merge/promote.
+
+
+## Aktualizacja ciągłości — 2026-09-29
+
+Nowa decyzja kapitalizacyjna:
+- **rzeczownik pospolity zawsze ma pierwszeństwo nad innymi regułami dla tego samego klucza case-insensitive**;
+- zweryfikowany common noun wymusza lowercase, nawet gdy źródło nazwy własnej lub `surface_registry_policy.tsv` dostarcza kapitalizowaną powierzchnię;
+- `proper_lemma_keys` jest zachowane wyłącznie jako provenance/diagnostyka i nie osłabia tej reguły;
+- regresja `Bardo` została zmieniona: oczekujemy `bardo`, nie `Bardo`;
+- `Tomaszów` pozostaje wielką literą tylko dlatego, że obecnie nie ma zweryfikowanej analizy rzeczownika pospolitego dla tego klucza.
+
+Implementacja resolvera: `d2dca7e0361504123543ebe2e59a72c2fdb8e4f2`.
+Kontrakt CI dla tej reguły znajduje się w commitcie `5dbe013c2b7b613fc003ca9911a89df24bc856a7`.
+Dokumentacja architektury: `a5e93ed3ab344f93c5b170731454eb1c8ce66dfa`.
+Następny wymagany stan akceptacyjny: green preview + size-study na aktualnym HEAD oraz bezpośrednia weryfikacja CKDT.
