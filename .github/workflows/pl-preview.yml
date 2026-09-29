@@ -487,6 +487,10 @@ jobs:
           assert all(row["case_policy"] in {"lowercase", "capitalized"} for row in terc_inflection_rows)
           # Like TERC lemmas, generated inflection case_policy is source evidence only.
           # The canonical CKDT surface is the final shared capitalization-audit result.
+          # Shared capitalization resolutions must exist before any TERC inflection lookup.
+          core_cap_resolved = core_audit_for_names.get("resolved_surfaces", {})
+          module_cap_resolved = module_audit_for_names.get("resolved_surfaces", {})
+
           expected_terc_inflection_surfaces = set()
           for row in terc_inflection_rows:
               key = row["form"].strip().lower()
@@ -519,8 +523,6 @@ jobs:
           # TERC source case_policy is evidence, not the final CKDT surface.
           # The shared capitalization audits are authoritative after resolving
           # adjective/common-noun homographs and cross-source conflicts.
-          core_cap_resolved = core_audit_for_names.get("resolved_surfaces", {})
-          module_cap_resolved = module_audit_for_names.get("resolved_surfaces", {})
           expected_terc_surfaces = set()
           for row in terc_rows:
               key = row["name"].strip().lower()
