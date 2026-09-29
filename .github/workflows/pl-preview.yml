@@ -1,5 +1,6 @@
 name: Polish language pack preview
 # CI retrigger: validate latest capitalization-resolver-only builder.
+# CI retrigger after Morfeusz diagnostic indentation fix.
 # Keep artifact verification aligned with source case_policy; no promotion occurs in preview.
 
 on:
