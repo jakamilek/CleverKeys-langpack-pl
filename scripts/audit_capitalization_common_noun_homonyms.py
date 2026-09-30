@@ -17,6 +17,7 @@ import json
 from pathlib import Path
 
 from surface_components import component_surfaces, dictionary_surfaces
+from nkjp_capitalization import load_nkjp_capitalization, resolve_nkjp_capitalization, resolve_nkjp_lemma_capitalization, resolve_nkjp_via_morfeusz_lemmas
 from capitalization_rules import resolve_capitalization
 
 COMMON_NOUN_CLASS = "nazwa_pospolita"
@@ -199,6 +200,7 @@ def main() -> int:
         )
 
     morfeusz = morfeusz2.Morfeusz()
+    nkjp, nkjp_lemmas = load_nkjp_capitalization(args.nkjp)
 
     audited = []
     unresolved = []
@@ -231,6 +233,30 @@ def main() -> int:
             proper_lemma_keys=proper_lemmas,
         )
         capitalized = [r for r in rows if r["policy"] == "capitalized"]
+        nkjp_resolution = resolve_nkjp_capitalization(
+            key, nkjp.get(key), basis="surface"
+        )
+        if nkjp_resolution is None:
+            nkjp_resolution = resolve_nkjp_lemma_capitalization(
+                key, nkjp.get(key), nkjp_lemmas
+            )
+        if nkjp_resolution is None:
+            nkjp_resolution = resolve_nkjp_via_morfeusz_lemmas(
+                key, morfeusz, nkjp_lemmas
+            )
+        if nkjp_resolution is None:
+            nkjp_resolution = resolve_nkjp_capitalization(
+                key, nkjp_lemmas.get(key), basis="lemma"
+            )
+        # Use exactly the same independent NKJP evidence layer as the core.
+        resolution = resolve_capitalization(
+            key=key,
+            policies=policies,
+            morfeusz=morfeusz,
+            explicit_policy=policy.get(key),
+            proper_lemma_keys=proper_lemmas,
+            secondary_linguistic_evidence=nkjp_resolution,
+        )
         core_result = core_resolved.get(key)
         core_conflict = bool(
             core_result is not None
