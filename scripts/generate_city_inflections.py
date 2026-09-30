@@ -188,18 +188,23 @@ def main() -> int:
         generated.add(("nom", name))
 
         # Primary oracle: Morfeusz 2 / SGJP.
-        for lemma_query in (name, lower_name):
-            for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
-                if str(lemma).lower() != lower_name:
-                    continue
-                if not tag.startswith("subst:sg:"):
-                    continue
-                for case_tag in sorted(case_from_tag(tag)):
-                    surface = str(orth).strip()
-                    if not surface:
+        # Hyphenated city names use the dedicated category model below. Running
+        # the ordinary full-name generator first can yield malformed partial
+        # surfaces such as "-Bielska", so the generic path is limited to
+        # one-token city lemmas.
+        if not is_hyphenated(name):
+            for lemma_query in (name, lower_name):
+                for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
+                    if str(lemma).lower() != lower_name:
                         continue
-                    surface = surface[:1].upper() + surface[1:]
-                    generated.add((case_tag, surface))
+                    if not tag.startswith("subst:sg:"):
+                        continue
+                    for case_tag in sorted(case_from_tag(tag)):
+                        surface = str(orth).strip()
+                        if not surface:
+                            continue
+                        surface = surface[:1].upper() + surface[1:]
+                        generated.add((case_tag, surface))
 
         # For lexical-hyphen city names, preserve the full surface and add
         # aligned same-case component inflections. This is a city-category
