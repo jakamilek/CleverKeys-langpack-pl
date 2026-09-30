@@ -173,7 +173,7 @@ jobs:
       - name: Validate global multiword surface tokenizer
         run: |
           python3 - <<'PY'
-          from scripts.surface_components import component_surfaces
+          from scripts.surface_components import component_surfaces, hyphen_components, is_hyphenated
 
           assert component_surfaces("Tomaszów Mazowiecki") == ["Tomaszów", "Mazowiecki"]
           assert component_surfaces("Saint John's") == ["Saint", "John"]
@@ -181,6 +181,13 @@ jobs:
           assert component_surfaces("King’s College") == ["King", "College"]
           assert component_surfaces("D'Arcy") == ["D", "Arcy"]
           assert component_surfaces("D’Arcy") == ["D", "Arcy"]
+          for value in ("kujawsko-pomorskie", "kujawsko‐pomorskie", "kujawsko‑pomorskie"):
+              assert is_hyphenated(value)
+              assert hyphen_components(value) == ["kujawsko", "pomorskie"]
+          assert not is_hyphenated("Szklarska Poręba")
+          assert not is_hyphenated("A–B")
+          assert not is_hyphenated("A—B")
+          assert not is_hyphenated("A/B")
           PY
 
       - name: Diagnose Morfeusz capitalization fields
@@ -578,12 +585,18 @@ jobs:
           core_cap_resolved = core_audit_for_names.get("resolved_surfaces", {})
           module_cap_resolved = module_audit_for_names.get("resolved_surfaces", {})
 
+          # CKDT is word-oriented, so a hyphenated TERC surface is represented
+          # by its lexical components. Ordinary space-separated phrases are likewise
+          # audited by component membership, but they do not enter the dedicated
+          # hyphenated-name inflection path.
           expected_terc_inflection_surfaces = set()
           for row in terc_inflection_rows:
-              key = row["form"].strip().lower()
-              resolution = core_cap_resolved.get(key) or module_cap_resolved.get(key)
-              assert resolution is not None, "No unified capitalization resolution for TERC inflection key: " + key
-              expected_terc_inflection_surfaces.add(resolution["surface"])
+              raw_surface = row["form"].strip()
+              for component in component_surfaces(raw_surface):
+                  key = component.lower()
+                  resolution = core_cap_resolved.get(key) or module_cap_resolved.get(key)
+                  assert resolution is not None, "No unified capitalization resolution for TERC inflection component: " + key
+                  expected_terc_inflection_surfaces.add(resolution["surface"])
 
           city_inflection_rows = []
           with Path("build/pl-city-inflections.tsv").open(encoding="utf-8", newline="") as handle:
