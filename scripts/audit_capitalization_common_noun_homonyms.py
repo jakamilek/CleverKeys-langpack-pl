@@ -18,7 +18,7 @@ from pathlib import Path
 
 from surface_components import component_surfaces, dictionary_surfaces
 from nkjp_capitalization import load_nkjp_capitalization, resolve_nkjp_capitalization, resolve_nkjp_lemma_capitalization, resolve_nkjp_via_morfeusz_lemmas
-from capitalization_rules import resolve_capitalization
+from capitalization_rules import OFFICIAL_CAPITALIZATION_SOURCES, resolve_capitalization
 
 COMMON_NOUN_CLASS = "nazwa_pospolita"
 
@@ -221,6 +221,12 @@ def main() -> int:
             for r in rows
             if r["policy"] in {"lowercase", "capitalized"}
         }
+        official_source_policies = {
+            r["policy"]
+            for r in rows
+            if r["source"] in OFFICIAL_CAPITALIZATION_SOURCES
+            and r["policy"] in {"lowercase", "capitalized"}
+        }
         proper_lemmas = {
             lemma
             for row in rows
@@ -261,6 +267,7 @@ def main() -> int:
             explicit_policy=policy.get(key),
             proper_lemma_keys=proper_lemmas,
             secondary_linguistic_evidence=nkjp_resolution,
+            official_source_policies=official_source_policies,
         )
         core_result = core_resolved.get(key)
         core_conflict = bool(
