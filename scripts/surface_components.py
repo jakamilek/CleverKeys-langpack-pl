@@ -16,6 +16,10 @@ import re
 # / `’S`. Internal apostrophes such as `D'...` or `D’...` are preserved as
 # separators for component-level audit.
 WORD_COMPONENT_RE = re.compile(r"[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+")
+# Only these characters are treated as lexical hyphens for the dedicated
+# hyphenated-name processing path. En/em dashes and punctuation are not.
+LEXICAL_HYPHENS = ("-", "‐", "‑")
+HYPHEN_SPLIT_RE = re.compile(r"[-‐‑]")
 ENGLISH_POSSESSIVE_RE = re.compile(r"(?i)(?:'|’|＇)s\b")
 
 
@@ -30,3 +34,13 @@ def component_records(surface: str) -> list[tuple[int, str]]:
 
 def is_multi_component(surface: str) -> bool:
     return len(component_surfaces(surface)) > 1
+
+
+def is_hyphenated(surface: str) -> bool:
+    """Return whether a surface contains a project-recognized lexical hyphen."""
+    return bool(HYPHEN_SPLIT_RE.search(surface)) and len(hyphen_components(surface)) > 1
+
+
+def hyphen_components(surface: str) -> list[str]:
+    """Return lexical components of a hyphenated surface without changing text."""
+    return [part.strip() for part in HYPHEN_SPLIT_RE.split(surface) if part.strip()]
