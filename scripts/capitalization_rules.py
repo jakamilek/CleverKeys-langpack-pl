@@ -30,6 +30,17 @@ from typing import Iterable
 
 COMMON_NOUN_CLASS = "nazwa_pospolita"
 CAPITALIZATION_POLICIES = {"lowercase", "capitalized"}
+OFFICIAL_CAPITALIZATION_SOURCES = {
+    "first-name-inflection",
+    "city",
+    "city-inflection",
+    "terc-source",
+    "terc",
+    "country",
+    "country-inflection",
+    "capital",
+    "capital-inflection",
+}
 ORDINARY_POS = {
     "subst", "adj", "adv", "verb", "part", "prep", "conj",
     "num", "ger", "ppron", "pron",
