@@ -216,6 +216,7 @@ jobs:
       - name: Verify case-sensitive core capitalization probes
         run: |
           python3 - <<'PY'
+          import json
           import morfeusz2
           from scripts.capitalization_rules import resolve_capitalization
 
