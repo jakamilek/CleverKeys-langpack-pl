@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Generate complete validated singular inflections for one-token TERC admin names."""
+"""Generate complete validated singular inflections for TERC admin names.
+
+All 16 voivodeships are included, including the two hyphenated names. Lower
+levels retain the existing one-token eligibility gate."""
 from __future__ import annotations
 
 import argparse
@@ -62,7 +65,9 @@ def main() -> int:
     rows = load_tsv(args.terc)
     names = {}
     for row in rows:
-        if row["eligible_single_token"] != "yes":
+        # All voivodeships require complete singular paradigms, including
+        # hyphenated names. Lower-level units retain the existing one-token gate.
+        if row["level"] != "voivodeship" and row["eligible_single_token"] != "yes":
             continue
         lower = row["name"].strip().lower()
         unit_key = (row["level"], row["terc"])
@@ -89,38 +94,84 @@ def main() -> int:
 
     out = []
     case_coverage = {}
+    voivodeship_names = set()
     for unit_key in sorted(names):
         row_meta = names[unit_key]
         lower_name = row_meta["name"].strip().lower()
         name = row_meta["name"]
         generated = {("nom", name)}
-        for lemma_query in (name, lower_name):
-            for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
-                if str(lemma).lower() != lower_name or not tag.startswith("subst:sg:"):
+
+        if row_meta["level"] == "voivodeship":
+            # Voivodeship names are adjectival. For a hyphenated name such as
+            # "kujawsko-pomorskie", inflect only the final adjective and keep
+            # the invariant first component unchanged.
+            from polish_inflection import odmien_przymiotnik, podaj_przymiotnik, NIJAKI
+            parts = name.split("-")
+            last = parts[-1].strip().lower()
+            analyses = podaj_przymiotnik(last)
+            lemmas = sorted({
+                str(a.lemat).strip().lower()
+                for a in analyses
+                if str(a.liczba) == "sg" and str(a.rodzaj) == "n"
+            })
+            if not lemmas:
+                raise SystemExit(
+                    "No SGJP adjective lemma for voivodeship "
+                    + repr(name) + " final component " + repr(last)
+                )
+            lemma = lemmas[0]
+            for case_tag, const in constants.items():
+                if case_tag == "nom":
                     continue
-                for case_tag in sorted(case_from_tag(tag)):
-                    surface = str(orth).strip()
-                    if surface:
-                        generated.add((case_tag, surface[:1].upper() + surface[1:]))
-        for case_tag, const in constants.items():
-            if case_tag == "nom":
-                continue
-            try:
-                variants = list(odmien_warianty(lower_name, const, POJEDYNCZA))
-            except Exception:
-                variants = []
-            for variant in variants:
-                form = str(variant).strip()
+                try:
+                    form = str(
+                        odmien_przymiotnik(lemma, const, NIJAKI, default=None) or ""
+                    ).strip()
+                except Exception:
+                    form = ""
                 if not form:
                     continue
-                analyses = podaj(form, liczba=POJEDYNCZA)
-                if any(
-                    str(a.lemat).lower() == lower_name
+                validated = podaj_przymiotnik(form)
+                if not any(
+                    str(a.lemat).strip().lower() == lemma
                     and str(a.przypadek) == case_tag
                     and str(a.liczba) == "sg"
-                    for a in analyses
+                    and str(a.rodzaj) == "n"
+                    for a in validated
                 ):
-                    generated.add((case_tag, form[:1].upper() + form[1:]))
+                    continue
+                prefix = "-".join(part.strip() for part in parts[:-1])
+                composed = (prefix + "-" + form) if prefix else form
+                generated.add((case_tag, composed))
+            voivodeship_names.add(unit_key)
+        else:
+            for lemma_query in (name, lower_name):
+                for orth, lemma, tag, _names, _labels in morfeusz.generate(lemma_query):
+                    if str(lemma).lower() != lower_name or not tag.startswith("subst:sg:"):
+                        continue
+                    for case_tag in sorted(case_from_tag(tag)):
+                        surface = str(orth).strip()
+                        if surface:
+                            generated.add((case_tag, surface[:1].upper() + surface[1:]))
+            for case_tag, const in constants.items():
+                if case_tag == "nom":
+                    continue
+                try:
+                    variants = list(odmien_warianty(lower_name, const, POJEDYNCZA))
+                except Exception:
+                    variants = []
+                for variant in variants:
+                    form = str(variant).strip()
+                    if not form:
+                        continue
+                    analyses = podaj(form, liczba=POJEDYNCZA)
+                    if any(
+                        str(a.lemat).lower() == lower_name
+                        and str(a.przypadek) == case_tag
+                        and str(a.liczba) == "sg"
+                        for a in analyses
+                    ):
+                        generated.add((case_tag, form[:1].upper() + form[1:]))
 
         policy = row_meta.get("case_policy", "capitalized")
         for case_tag, surface in sorted(generated, key=lambda x: (CASES.index(x[0]), x[1])):
@@ -150,13 +201,31 @@ def main() -> int:
         writer.writeheader()
         writer.writerows(out)
 
+    if len(voivodeship_names) != 16:
+        raise SystemExit(
+            "TERC voivodeship generation requires all 16 units, got "
+            + str(len(voivodeship_names))
+        )
+    missing_voivodeship_cases = {
+        unit_key: sorted(set(CASES) - case_coverage.get(unit_key, set()))
+        for unit_key in sorted(voivodeship_names)
+        if set(CASES) - case_coverage.get(unit_key, set())
+    }
+    if missing_voivodeship_cases:
+        raise SystemExit(
+            "TERC voivodeship full-inflection gap: "
+            + json.dumps(missing_voivodeship_cases, ensure_ascii=False, sort_keys=True)
+        )
+
     report = {
-        "oracle": "Morfeusz 2 / SGJP",
+        "oracle": "Morfeusz 2 / SGJP + polish-inflection SGJP adjective rules",
         "morfeusz_version": str(morfeusz2.__version__),
         "category": "terc",
         "number": "sg",
         "input_identity": "level+terc",
-        "input_one_token_units": len(names),
+        "input_units_total": len(names),
+        "voivodeship_units": len(voivodeship_names),
+        "voivodeship_full_inflection": True,
         "inflection_record_count": len(out),
         "names_with_non_nominative": sum(
             1 for cases in case_coverage.values() if len(cases) > 1
