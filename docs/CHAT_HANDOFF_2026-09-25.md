@@ -1348,3 +1348,23 @@ Zaakceptowano i zapisano w implementacji zasadę, że specjalna obsługa nazw wi
 - Sama detekcja łącznika nie daje prawa do mechanicznej odmiany dowolnej nazwy: generator musi mieć właściwy model gramatyczny i walidację dla danej kategorii.
 
 Ważne: te dwa commity nie zmieniają membership immutable 100k, zasady pierwszeństwa `nazwa_pospolita`, rankingu runtime ani geometrii swipe. Nie wykonano merge/promote do `main`.
+
+
+## Aktualizacja ciągłości — 2026-09-30 — weryfikacja CKDT dla nazw łącznikowych
+
+Po wprowadzeniu wspólnej reguły łącznikowej poprzedni Preview #324 zakończył się błędem w samej bramce `Verify CKDT and pack contents`: test oczekiwał pełnej powierzchni `kujawsko-pomorskie` w CKDT. Jest to niezgodne z architekturą CKDT, ponieważ builder jest word-oriented i emituje komponenty powierzchni.
+
+Wprowadzone poprawki:
+- `5a5afadc7c471a76c8058ca99dfbdbc4692b3b34` — wspólne `LEXICAL_HYPHENS`, `is_hyphenated()`, `hyphen_components()` w `scripts/surface_components.py`;
+- `08333271f54557f4e5568df3288c2f58d5555523` — TERC korzysta z tej wspólnej definicji;
+- `62f0daf41cc491d7bd0161b8be4bfbad2566eef1` — dokumentacja zakresu reguły;
+- `490b052352e53f318cfe8d02f99d1de25510e977` — zapis decyzji w handoffie;
+- `a0dc3b5b023d68ab1021c24f4971560e392190c3` — test CI rozróżnia łącznik od spacji/półpauzy/pauzy/ukośnika i sprawdza rozbijanie nazw łącznikowych na komponenty;
+- `4bc8b2fbaff4f2dc1ebc42ac286b103f0a43f5c3` — końcowa weryfikacja Preview sprawdza dla wygenerowanych TERC form komponenty CKDT zamiast wymagać pełnej powierzchni łącznikowej.
+
+Aktualny HEAD branch przed tym wpisem: `4bc8b2fbaff4f2dc1ebc42ac286b103f0a43f5c3`. Ostatnie nowe runy do oceny:
+- Preview #327, run `36751879287` — uruchomiony na wcześniejszym HEAD `a0dc3b5b...`;
+- wcześniejszy Preview #326, run `36751674434` — HEAD `08333271...`;
+- Size-study #247, run `36751674417` — HEAD `08333271...`.
+
+Po aktualizacji handoffu ten commit dokumentacyjny nie jest objęty ścieżkami wyzwalającymi powyższe workflowy. Należy więc ocenić istniejące runy dla właściwego kodu i nie traktować statusu `pending/in_progress` jako sukcesu.
