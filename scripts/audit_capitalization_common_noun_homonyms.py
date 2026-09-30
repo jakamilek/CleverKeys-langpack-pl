@@ -2,11 +2,11 @@
 # CI trigger marker; logic unchanged.
 """Audit and resolve capitalization for every active additive-module key.
 
-The shared linguistic capitalization oracle is the primary decision layer.
-For keys already present in the immutable core, the core audit is authoritative
-and module information is verification-only. For module-only keys, the module
-source policy is permitted only as a final fallback when the linguistic oracle
-has no lexical evidence. Downstream builders never derive capitalization.
+The shared linguistic capitalization oracle is the primary decision layer for
+module surfaces. Module keys are resolved independently; when a key also exists
+in the immutable core, the module result is compared with the already-resolved
+core surface. A disagreement is a rule-level conflict and fails CI; the module
+never repairs or overrides the core.
 """
 
 from __future__ import annotations
@@ -191,39 +191,12 @@ def main() -> int:
     capitalized_candidate_count = 0
     core_authoritative_count = 0
 
-    for key, rows in sorted(candidates.items()):
-        if key in core_keys:
-            authoritative = core_resolved[key]
-            audited.append({
-                "surface_key": key,
-                "capitalized_candidates": sorted({
-                    (r["surface"], r["source"])
-                    for r in rows
-                    if r["policy"] == "capitalized"
-                }),
-                "sources": sorted({r["source"] for r in rows}),
-                "common_lexical_homonym": None,
-                "common_noun_homonym": None,
-                "common_lexical_matches": [],
-                "common_adjective_matches": [],
-                "common_noun_matches": [],
-                "explicit_surface_policy": (
-                    {"surface": policy[key][0], "policy": policy[key][1]}
-                    if key in policy else None
-                ),
-                "resolved": True,
-                "resolution_reason": "core-authoritative",
-                "core_authoritative": True,
-                "canonical_surface": authoritative["surface"],
-                "canonical_policy": authoritative["policy"],
-            })
-            resolved_surfaces[key] = authoritative
-            core_authoritative_count += 1
-            continue
+    core_overlap_conflicts: list[str] = []
 
-        # Every module-only key goes through the same shared resolver, even when
-        # its source evidence is lowercase-only. This is what makes adjective
-        # -> lowercase and all other project-wide rules apply uniformly.
+    for key, rows in sorted(candidates.items()):
+        # Every module key goes through the same shared resolver. For a key also
+        # present in the core, the independent module result is compared with
+        # the already-resolved core result; the module never repairs the core.
         policies = {
             r["policy"]
             for r in rows
@@ -242,6 +215,17 @@ def main() -> int:
             proper_lemma_keys=proper_lemmas,
         )
         capitalized = [r for r in rows if r["policy"] == "capitalized"]
+        core_result = core_resolved.get(key)
+        core_conflict = bool(
+            core_result is not None
+            and resolution["resolved"]
+            and (
+                str(resolution["surface"]) != str(core_result.get("surface"))
+                or str(resolution["policy"]) != str(core_result.get("policy"))
+            )
+        )
+        if core_conflict:
+            core_overlap_conflicts.append(key)
         if capitalized:
             capitalized_candidate_count += 1
 
@@ -263,6 +247,9 @@ def main() -> int:
             "resolved": bool(resolution["resolved"]),
             "resolution_reason": str(resolution["reason"]),
             "core_authoritative": False,
+            "core_overlap": core_result is not None,
+            "core_overlap_conflict": core_conflict,
+            "core_surface": core_result.get("surface") if core_result is not None else None,
             "canonical_surface": str(resolution["surface"]),
             "canonical_policy": str(resolution["policy"]),
         }
@@ -291,7 +278,12 @@ def main() -> int:
         "unresolved_count": len(unresolved),
         "unresolved_surface_keys": [r["surface_key"] for r in unresolved],
         "resolved_surfaces": resolved_surfaces,
-        "core_authoritative_keys": core_authoritative_count,
+        "core_authoritative_keys": 0,
+        "core_overlap_keys_analyzed": sum(
+            1 for row in audited if row.get("core_overlap")
+        ),
+        "core_overlap_conflict_count": len(core_overlap_conflicts),
+        "core_overlap_conflict_keys": core_overlap_conflicts,
         "module_only_keys_analyzed": sum(
             1 for row in audited if not row.get("core_authoritative")
         ),
@@ -342,6 +334,13 @@ def main() -> int:
         print(
             "Unresolved common-noun capitalization collisions: "
             + ", ".join(r["surface_key"] for r in unresolved)
+        )
+        return 1
+    if core_overlap_conflicts:
+        print(
+            "Core/module capitalization rule conflicts detected; fix the shared "
+            "rule instead of adding per-word exceptions: "
+            + ", ".join(core_overlap_conflicts)
         )
         return 1
 

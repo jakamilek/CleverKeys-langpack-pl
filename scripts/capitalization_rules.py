@@ -186,6 +186,7 @@ def resolve_capitalization(
     morfeusz,
     explicit_policy: tuple[str, str] | None = None,
     proper_lemma_keys: Iterable[str] | None = None,
+    secondary_linguistic_evidence: dict[str, object] | None = None,
 ) -> dict[str, object]:
     """Resolve one key from the independent linguistic capitalization oracle.
 
@@ -264,6 +265,7 @@ def resolve_capitalization(
         "linguistic_analysis_count": len(analyses),
         "module_policy_evidence": sorted(policy_set),
         "proper_lemma_keys": sorted(proper_lemma_set),
+        "secondary_linguistic_evidence": secondary_linguistic_evidence,
     }
 
     # Absolute project rule: verified common noun always wins.
@@ -313,6 +315,24 @@ def resolve_capitalization(
             ),
             **base,
         }
+    # A secondary independent linguistic oracle (currently NKJP1M) may repair
+    # an overly broad ordinary-lexical lowercase result. This remains linguistic
+    # evidence internal to the resolver; module membership is not involved.
+    secondary = secondary_linguistic_evidence or {}
+    if lexical and bool(secondary.get("resolved")) and str(secondary.get("policy")) == "capitalized":
+        return {
+            "resolved": True,
+            "surface": normalized[:1].upper() + normalized[1:],
+            "policy": "capitalized",
+            "reason": "secondary-linguistic-proper-name-evidence-overrides-ordinary-lexical",
+            "linguistic_basis": str(secondary.get("linguistic_basis", "secondary-linguistic")),
+            "explicit_policy_conflict": bool(
+                explicit_policy is not None
+                and explicit_policy[1] != "capitalized"
+            ),
+            **base,
+        }
+
     # Ordinary Polish lexical evidence independently establishes lowercase.
     if lexical:
         return {

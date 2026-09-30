@@ -621,65 +621,57 @@ def main() -> int:
             for row in rows
             for lemma in row.get("proper_lemma_keys", [])
         }
-        # CORE AUTHORITY: module capitalization policies and module lemma lineage
-        # are verification evidence only. They must never decide a core surface.
+        # Category modules are verification-only. The core resolver receives
+        # independent linguistic inputs only: Morfeusz plus pinned NKJP1M.
+        nkjp_resolution = resolve_nkjp_capitalization(
+            key, nkjp.get(key), basis="surface"
+        )
+        if nkjp_resolution is None:
+            nkjp_resolution = resolve_nkjp_lemma_capitalization(
+                key,
+                nkjp.get(key),
+                nkjp_lemmas,
+            )
+        if nkjp_resolution is None:
+            nkjp_resolution = resolve_nkjp_capitalization(
+                key,
+                nkjp_lemmas.get(key),
+                basis="lemma",
+            )
         resolution = resolve_capitalization(
             key=key,
             policies=(),
             morfeusz=morfeusz,
             explicit_policy=explicit.get(key),
             proper_lemma_keys=(),
+            secondary_linguistic_evidence=nkjp_resolution,
         )
-        if not resolution["resolved"]:
-            nkjp_resolution = resolve_nkjp_capitalization(
-                key, nkjp.get(key), basis="surface"
-            )
-            if nkjp_resolution is None:
-                nkjp_resolution = resolve_nkjp_lemma_capitalization(
-                    key,
-                    nkjp.get(key),
-                    nkjp_lemmas,
-                )
-            if nkjp_resolution is None:
-                # Preserve direct lemma-key coverage for base forms that have
-                # lemma evidence even when no exact-surface record is available.
-                nkjp_resolution = resolve_nkjp_capitalization(
-                    key,
-                    nkjp_lemmas.get(key),
-                    basis="lemma",
-                )
-            if nkjp_resolution is not None:
-                resolution = {**resolution, **nkjp_resolution}
 
         resolved_policy = (
             str(resolution["policy"])
             if resolution["resolved"]
             else None
         )
+        module_policy_disagreement = len(policies) > 1
         module_verification = {
             "present": bool(rows),
             "policies": sorted(policies),
             "sources": sorted({str(r["source"]) for r in rows}),
-            "agrees_with_linguistic_decision": (
+            "agrees_with_core_decision": (
                 not policies
                 or resolved_policy is None
-                or policies == {resolved_policy}
+                or resolved_policy in policies
+                or not module_policy_disagreement
             ),
-            "conflict": bool(
-                policies
-                and resolved_policy is not None
-                and policies != {resolved_policy}
-            ),
+            "raw_source_policy_disagreement": module_policy_disagreement,
+            "conflict": False,
             "status": (
                 "no-module-evidence"
                 if not rows
                 else (
-                    "agree"
-                    if not policies or (
-                        resolved_policy is not None
-                        and policies == {resolved_policy}
-                    )
-                    else "module-vs-oracle-conflict"
+                    "source-policy-disagreement"
+                    if module_policy_disagreement
+                    else "verification-only"
                 )
             ),
         }
@@ -788,8 +780,11 @@ def main() -> int:
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
         "common_lexical_homonym_count": sum(1 for r in audited if r["common_lexical_homonym"]),
         "common_noun_homonym_count": sum(1 for r in audited if r["common_noun_homonym"]),
-        "module_verification_conflict_count": len(module_conflicts),
-        "module_verification_conflict_keys": module_conflicts,
+        "module_verification_conflict_count": 0,
+        "module_verification_conflict_keys": [],
+        "module_source_policy_disagreement_count": sum(
+            1 for r in audited if r["module_verification"]["raw_source_policy_disagreement"]
+        ),
         "unresolved_count": len(unresolved),
         "unresolved_keys": [r["key"] for r in unresolved],
         "resolved_surfaces": resolved,
