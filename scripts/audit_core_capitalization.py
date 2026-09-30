@@ -125,11 +125,11 @@ def resolve_nkjp_capitalization(
 ) -> dict[str, object] | None:
     """Resolve a Morfeusz gap from conservative NKJP secondary evidence.
 
-    NCH is only "not checked" and can hide any other classification, so it is
-    never interpreted as a class. The resolver instead uses explicit classes,
-    SGJP-presence casing statuses, and observed lemma casing, restricted to
-    corpus rows marked as correctly usable. Morfeusz remains the primary
-    authority and has already had absolute common-noun precedence applied.
+    NCH is only "not checked" and may hide any other classification, so it is
+    never interpreted as a class. Explicit classes remain usable, while SGJP
+    presence is retained as supporting evidence. The capitalization direction
+    itself comes from a strict observed lemma-case majority, never from a
+    guessed interpretation of SGJP-LMM status names.
     """
     if not record:
         return None
@@ -141,14 +141,14 @@ def resolve_nkjp_capitalization(
     lemma_forms = record.get("lemma_forms", Counter())
     correctness = record.get("correctness", Counter())
 
-    def common_payload(
+    def evidence_payload(
         *,
         surface: str,
         policy: str,
         reason: str,
         basis_name: str,
         proper_name_classes: list[str] | None = None,
-        lemma_case_source: str = "none",
+        lemma_case_source: str,
     ) -> dict[str, object]:
         return {
             "resolved": True,
@@ -179,7 +179,7 @@ def resolve_nkjp_capitalization(
         }
 
     if classes.get("CW", 0) > 0:
-        return common_payload(
+        return evidence_payload(
             surface=normalized,
             policy="lowercase",
             reason=(
@@ -189,12 +189,11 @@ def resolve_nkjp_capitalization(
             basis_name=(
                 "nkjp-common-word" if basis == "surface" else "nkjp-common-word-lemma"
             ),
+            lemma_case_source="explicit-classification",
         )
 
     proper_classes = {"PN", "ACRO", "WEB"}
-    observed_proper = sorted(
-        value for value in classes if value in proper_classes
-    )
+    observed_proper = sorted(value for value in classes if value in proper_classes)
     if observed_proper:
         lowercase_frequency = sum(
             int(count) for form, count in forms.items()
@@ -205,7 +204,7 @@ def resolve_nkjp_capitalization(
             if str(form)[:1].isupper()
         )
         if uppercase_frequency > 0 and uppercase_frequency >= lowercase_frequency:
-            return common_payload(
+            return evidence_payload(
                 surface=normalized[:1].upper() + normalized[1:],
                 policy="capitalized",
                 reason=(
@@ -217,10 +216,10 @@ def resolve_nkjp_capitalization(
                     "nkjp-proper-name" if basis == "surface" else "nkjp-proper-name-lemma"
                 ),
                 proper_name_classes=observed_proper,
-                lemma_case_source="proper-class-surface-casing",
+                lemma_case_source="explicit-classification-plus-surface-casing",
             )
         if lowercase_frequency > 0:
-            return common_payload(
+            return evidence_payload(
                 surface=normalized,
                 policy="lowercase",
                 reason=(
@@ -232,12 +231,12 @@ def resolve_nkjp_capitalization(
                     "nkjp-proper-name" if basis == "surface" else "nkjp-proper-name-lemma"
                 ),
                 proper_name_classes=observed_proper,
-                lemma_case_source="proper-class-surface-casing",
+                lemma_case_source="explicit-classification-plus-surface-casing",
             )
 
     lexical_classes = {"SPEC", "NEOL", "EXT", "SYMB", "COMPD"}
     if any(classes.get(value, 0) > 0 for value in lexical_classes):
-        return common_payload(
+        return evidence_payload(
             surface=normalized,
             policy="lowercase",
             reason=(
@@ -247,22 +246,8 @@ def resolve_nkjp_capitalization(
             basis_name=(
                 "nkjp-lexical" if basis == "surface" else "nkjp-lexical-lemma"
             ),
+            lemma_case_source="explicit-classification",
         )
-
-    capital_statuses = {"SGJP-LMM-CAPITAL"}
-    lowercase_statuses = {
-        "SGJP-LMM-UNCAPITAL",
-        "SGJP-LMM-LOWER",
-        "SGJP-BTH-LOWER",
-    }
-    capital_frequency = sum(
-        int(sgjp_status.get(status, 0))
-        for status in capital_statuses
-    )
-    lowercase_frequency = sum(
-        int(sgjp_status.get(status, 0))
-        for status in lowercase_statuses
-    )
 
     lemma_capital_frequency = sum(
         int(count) for lemma, count in lemma_forms.items()
@@ -272,115 +257,67 @@ def resolve_nkjp_capitalization(
         int(count) for lemma, count in lemma_forms.items()
         if str(lemma)[:1].islower()
     )
-    exact_sgjp_frequency = int(sgjp_status.get("SGJP-EXACT", 0))
+    sgjp_supported_frequency = sum(
+        int(count)
+        for status, count in sgjp_status.items()
+        if status != "NON-SGJP"
+    )
 
-    # Directional SGJP status is stronger than corpus sentence-position casing.
-    if capital_frequency > 0 and capital_frequency > lowercase_frequency:
-        return common_payload(
-            surface=normalized[:1].upper() + normalized[1:],
-            policy="capitalized",
-            reason=(
-                "nkjp-sgjp-capital-lemma-fallback"
-                if basis == "surface" else "nkjp-sgjp-capital-lemma-linked-fallback"
-            ),
-            basis_name=(
-                "nkjp-sgjp-casing" if basis == "surface" else "nkjp-sgjp-casing-lemma"
-            ),
-            lemma_case_source="sgjp-directional-status",
-        )
-
-    if lowercase_frequency > 0 and lowercase_frequency > capital_frequency:
-        return common_payload(
-            surface=normalized,
-            policy="lowercase",
-            reason=(
-                "nkjp-sgjp-lower-lemma-fallback"
-                if basis == "surface" else "nkjp-sgjp-lower-lemma-linked-fallback"
-            ),
-            basis_name=(
-                "nkjp-sgjp-casing" if basis == "surface" else "nkjp-sgjp-casing-lemma"
-            ),
-            lemma_case_source="sgjp-directional-status",
-        )
-
-    # SGJP-EXACT confirms that the exact NKJP triple exists in SGJP but does
-    # not itself say which case is normative. In that situation, use only a
-    # strict lemma-case majority from the same accepted rows.
-    if (
-        exact_sgjp_frequency > 0
-        and lemma_capital_frequency > 0
-        and lemma_capital_frequency > lemma_lower_frequency
-    ):
-        return common_payload(
-            surface=normalized[:1].upper() + normalized[1:],
-            policy="capitalized",
-            reason=(
-                "nkjp-exact-sgjp-lemma-capitalization-fallback"
-                if basis == "surface"
-                else "nkjp-exact-sgjp-lemma-linked-capitalization-fallback"
-            ),
-            basis_name=(
-                "nkjp-exact-sgjp-lemma-casing"
-                if basis == "surface"
-                else "nkjp-exact-sgjp-lemma-linked-casing"
-            ),
-            lemma_case_source="sgjp-exact-plus-observed-lemma-casing",
-        )
-
-    if (
-        exact_sgjp_frequency > 0
-        and lemma_lower_frequency > 0
-        and lemma_lower_frequency > lemma_capital_frequency
-    ):
-        return common_payload(
-            surface=normalized,
-            policy="lowercase",
-            reason=(
-                "nkjp-exact-sgjp-lemma-lowercase-fallback"
-                if basis == "surface"
-                else "nkjp-exact-sgjp-lemma-linked-lowercase-fallback"
-            ),
-            basis_name=(
-                "nkjp-exact-sgjp-lemma-casing"
-                if basis == "surface"
-                else "nkjp-exact-sgjp-lemma-linked-casing"
-            ),
-            lemma_case_source="sgjp-exact-plus-observed-lemma-casing",
-        )
-
-    # Last NKJP-only fallback: strict observed lemma casing. It is deliberately
-    # not a simple "uppercase if seen once" rule; mixed casing remains unresolved.
+    # The SGJP-presence column is supporting evidence only. We deliberately do
+    # not interpret LMM-CAPITAL/LMM-UNCAPITAL as an independent case decision.
+    # A strict lemma-case majority is the directional evidence.
     if lemma_capital_frequency > 0 and lemma_capital_frequency > lemma_lower_frequency:
-        return common_payload(
+        reason_prefix = (
+            "nkjp-sgjp-supported-" if sgjp_supported_frequency > 0 else "nkjp-"
+        )
+        suffix = (
+            "lemma-capitalization-fallback"
+            if basis == "surface"
+            else "lemma-linked-capitalization-fallback"
+        )
+        return evidence_payload(
             surface=normalized[:1].upper() + normalized[1:],
             policy="capitalized",
-            reason=(
-                "nkjp-observed-lemma-capitalization-fallback"
-                if basis == "surface"
-                else "nkjp-observed-lemma-capitalization-lemma-fallback"
-            ),
+            reason=reason_prefix + suffix,
             basis_name=(
-                "nkjp-lemma-casing" if basis == "surface" else "nkjp-lemma-casing-linked"
+                "nkjp-sgjp-supported-lemma-casing"
+                if sgjp_supported_frequency > 0
+                else ("nkjp-lemma-casing" if basis == "surface" else "nkjp-lemma-casing-linked")
             ),
-            lemma_case_source="observed-lemma-casing",
+            lemma_case_source=(
+                "observed-lemma-casing-plus-sgjp-presence"
+                if sgjp_supported_frequency > 0
+                else "observed-lemma-casing"
+            ),
         )
 
     if lemma_lower_frequency > 0 and lemma_lower_frequency > lemma_capital_frequency:
-        return common_payload(
+        reason_prefix = (
+            "nkjp-sgjp-supported-" if sgjp_supported_frequency > 0 else "nkjp-"
+        )
+        suffix = (
+            "lemma-lowercase-fallback"
+            if basis == "surface"
+            else "lemma-linked-lowercase-fallback"
+        )
+        return evidence_payload(
             surface=normalized,
             policy="lowercase",
-            reason=(
-                "nkjp-observed-lemma-lowercase-fallback"
-                if basis == "surface"
-                else "nkjp-observed-lemma-lowercase-lemma-fallback"
-            ),
+            reason=reason_prefix + suffix,
             basis_name=(
-                "nkjp-lemma-casing" if basis == "surface" else "nkjp-lemma-casing-linked"
+                "nkjp-sgjp-supported-lemma-casing"
+                if sgjp_supported_frequency > 0
+                else ("nkjp-lemma-casing" if basis == "surface" else "nkjp-lemma-casing-linked")
             ),
-            lemma_case_source="observed-lemma-casing",
+            lemma_case_source=(
+                "observed-lemma-casing-plus-sgjp-presence"
+                if sgjp_supported_frequency > 0
+                else "observed-lemma-casing"
+            ),
         )
 
     return None
+
 def resolve_nkjp_lemma_capitalization(
     key: str,
     surface_record: dict[str, object] | None,
