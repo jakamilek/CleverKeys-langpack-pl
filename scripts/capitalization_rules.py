@@ -235,6 +235,7 @@ def resolve_capitalization(
         for item in analyses
         if item["pos"] in ORDINARY_POS
         and item["proper_name_classes"]
+        and (item["pos"] != "adj" or "nazwisko" in item["proper_name_classes"])
     ]
     lexical = [
         {
