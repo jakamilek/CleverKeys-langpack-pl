@@ -1,3 +1,5 @@
+> **Aktualizacja 2026-09-30:** obowiązuje nowsza architektura z `docs/ARCHITECTURE_DECISION_2026-09-30.md`. Rdzeń 100k zachowuje niezmienne członkostwo, ale każda jego powierzchnia przechodzi niezależną kapitalizację przed modułami. Moduły są wyłącznie dodatkowymi zbiorami słów. Nazwy z rozpoznanym łącznikiem są zachowywane równolegle jako komponenty i jako pełna powierzchnia z łącznikiem.
+
 # Kapitalizacja rdzenia i nazw wieloczłonowych — polityka 2026-09-26
 
 ## Cel
@@ -6,7 +8,7 @@ Kapitalizacja jest właściwością leksykalnej powierzchni słowa, a nie skutki
 
 Przyjęty przepływ:
 
-source -> pełna powierzchnia -> człony -> analiza leksykalna -> rejestr powierzchni -> CKDT
+100k membership -> niezależna kapitalizacja rdzenia -> walidacja modułów -> additive union -> CKDT
 
 ## 1. Rdzeń 100 000
 
@@ -48,15 +50,15 @@ Przykład `Tomaszów Mazowiecki`: pełna nazwa pozostaje w źródle, a `Tomaszó
 
 ## 4. Hierarchia prawdy dla kapitalizacji
 
-### 4.1 Rdzeń jest autorytetem
+### 4.1 Rdzeń jest autorytetem po własnej kapitalizacji
 
 Po zakończeniu scripts/audit_core_capitalization.py rdzeń wyznacza kanoniczną powierzchnię dla każdego klucza należącego do 100 000. Jest to pierwsza i nadrzędna prawda dotycząca kapitalizacji tego klucza w finalnym CKDT.
 
-Jeżeli klucz modułowy już należy do rdzenia, moduł nie może ponownie ustalać jego pierwszej litery ani nadpisywać decyzji rdzenia. Podczas składania słownika moduł przejmuje powierzchnię ustaloną przez rdzeń.
+Jeżeli klucz modułowy już należy do rdzenia, moduł nie może ustalać ani naprawiać jego pierwszej litery. Rdzeń został już niezależnie rozstrzygnięty przed modułami.
 
-### 4.2 Audyt modułów jest drugą warstwą ochronną
+### 4.2 Audyt modułów jest niezależną kontrolą zgodności
 
-Audyt scripts/audit_capitalization_common_noun_homonyms.py działa po audycie rdzenia. Dla kluczy obecnych w rdzeniu pełni funkcję kontrolną („second layer” — „druga warstwa ochronna”) i zapisuje fakt, że kanon pochodzi z rdzenia; nie wykonuje konkurencyjnego rozstrzygnięcia kapitalizacji.
+Audyt scripts/audit_capitalization_common_noun_homonyms.py działa po audycie rdzenia. Dla kluczy obecnych w rdzeniu ponownie rozstrzyga powierzchnię własnymi danymi i porównuje wynik z rdzeniem. Różnica jest konfliktem reguły i ma zablokować CI; moduł nigdy nie poprawia rdzenia.
 
 Dla kluczy net-new („nowych względem rdzenia”) modułowy audyt pozostaje właściwą warstwą rozstrzygającą. Jawny rejestr surface_registry_policy.tsv może nadal dostarczać bezpieczne, audytowalne wyjątki.
 
@@ -66,7 +68,7 @@ Taka hierarchia daje jeden kanon i eliminuje sytuację, w której ten sam klucz 
 
 Dotyczy to imion, miast, TERC, państw, stolic i przyszłych modułów.
 
-Moduł może wnosić pełne nazwy wieloczłonowe jako dowód i pochodzenie, ale CKDT pozostaje słownikiem powierzchni słów. Dlatego jego finalny klucz jest tworzony na poziomie członu, a nie pełnej frazy.
+Moduł może wnosić pełne nazwy wieloczłonowe, a nazwy z rozpoznanym łącznikiem wnoszą zarówno komponenty, jak i pełną powierzchnię. Pełna powierzchnia z łącznikiem jest prawidłowym kluczem CKDT obok komponentów.
 
 Nie wolno używać faktu, że dany moduł nie został dodany, jako powodu do rezygnacji z jego informacji ortograficznej na etapie audytu rdzenia.
 

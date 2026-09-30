@@ -1,3 +1,5 @@
+> **Aktualizacja 2026-09-30:** obowiązuje nowsza architektura z `docs/ARCHITECTURE_DECISION_2026-09-30.md`. Rdzeń 100k zachowuje niezmienne członkostwo, ale każda jego powierzchnia przechodzi niezależną kapitalizację przed modułami. Moduły są wyłącznie dodatkowymi zbiorami słów. Nazwy z rozpoznanym łącznikiem są zachowywane równolegle jako komponenty i jako pełna powierzchnia z łącznikiem.
+
 # Module surface identity and capitalization policy
 Date: 2026-09-26
 
@@ -11,7 +13,7 @@ The project uses two different identities and must never confuse them:
 For TERC, the source-unit identity is `level + terc`.
 For dictionary capacity and CKDT uniqueness, identity is case-insensitive surface key.
 
-Therefore two distinct TERC units may share one dictionary word without creating two dictionary entries.
+Therefore two distinct TERC units may share one dictionary word without creating two dictionary entries. A recognized lexical-hyphen source additionally creates a full hyphenated dictionary surface alongside its components.
 
 Example:
 - unit A: gmina X, TERC code A
