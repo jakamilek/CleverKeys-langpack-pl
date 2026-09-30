@@ -1291,3 +1291,28 @@ Stan CI po poprawce:
 - Size-study #229, run `36628928339`, HEAD `6abd31f6f27cb585e69fc91ebf552e23b5033824` — in_progress.
 
 Nie uznawać tych runów za green przed rzeczywistym `conclusion=success`. Po green sprawdzić świeże artefakty i pełny zestaw regresji. Jeżeli audyt core nadal będzie czerwony, analizować reprezentatywne rekordy NKJP po ścieżce surface -> lemma (surface, lemma, tag, frequency, classification), bez ręcznych wyjątków i bez zmiany rdzenia.
+
+## Aktualizacja 2026-09-30 — NKJP capitalization fallback diagnostics
+
+Po kolejnych testach Preview #313 ustalono, że wcześniejsze rozszerzenie surface→lemma nie zmniejszyło listy nierozstrzygniętych kluczy core. Preview #313 (run `36730131271`) zakończył się `failure` na kroku `Audit immutable core capitalization before module assembly`; testy probe Morfeusz oraz pobranie/walidacja NKJP i AOSP były poprawne. Lista unresolved pozostała bardzo szeroka.
+
+Wprowadzone atomowe commity:
+- `39f62a8935ed8ed2391abd285750bbf0c03ace57` — zachowanie większej ilości evidence NKJP i śledzenie lemma;
+- `621271f67e2a976ea990173e8d83ec476f25511b` — próba ograniczenia fallbacku do poprawnych rekordów SGJP;
+- `015a14fff1d27b2f3a56725e5bc8790f4934c215` — poprawa raportowania correctness;
+- `96fb1d6afa226749fb9b9498e55f78a0e48c7616` — usunięcie ryzykownej interpretacji nazw statusów `SGJP-LMM-*`; kierunek kapitalizacji miał wynikać ze ścisłej przewagi pisowni lematu;
+- `645521c4eabd75e4ab4af262ce5fe226a71eaf48` — diagnostyka: dla pierwszych 25 unresolved audit wypisuje rzeczywiste agregaty NKJP surface/lemma (`forms`, `lemmas`, `classes`, `sgjp_status`, `correctness`) oraz do 3 najlepiej powiązanych lematów. Diagnostyka jest read-only i nie zmienia membership ani decyzji.
+
+Ważne ustalenie źródłowe: dokumentacja NKJP1M definiuje correctness m.in. jako `CORR`, `ERR`, `CERR`, `PHON`, `DIAL`, `TAGD`, `PLTAN`, `TAGE` oraz warianty błędów; `NCH` w klasyfikacji oznacza `not checked` i nie jest dowodem ani lowercase, ani proper-name. `PN` również nie oznacza automatycznie uppercase.
+
+Preview #313 pokazał poprawne działanie głównego resolvera na znanych konfliktach:
+- `bardo` — `nazwa_pospolita` ma absolutne pierwszeństwo;
+- `łódź` / `Łódź` — `nazwa_pospolita` ma absolutne pierwszeństwo nad `nazwa_geograficzna`;
+- `Tomaszów` — analiza `nazwa_geograficzna` jest wykrywana;
+- `Jakub` — analiza `imię` jest wykrywana.
+
+Bieżący test po diagnostyce:
+- Preview #314, run `36730800444`, HEAD `645521c4eabd75e4ab4af262ce5fe226a71eaf48` — w toku podczas zapisu tej aktualizacji;
+- Size-study #235, run `36730800278`, HEAD `645521c4eabd75e4ab4af262ce5fe226a71eaf48` — w toku podczas zapisu tej aktualizacji.
+
+Następny krok jest zależny od realnego diagnostycznego outputu NKJP. Nie dodawać ręcznych wyjątków ani nie zmieniać 100k core. Szczególnie nie interpretować `NCH` ani samego `PN` jako decyzji kapitalizacyjnej.
