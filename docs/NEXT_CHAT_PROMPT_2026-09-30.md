@@ -50,6 +50,21 @@ Dla miast: Bielsko i Bielsko-Biała mają być osobnymi kandydatami; prefix biel
 
 Spacja sama nie uruchamia ścieżki łącznikowej. Oficjalna nazwa może jednak zawierać łącznik i spację; pełna powierzchnia hyphenowana jest zachowywana, natomiast alternatywy rozdzielone przecinkiem nie są jedną nazwą.
 
+## Aktualny stan po wykonanych zmianach
+
+Ostatnie commity na branchu:
+- `7f21f763c8f6f8177819a81b6eb070c3c42a86c4` — niezależna kapitalizacja rdzenia;
+- `4f1bc16e57172798040bbeb05479bdacf460e6da` — pełne powierzchnie z łącznikiem;
+- `7f31c51c9cbaf949931ae1589859b5aef8ec9271` — pełne formy miast/KSNG;
+- `9f5acde2e66d91f299c0d50130afd8e2feebb14d` — poprawa generatorów;
+- `f2230fd7933eb927837407e3064c4bef362aec63` — połączenie form rdzenia z evidencją NKJP przez lemata Morfeusza;
+- `e6a807b58ec777060fa6983bf804cfc8ccca48c4` — naprawa importu audytu modułów;
+- `3e876ce3101ec29845e55650559d9b97a883c8a8` — regresje rdzeń + łączniki;
+- `aca90f627c0cc0f610a8e2295383cd51e193028e` — niezależne rozstrzyganie komponentów nazw złożonych;
+- `a382f735af0d8ada962d53bfc1ec7258207a9405` — aktualizacja starszej dokumentacji.
+
+Świeże CI należy zawsze sprawdzać względem najnowszego HEAD, a nie względem wcześniejszych runów. Znany wcześniejszy failure ujawnił konflikty `abudży, dżibuti, fidżi, male, mark, mia, nauru, prince, santo, zjednoczone`; była to właśnie pożądana sygnalizacja problemu reguły. Po rozdzieleniu kapitalizacji komponentów należy sprawdzić, które z nich pozostają rzeczywistym konfliktem.
+
 ## Stan znany przed bieżącą naprawą
 
 Poprzedni zielony checkpoint:
