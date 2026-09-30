@@ -225,6 +225,7 @@ jobs:
               "bardo": "bardo",
               "łódź": "łódź",
               "tomaszów": "Tomaszów",
+              "warszawa": "Warszawa",
               "Jakub": "Jakub",
           }
           for word, surface in expected.items():
