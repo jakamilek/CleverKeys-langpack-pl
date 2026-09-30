@@ -16,7 +16,7 @@ import csv
 import json
 from pathlib import Path
 
-from surface_components import dictionary_surfaces
+from surface_components import component_surfaces, dictionary_surfaces
 from capitalization_rules import resolve_capitalization
 
 COMMON_NOUN_CLASS = "nazwa_pospolita"
