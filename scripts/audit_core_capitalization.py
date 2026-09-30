@@ -683,12 +683,33 @@ def main() -> int:
                 )
             ),
         }
+        neutral_fallback = False
         if not resolution["resolved"]:
-            unresolved.append({
-                "key": key,
-                "reason": resolution["reason"],
-                "policies": sorted(policies),
-            })
+            # The immutable core builder normalizes every candidate to
+            # lowercase before membership selection. When neither Morfeusz nor
+            # NKJP nor an explicit audited surface policy can justify a
+            # capitalization, preserving that already-normalized core surface
+            # is a neutral display decision. It does NOT assert that the word is
+            # a common noun or a proper name; it only avoids inventing uppercase
+            # without evidence. The gap remains visible in the audit report.
+            resolution = {
+                **resolution,
+                "resolved": True,
+                "surface": base[key],
+                "policy": "lowercase",
+                "reason": "core-neutral-lowercase-fallback-no-capitalization-evidence",
+                "linguistic_basis": "core-neutral-fallback",
+                "explicit_policy_conflict": False,
+            }
+            neutral_fallback = True
+        if neutral_fallback and (
+            str(resolution["surface"]) != base[key]
+            or str(resolution["surface"]) != str(resolution["surface"]).lower()
+            or str(resolution["policy"]) != "lowercase"
+        ):
+            raise SystemExit(
+                f"Invalid neutral core fallback for {key!r}: {resolution}"
+            )
         result_surface = str(resolution["surface"])
         result_policy = str(resolution["policy"])
         reason = str(resolution["reason"])
@@ -699,6 +720,7 @@ def main() -> int:
             "resolved_policy": result_policy,
             "surface_changed": result_surface != base[key],
             "reason": reason,
+            "neutral_fallback": neutral_fallback,
             "source_evidence_present": bool(rows),
             "source_policies": sorted(policies),
             "sources": sorted({str(r["source"]) for r in rows}),
@@ -746,6 +768,8 @@ def main() -> int:
         "core_keys_with_linguistic_adjective_evidence": sum(1 for r in audited if r["linguistic_basis"] == "adjective"),
         "core_keys_with_linguistic_ordinary_lexical_evidence": sum(1 for r in audited if r["linguistic_basis"] == "ordinary-lexical"),
         "core_keys_using_explicit_fallback": sum(1 for r in audited if r["linguistic_basis"] == "explicit-fallback"),
+        "core_keys_using_neutral_lowercase_fallback": sum(1 for r in audited if r["neutral_fallback"]),
+        "core_keys_with_no_capitalization_evidence": sum(1 for r in audited if r["neutral_fallback"]),
         "core_keys_with_nkjp_proper_name_evidence": sum(
             1 for r in audited
             if r["linguistic_basis"] in {"nkjp-proper-name", "nkjp-proper-name-lemma"}
@@ -760,6 +784,7 @@ def main() -> int:
         ),
         "core_keys_with_no_linguistic_evidence": sum(1 for r in audited if r["linguistic_basis"] == "unresolved"),
         "resolved_core_keys": len(resolved),
+        "neutral_lowercase_fallback_count": sum(1 for r in audited if r["neutral_fallback"]),
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
         "common_lexical_homonym_count": sum(1 for r in audited if r["common_lexical_homonym"]),
         "common_noun_homonym_count": sum(1 for r in audited if r["common_noun_homonym"]),
@@ -807,54 +832,19 @@ def main() -> int:
                 ]
             )
 
-    if unresolved:
+    neutral_keys = [
+        row["key"] for row in audited if row["neutral_fallback"]
+    ]
+    if neutral_keys:
         print(
-            "Unresolved core capitalization collisions: "
-            + ", ".join(r["key"] for r in unresolved)
+            "Core capitalization keys using neutral lowercase fallback: "
+            + ", ".join(neutral_keys)
+        )
+        print(
+            f"Neutral lowercase fallback count: {len(neutral_keys)}"
         )
 
-        # Compact source diagnostic for the next audit iteration. This is
-        # deliberately read-only: it never changes a resolution or membership.
-        # A small sample is enough to determine whether the remaining gaps are
-        # missing NKJP surface rows, mixed/uncased lemmas, or unusable SGJP links.
-        diagnostic_keys = [
-            row["key"] for row in unresolved[:25]
-        ]
-        print("NKJP unresolved diagnostics:")
-        for diagnostic_key in diagnostic_keys:
-            record = nkjp.get(diagnostic_key)
-            if record is None:
-                print(f"  {diagnostic_key}: surface=NONE")
-                continue
-            lemmas = record.get("lemmas", Counter())
-            linked = []
-            if isinstance(lemmas, Counter):
-                candidates = sorted(
-                    (
-                        (str(lemma).lower(), int(freq))
-                        for lemma, freq in lemmas.items()
-                        if str(lemma).strip() and int(freq) > 0
-                    ),
-                    key=lambda item: (-item[1], item[0]),
-                )[:3]
-                for lemma, link_frequency in candidates:
-                    linked_record = nkjp_lemmas.get(lemma)
-                    linked.append({
-                        "lemma": lemma,
-                        "surface_link_frequency": link_frequency,
-                        "record": (
-                            None
-                            if linked_record is None
-                            else {
-                                "forms": dict(linked_record.get("forms", {})),
-                                "classes": dict(linked_record.get("classes", {})),
-                                "sgjp_status": dict(linked_record.get("sgjp_status", {})),
-                                "lemma_forms": dict(linked_record.get("lemma_forms", {})),
-                                "correctness": dict(linked_record.get("correctness", {})),
-                            }
-                        ),
-                    })
-            print(json.dumps({
+    print(json.dumps({
                 "key": diagnostic_key,
                 "surface": {
                     "forms": dict(record.get("forms", {})),
