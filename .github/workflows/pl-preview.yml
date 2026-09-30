@@ -344,6 +344,7 @@ jobs:
           import csv
           import json, struct, zipfile
           from pathlib import Path
+          from scripts.surface_components import component_surfaces
 
           report = json.loads(Path("build/pl-preview-report.json").read_text(encoding="utf-8"))
           expected = report["kept"]
