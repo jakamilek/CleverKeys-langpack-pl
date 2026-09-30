@@ -158,7 +158,7 @@ jobs:
 
       - name: Generate full TERC administrative inflections and select production retention
         run: |
-          python3 scripts/generate_terc_inflections.py             --terc build/pl-terc-flat.tsv             --out-tsv build/pl-terc-inflections.tsv             --out-report build/pl-terc-inflections-report.json
+          python3 scripts/generate_terc_inflections.py             --terc build/pl-terc-source.tsv             --out-tsv build/pl-terc-inflections.tsv             --out-report build/pl-terc-inflections-report.json
           python3 scripts/select_terc_inflections.py             --input build/pl-terc-inflections.tsv             --nkjp build/nkjp/NKJP1M-tagged-frequency.tab             --out build/pl-terc-inflections-selected.tsv             --out-report build/pl-terc-retention-report.json
       - name: Pin CleverKeys runtime
         run: |
