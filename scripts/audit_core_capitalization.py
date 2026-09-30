@@ -279,6 +279,19 @@ def main() -> int:
         independent_noun_dual_surface_candidate = bool(
             independent_common_noun_matches and independent_proper_noun_matches
         )
+        independent_noun_dual_surface_nom_sg_candidate = (
+            bool(independent_noun_dual_surface_candidate)
+            and any(
+                "subst:sg:" in str(item.get("tag", ""))
+                and "nom" in str(item.get("tag", "")).split(":")[2].split(".")
+                for item in independent_common_noun_matches
+            )
+            and any(
+                "subst:sg:" in str(item.get("tag", ""))
+                and "nom" in str(item.get("tag", "")).split(":")[2].split(".")
+                for item in independent_proper_noun_matches
+            )
+        )
 
         rows = evidence.get(key, [])
         policies = {str(r["policy"]) for r in rows if r["policy"] in {"lowercase", "capitalized"}}
@@ -422,6 +435,7 @@ def main() -> int:
                 for cls in item.get("proper_name_classes", [])
             }),
             "independent_noun_dual_surface_candidate": independent_noun_dual_surface_candidate,
+            "independent_noun_dual_surface_nom_sg_candidate": independent_noun_dual_surface_nom_sg_candidate,
             "independent_noun_dual_surface_proper_name_classes": sorted({
                 cls
                 for item in independent_proper_noun_matches
@@ -497,6 +511,14 @@ def main() -> int:
             for r in audited
             if r["independent_noun_dual_surface_candidate"]
         ],
+        "independent_noun_dual_surface_nom_sg_candidate_count": sum(
+            1 for r in audited if r["independent_noun_dual_surface_nom_sg_candidate"]
+        ),
+        "independent_noun_dual_surface_nom_sg_candidate_keys": [
+            r["surface_key"]
+            for r in audited
+            if r["independent_noun_dual_surface_nom_sg_candidate"]
+        ],
         "module_verification_conflict_count": 0,
         "module_verification_conflict_keys": [],
         "module_source_policy_disagreement_count": sum(
@@ -557,6 +579,11 @@ def main() -> int:
         for row in audited
         if row["independent_noun_dual_surface_candidate"]
     ]
+    noun_dual_surface_nom_sg_keys = [
+        row["surface_key"]
+        for row in audited
+        if row["independent_noun_dual_surface_nom_sg_candidate"]
+    ]
     print(
         "Independent Morfeusz common/proper dual-surface candidate count (all POS): "
         + str(len(dual_surface_keys))
@@ -564,6 +591,10 @@ def main() -> int:
     print(
         "Independent Morfeusz common-noun/proper-noun dual-surface candidate count: "
         + str(len(noun_dual_surface_keys))
+    )
+    print(
+        "Independent Morfeusz common-noun/proper-noun dual-surface candidate count (nom.sg): "
+        + str(len(noun_dual_surface_nom_sg_keys))
     )
     if noun_dual_surface_keys:
         print(
