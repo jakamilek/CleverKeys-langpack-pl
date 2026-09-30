@@ -149,6 +149,7 @@ def proper_name_matches(morfeusz, surface: str) -> list[dict[str, object]]:
         for item in _collect_analyses(morfeusz, surface)
         if item["pos"] in ORDINARY_POS
         and item["proper_name_classes"]
+        and (item["pos"] != "adj" or "nazwisko" in item["proper_name_classes"])
     ]
 
 
