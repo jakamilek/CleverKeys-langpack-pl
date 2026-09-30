@@ -44,3 +44,27 @@ def is_hyphenated(surface: str) -> bool:
 def hyphen_components(surface: str) -> list[str]:
     """Return lexical components of a hyphenated surface without changing text."""
     return [part.strip() for part in HYPHEN_SPLIT_RE.split(surface) if part.strip()]
+
+
+def hyphenated_surfaces(surface: str) -> list[str]:
+    """Return full source surfaces that contain a recognized lexical hyphen.
+
+    Comma-separated alternatives remain separate surfaces, so an input such as
+    "Doha, Ad-Dauha" yields the hyphenated alternative "Ad-Dauha" only.
+    Original recognized-hyphen spelling is preserved.
+    """
+    out: list[str] = []
+    for part in re.split(r"\s*,\s*", surface):
+        candidate = part.strip()
+        if candidate and is_hyphenated(candidate) and candidate not in out:
+            out.append(candidate)
+    return out
+
+
+def dictionary_surfaces(surface: str) -> list[str]:
+    """Return lexical components plus full recognized-hyphen surfaces."""
+    out = component_surfaces(surface)
+    for full in hyphenated_surfaces(surface):
+        if full not in out:
+            out.append(full)
+    return out

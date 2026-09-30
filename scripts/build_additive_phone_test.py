@@ -9,7 +9,7 @@ import csv
 import json
 from pathlib import Path
 
-from surface_components import component_surfaces
+from surface_components import dictionary_surfaces
 
 
 def read_base(path: Path) -> dict[str, str]:
@@ -33,7 +33,7 @@ def add_records(registry, rows, surface_field, policy_field, source, lower_keys=
         raw_surface = row[surface_field].strip()
         if not raw_surface:
             continue
-        for surface in component_surfaces(raw_surface):
+        for surface in dictionary_surfaces(raw_surface):
             key = surface.lower()
             source_policy = row[policy_field].strip() if policy_field else (
                 "lowercase" if surface == surface.lower() else "capitalized"
@@ -184,8 +184,8 @@ def main() -> int:
             "core_authoritative_keys": core_authoritative_keys,
             "module_only_keys": module_only_keys,
             "module_audited_keys": module_audited_keys,
-            "module_is_second_layer_for_core": True,
-            "module_casing_source": "shared-capitalization-resolver-module-audit",
+            "module_is_additive_only_for_core": True,
+            "module_casing_source": "independently-resolved-module-audit",
         },
         "capitalization_audit": {
             "checked": len(resolved),

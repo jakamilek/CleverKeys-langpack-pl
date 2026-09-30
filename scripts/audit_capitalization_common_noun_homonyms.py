@@ -16,7 +16,7 @@ import csv
 import json
 from pathlib import Path
 
-from surface_components import component_surfaces
+from surface_components import dictionary_surfaces
 from capitalization_rules import resolve_capitalization
 
 COMMON_NOUN_CLASS = "nazwa_pospolita"
@@ -55,7 +55,7 @@ def add_candidates(
         if name_field and row.get(name_field, "").strip().lower() in lower_names:
             policy = "lowercase"
             surface = surface.lower()
-        for component in component_surfaces(surface):
+        for component in dictionary_surfaces(surface):
             component_policy = policy if component[:1].isupper() else "lowercase"
             proper_lemma_keys = (
                 sorted({

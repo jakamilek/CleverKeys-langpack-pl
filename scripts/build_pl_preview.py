@@ -25,7 +25,7 @@ import shutil
 import subprocess
 import unicodedata
 from pathlib import Path
-from surface_components import component_surfaces, hyphen_components, is_hyphenated
+from surface_components import component_surfaces, hyphen_components, is_hyphenated, hyphenated_surfaces
 
 POLISH_ALPHABET = set("aąbcćdeęfghijklłmnńoóprsśtuwyzźż")
 WORD_RE = re.compile(r"^[a-ząćęłńóśźż]+$", re.IGNORECASE)
@@ -310,6 +310,17 @@ def load_city_source(
                         f"Conflicting city component capitalization {path}:{line_no}: {prior!r} vs {canonical!r}"
                     )
                 surface_map[lower] = canonical
+            for full in hyphenated_surfaces(name):
+                lower = full.lower()
+                override = (surface_registry_policy or {}).get(lower)
+                canonical = override[0] if override is not None else full
+                forms.add(lower)
+                prior = surface_map.get(lower)
+                if prior is not None and prior != canonical:
+                    raise SystemExit(
+                        f"Conflicting city full-hyphen capitalization {path}:{line_no}: {prior!r} vs {canonical!r}"
+                    )
+                surface_map[lower] = canonical
     return forms, surface_map
 
 
@@ -326,8 +337,8 @@ def is_inflection_surface(word: str) -> bool:
         return True
     if not is_hyphenated(word):
         return False
-    parts = hyphen_components(word)
-    return len(parts) > 1 and all(re.fullmatch(component_re, part) for part in parts)
+    full_surface_re = r"^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+(?:[ \-‐‑][A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+)+$"
+    return re.fullmatch(full_surface_re, word) is not None
 
 
 def validate_capitalization(
@@ -504,6 +515,28 @@ def load_geo_source(
                 forms.add(lower)
                 surface_map[lower] = component.lower() if component_policy == "lowercase" else component
                 case_policy_map[lower] = component_policy
+            for full in hyphenated_surfaces(name):
+                lower = full.lower()
+                full_policy = "lowercase" if policy == "lowercase" else (
+                    "lowercase" if full[:1].islower() else "capitalized"
+                )
+                override = (surface_registry_policy or {}).get(lower)
+                if override is not None:
+                    full, full_policy = override
+                prior = surface_map.get(lower)
+                if prior is not None and prior != full:
+                    raise SystemExit(
+                        f"Conflicting {expected_category} full-hyphen surface {path}:{line_no}: {prior!r} vs {full!r}"
+                    )
+                prior_policy = case_policy_map.get(lower)
+                if prior_policy is not None and prior_policy != full_policy:
+                    raise SystemExit(
+                        f"Conflicting {expected_category} full-hyphen policy {path}:{line_no}: "
+                        f"{prior_policy!r} vs {full_policy!r}"
+                    )
+                forms.add(lower)
+                surface_map[lower] = full
+                case_policy_map[lower] = full_policy
     return forms, surface_map, case_policy_map
 
 
@@ -831,6 +864,30 @@ def main() -> int:
                             )
                     terc_surface_map[lower] = canonical
                     terc_case_policy_map[lower] = component_policy
+                    terc_forms.add(lower)
+                for full in hyphenated_surfaces(name):
+                    lower = full.lower()
+                    full_policy = "lowercase" if policy == "lowercase" else (
+                        "lowercase" if full[:1].islower() else "capitalized"
+                    )
+                    override = surface_registry_policy.get(lower)
+                    canonical = override[0] if override is not None else (
+                        full.lower() if full_policy == "lowercase" else full
+                    )
+                    prior = terc_surface_map.get(lower)
+                    if prior is not None and prior != canonical:
+                        raise SystemExit(
+                            f"Conflicting TERC full-hyphen surface {args.terc}:{line_no}: "
+                            f"{prior!r} vs {canonical!r}"
+                        )
+                    prior_policy = terc_case_policy_map.get(lower)
+                    if prior_policy is not None and prior_policy != full_policy:
+                        raise SystemExit(
+                            f"Conflicting TERC full-hyphen policy {args.terc}:{line_no}: "
+                            f"{prior_policy!r} vs {full_policy!r}"
+                        )
+                    terc_surface_map[lower] = canonical
+                    terc_case_policy_map[lower] = full_policy
                     terc_forms.add(lower)
     terc_inflection_forms: set[str] = set()
     terc_inflection_surface_map: dict[str, str] = {}
