@@ -47,11 +47,19 @@ Kolejność jest twarda:
 
 Żaden moduł nie może zmieniać członkostwa 100k ani jego kanonicznej powierzchni. Pełna historia źródeł i audytów pozostaje zachowana.
 
-## Status przed wdrożeniem
+## Status bieżący
 
-Na branchu ops/baseline-sync-2026-09-20 poprzedni zielony checkpoint miał 105703 unikalne klucze, ale ujawnił architektonicznie błędne założenie: obecny core resolver mógł rozstrzygnąć warszawa lowercase, mimo że aktywne źródła modułowe zawierały Warszawa. To nie może być naprawiane wpisem dla Warszawa; trzeba poprawić niezależną regułę resolvera, aby rdzeń sam potrafił skorygować powierzchnię.
+Poprzedni zielony checkpoint miał 105703 unikalne klucze. Późniejsza diagnostyka ujawniła dwa rozłączne problemy: brak wspólnej warstwy NKJP1M w audycie modułów oraz nadmiernie optymistyczne oczekiwanie kapitalizacji `warszawa`.
 
-Ten dokument supersedes wcześniejsze interpretacje, w których moduły były traktowane jako potencjalne źródło decyzji kapitalizacyjnej rdzenia albo w których pełna nazwa z łącznikiem była zastępowana samymi komponentami.
+Aktualne zasady są następujące:
+- jeśli Morfeusz/SGJP potwierdza `nazwa_pospolita`, wynik pozostaje lowercase bez względu na źródło modułowe;
+- dla luk lingwistycznych oficjalna pisownia źródłowa może dostarczyć późny fallback ortograficzny;
+- rdzeń i moduł korzystają z tego samego niezależnego resolvera, więc wspólny klucz nie powinien generować konfliktu tylko dlatego, że surowe źródła mają różne wielkości liter;
+- pełne powierzchnie z rozpoznanym łącznikiem pozostają równolegle z komponentami.
+
+Przypadek `warszawa` jest obecnie testowany jako lowercase, ponieważ bieżący resolver wykrywa analizę `nazwa_pospolita`.
+
+Ten dokument zastępuje wcześniejsze interpretacje, w których moduły były traktowane jako potencjalne źródło decyzji kapitalizacyjnej rdzenia albo pełna nazwa z łącznikiem była zastępowana samymi komponentami.
 
 
 ## Doprecyzowanie po diagnostyce CI — 2026-09-30
