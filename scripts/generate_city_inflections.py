@@ -78,7 +78,7 @@ def build_hyphenated_city_forms(morfeusz, name: str) -> set[tuple[str, str]]:
             continue
         # Deterministic, bounded Cartesian product. For official city names
         # component ambiguity is uncommon; the cap prevents pathological oracle output.
-        products = [("",)]
+        products = [()]
         for values in choices:
             next_products = []
             for prefix in products:
