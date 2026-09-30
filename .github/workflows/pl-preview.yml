@@ -229,6 +229,8 @@ jobs:
           }
           for word, surface in expected.items():
               result = resolve_capitalization(key=word, morfeusz=m)
+              if word.lower() == "warszawa":
+                  print("Warszawa resolver diagnostic:", json.dumps(result, ensure_ascii=False, indent=2))
               assert result["resolved"], (word, result)
               assert result["surface"] == surface, (word, result)
           print("case-sensitive capitalization probes: OK")
