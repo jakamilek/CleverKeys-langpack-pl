@@ -543,3 +543,7 @@ Wspólna implementacja:
 Nie wolno rozszerzać tej reguły na zwykłe frazy ze spacją ani mechanicznie odmieniać każdego komponentu tylko dlatego, że występuje łącznik. Odmiana wymaga odpowiedniego modelu gramatycznego i walidacji dla konkretnej kategorii.
 
 Aktualny kod projektowy kończy się na commitcie `4bc8b2fbaff4f2dc1ebc42ac286b103f0a43f5c3`; późniejszy commit dokumentacyjny aktualizuje handoff i nie zmienia kodu.
+
+
+## Aktualizacja 2026-09-30 — size-study i walidacja nazw łącznikowych
+Jeżeli kolejny chat sprawdza stan po `df355adb17fd8527683d283599b6a6b280905dca`, pamiętaj: Size-study #247 był czerwony wyłącznie dlatego, że `build_pl_preview.py:is_inflection_surface()` odrzucał `kujawsko-pomorskie` jako formę wieloczłonową. Poprawka pozwala na pojedynczy token albo komponenty połączone jednym z trzech dozwolonych łączników. Po nowym green Size-study trzeba ponownie zmierzyć finalną unię modułów; wcześniejsze `105688` i obecne Preview `105703` nie zastępują tego pomiaru.
