@@ -112,3 +112,12 @@ Przeczytaj także nowy dokument: docs/ARCHITECTURE_DECISION_2026-09-30.md.
 - `warszawa` jest obecnie oczekiwane jako lowercase, ponieważ resolver wykrył analizę `nazwa_pospolita`.
 - Oficjalna kapitalizacja źródłowa jest fallbackiem ortograficznym, nie sposobem na przełamanie analizy językowej.
 - Nie dodawać ręcznego wyjątku dla Warszawy bez dowodu, że zmienia się reguła całej klasy.
+
+
+### Stan po wykryciu błędu `-Bielska`
+
+- Size-study #265 wykrył w `build/pl-city-inflections.tsv` wadliwą formę `-Bielska`.
+- Commit `25b4aa79d8db2d8448f12c42b9287548fe7d7557` naprawił pierwotną przyczynę w `build_hyphenated_city_forms()`: `products` musi startować od `()`, nie `("",)`.
+- Commit `7af161c9fa1b639b8f0cb08843178eb8aa07f3e3` dodatkowo wyłącza zwykłą ścieżkę `Morfeusz.generate()` dla nazw z łącznikiem; takie nazwy są obsługiwane wyłącznie przez model hyphenowany kategorii miast.
+- Świeże CI na `7af161c...`: Preview #357 / run `36770877395`; Size-study #268 / run `36770877795`.
+- Nie uznawać jeszcze wyniku za zielony checkpoint.
