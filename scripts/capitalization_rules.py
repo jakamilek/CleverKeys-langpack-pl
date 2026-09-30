@@ -281,25 +281,9 @@ def resolve_capitalization(
             **base,
         }
 
-    # Proper-name evidence from the correctly-capitalized probe outranks an
-    # adjective reading of the lowercase surface (for example, a surname vs.
-    # an adjective). The absolute common-noun rule was handled above.
-    if proper_names:
-        return {
-            "resolved": True,
-            "surface": normalized[:1].upper() + normalized[1:],
-            "policy": "capitalized",
-            "reason": "proper-name-classification-from-linguistic-oracle",
-            "linguistic_basis": "proper-name",
-            "explicit_policy_conflict": bool(
-                explicit_policy is not None
-                and explicit_policy[1] != "capitalized"
-            ),
-            **base,
-        }
-
-    # Ordinary adjective forms are lowercase when no competing proper-name
-    # interpretation exists in the case-sensitive oracle.
+    # Ordinary adjectives are always lowercase in the project. This rule is
+    # stronger than broad proper-name metadata attached to an adjective
+    # analysis, including geographic-name metadata.
     if adjectives:
         return {
             "resolved": True,
@@ -310,6 +294,22 @@ def resolve_capitalization(
             "explicit_policy_conflict": bool(
                 explicit_policy is not None
                 and explicit_policy[1] != "lowercase"
+            ),
+            **base,
+        }
+
+    # Proper-name evidence is considered only after the unconditional
+    # adjective rule.
+    if proper_names:
+        return {
+            "resolved": True,
+            "surface": normalized[:1].upper() + normalized[1:],
+            "policy": "capitalized",
+            "reason": "proper-name-classification-from-linguistic-oracle",
+            "linguistic_basis": "proper-name",
+            "explicit_policy_conflict": bool(
+                explicit_policy is not None
+                and explicit_policy[1] != "capitalized"
             ),
             **base,
         }
