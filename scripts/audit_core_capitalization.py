@@ -175,7 +175,7 @@ def resolve_nkjp_capitalization(
                 ),
                 "source": lemma_case_source,
             },
-            "nkjp_correctness": sorted(valid_correctness),
+            "nkjp_correctness": sorted(correctness),
         }
 
     if classes.get("CW", 0) > 0:
