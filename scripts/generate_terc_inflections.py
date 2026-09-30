@@ -10,6 +10,8 @@ import csv
 import json
 from pathlib import Path
 
+from surface_components import LEXICAL_HYPHENS, hyphen_components, is_hyphenated
+
 CASES = ("nom", "gen", "dat", "acc", "inst", "loc", "voc")
 OUTPUT_FIELDS = (
     "category",
@@ -106,7 +108,12 @@ def main() -> int:
             # "kujawsko-pomorskie", inflect only the final adjective and keep
             # the invariant first component unchanged.
             from polish_inflection import odmien_przymiotnik, podaj_przymiotnik, NIJAKI
-            parts = name.split("-")
+            if is_hyphenated(name):
+                parts = hyphen_components(name)
+                separator = next((char for char in name if char in LEXICAL_HYPHENS), "-")
+            else:
+                parts = [name]
+                separator = ""
             last = parts[-1].strip().lower()
             analyses = podaj_przymiotnik(last)
             lemmas = sorted({
@@ -140,8 +147,8 @@ def main() -> int:
                     for a in validated
                 ):
                     continue
-                prefix = "-".join(part.strip() for part in parts[:-1])
-                composed = (prefix + "-" + form) if prefix else form
+                prefix = separator.join(part.strip() for part in parts[:-1])
+                composed = (prefix + separator + form) if prefix else form
                 generated.add((case_tag, composed))
             voivodeship_names.add(unit_key)
         else:
