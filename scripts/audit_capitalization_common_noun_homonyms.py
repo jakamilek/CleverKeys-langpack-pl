@@ -56,7 +56,20 @@ def add_candidates(
             policy = "lowercase"
             surface = surface.lower()
         for component in dictionary_surfaces(surface):
-            component_policy = policy if component[:1].isupper() else "lowercase"
+            # A full recognized-hyphen/multi-component source and its components
+            # are distinct dictionary surfaces. The component must be resolved
+            # on its own linguistic evidence; it must not inherit capitalization
+            # from the full source phrase. Only the full hyphenated surface keeps
+            # the source-level casing hint as a fallback.
+            component_policy = (
+                policy
+                if component == surface
+                else (
+                    "lowercase"
+                    if component[:1].islower()
+                    else ""
+                )
+            )
             proper_lemma_keys = (
                 sorted({
                     part.lower()
