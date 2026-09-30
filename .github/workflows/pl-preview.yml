@@ -226,7 +226,7 @@ jobs:
               "bardo": "bardo",
               "łódź": "łódź",
               "tomaszów": "Tomaszów",
-              "warszawa": "Warszawa",
+              "warszawa": "warszawa",
               "Jakub": "Jakub",
           }
           for word, surface in expected.items():
@@ -258,8 +258,9 @@ jobs:
           assert audit["unresolved_count"] == 0
           warszawa = audit["resolved_surfaces"]["warszawa"]
           print("Warszawa independent-core probe:", json.dumps(warszawa, ensure_ascii=False, indent=2))
-          assert warszawa["surface"] == "Warszawa", warszawa
-          assert warszawa["policy"] == "capitalized", warszawa
+          assert warszawa["surface"] == "warszawa", warszawa
+          assert warszawa["policy"] == "lowercase", warszawa
+          assert warszawa["reason"] == "common-noun-homonym-absolute-lowercase", warszawa
           assert audit["resolved_surfaces"]["malina"]["surface"] == "malina"
           assert audit["resolved_surfaces"]["malina"]["policy"] == "lowercase"
           assert audit["resolved_surfaces"]["łódź"]["surface"] == "łódź"
