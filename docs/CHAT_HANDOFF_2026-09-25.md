@@ -1380,3 +1380,46 @@ Atomiczna poprawka `df355adb17fd8527683d283599b6a6b280905dca`:
 - zaktualizowano help argumentu TERC, aby nie twierdził, że odmiany muszą być jedno-tokenowe.
 
 To jest zmiana walidacyjna; nie zmienia membership immutable 100k ani polityki kapitalizacji. Nowy push powinien uruchomić świeży Preview i Size-study.
+
+
+## Aktualizacja ciągłości — 2026-09-30 — pełny zielony checkpoint po regule łącznikowej
+
+Po poprawce walidatora nazw łącznikowych cały zestaw wymaganych kontroli dla HEAD `df355adb17fd8527683d283599b6a6b280905dca` zakończył się sukcesem:
+
+- Preview #329, run `36753805242`: **SUCCESS**;
+- Size-study #248, run `36753805549`: **SUCCESS**;
+- First-name audit #121, run `36753805054`: **SUCCESS**.
+
+Świeży Preview:
+- artifact `11115257853`;
+- digest `sha256:4efe28e93c89411e39c6058b339e16bb9744dadf322d9760830ff5598b6a5e69`;
+- final unique keys: **105703**.
+
+Świeży Size-study potwierdził:
+- immutable core: **100000**;
+- module unique keys: **7519**;
+- module keys already in base: **1816**;
+- module keys new vs base: **5703**;
+- final unique keys: **105703**;
+- formula: **100000 + union(net-new case-insensitive module keys)**.
+
+Zakres TERC w tym green pipeline:
+- 16 województw: pełna odmiana, w tym nazwy łącznikowe;
+- 380 powiatów: selekcja;
+- gminy: tylko nominative;
+- wygenerowano 12440 pełnych rekordów przed selekcją i zachowano 2712 rekordów w produkcyjnej selekcji.
+
+Najnowszy świeży artefakt Size-study:
+- artifact `11115363006`;
+- digest `sha256:0d64ce8b35d076ef7c35933cb137a0ef16d60d5db902aae8b302646fc8da5c17`.
+
+Frequency audit wykonał się poprawnie; nie ustalamy jeszcze żadnego progu częstotliwościowego. Aktualny raport pokazał, że dla mierzonych powierzchni modułowych 3077 miało niezerową częstość NKJP1M, 5987 zerową; wordfreq miało niezerową wartość dla 7334 i zero dla 1730. Te dane służą do przyszłej kalibracji, nie do automatycznego wycinania poprawnych obecnych dodatków.
+
+Następny etap projektu nie wymaga dalszej zmiany architektury nazw łącznikowych. Przed przejściem do kolejnych modułów należy:
+1. uznać **105703** za aktualny pomiar referencyjny;
+2. przeprowadzić ręczny/automatyczny przegląd finalnego CKDT z naciskiem na regresje casingowe i wcześniejsze przypadki swipe;
+3. pobrać świeży Preview ZIP z artefaktu #329 i zainstalować go w CleverKeys;
+4. wykonać kontrolowany test runtime/swipe na reprezentatywnych polskich słowach krótkich, nazwach i formach miejscowości;
+5. dopiero na podstawie wyników runtime decydować o ewentualnych zmianach rankingu, geometrii lub dalszych dodatkach.
+
+Nie zmieniać immutable 100k membership z powodu testów runtime. Nie wykonywać merge/promote do `main`.
