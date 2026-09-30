@@ -36,49 +36,85 @@ def gen_rows(rows: list[dict[str,str]], category: str, rejected_official: list[d
         targets = [name] if SURFACE_RE.fullmatch(name) else hyphenated_surfaces(name)
         if not targets:
             continue
+
         for target in targets:
             lower = target.lower()
-            policy = row["case_policy"]
-            generated: dict[tuple[str,str,str],str] = {}
-        # The official source is authoritative for the base and its published D./Mc. forms.
-            generated[("source","nom","source")] = target if policy == "capitalized" else target.lower()
+            policy = row["case_policy"].strip()
+            generated: dict[tuple[str, str, str], str] = {}
+
+            # The official source is authoritative for the nominative target.
+            generated[("source", "nom", "source")] = (
+                target if policy == "capitalized" else target.lower()
+            )
+
             if row.get("official_ndm") != "yes":
                 if row.get("official_genitive"):
                     form = row["official_genitive"].strip()
                     if SURFACE_RE.fullmatch(form) or is_hyphenated(form):
-                        generated[("source","gen","source")] = form
+                        generated[("source", "gen", "source")] = form
                     else:
-                        rejected_official.append({"category": category, "name": target, "case": "gen", "form": form, "reason": "official form is not a valid lexical-hyphen surface"})
+                        rejected_official.append({
+                            "category": category,
+                            "name": target,
+                            "case": "gen",
+                            "form": form,
+                            "reason": "official form is not a valid lexical-hyphen surface",
+                        })
                 if row.get("official_locative"):
                     form = row["official_locative"].strip()
                     if SURFACE_RE.fullmatch(form) or is_hyphenated(form):
-                        generated[("source","loc","source")] = form
+                        generated[("source", "loc", "source")] = form
                     else:
-                        rejected_official.append({"category": category, "name": target, "case": "loc", "form": form, "reason": "official form is not a valid lexical-hyphen surface"})
+                        rejected_official.append({
+                            "category": category,
+                            "name": target,
+                            "case": "loc",
+                            "form": form,
+                            "reason": "official form is not a valid lexical-hyphen surface",
+                        })
+
             for orth, lemma, tag, _names, _labels in morfeusz2.Morfeusz(
-                expand_tags=True, expand_dot=True, expand_underscore=True
-            ).generate(name):
+                expand_tags=True,
+                expand_dot=True,
+                expand_underscore=True,
+            ).generate(target):
                 if str(lemma).lower() != lower:
                     continue
                 _, number, cases = tag_parts(str(tag))
                 for case in sorted(cases):
                     surface = str(orth).strip()
-                    if not surface or not SURFACE_RE.fullmatch(surface):
+                    valid_surface = (
+                        bool(SURFACE_RE.fullmatch(surface))
+                        or is_hyphenated(surface)
+                    )
+                    if not surface or not valid_surface:
                         continue
                     if policy == "capitalized":
                         surface = surface[:1].upper() + surface[1:]
                     else:
                         surface = surface.lower()
-                    generated[("morfeusz",case,number)] = surface
-            for (origin, case, number), surface in sorted(generated.items(), key=lambda x: (x[0][1], x[0][2], x[1])):
-            out.append({
-                "category": category, "name": name, "number": number,
-                "case": case, "form": surface, "case_policy": policy,
-                "source": "KSNG/GUGiK official form" if origin == "source" else
-                          "Morfeusz 2 / SGJP generated from KSNG/GUGiK name",
-                "morfeusz_version": str(morfeusz2.__version__),
-            })
+                    generated[("morfeusz", case, number)] = surface
+
+            for (origin, case, number), surface in sorted(
+                generated.items(),
+                key=lambda item: (item[0][1], item[0][2], item[1]),
+            ):
+                out.append({
+                    "category": category,
+                    "name": target,
+                    "number": number,
+                    "case": case,
+                    "form": surface,
+                    "case_policy": policy,
+                    "source": (
+                        "KSNG/GUGiK official form"
+                        if origin == "source"
+                        else "Morfeusz 2 / SGJP generated from KSNG/GUGiK name"
+                    ),
+                    "morfeusz_version": str(morfeusz2.__version__),
+                })
     return out
+
 
 def write(path: Path, rows: list[dict[str,str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)

@@ -272,8 +272,13 @@ def main() -> int:
         "oracle": "Morfeusz 2 / SGJP",
         "morfeusz_version": str(morfeusz2.__version__),
         "all_city_names_in_source": len(all_cities),
-        "all_one_token_city_names": len(cities),
-        "multi_component_city_names_excluded_from_one_token_inflection": len(all_cities) - len(cities),
+        "all_one_token_city_names": len(one_token_cities),
+        "hyphenated_city_names_selected": len(hyphenated_cities),
+        "multi_component_city_names_not_selected_for_non_hyphen_inflection": sum(
+            1 for row in all_cities
+            if not is_hyphenated(row["name"].strip())
+            and not re.fullmatch(r"^[a-ząćęłńóśźż]+$", row["name"], re.IGNORECASE)
+        ),
         "top_n": args.top_n,
         "priority_names": sorted(priorities),
         "selected_city_names": len(selected),
