@@ -509,3 +509,21 @@ Po wznowieniu pracy:
 Źródłowa dokumentacja NKJP1M potwierdza, że `NCH` jest automatycznym „not checked” i może reprezentować inne klasy; `PN` może obejmować także przypadki normatywnie lowercase. Statusy `SGJP-LMM-*` opisują sposób dopasowania do SGJP i nie powinny być traktowane jako samodzielny oracle kapitalizacji bez dodatkowego dowodu.
 
 Nie wykonuj merge/promote do `main`. Po uzyskaniu green Preview zawsze sprawdź świeży artefakt i pełny zestaw regresji.
+
+## Aktualizacja 2026-09-30 — neutralny fallback core
+
+Aktualny punkt pracy: commit `ecc856d2dc9fa8a0bce7ed9714d78cad8c4d3bb5` na branch `ops/baseline-sync-2026-09-20`.
+
+Po analizie Preview #313 / Size-study #236 ustalono, że wiele unresolved core keys nie ma żadnego rekordu NKJP1M (`surface=NONE`). Nie należy dalej rozszerzać NKJP heurystycznie.
+
+Nowa reguła warstwy audytu immutable 100k: po wyczerpaniu Morfeusz/SGJP, NKJP oraz explicit surface registry zachowujemy już znormalizowaną lowercase powierzchnię core jako `core-neutral-lowercase-fallback`. Jest to brak dowodu na kapitalizację, a nie klasyfikacja jako rzeczownik pospolity. Liczba takich kluczy ma być jawnie raportowana.
+
+Reguły nienaruszalne:
+- `nazwa_pospolita` zawsze ma absolutne pierwszeństwo i wymusza lowercase;
+- `PN` nie oznacza automatycznie uppercase;
+- `NCH` nie oznacza ani lowercase, ani uppercase;
+- moduły nie decydują o kapitalizacji immutable core;
+- membership 100k nie zmienia się z powodu kapitalizacji;
+- brak dowodu może użyć wyłącznie neutralnej istniejącej powierzchni core, bez wymyślania nowej wielkości liter.
+
+Po kolejnym green Preview sprawdź świeży artefakt, regresje `bardo`, `Tomaszów`, `łódź`, `Jakub`, Gdynia/Wrocław/Toruń oraz hard blocklist. Nie wykonuj merge/promote do `main`.
