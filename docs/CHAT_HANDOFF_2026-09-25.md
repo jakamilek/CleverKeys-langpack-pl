@@ -1368,3 +1368,15 @@ Aktualny HEAD branch przed tym wpisem: `4bc8b2fbaff4f2dc1ebc42ac286b103f0a43f5c3
 - Size-study #247, run `36751674417` — HEAD `08333271...`.
 
 Po aktualizacji handoffu ten commit dokumentacyjny nie jest objęty ścieżkami wyzwalającymi powyższe workflowy. Należy więc ocenić istniejące runy dla właściwego kodu i nie traktować statusu `pending/in_progress` jako sukcesu.
+
+
+## Aktualizacja ciągłości — 2026-09-30 — walidacja łącznikowych odmian w size-study
+Size-study #247 (run `36751674417`) zakończył się FAILURE nie na danych językowych, lecz na istniejącym walidatorze `scripts/build_pl_preview.py`, który przy wariantach rozmiarowych wymagał jedno-tokenowych powierzchni TERC. Po wprowadzeniu pełnej odmiany 16 województw odrzucił `kujawsko-pomorskie`.
+
+Atomiczna poprawka `df355adb17fd8527683d283599b6a6b280905dca`:
+- `is_inflection_surface()` akceptuje teraz pojedynczy token lub powierzchnię złożoną z komponentów połączonych wyłącznie rozpoznanym łącznikiem;
+- walidator korzysta ze wspólnej definicji z `scripts/surface_components.py`;
+- zwykłe frazy ze spacją oraz `–`, `—`, `/` nadal nie są akceptowane jako powierzchnie łącznikowe;
+- zaktualizowano help argumentu TERC, aby nie twierdził, że odmiany muszą być jedno-tokenowe.
+
+To jest zmiana walidacyjna; nie zmienia membership immutable 100k ani polityki kapitalizacji. Nowy push powinien uruchomić świeży Preview i Size-study.
