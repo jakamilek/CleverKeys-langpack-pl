@@ -449,26 +449,26 @@ jobs:
                   + homonym + " -> " + resolution["surface"]
               )
 
-           from scripts.surface_components import dictionary_surfaces, hyphenated_surfaces
+          from scripts.surface_components import dictionary_surfaces, hyphenated_surfaces
 
-           assert dictionary_surfaces("kujawsko-pomorskie") == [
-               "kujawsko", "pomorskie", "kujawsko-pomorskie"
-           ]
-           assert hyphenated_surfaces("Doha, Ad-Dauha") == ["Ad-Dauha"]
-           assert hyphenated_surfaces("Szklarska Poręba") == []
+          assert dictionary_surfaces("kujawsko-pomorskie") == [
+              "kujawsko", "pomorskie", "kujawsko-pomorskie"
+          ]
+          assert hyphenated_surfaces("Doha, Ad-Dauha") == ["Ad-Dauha"]
+          assert hyphenated_surfaces("Szklarska Poręba") == []
 
-           assert "Warszawa" in ckdt_raw
-           assert "warszawa" not in ckdt_raw
-           assert "malina" in ckdt_raw
-           assert "Malina" not in ckdt_raw
-           assert "łódź" in ckdt_raw
-           assert "Łódź" not in ckdt_raw
-           assert "Bielsko" in ckdt_raw
-           assert "Bielsko-Biała" in ckdt_raw
-           assert "kujawsko-pomorskie" in ckdt_raw
-           assert "kujawsko-pomorskiego" in ckdt_raw
+          assert "warszawa" in ckdt_raw
+          assert "Warszawa" not in ckdt_raw
+          assert "malina" in ckdt_raw
+          assert "Malina" not in ckdt_raw
+          assert "łódź" in ckdt_raw
+          assert "Łódź" not in ckdt_raw
+          assert "Bielsko" in ckdt_raw
+          assert "Bielsko-Biała" in ckdt_raw
+          assert "kujawsko-pomorskie" in ckdt_raw
+          assert "kujawsko-pomorskiego" in ckdt_raw
 
-           assert module_audit_for_names.get("core_overlap_conflict_count", 0) == 0
+          assert module_audit_for_names.get("core_overlap_conflict_count", 0) == 0
 
           # Orthographic regression: adjectives derived from geographic/proper names are
           # ordinary lexical words and must remain lowercase. These examples exercise the
