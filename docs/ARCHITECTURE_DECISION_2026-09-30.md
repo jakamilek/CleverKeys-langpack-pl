@@ -52,3 +52,16 @@ Kolejność jest twarda:
 Na branchu ops/baseline-sync-2026-09-20 poprzedni zielony checkpoint miał 105703 unikalne klucze, ale ujawnił architektonicznie błędne założenie: obecny core resolver mógł rozstrzygnąć warszawa lowercase, mimo że aktywne źródła modułowe zawierały Warszawa. To nie może być naprawiane wpisem dla Warszawa; trzeba poprawić niezależną regułę resolvera, aby rdzeń sam potrafił skorygować powierzchnię.
 
 Ten dokument supersedes wcześniejsze interpretacje, w których moduły były traktowane jako potencjalne źródło decyzji kapitalizacyjnej rdzenia albo w których pełna nazwa z łącznikiem była zastępowana samymi komponentami.
+
+
+## Doprecyzowanie po diagnostyce CI — 2026-09-30
+
+Najnowsza diagnostyka resolvera potwierdziła, że dla klucza `warszawa` Morfeusz/SGJP znajduje analizę oznaczoną `nazwa_pospolita`. Zgodnie z twardą regułą projektu daje to kanoniczną powierzchnię `warszawa`, nawet jeżeli źródła miejskie zawierają nazwę własną `Warszawa`. Nie jest to wyjątek dla Warszawy, lecz konsekwencja ogólnej reguły pierwszeństwa zweryfikowanej nazwy pospolitej.
+
+Wniosek architektoniczny:
+- nazwa własna w module nie może przełamać zweryfikowanej analizy `nazwa_pospolita`;
+- `official_source_policies` są wyłącznie późnym fallbackiem ortograficznym dla luk lingwistycznych;
+- wspólny klucz rdzeń/moduł musi po zastosowaniu tych samych reguł dawać tę samą powierzchnię;
+- regresja dla `warszawa` powinna więc wymuszać lowercase, a nie kapitalizację.
+
+Ta decyzja zastępuje wcześniejszy przykład zakładający `warszawa -> Warszawa` bez uwzględnienia nadrzędnej analizy `nazwa_pospolita`.
