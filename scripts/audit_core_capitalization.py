@@ -27,7 +27,12 @@ from pathlib import Path
 from collections import Counter, defaultdict
 
 from surface_components import component_records, component_surfaces
-from capitalization_rules import OFFICIAL_CAPITALIZATION_SOURCES, resolve_capitalization
+from capitalization_rules import (
+    OFFICIAL_CAPITALIZATION_SOURCES,
+    common_noun_matches,
+    proper_name_matches,
+    resolve_capitalization,
+)
 
 
 def read_rows(path: Path) -> list[dict[str, str]]:
@@ -253,6 +258,17 @@ def main() -> int:
     # Every immutable-core key is audited. Source modules provide evidence when
     # available, but their absence must never silently exclude a core key.
     for key in sorted(base):
+        # Independent homonym audit: this classification uses Morfeusz only,
+        # deliberately ignoring every module and its source evidence. A key is
+        # a dual-surface candidate when Morfeusz exposes both an ordinary
+        # common-noun analysis and a competing proper-name analysis for the
+        # same case-folded surface.
+        independent_common_matches = common_noun_matches(morfeusz, key)
+        independent_proper_matches = proper_name_matches(morfeusz, key)
+        independent_case_dual_surface_candidate = bool(
+            independent_common_matches and independent_proper_matches
+        )
+
         rows = evidence.get(key, [])
         policies = {str(r["policy"]) for r in rows if r["policy"] in {"lowercase", "capitalized"}}
         official_source_policies = {
@@ -388,6 +404,12 @@ def main() -> int:
             "common_adjective_matches": resolution["common_adjective_matches"],
             "common_noun_homonym": bool(resolution["common_noun_matches"]),
             "common_noun_matches": resolution["common_noun_matches"],
+            "independent_case_dual_surface_candidate": independent_case_dual_surface_candidate,
+            "independent_case_dual_surface_proper_name_classes": sorted({
+                cls
+                for item in independent_proper_matches
+                for cls in item.get("proper_name_classes", [])
+            }),
             "module_verification": module_verification,
             "evidence": rows,
         })
@@ -442,6 +464,14 @@ def main() -> int:
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
         "common_lexical_homonym_count": sum(1 for r in audited if r["common_lexical_homonym"]),
         "common_noun_homonym_count": sum(1 for r in audited if r["common_noun_homonym"]),
+        "independent_case_dual_surface_candidate_count": sum(
+            1 for r in audited if r["independent_case_dual_surface_candidate"]
+        ),
+        "independent_case_dual_surface_candidate_keys": [
+            r["surface_key"]
+            for r in audited
+            if r["independent_case_dual_surface_candidate"]
+        ],
         "module_verification_conflict_count": 0,
         "module_verification_conflict_keys": [],
         "module_source_policy_disagreement_count": sum(
@@ -492,6 +522,21 @@ def main() -> int:
     neutral_keys = [
         row["surface_key"] for row in audited if row["neutral_fallback"]
     ]
+    dual_surface_keys = [
+        row["surface_key"]
+        for row in audited
+        if row["independent_case_dual_surface_candidate"]
+    ]
+    print(
+        "Independent Morfeusz common/proper dual-surface candidate count: "
+        + str(len(dual_surface_keys))
+    )
+    if dual_surface_keys:
+        print(
+            "Independent Morfeusz common/proper dual-surface candidates: "
+            + ", ".join(dual_surface_keys)
+        )
+
     if neutral_keys:
         print(
             "Core capitalization keys using neutral lowercase fallback: "
