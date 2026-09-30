@@ -64,11 +64,13 @@ Ostatnie poprawki po checkpointcie:
 - Dokumentacja starszych polityk została zaktualizowana; obowiązuje `docs/ARCHITECTURE_DECISION_2026-09-30.md`.
 
 ### Bieżące CI
-Dla HEAD `36374a6d7cb6ae2452e010f675e61587f7667758` wystartowały:
-- Preview #340, run `36766869572`;
-- Size-study #257, run `36766869525`.
-
-Nie zakładaj wyniku. Przed dalszym etapem sprawdź świeże runy i używaj wyłącznie ich wyników. Poprzednie runy #254/#255 zakończyły się błędem w audycie modułów przed aktualną poprawką.
+Najnowszy stan należy sprawdzać bezpośrednio w GitHub, ponieważ kolejne commity diagnostyczne uruchamiają nowe runy i anulują starsze.
+- Preview #354 / run `36770384684` uruchomiony dla diagnostyki Warszawy; wynik należy zweryfikować przed kolejnym etapem.
+- Size-study #265 / run `36770261873` jest starszym runem na `098bf1f6...`; jego wynik nie jest jeszcze checkpointem.
+- Wcześniejsze Preview #344 wykazało, że resolver rdzenia zwraca dla `warszawa` lowercase z powodu analizy `nazwa_pospolita`.
+- Wcześniejszy Size-study wykazał dziewięć rozbieżności wynikających z braku niezależnego fallbacku oficjalnej pisowni; dodano `OFFICIAL_CAPITALIZATION_SOURCES` jako późną warstwę ortograficzną.
+- Aktualny workflow ma dodatkowy probe surowych analiz Morfeusza dla `warszawa`.
+Nie traktuj żadnego z tych runów jako zielonego checkpointu, dopóki GitHub nie poda `success`.
 
 
 ## Aktualny stan po wykonanych zmianach
@@ -108,3 +110,11 @@ To jest tylko checkpoint referencyjny. Po zmianach kapitalizacji i nazw z łącz
 8. Po green CI pobrać świeży ZIP, sprawdzić CKDT i dopiero potem przejść do testów runtime/swipe.
 
 Przeczytaj także nowy dokument: docs/ARCHITECTURE_DECISION_2026-09-30.md.
+
+
+## Aktualny wniosek po diagnostyce Warszawy
+
+- `nazwa_pospolita` ma absolutne pierwszeństwo.
+- `warszawa` jest obecnie oczekiwane jako lowercase, ponieważ resolver wykrył analizę `nazwa_pospolita`.
+- Oficjalna kapitalizacja źródłowa jest fallbackiem ortograficznym, nie sposobem na przełamanie analizy językowej.
+- Nie dodawać ręcznego wyjątku dla Warszawy bez dowodu, że zmienia się reguła całej klasy.
