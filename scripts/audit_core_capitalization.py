@@ -41,13 +41,24 @@ def read_rows(path: Path) -> list[dict[str, str]]:
 
 
 def load_nkjp_capitalization(path: Path) -> tuple[dict[str, dict[str, object]], dict[str, dict[str, object]]]:
-    """Aggregate pinned NKJP1M word-form casing/classification evidence."""
+    """Aggregate pinned NKJP1M casing, lemma and SGJP-link evidence.
+
+    NKJP classification NCH is intentionally not treated as a class decision:
+    the source documents it as an automatic "not checked" label that may hide
+    any other classification. The useful secondary casing evidence is kept
+    from the SGJP-presence column (column 6), observed lemma casing and
+    correctness (column 8), while Morfeusz remains the primary oracle.
+    """
     out: dict[str, dict[str, object]] = defaultdict(
         lambda: {
             "forms": Counter(),
             "classes": Counter(),
             "tags": Counter(),
             "lemmas": Counter(),
+            "lemma_forms": Counter(),
+            "sgjp_status": Counter(),
+            "morphology": Counter(),
+            "correctness": Counter(),
         }
     )
     by_lemma: dict[str, dict[str, object]] = defaultdict(
@@ -55,6 +66,10 @@ def load_nkjp_capitalization(path: Path) -> tuple[dict[str, dict[str, object]], 
             "forms": Counter(),
             "classes": Counter(),
             "tags": Counter(),
+            "lemma_forms": Counter(),
+            "sgjp_status": Counter(),
+            "morphology": Counter(),
+            "correctness": Counter(),
         }
     )
     with path.open(encoding="utf-8", errors="strict") as handle:
@@ -62,13 +77,16 @@ def load_nkjp_capitalization(path: Path) -> tuple[dict[str, dict[str, object]], 
             if not line.strip() or line.lstrip().startswith("#"):
                 continue
             fields = line.rstrip("\n").split("\t")
-            if len(fields) < 7:
+            if len(fields) < 8:
                 continue
             form = fields[0].strip()
             lemma = fields[1].strip()
             tag = fields[2].strip()
+            morphology = fields[4].strip()
+            sgjp_status = fields[5].strip()
             classification = fields[6].strip()
-            if not form or not classification:
+            correctness = fields[7].strip()
+            if not form or not lemma or not classification:
                 continue
             try:
                 frequency = int(fields[3])
@@ -76,21 +94,28 @@ def load_nkjp_capitalization(path: Path) -> tuple[dict[str, dict[str, object]], 
                 continue
             if frequency <= 0:
                 continue
+
             key = form.lower()
             row = out[key]
             row["forms"][form] += frequency
             row["classes"][classification] += frequency
-            if tag:
-                row["tags"][tag] += frequency
-            if lemma:
-                lemma_key = lemma.lower()
-                lemma_row = by_lemma[lemma_key]
-                lemma_row["forms"][form] += frequency
-                lemma_row["classes"][classification] += frequency
-                if tag:
-                    lemma_row["tags"][tag] += frequency
-    return dict(out), dict(by_lemma)
+            row["tags"][tag] += frequency
+            row["lemmas"][lemma] += frequency
+            row["lemma_forms"][lemma] += frequency
+            row["sgjp_status"][sgjp_status] += frequency
+            row["morphology"][morphology] += frequency
+            row["correctness"][correctness] += frequency
 
+            lemma_key = lemma.lower()
+            lemma_row = by_lemma[lemma_key]
+            lemma_row["forms"][form] += frequency
+            lemma_row["classes"][classification] += frequency
+            lemma_row["tags"][tag] += frequency
+            lemma_row["lemma_forms"][lemma] += frequency
+            lemma_row["sgjp_status"][sgjp_status] += frequency
+            lemma_row["morphology"][morphology] += frequency
+            lemma_row["correctness"][correctness] += frequency
+    return dict(out), dict(by_lemma)
 
 def resolve_nkjp_capitalization(
     key: str,
@@ -98,11 +123,17 @@ def resolve_nkjp_capitalization(
     *,
     basis: str = "surface",
 ) -> dict[str, object] | None:
-    """Resolve capitalization only when the Morfeusz oracle has a lexical gap.
+    """Resolve a Morfeusz gap from conservative NKJP secondary evidence.
 
-    CW (common word) evidence forces lowercase. PN/ACRO/WEB use the
-    frequency-weighted observed first-letter casing. Other NKJP classifications
-    are lowercase lexical evidence; NCH alone remains unresolved.
+    Important source constraint: NCH is only "not checked" and can represent
+    any other classification, so NCH is never interpreted as lowercase or as
+    proper-name evidence. Instead, this resolver uses:
+    - explicit NKJP classes when present;
+    - SGJP-presence casing statuses from column 6;
+    - observed lemma casing when SGJP says the triple is present.
+
+    The absolute common-noun rule has already run in Morfeusz and therefore
+    cannot be overridden here.
     """
     if not record:
         return None
@@ -110,7 +141,25 @@ def resolve_nkjp_capitalization(
     normalized = key.lower()
     classes = record["classes"]
     forms = record["forms"]
+    correctness = record.get("correctness", Counter())
+    valid_correctness = {
+        value for value, count in correctness.items()
+        if int(count) > 0 and value in {"CORR", "TAGD", "PLTAN", "TAGE", "DIAL"}
+    }
+    if correctness and not valid_correctness:
+        return None
 
+    def valid_frequency(counter: Counter) -> int:
+        if not counter:
+            return 0
+        return sum(
+            int(count)
+            for value, count in counter.items()
+            if not correctness or value in valid_correctness
+        )
+
+    # The tagged table explicitly identifies CW / PN / ACRO / WEB / lexical
+    # classes. NCH is intentionally neutral.
     if classes.get("CW", 0) > 0:
         return {
             "resolved": True,
@@ -122,9 +171,7 @@ def resolve_nkjp_capitalization(
                 else "nkjp-common-word-lemma-lowercase-fallback"
             ),
             "linguistic_basis": (
-                "nkjp-common-word"
-                if basis == "surface"
-                else "nkjp-common-word-lemma"
+                "nkjp-common-word" if basis == "surface" else "nkjp-common-word-lemma"
             ),
             "explicit_policy_conflict": False,
             "common_lexical_matches": [],
@@ -133,16 +180,19 @@ def resolve_nkjp_capitalization(
             "proper_name_matches": [],
             "proper_name_classes": [],
             "linguistic_analysis_count": 0,
+            "nkjp_sgjp_status": sorted(record.get("sgjp_status", {})),
+            "nkjp_lemma_cases": {},
+            "nkjp_correctness": sorted(record.get("correctness", {})),
         }
 
     proper_classes = {"PN", "ACRO", "WEB"}
     if any(classes.get(value, 0) > 0 for value in proper_classes):
         lowercase_frequency = sum(
-            count for form, count in forms.items()
+            int(count) for form, count in forms.items()
             if str(form)[:1].islower()
         )
         uppercase_frequency = sum(
-            count for form, count in forms.items()
+            int(count) for form, count in forms.items()
             if str(form)[:1].isupper()
         )
         if uppercase_frequency > 0 and uppercase_frequency >= lowercase_frequency:
@@ -153,7 +203,7 @@ def resolve_nkjp_capitalization(
                 if basis == "surface"
                 else "nkjp-proper-name-lemma-observed-casing-fallback"
             )
-        else:
+        elif lowercase_frequency > 0:
             surface = normalized
             policy = "lowercase"
             reason = (
@@ -161,15 +211,15 @@ def resolve_nkjp_capitalization(
                 if basis == "surface"
                 else "nkjp-proper-name-lemma-lowercase-observed-fallback"
             )
+        else:
+            return None
         return {
             "resolved": True,
             "surface": surface,
             "policy": policy,
             "reason": reason,
             "linguistic_basis": (
-                "nkjp-proper-name"
-                if basis == "surface"
-                else "nkjp-proper-name-lemma"
+                "nkjp-proper-name" if basis == "surface" else "nkjp-proper-name-lemma"
             ),
             "explicit_policy_conflict": False,
             "common_lexical_matches": [],
@@ -180,6 +230,9 @@ def resolve_nkjp_capitalization(
                 value for value in classes if value in proper_classes
             ),
             "linguistic_analysis_count": 0,
+            "nkjp_sgjp_status": sorted(record.get("sgjp_status", {})),
+            "nkjp_lemma_cases": {},
+            "nkjp_correctness": sorted(record.get("correctness", {})),
         }
 
     lexical_classes = {"SPEC", "NEOL", "EXT", "SYMB", "COMPD"}
@@ -194,9 +247,7 @@ def resolve_nkjp_capitalization(
                 else "nkjp-lexical-lemma-lowercase-fallback"
             ),
             "linguistic_basis": (
-                "nkjp-lexical"
-                if basis == "surface"
-                else "nkjp-lexical-lemma"
+                "nkjp-lexical" if basis == "surface" else "nkjp-lexical-lemma"
             ),
             "explicit_policy_conflict": False,
             "common_lexical_matches": [],
@@ -205,10 +256,169 @@ def resolve_nkjp_capitalization(
             "proper_name_matches": [],
             "proper_name_classes": [],
             "linguistic_analysis_count": 0,
+            "nkjp_sgjp_status": sorted(record.get("sgjp_status", {})),
+            "nkjp_lemma_cases": {},
+            "nkjp_correctness": sorted(record.get("correctness", {})),
+        }
+
+    # SGJP-presence status is an explicit secondary casing signal. These
+    # statuses are directional by definition: LMM-CAPITAL points to a
+    # capitalized lemma in SGJP; LMM-UNCAPITAL/LMM-LOWER/BTH-LOWER point to a
+    # lowercase lemma. NCH is deliberately ignored here.
+    sgjp_status = record.get("sgjp_status", Counter())
+    capital_statuses = {
+        "SGJP-LMM-CAPITAL",
+    }
+    lowercase_statuses = {
+        "SGJP-LMM-UNCAPITAL",
+        "SGJP-LMM-LOWER",
+        "SGJP-BTH-LOWER",
+    }
+    capital_frequency = sum(
+        int(sgjp_status.get(status, 0))
+        for status in capital_statuses
+    )
+    lowercase_frequency = sum(
+        int(sgjp_status.get(status, 0))
+        for status in lowercase_statuses
+    )
+
+    lemma_forms = record.get("lemma_forms", Counter())
+    lemma_capital_frequency = sum(
+        int(count)
+        for lemma, count in lemma_forms.items()
+        if str(lemma)[:1].isupper()
+    )
+    lemma_lower_frequency = sum(
+        int(count)
+        for lemma, count in lemma_forms.items()
+        if str(lemma)[:1].islower()
+    )
+
+    # Use SGJP status first. Observed lemma casing is a tiebreaker/backup and
+    # is only accepted when one direction is strict; this avoids treating
+    # corpus sentence-position casing as an authority.
+    if capital_frequency > 0 and capital_frequency > lowercase_frequency:
+        surface = normalized[:1].upper() + normalized[1:]
+        return {
+            "resolved": True,
+            "surface": surface,
+            "policy": "capitalized",
+            "reason": (
+                "nkjp-sgjp-capital-lemma-fallback"
+                if basis == "surface" else "nkjp-sgjp-capital-lemma-linked-fallback"
+            ),
+            "linguistic_basis": (
+                "nkjp-sgjp-casing" if basis == "surface" else "nkjp-sgjp-casing-lemma"
+            ),
+            "explicit_policy_conflict": False,
+            "common_lexical_matches": [],
+            "common_adjective_matches": [],
+            "common_noun_matches": [],
+            "proper_name_matches": [],
+            "proper_name_classes": [],
+            "linguistic_analysis_count": 0,
+            "nkjp_sgjp_status": sorted(sgjp_status),
+            "nkjp_lemma_cases": {
+                "capitalized_frequency": lemma_capital_frequency,
+                "lowercase_frequency": lemma_lower_frequency,
+            },
+            "nkjp_correctness": sorted(correctness),
+        }
+
+    if lowercase_frequency > 0 and lowercase_frequency > capital_frequency:
+        surface = normalized
+        return {
+            "resolved": True,
+            "surface": surface,
+            "policy": "lowercase",
+            "reason": (
+                "nkjp-sgjp-lower-lemma-fallback"
+                if basis == "surface" else "nkjp-sgjp-lower-lemma-linked-fallback"
+            ),
+            "linguistic_basis": (
+                "nkjp-sgjp-casing" if basis == "surface" else "nkjp-sgjp-casing-lemma"
+            ),
+            "explicit_policy_conflict": False,
+            "common_lexical_matches": [],
+            "common_adjective_matches": [],
+            "common_noun_matches": [],
+            "proper_name_matches": [],
+            "proper_name_classes": [],
+            "linguistic_analysis_count": 0,
+            "nkjp_sgjp_status": sorted(sgjp_status),
+            "nkjp_lemma_cases": {
+                "capitalized_frequency": lemma_capital_frequency,
+                "lowercase_frequency": lemma_lower_frequency,
+            },
+            "nkjp_correctness": sorted(correctness),
+        }
+
+    if (
+        not capital_frequency
+        and not lowercase_frequency
+        and lemma_capital_frequency > 0
+        and lemma_capital_frequency > lemma_lower_frequency
+    ):
+        return {
+            "resolved": True,
+            "surface": normalized[:1].upper() + normalized[1:],
+            "policy": "capitalized",
+            "reason": (
+                "nkjp-observed-lemma-capitalization-fallback"
+                if basis == "surface" else "nkjp-observed-lemma-capitalization-lemma-fallback"
+            ),
+            "linguistic_basis": (
+                "nkjp-lemma-casing" if basis == "surface" else "nkjp-lemma-casing-linked"
+            ),
+            "explicit_policy_conflict": False,
+            "common_lexical_matches": [],
+            "common_adjective_matches": [],
+            "common_noun_matches": [],
+            "proper_name_matches": [],
+            "proper_name_classes": [],
+            "linguistic_analysis_count": 0,
+            "nkjp_sgjp_status": sorted(sgjp_status),
+            "nkjp_lemma_cases": {
+                "capitalized_frequency": lemma_capital_frequency,
+                "lowercase_frequency": lemma_lower_frequency,
+            },
+            "nkjp_correctness": sorted(correctness),
+        }
+
+    if (
+        not capital_frequency
+        and not lowercase_frequency
+        and lemma_lower_frequency > 0
+        and lemma_lower_frequency > lemma_capital_frequency
+    ):
+        return {
+            "resolved": True,
+            "surface": normalized,
+            "policy": "lowercase",
+            "reason": (
+                "nkjp-observed-lemma-lowercase-fallback"
+                if basis == "surface" else "nkjp-observed-lemma-lowercase-lemma-fallback"
+            ),
+            "linguistic_basis": (
+                "nkjp-lemma-casing" if basis == "surface" else "nkjp-lemma-casing-linked"
+            ),
+            "explicit_policy_conflict": False,
+            "common_lexical_matches": [],
+            "common_adjective_matches": [],
+            "common_noun_matches": [],
+            "proper_name_matches": [],
+            "proper_name_classes": [],
+            "linguistic_analysis_count": 0,
+            "nkjp_sgjp_status": sorted(sgjp_status),
+            "nkjp_lemma_cases": {
+                "capitalized_frequency": lemma_capital_frequency,
+                "lowercase_frequency": lemma_lower_frequency,
+            },
+            "nkjp_correctness": sorted(correctness),
         }
 
     return None
-
 
 def resolve_nkjp_lemma_capitalization(
     key: str,
@@ -555,6 +765,9 @@ def main() -> int:
             "proper_name_matches": resolution.get("proper_name_matches", []),
             "nkjp_linked_lemma": resolution.get("nkjp_linked_lemma"),
             "nkjp_lemma_link_frequency": resolution.get("nkjp_lemma_link_frequency"),
+            "nkjp_sgjp_status": resolution.get("nkjp_sgjp_status", []),
+            "nkjp_lemma_cases": resolution.get("nkjp_lemma_cases", {}),
+            "nkjp_correctness": resolution.get("nkjp_correctness", []),
             "common_lexical_homonym": bool(resolution["common_lexical_matches"]),
             "common_lexical_matches": resolution["common_lexical_matches"],
             "common_adjective_matches": resolution["common_adjective_matches"],
