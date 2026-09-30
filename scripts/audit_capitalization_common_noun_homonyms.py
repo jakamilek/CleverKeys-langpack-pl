@@ -234,16 +234,20 @@ def main() -> int:
             proper_lemma_keys=proper_lemmas,
         )
         capitalized = [r for r in rows if r["policy"] == "capitalized"]
-        nkjp_resolution = resolve_nkjp_capitalization(
-            key, nkjp.get(key), basis="surface"
+        # Prefer lemma-linked evidence: raw surface casing in a corpus is
+        # strongly affected by sentence position, while the canonical lemma
+        # spelling carries the lexical capitalization signal. Exact-surface
+        # evidence remains a fallback for cases without useful lemma linkage.
+        nkjp_resolution = resolve_nkjp_via_morfeusz_lemmas(
+            key, morfeusz, nkjp_lemmas
         )
         if nkjp_resolution is None:
             nkjp_resolution = resolve_nkjp_lemma_capitalization(
                 key, nkjp.get(key), nkjp_lemmas
             )
         if nkjp_resolution is None:
-            nkjp_resolution = resolve_nkjp_via_morfeusz_lemmas(
-                key, morfeusz, nkjp_lemmas
+            nkjp_resolution = resolve_nkjp_capitalization(
+                key, nkjp.get(key), basis="surface"
             )
         if nkjp_resolution is None:
             nkjp_resolution = resolve_nkjp_capitalization(
