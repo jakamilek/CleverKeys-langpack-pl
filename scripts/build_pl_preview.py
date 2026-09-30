@@ -25,7 +25,7 @@ import shutil
 import subprocess
 import unicodedata
 from pathlib import Path
-from surface_components import component_surfaces
+from surface_components import component_surfaces, hyphen_components, is_hyphenated
 
 POLISH_ALPHABET = set("aąbcćdeęfghijklłmnńoóprsśtuwyzźż")
 WORD_RE = re.compile(r"^[a-ząćęłńóśźż]+$", re.IGNORECASE)
@@ -314,13 +314,20 @@ def load_city_source(
 
 
 def is_inflection_surface(word: str) -> bool:
-    """Validate explicit proper-name/city inflection surfaces.
+    """Validate explicit audited inflection surfaces.
 
     The ordinary vocabulary gate is intentionally stricter and Polish-only. Explicitly
-    audited proper names may legitimately use additional basic Latin letters (e.g. Alex),
-    so this layer accepts ASCII A-Z plus Polish diacritics while still requiring one token.
+    audited proper names may legitimately use additional basic Latin letters (e.g. Alex).
+    Inflection surfaces are accepted as either one lexical token or a surface whose
+    lexical components are joined only by a project-recognized hyphen.
     """
-    return bool(re.fullmatch(r"^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$", word))
+    component_re = r"^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$"
+    if re.fullmatch(component_re, word):
+        return True
+    if not is_hyphenated(word):
+        return False
+    parts = hyphen_components(word)
+    return len(parts) > 1 and all(re.fullmatch(component_re, part) for part in parts)
 
 
 def validate_capitalization(
@@ -621,7 +628,7 @@ def main() -> int:
         "--terc-inflections",
         type=Path,
         default=None,
-        help="Generated singular inflections for one-token TERC names.",
+        help="Generated singular TERC inflections; supports single-token and hyphenated surfaces.",
     )
     ap.add_argument(
         "--custom",
