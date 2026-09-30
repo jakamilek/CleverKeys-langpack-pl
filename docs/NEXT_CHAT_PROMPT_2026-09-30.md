@@ -24,17 +24,12 @@ Moduły są wyłącznie dodatkowymi zbiorami słów. Mogą dostarczać słowa no
 ### Konflikt rdzeń ↔ moduł
 Porównujemy wyniki niezależnego resolvera, a nie surową kapitalizację źródłową. Jeżeli rdzeń i moduł po zastosowaniu wspólnych reguł dają różne kanoniczne powierzchnie, CI ma się zatrzymać. To jest sygnał do naprawy reguły dla całej klasy przypadków, a nie do dopisywania wyjątku dla jednego słowa.
 
-Przykład docelowy:
-- warszawa w rdzeniu + niezależny resolver rdzenia -> Warszawa;
-- moduł miasta -> Warszawa;
-- zgodność.
+Przykład aktualny:
+- warszawa w rdzeniu + niezależny resolver -> warszawa, ponieważ Morfeusz/SGJP potwierdza analizę `nazwa_pospolita`;
+- moduł miasta po tym samym resolverze również -> warszawa;
+- surowe źródło `Warszawa` nie może przełamać tej reguły.
 
-Kontrprzykład:
-- warszawa w rdzeniu -> warszawa;
-- moduł po własnym resolverze -> Warszawa;
-- CI ma wskazać konflikt i zablokować pipeline.
-
-Nie wolno naprawiać tego przez ręczny wpis dla Warszawa.
+Nie wolno naprawiać tego przez ręczny wyjątek dla Warszawy.
 
 ## Nazwy z łącznikiem — obowiązująca zasada
 
@@ -53,7 +48,8 @@ Spacja sama nie uruchamia ścieżki łącznikowej. Oficjalna nazwa może jednak 
 ## Aktualizacja ciągłości — 2026-09-30 — najnowszy stan HEAD
 
 Najnowszy HEAD branch:
-- `36374a6d7cb6ae2452e010f675e61587f7667758` — `fix: share NKJP evidence across core and module audits`.
+- `c7ad011a1e7631438b263b2c31c98950ee690222` — `test: inspect Morfeusz analysis for Warsaw`.
+- dokumentacja została później uzupełniona w commitach `95181170...`, `3709c563...`, `cf07e423...`.
 
 Ostatnie poprawki po checkpointcie:
 - `29af2b160787e4879dd952d2e8b57b9d75917701` — komponent nazwy złożonej ma własną analizę; kapitalizacja ze źródła jest tylko fallbackiem, nie wymuszeniem.
@@ -100,14 +96,12 @@ To jest tylko checkpoint referencyjny. Po zmianach kapitalizacji i nazw z łącz
 
 ## Następne zadania
 
-1. Poprawić wspólny resolver tak, aby rdzeń samodzielnie potrafił rozstrzygać nazwy własne, w tym przypadki typu Warszawa, bez danych modułowych.
-2. Dodać niezależną wtórną evidencję lingwistyczną NKJP1M do resolvera core, tak aby silne niezależne wskazanie kapitalizacji mogło skorygować zbyt szerokie ordinary-lexical -> lowercase, ale nigdy nie przełamało nazwy pospolitej ani reguły przymiotnik -> lowercase.
-3. Zmienić audyt modułów: dla kluczy wspólnych z rdzeniem moduł również rozstrzyga się niezależnie przez wspólny resolver, a wynik porównuje z rdzeniem. Różnica ma blokować CI i być traktowana jako problem reguły.
-4. Zachować komponenty i pełne powierzchnie z łącznikiem we wszystkich aktywnych modułach, ze szczególnym uwzględnieniem miast, TERC, krajów/stolic oraz custom_manual.
-5. Weryfikować pełne formy odmienione według modelu kategorii; nie wprowadzać sztucznych odmian.
-6. Dodać regresje dla Warszawa, malina, łódź, przymiotników pochodnych oraz kujawsko-pomorskie / kujawsko-pomorskiego / Bielsko-Biała.
-7. Nie zmieniać membership immutable 100k.
-8. Po green CI pobrać świeży ZIP, sprawdzić CKDT i dopiero potem przejść do testów runtime/swipe.
+1. Zweryfikować najnowszy Preview i Size-study na aktualnym branchu; żaden wcześniejszy failure nie jest checkpointem.
+2. Sprawdzić, czy fallback oficjalnej pisowni usuwa wcześniejsze dziewięć rozbieżności `abudży, dżibuti, fidżi, male, mark, mia, nauru, prince, santo`.
+3. Potwierdzić w logu surowe analizy Morfeusza dla `warszawa` oraz zgodność z testem lowercase.
+4. Po green CI pobrać świeży artefakt, sprawdzić CKDT, 100k membership, kapitalizację oraz wszystkie pełne powierzchnie z rozpoznanym łącznikiem.
+5. Dopiero po poprawnym artefakcie przejść do testów runtime/prefix/swipe na przypiętym CleverKeys.
+6. Nie zmieniać membership immutable 100k i nie wykonywać merge/promote do `main`.
 
 Przeczytaj także nowy dokument: docs/ARCHITECTURE_DECISION_2026-09-30.md.
 
