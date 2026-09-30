@@ -4,6 +4,9 @@
 The capitalization decision for the immutable 100k core must come from
 independent linguistic evidence, not from category-module membership.
 
+Official source spelling is permitted only as a late orthographic fallback
+after linguistic evidence; verified common-noun evidence remains absolute.
+
 Morfeusz 2 / SGJP exposes lexical "commonness" classifications such as
 nazwa_pospolita, imię, nazwisko, geograficzna, marka and other proper-name
 classes. This resolver treats those classifications as the primary lexical
