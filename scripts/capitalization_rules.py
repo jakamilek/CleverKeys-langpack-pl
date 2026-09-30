@@ -252,6 +252,7 @@ def resolve_capitalization(
         "common_lexical_matches": lexical,
         "common_adjective_matches": adjectives,
         "common_noun_matches": common_noun,
+        "common_noun_homonym": bool(common_noun),
         "proper_name_matches": proper_names,
         "proper_name_classes": sorted({
             cls
