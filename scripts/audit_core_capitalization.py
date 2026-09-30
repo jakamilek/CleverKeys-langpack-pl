@@ -41,14 +41,14 @@ def read_rows(path: Path) -> list[dict[str, str]]:
 
 
 def load_nkjp_capitalization(path: Path) -> tuple[dict[str, dict[str, object]], dict[str, dict[str, object]]]:
-    """Aggregate pinned NKJP1M casing, lemma and SGJP-link evidence.
+    """Aggregate valid NKJP1M casing, lemma and SGJP-link evidence.
 
-    NKJP classification NCH is intentionally not treated as a class decision:
-    the source documents it as an automatic "not checked" label that may hide
-    any other classification. The useful secondary casing evidence is kept
-    from the SGJP-presence column (column 6), observed lemma casing and
-    correctness (column 8), while Morfeusz remains the primary oracle.
+    NCH is only "not checked" and can hide any other classification, so it is
+    never interpreted as a class. Rows marked as spelling/tagging errors are
+    excluded before aggregation; accepted rows retain the SGJP-presence
+    status, observed lemma casing and explicit classification.
     """
+    accepted_correctness = {"CORR", "TAGD", "PLTAN", "TAGE", "DIAL"}
     out: dict[str, dict[str, object]] = defaultdict(
         lambda: {
             "forms": Counter(),
@@ -92,7 +92,7 @@ def load_nkjp_capitalization(path: Path) -> tuple[dict[str, dict[str, object]], 
                 frequency = int(fields[3])
             except ValueError:
                 continue
-            if frequency <= 0:
+            if frequency <= 0 or correctness not in accepted_correctness:
                 continue
 
             key = form.lower()
@@ -135,27 +135,11 @@ def resolve_nkjp_capitalization(
         return None
 
     normalized = key.lower()
+    classes = record.get("classes", Counter())
+    forms = record.get("forms", Counter())
+    sgjp_status = record.get("sgjp_status", Counter())
+    lemma_forms = record.get("lemma_forms", Counter())
     correctness = record.get("correctness", Counter())
-    accepted_correctness = {"CORR", "TAGD", "PLTAN", "TAGE", "DIAL"}
-
-    def valid(counter: object) -> Counter:
-        if not isinstance(counter, Counter):
-            return Counter()
-        if not correctness:
-            return Counter(counter)
-        return Counter({
-            value: int(count)
-            for value, count in counter.items()
-            if value in accepted_correctness and int(count) > 0
-        })
-
-    classes = valid(record.get("classes", Counter()))
-    forms = valid(record.get("forms", Counter()))
-    sgjp_status = valid(record.get("sgjp_status", Counter()))
-    lemma_forms = valid(record.get("lemma_forms", Counter()))
-    valid_correctness = valid(correctness)
-    if correctness and not valid_correctness:
-        return None
 
     def common_payload(
         *,
@@ -397,7 +381,6 @@ def resolve_nkjp_capitalization(
         )
 
     return None
-
 def resolve_nkjp_lemma_capitalization(
     key: str,
     surface_record: dict[str, object] | None,
