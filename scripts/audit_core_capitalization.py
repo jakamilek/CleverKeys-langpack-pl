@@ -833,41 +833,35 @@ def main() -> int:
             )
 
     neutral_keys = [
-        row["key"] for row in audited if row["neutral_fallback"]
+        row["surface_key"] for row in audited if row["neutral_fallback"]
     ]
     if neutral_keys:
         print(
             "Core capitalization keys using neutral lowercase fallback: "
             + ", ".join(neutral_keys)
         )
-        print(
-            f"Neutral lowercase fallback count: {len(neutral_keys)}"
-        )
-
-    print(json.dumps({
-                "key": diagnostic_key,
-                "surface": {
-                    "forms": dict(record.get("forms", {})),
-                    "classes": dict(record.get("classes", {})),
-                    "sgjp_status": dict(record.get("sgjp_status", {})),
-                    "lemmas": dict(record.get("lemmas", {})),
-                    "lemma_forms": dict(record.get("lemma_forms", {})),
-                    "correctness": dict(record.get("correctness", {})),
-                },
-                "linked_lemmas": linked,
-            }, ensure_ascii=False, sort_keys=True))
-
-        return 1
+        print(f"Neutral lowercase fallback count: {len(neutral_keys)}")
 
     print(json.dumps({
         "core_keys_audited": len(audited),
         "authority": "independent-linguistic-oracle",
-        "core_keys_with_source_capitalization_evidence": sum(1 for r in audited if r["source_evidence_present"]),
-        "core_keys_without_source_capitalization_evidence": sum(1 for r in audited if not r["source_evidence_present"]),
-        "core_keys_with_linguistic_proper_name_evidence": sum(1 for r in audited if r["linguistic_basis"] == "proper-name"),
-        "core_keys_with_no_linguistic_evidence": sum(1 for r in audited if r["linguistic_basis"] == "unresolved"),
+        "core_keys_with_source_capitalization_evidence": sum(
+            1 for r in audited if r["source_evidence_present"]
+        ),
+        "core_keys_without_source_capitalization_evidence": sum(
+            1 for r in audited if not r["source_evidence_present"]
+        ),
+        "core_keys_with_linguistic_proper_name_evidence": sum(
+            1 for r in audited if r["linguistic_basis"] == "proper-name"
+        ),
+        "core_keys_with_no_linguistic_evidence": sum(
+            1 for r in audited if r["linguistic_basis"] == "core-neutral-fallback"
+        ),
         "resolved_core_keys": len(resolved),
-        "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
+        "neutral_lowercase_fallback_count": len(neutral_keys),
+        "surface_changes_required": sum(
+            1 for r in audited if r["surface_changed"]
+        ),
         "module_verification_conflict_count": len(module_conflicts),
         "unresolved_count": 0,
     }, ensure_ascii=False, indent=2))
