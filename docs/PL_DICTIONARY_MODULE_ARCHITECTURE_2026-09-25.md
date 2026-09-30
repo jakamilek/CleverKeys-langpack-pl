@@ -290,3 +290,17 @@ Precedencja resolvera jest teraz:
 Ta kolejność zachowuje kluczową zasadę projektu: `bardo` pozostaje lowercase mimo istnienia miejscowości Bardo. Jednocześnie pozwala wykryć nazwisko lub nazwę geograficzną, która przy lowercase wygląda jak zwykłe słowo lub `ign`, ale przy poprawnej kapitalizacji ma klasyfikację własną.
 
 Moduły nadal nie podejmują decyzji dla immutable 100k. Ich polityki pozostają wyłącznie w raporcie jako niezależny cross-check konfliktów i pokrycia.
+
+
+## Aktualizacja 2026-09-30 — zakres reguły dla nazw łącznikowych
+
+Przyjęto świadome ograniczenie specjalnej obsługi nazw wieloczłonowych do nazw, których człony są połączone rozpoznanym łącznikiem.
+
+- Specjalna ścieżka odmiany/rekompozycji dotyczy wyłącznie znaków: `-` (U+002D), `‐` (U+2010) oraz `‑` (U+2011).
+- Zwykła spacja nie uruchamia tej ścieżki.
+- `–` (U+2013, półpauza), `—` (U+2014, pauza), ukośnik i inne znaki interpunkcyjne nie są traktowane jako łączniki.
+- Nazwy wielowyrazowe rozdzielone spacją mogą nadal być rozbijane na komponenty na potrzeby membership, audytu i proweniencji, ale samo rozbicie nie oznacza automatycznej odmiany całej frazy.
+- Wspólne rozpoznanie łącznika znajduje się w `scripts/surface_components.py`; generatory modułów mają korzystać z tej definicji zamiast własnych ad-hoc testów znaków.
+- Sama obecność łącznika nie rozstrzyga gramatyki wszystkich komponentów. Każdy generator nadal musi mieć odpowiedni, zweryfikowany model odmiany dla danej kategorii.
+
+W praktyce usuwa to potrzebę tworzenia wyjątku wyłącznie dla województw. TERC może wykorzystywać wspólną detekcję nazw łącznikowych, natomiast przyszłe moduły mogą użyć tej samej warstwy tylko tam, gdzie mają źródłowo uzasadnioną odmianę.
