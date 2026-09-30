@@ -1316,3 +1316,21 @@ Bieżący test po diagnostyce:
 - Size-study #235, run `36730800278`, HEAD `645521c4eabd75e4ab4af262ce5fe226a71eaf48` — w toku podczas zapisu tej aktualizacji.
 
 Następny krok jest zależny od realnego diagnostycznego outputu NKJP. Nie dodawać ręcznych wyjątków ani nie zmieniać 100k core. Szczególnie nie interpretować `NCH` ani samego `PN` jako decyzji kapitalizacyjnej.
+
+## Aktualizacja 2026-09-30 — neutralny fallback immutable core po wyczerpaniu dowodów
+
+Po Preview #313 i Size-study #236 ustalono, że duża część nierozstrzygniętych kluczy core nie ma rekordu NKJP1M nawet na poziomie powierzchni (`surface=NONE`). Dalsze rozszerzanie fallbacku NKJP nie daje kompletnego pokrycia.
+
+Nowa atomowa decyzja implementacyjna: commit `ecc856d2dc9fa8a0bce7ed9714d78cad8c4d3bb5` pozostawia wspólny `resolve_capitalization()` bez zmian i dodaje **core-only neutral lowercase fallback** w `audit_core_capitalization.py` po wyczerpaniu Morfeusz/SGJP, NKJP i jawnej surface-registry policy.
+
+Znaczenie:
+- nie jest to twierdzenie, że klucz jest rzeczownikiem pospolitym;
+- nie jest to twierdzenie, że klucz jest nazwą własną;
+- nie używa `PN => uppercase` ani `NCH => lowercase/uppercase`;
+- zachowuje istniejącą powierzchnię immutable core, która jest już normalizowana do lowercase przez `build_pl_preview.py`;
+- nie zmienia membership 100k;
+- audyt raportuje liczbę kluczy używających tego neutralnego fallbacku.
+
+Dzięki temu brak dowodu kapitalizacyjnego nie blokuje produkcji przez sztuczne żądanie nierozstrzygalnej klasyfikacji, a ewentualna kapitalizacja pozostaje możliwa tylko tam, gdzie istnieje rzeczywisty dowód językowy lub jawna, wcześniej audytowana polityka.
+
+Commit uruchamia nową parę CI; najnowsze runy po tej zmianie należy oceniać wyłącznie po rzeczywistym `conclusion`. Po green Preview wymagany jest świeży artefakt i pełny zestaw regresji.
