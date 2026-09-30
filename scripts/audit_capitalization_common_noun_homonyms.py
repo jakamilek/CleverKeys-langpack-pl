@@ -61,13 +61,16 @@ def add_candidates(
             # on its own linguistic evidence; it must not inherit capitalization
             # from the full source phrase. Only the full hyphenated surface keeps
             # the source-level casing hint as a fallback.
+            # Component capitalization is resolved independently. The
+            # component's own source spelling is only fallback evidence; it
+            # never overrides Morfeusz/common-noun/adjective decisions.
             component_policy = (
                 policy
                 if component == surface
                 else (
-                    "lowercase"
-                    if component[:1].islower()
-                    else ""
+                    "capitalized"
+                    if component[:1].isupper()
+                    else "lowercase"
                 )
             )
             proper_lemma_keys = (
