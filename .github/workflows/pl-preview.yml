@@ -195,7 +195,7 @@ jobs:
           python3 - <<'PY'
           import morfeusz2
           m = morfeusz2.Morfeusz()
-          for word in ["absorbuje", "abidżan", "kowalski", "bardo", "łódź", "tomaszów", "nazwisko", "Jakub"]:
+          for word in ["absorbuje", "abidżan", "kowalski", "bardo", "łódź", "tomaszów", "warszawa", "nazwisko", "Jakub"]:
               print("WORD", word)
               variants = [word.lower()]
               capitalized = word[:1].upper() + word[1:].lower() if word else word
