@@ -490,3 +490,22 @@ Stan CI po poprawce:
 - Size-study #229, run `36628928339`, HEAD `6abd31f6f27cb585e69fc91ebf552e23b5033824` — in_progress.
 
 Nie uznawać tych runów za green przed rzeczywistym `conclusion=success`. Po green sprawdzić świeże artefakty i pełny zestaw regresji. Jeżeli audyt core nadal będzie czerwony, analizować reprezentatywne rekordy NKJP po ścieżce surface -> lemma (surface, lemma, tag, frequency, classification), bez ręcznych wyjątków i bez zmiany rdzenia.
+
+## Aktualizacja 2026-09-30 — bieżący stan po diagnostyce NKJP
+
+Kontynuuj z branch `ops/baseline-sync-2026-09-20`. Aktualny HEAD: `645521c4eabd75e4ab4af262ce5fe226a71eaf48`.
+
+Ostatnie atomowe zmiany dotyczą wyłącznie fallbacku/audytu kapitalizacji NKJP; immutable 100k membership nie został zmieniony.
+Najważniejsze: Preview #313 (run `36730131271`) zakończył się `failure` na audycie core, a lista unresolved pozostała bardzo szeroka mimo surface→lemma fallbacku. Został dodany kontrolowany diagnostyczny output w commitcie `645521c4...`, który wypisuje realne dane NKJP dla pierwszych 25 unresolved.
+
+Po wznowieniu pracy:
+1. sprawdź Preview #314 (`36730800444`) i Size-study #235 (`36730800278`) po rzeczywistym `conclusion`;
+2. jeżeli Preview #314 doszedł do audytu core, odczytaj log i przeanalizuj blok `NKJP unresolved diagnostics` dla `aaa`, `abdul`, `abdula`, `abidżan`, `abidżanie`, `abudży`, `acer`, `addamsów`, `adi`, `afr`, `aja`, `akbar`, `akita`, `alia`, `aloha`, `amb`, `amer`, `amiki`, `anand`, `andreą`, `andreę`, `ankh`, `anu`, `apis`, `aram`;
+3. na podstawie faktycznych rekordów (`surface`, `lemma`, `tag`, `frequency`, `classification`, correctness, SGJP status) ustal dlaczego te klucze pozostają unresolved;
+4. nie wprowadzaj reguł `PN => uppercase`, `NCH => lowercase`, `NCH => uppercase` ani ręcznych wyjątków pojedynczych nazw;
+5. zachowaj absolutne pierwszeństwo `nazwa_pospolita`, niezależność core od modułów i brak zmian membership 100k;
+6. dopiero po rozpoznaniu rzeczywistego wzorca popraw fallback jednym małym, atomowym commitem i ponownie sprawdź CI.
+
+Źródłowa dokumentacja NKJP1M potwierdza, że `NCH` jest automatycznym „not checked” i może reprezentować inne klasy; `PN` może obejmować także przypadki normatywnie lowercase. Statusy `SGJP-LMM-*` opisują sposób dopasowania do SGJP i nie powinny być traktowane jako samodzielny oracle kapitalizacji bez dodatkowego dowodu.
+
+Nie wykonuj merge/promote do `main`. Po uzyskaniu green Preview zawsze sprawdź świeży artefakt i pełny zestaw regresji.
