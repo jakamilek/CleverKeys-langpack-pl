@@ -1334,3 +1334,17 @@ Znaczenie:
 Dzięki temu brak dowodu kapitalizacyjnego nie blokuje produkcji przez sztuczne żądanie nierozstrzygalnej klasyfikacji, a ewentualna kapitalizacja pozostaje możliwa tylko tam, gdzie istnieje rzeczywisty dowód językowy lub jawna, wcześniej audytowana polityka.
 
 Commit uruchamia nową parę CI; najnowsze runy po tej zmianie należy oceniać wyłącznie po rzeczywistym `conclusion`. Po green Preview wymagany jest świeży artefakt i pełny zestaw regresji.
+
+
+## Aktualizacja ciągłości — 2026-09-30 — zasada nazw łącznikowych
+
+Zaakceptowano i zapisano w implementacji zasadę, że specjalna obsługa nazw wieloczłonowych nie jest ogólną regułą dla fraz rozdzielonych spacją.
+
+- Dedykowana ścieżka dotyczy tylko nazw z łącznikiem: `-` (U+002D), `‐` (U+2010), `‑` (U+2011).
+- Spacja nie uruchamia tej ścieżki; nazwy typu "Szklarska Poręba", "Stany Zjednoczone" czy "Buenos Aires" nie są automatycznie traktowane jako jeden złożony wzorzec odmiany.
+- `–` i `—` nie są łącznikami tej reguły.
+- `scripts/surface_components.py` jest wspólnym miejscem rozpoznawania tych znaków przez `is_hyphenated()` i `hyphen_components()`.
+- `scripts/generate_terc_inflections.py` korzysta już z tej wspólnej definicji zamiast własnego `split("-")`.
+- Sama detekcja łącznika nie daje prawa do mechanicznej odmiany dowolnej nazwy: generator musi mieć właściwy model gramatyczny i walidację dla danej kategorii.
+
+Ważne: te dwa commity nie zmieniają membership immutable 100k, zasady pierwszeństwa `nazwa_pospolita`, rankingu runtime ani geometrii swipe. Nie wykonano merge/promote do `main`.
