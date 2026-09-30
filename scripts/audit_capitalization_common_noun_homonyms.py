@@ -389,6 +389,25 @@ def main() -> int:
             "rule instead of adding per-word exceptions: "
             + ", ".join(core_overlap_conflicts)
         )
+        print("Detailed core/module conflict diagnostics:")
+        for conflict_key in core_overlap_conflicts:
+            conflict_row = next(
+                row for row in audited if row["surface_key"] == conflict_key
+            )
+            print(json.dumps(
+                {
+                    "surface_key": conflict_key,
+                    "module_surface": conflict_row["canonical_surface"],
+                    "module_policy": conflict_row["canonical_policy"],
+                    "module_reason": conflict_row["resolution_reason"],
+                    "module_common_noun": conflict_row["common_noun_homonym"],
+                    "module_common_noun_matches": conflict_row["common_noun_matches"],
+                    "module_sources": conflict_row["sources"],
+                    "core_surface": conflict_row["core_surface"],
+                },
+                ensure_ascii=False,
+                indent=2,
+            ))
         return 1
 
     print(
