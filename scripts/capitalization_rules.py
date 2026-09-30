@@ -205,6 +205,7 @@ def resolve_capitalization(
     proper_lemma_keys: Iterable[str] | None = None,
     secondary_linguistic_evidence: dict[str, object] | None = None,
     official_source_policies: Iterable[str] = (),
+    official_source_surfaces: Iterable[str] = (),
 ) -> dict[str, object]:
     """Resolve one key from the independent linguistic capitalization oracle.
 
@@ -218,6 +219,11 @@ def resolve_capitalization(
     }
     official_source_policy_set = {
         value for value in official_source_policies if value in CAPITALIZATION_POLICIES
+    }
+    official_source_surface_set = {
+        str(value).strip()
+        for value in official_source_surfaces
+        if str(value).strip() and str(value).strip().lower() == normalized
     }
     proper_lemma_set = {
         str(value).strip().lower()
@@ -298,6 +304,7 @@ def resolve_capitalization(
         "proper_lemma_keys": sorted(proper_lemma_set),
         "secondary_linguistic_evidence": secondary_linguistic_evidence,
         "official_source_policy_evidence": sorted(official_source_policy_set),
+        "official_source_surface_evidence": sorted(official_source_surface_set),
     }
 
     # Absolute project rule: verified common noun always wins.
@@ -398,9 +405,14 @@ def resolve_capitalization(
     # orthographic fallback. It is not module membership and cannot override
     # common-noun/adjective/proper-name linguistic evidence above.
     if official_source_policy_set == {"lowercase"}:
+        official_surface = (
+            next(iter(official_source_surface_set))
+            if len(official_source_surface_set) == 1
+            else normalized
+        )
         return {
             "resolved": True,
-            "surface": normalized,
+            "surface": official_surface,
             "policy": "lowercase",
             "reason": "official-source-orthographic-fallback",
             "linguistic_basis": "official-source-fallback",
@@ -409,9 +421,24 @@ def resolve_capitalization(
         }
 
     if official_source_policy_set == {"capitalized"}:
+        if len(official_source_surface_set) > 1:
+            return {
+                "resolved": False,
+                "surface": normalized,
+                "policy": "lowercase",
+                "reason": "conflicting-official-source-surfaces-without-linguistic-resolution",
+                "linguistic_basis": "unresolved",
+                "explicit_policy_conflict": False,
+                **base,
+            }
+        official_surface = (
+            next(iter(official_source_surface_set))
+            if len(official_source_surface_set) == 1
+            else normalized[:1].upper() + normalized[1:]
+        )
         return {
             "resolved": True,
-            "surface": normalized[:1].upper() + normalized[1:],
+            "surface": official_surface,
             "policy": "capitalized",
             "reason": "official-source-orthographic-fallback",
             "linguistic_basis": "official-source-fallback",
