@@ -527,3 +527,19 @@ Reguły nienaruszalne:
 - brak dowodu może użyć wyłącznie neutralnej istniejącej powierzchni core, bez wymyślania nowej wielkości liter.
 
 Po kolejnym green Preview sprawdź świeży artefakt, regresje `bardo`, `Tomaszów`, `łódź`, `Jakub`, Gdynia/Wrocław/Toruń oraz hard blocklist. Nie wykonuj merge/promote do `main`.
+
+
+## Aktualizacja 2026-09-30 — obowiązujący zakres reguły nazw łącznikowych
+
+Specjalna obsługa nazw wieloczłonowych jest ograniczona do nazw, których człony są połączone rozpoznanym łącznikiem: `-` (U+002D), `‐` (U+2010), `‑` (U+2011).
+
+Spacja nie uruchamia tej ścieżki. `–` (U+2013, półpauza), `—` (U+2014, pauza), `/` i inne znaki interpunkcyjne nie są traktowane jako łącznik tej reguły.
+
+Wspólna implementacja:
+- `scripts/surface_components.py`: `LEXICAL_HYPHENS`, `is_hyphenated()`, `hyphen_components()`;
+- `scripts/generate_terc_inflections.py`: korzysta z tej definicji zamiast własnego `split("-")`;
+- CKDT pozostaje word-oriented: dla nazwy łącznikowej audyt/weryfikacja sprawdza jej komponenty, nie wymaga pełnej powierzchni z łącznikiem w `dictionary.bin`.
+
+Nie wolno rozszerzać tej reguły na zwykłe frazy ze spacją ani mechanicznie odmieniać każdego komponentu tylko dlatego, że występuje łącznik. Odmiana wymaga odpowiedniego modelu gramatycznego i walidacji dla konkretnej kategorii.
+
+Aktualny kod projektowy kończy się na commitcie `4bc8b2fbaff4f2dc1ebc42ac286b103f0a43f5c3`; późniejszy commit dokumentacyjny aktualizuje handoff i nie zmienia kodu.
