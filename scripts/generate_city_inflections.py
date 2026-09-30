@@ -71,9 +71,23 @@ def build_hyphenated_city_forms(morfeusz, name: str) -> set[tuple[str, str]]:
         return set()
 
     component_forms = [case_forms_for_component(morfeusz, part) for part in parts]
+
+    def preserve_source_initial(value: str, source_part: str) -> str:
+        if not value:
+            return value
+        if source_part[:1].isupper():
+            return value[:1].upper() + value[1:]
+        return value[:1].lower() + value[1:]
+
     out: set[tuple[str, str]] = set()
     for case in CASES:
-        choices = [sorted(forms[case]) for forms in component_forms]
+        choices = [
+            sorted(
+                preserve_source_initial(value, part)
+                for value in forms[case]
+            )
+            for part, forms in zip(parts, component_forms)
+        ]
         if not all(choices):
             continue
         # Deterministic, bounded Cartesian product. For official city names
