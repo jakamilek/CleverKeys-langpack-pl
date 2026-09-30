@@ -119,6 +119,7 @@ def main() -> int:
     ap.add_argument("--capital-inflections", type=Path, required=True)
     ap.add_argument("--custom", type=Path, required=True)
     ap.add_argument("--surface-registry-policy", type=Path, required=True)
+    ap.add_argument("--nkjp", type=Path, required=True)
     ap.add_argument(
         "--core-capitalization-audit",
         type=Path,
