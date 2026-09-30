@@ -767,6 +767,61 @@ def main() -> int:
             "Unresolved core capitalization collisions: "
             + ", ".join(r["key"] for r in unresolved)
         )
+
+        # Compact source diagnostic for the next audit iteration. This is
+        # deliberately read-only: it never changes a resolution or membership.
+        # A small sample is enough to determine whether the remaining gaps are
+        # missing NKJP surface rows, mixed/uncased lemmas, or unusable SGJP links.
+        diagnostic_keys = [
+            row["key"] for row in unresolved[:25]
+        ]
+        print("NKJP unresolved diagnostics:")
+        for diagnostic_key in diagnostic_keys:
+            record = nkjp.get(diagnostic_key)
+            if record is None:
+                print(f"  {diagnostic_key}: surface=NONE")
+                continue
+            lemmas = record.get("lemmas", Counter())
+            linked = []
+            if isinstance(lemmas, Counter):
+                candidates = sorted(
+                    (
+                        (str(lemma).lower(), int(freq))
+                        for lemma, freq in lemmas.items()
+                        if str(lemma).strip() and int(freq) > 0
+                    ),
+                    key=lambda item: (-item[1], item[0]),
+                )[:3]
+                for lemma, link_frequency in candidates:
+                    linked_record = nkjp_lemmas.get(lemma)
+                    linked.append({
+                        "lemma": lemma,
+                        "surface_link_frequency": link_frequency,
+                        "record": (
+                            None
+                            if linked_record is None
+                            else {
+                                "forms": dict(linked_record.get("forms", {})),
+                                "classes": dict(linked_record.get("classes", {})),
+                                "sgjp_status": dict(linked_record.get("sgjp_status", {})),
+                                "lemma_forms": dict(linked_record.get("lemma_forms", {})),
+                                "correctness": dict(linked_record.get("correctness", {})),
+                            }
+                        ),
+                    })
+            print(json.dumps({
+                "key": diagnostic_key,
+                "surface": {
+                    "forms": dict(record.get("forms", {})),
+                    "classes": dict(record.get("classes", {})),
+                    "sgjp_status": dict(record.get("sgjp_status", {})),
+                    "lemmas": dict(record.get("lemmas", {})),
+                    "lemma_forms": dict(record.get("lemma_forms", {})),
+                    "correctness": dict(record.get("correctness", {})),
+                },
+                "linked_lemmas": linked,
+            }, ensure_ascii=False, sort_keys=True))
+
         return 1
 
     print(json.dumps({
