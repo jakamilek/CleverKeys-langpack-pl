@@ -463,6 +463,12 @@ jobs:
           assert "Malina" not in ckdt_raw
           assert "łódź" in ckdt_raw
           assert "Łódź" not in ckdt_raw
+          print("Bielsko hyphen diagnostic:", json.dumps({
+              "preview_bielsko_biala": "Bielsko-Biała" in words,
+              "ckdt_bielsko_biala": "Bielsko-Biała" in ckdt_raw,
+              "ckdt_bielsko_variants": sorted(x for x in ckdt_raw if x.lower().startswith("bielsko"))[:50],
+          }, ensure_ascii=False))
+
           assert "Bielsko" in ckdt_raw
           assert "Bielsko-Biała" in ckdt_raw
           assert "kujawsko-pomorskie" in ckdt_raw
