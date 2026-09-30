@@ -50,6 +50,27 @@ Dla miast: Bielsko i Bielsko-Biała mają być osobnymi kandydatami; prefix biel
 
 Spacja sama nie uruchamia ścieżki łącznikowej. Oficjalna nazwa może jednak zawierać łącznik i spację; pełna powierzchnia hyphenowana jest zachowywana, natomiast alternatywy rozdzielone przecinkiem nie są jedną nazwą.
 
+## Aktualizacja ciągłości — 2026-09-30 — najnowszy stan HEAD
+
+Najnowszy HEAD branch:
+- `36374a6d7cb6ae2452e010f675e61587f7667758` — `fix: share NKJP evidence across core and module audits`.
+
+Ostatnie poprawki po checkpointcie:
+- `29af2b160787e4879dd952d2e8b57b9d75917701` — komponent nazwy złożonej ma własną analizę; kapitalizacja ze źródła jest tylko fallbackiem, nie wymuszeniem.
+- `36374a6d7cb6ae2452e010f675e61587f7667758` — wspólna warstwa NKJP1M została wydzielona do `scripts/nkjp_capitalization.py`; zarówno audyt rdzenia, jak i audyt modułów korzystają z tego samego niezależnego źródła wtórnego.
+- Audyt modułów dostaje teraz `--nkjp` i dla kluczy wspólnych z rdzeniem wykonuje niezależne rozstrzygnięcie na tej samej warstwie Morfeusz + NKJP, po czym porównuje wynik z rdzeniem.
+- To naprawia klasę konfliktów, w której rdzeń mógł dostać `Warszawa` z niezależnej evidencji NKJP, a moduł bez NKJP nadal rozstrzygał `warszawa`.
+- Nazwy z rozpoznanym łącznikiem pozostają podwójne: komponenty + pełna powierzchnia. Pełne formy są objęte walidacją CKDT.
+- Dokumentacja starszych polityk została zaktualizowana; obowiązuje `docs/ARCHITECTURE_DECISION_2026-09-30.md`.
+
+### Bieżące CI
+Dla HEAD `36374a6d7cb6ae2452e010f675e61587f7667758` wystartowały:
+- Preview #340, run `36766869572`;
+- Size-study #257, run `36766869525`.
+
+Nie zakładaj wyniku. Przed dalszym etapem sprawdź świeże runy i używaj wyłącznie ich wyników. Poprzednie runy #254/#255 zakończyły się błędem w audycie modułów przed aktualną poprawką.
+
+
 ## Aktualny stan po wykonanych zmianach
 
 Ostatnie commity na branchu:
