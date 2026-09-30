@@ -405,6 +405,41 @@ def resolve_nkjp_lemma_capitalization(
         }
     return None
 
+def resolve_nkjp_via_morfeusz_lemmas(
+    key: str,
+    morfeusz,
+    nkjp_lemmas: dict[str, dict[str, object]],
+) -> dict[str, object] | None:
+    """Use independent Morfeusz form-to-lemma linkage to consult NKJP1M."""
+    lemma_keys: set[str] = set()
+    try:
+        analyses = morfeusz.analyse(key)
+    except Exception:
+        analyses = []
+    for item in analyses:
+        if len(item) < 2:
+            continue
+        lemma = str(item[1]).strip().lower()
+        if lemma:
+            lemma_keys.add(lemma)
+
+    for lemma in sorted(lemma_keys):
+        resolution = resolve_nkjp_capitalization(
+            lemma,
+            nkjp_lemmas.get(lemma),
+            basis="lemma",
+        )
+        if resolution is None or str(resolution.get("policy")) != "capitalized":
+            continue
+        return {
+            **resolution,
+            "nkjp_linked_lemma": lemma,
+            "nkjp_lemma_link_source": "morfeusz-form-to-lemma",
+            "linguistic_basis": "nkjp-lemma-casing-linked",
+        }
+    return None
+
+
 def add_source(
     out: dict[str, list[dict[str, object]]],
     rows: list[dict[str, str]],
@@ -764,7 +799,11 @@ def main() -> int:
         "core_keys_with_no_capitalization_evidence": sum(1 for r in audited if r["neutral_fallback"]),
         "core_keys_with_nkjp_proper_name_evidence": sum(
             1 for r in audited
-            if r["linguistic_basis"] in {"nkjp-proper-name", "nkjp-proper-name-lemma"}
+            if r["linguistic_basis"] in {
+                "nkjp-proper-name",
+                "nkjp-proper-name-lemma",
+                "nkjp-lemma-casing-linked",
+            }
         ),
         "core_keys_with_nkjp_common_word_evidence": sum(
             1 for r in audited
