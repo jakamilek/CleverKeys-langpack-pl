@@ -27,7 +27,7 @@ from pathlib import Path
 from collections import Counter, defaultdict
 
 from surface_components import component_records, component_surfaces
-from capitalization_rules import resolve_capitalization
+from capitalization_rules import OFFICIAL_CAPITALIZATION_SOURCES, resolve_capitalization
 
 
 def read_rows(path: Path) -> list[dict[str, str]]:
@@ -255,6 +255,12 @@ def main() -> int:
     for key in sorted(base):
         rows = evidence.get(key, [])
         policies = {str(r["policy"]) for r in rows if r["policy"] in {"lowercase", "capitalized"}}
+        official_source_policies = {
+            str(r["policy"])
+            for r in rows
+            if r["source"] in OFFICIAL_CAPITALIZATION_SOURCES
+            and r["policy"] in {"lowercase", "capitalized"}
+        }
         proper_lemmas = {
             lemma
             for row in rows
@@ -296,6 +302,7 @@ def main() -> int:
             explicit_policy=explicit.get(key),
             proper_lemma_keys=(),
             secondary_linguistic_evidence=nkjp_resolution,
+            official_source_policies=official_source_policies,
         )
 
         resolved_policy = (
