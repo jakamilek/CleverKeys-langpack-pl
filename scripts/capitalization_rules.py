@@ -29,10 +29,13 @@ category-specific capitalization branch.
 
 from __future__ import annotations
 
+import re
 from typing import Iterable
 
 COMMON_NOUN_CLASS = "nazwa_pospolita"
 CAPITALIZATION_POLICIES = {"lowercase", "capitalized"}
+LEXICAL_HYPHEN_RE = re.compile(r"[-‐‑]")
+
 OFFICIAL_CAPITALIZATION_SOURCES = {
     "first-name-inflection",
     "city",
@@ -222,7 +225,17 @@ def resolve_capitalization(
         if str(value).strip()
     }
 
-    analyses = _collect_analyses(morfeusz, normalized)
+    # A recognized hyphenated name is a multi-component surface, not a
+    # single lexical token. Morfeusz may return analyses for its component
+    # tokens (especially adjectives/common nouns), which must not determine
+    # the capitalization of the full source surface. Components are audited
+    # independently by the module audit; the full surface uses its
+    # category/source spelling fallback below.
+    analyses = (
+        []
+        if LEXICAL_HYPHEN_RE.search(normalized)
+        else _collect_analyses(morfeusz, normalized)
+    )
     adjectives = [
         {
             "orth": item["orth"],
