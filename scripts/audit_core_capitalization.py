@@ -262,8 +262,14 @@ def main() -> int:
         }
         # Category modules are verification-only. The core resolver receives
         # independent linguistic inputs only: Morfeusz plus pinned NKJP1M.
-        nkjp_resolution = resolve_nkjp_capitalization(
-            key, nkjp.get(key), basis="surface"
+        # Prefer lemma-linked evidence: raw surface casing in a corpus is
+        # strongly affected by sentence position, while the canonical lemma
+        # spelling carries the lexical capitalization signal. Exact-surface
+        # evidence remains a fallback for cases without useful lemma linkage.
+        nkjp_resolution = resolve_nkjp_via_morfeusz_lemmas(
+            key,
+            morfeusz,
+            nkjp_lemmas,
         )
         if nkjp_resolution is None:
             nkjp_resolution = resolve_nkjp_lemma_capitalization(
@@ -272,10 +278,10 @@ def main() -> int:
                 nkjp_lemmas,
             )
         if nkjp_resolution is None:
-            nkjp_resolution = resolve_nkjp_via_morfeusz_lemmas(
+            nkjp_resolution = resolve_nkjp_capitalization(
                 key,
-                morfeusz,
-                nkjp_lemmas,
+                nkjp.get(key),
+                basis="surface",
             )
         if nkjp_resolution is None:
             nkjp_resolution = resolve_nkjp_capitalization(
