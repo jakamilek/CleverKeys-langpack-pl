@@ -227,6 +227,12 @@ def main() -> int:
             if r["source"] in OFFICIAL_CAPITALIZATION_SOURCES
             and r["policy"] in {"lowercase", "capitalized"}
         }
+        official_source_surfaces = {
+            r["surface"]
+            for r in rows
+            if r["source"] in OFFICIAL_CAPITALIZATION_SOURCES
+            and r["surface"].strip()
+        }
         proper_lemmas = {
             lemma
             for row in rows
@@ -268,6 +274,7 @@ def main() -> int:
             proper_lemma_keys=proper_lemmas,
             secondary_linguistic_evidence=nkjp_resolution,
             official_source_policies=official_source_policies,
+            official_source_surfaces=official_source_surfaces,
         )
         core_result = core_resolved.get(key)
         core_conflict = bool(
