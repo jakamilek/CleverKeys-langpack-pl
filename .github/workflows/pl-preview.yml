@@ -205,7 +205,7 @@ jobs:
           from collections import Counter
 
           m = morfeusz2.Morfeusz()
-          resolver = m.getIdResolver()
+          resolver = m._morfeusz_obj.getIdResolver()
 
           print("MORFEUSZ VERSION", morfeusz2.__version__)
           print("DICT ID", m.getDictID())
