@@ -29,6 +29,7 @@ from collections import Counter, defaultdict
 from surface_components import component_records, component_surfaces
 from capitalization_rules import (
     OFFICIAL_CAPITALIZATION_SOURCES,
+    _analyses,
     common_noun_matches,
     proper_name_matches,
     resolve_capitalization,
@@ -254,6 +255,8 @@ def main() -> int:
     audited = []
     resolved: dict[str, dict[str, str]] = {}
     unresolved = []
+    independent_common_proper_candidates: list[str] = []
+    independent_common_proper_non_surname_candidates: list[str] = []
 
     # Every immutable-core key is audited. Source modules provide evidence when
     # available, but their absence must never silently exclude a core key.
@@ -429,6 +432,7 @@ def main() -> int:
             "common_noun_homonym": bool(resolution["common_noun_matches"]),
             "common_noun_matches": resolution["common_noun_matches"],
             "independent_case_dual_surface_candidate": independent_case_dual_surface_candidate,
+            "independent_case_dual_surface_non_surname_candidate": independent_case_dual_surface_non_surname_candidate,
             "independent_case_dual_surface_proper_name_classes": sorted({
                 cls
                 for item in independent_proper_matches
@@ -495,14 +499,16 @@ def main() -> int:
         "surface_changes_required": sum(1 for r in audited if r["surface_changed"]),
         "common_lexical_homonym_count": sum(1 for r in audited if r["common_lexical_homonym"]),
         "common_noun_homonym_count": sum(1 for r in audited if r["common_noun_homonym"]),
-        "independent_case_dual_surface_candidate_count": sum(
-            1 for r in audited if r["independent_case_dual_surface_candidate"]
+        "independent_case_dual_surface_candidate_count": len(
+            independent_common_proper_candidates
         ),
-        "independent_case_dual_surface_candidate_keys": [
-            r["surface_key"]
-            for r in audited
-            if r["independent_case_dual_surface_candidate"]
-        ],
+        "independent_case_dual_surface_candidate_keys": independent_common_proper_candidates,
+        "independent_case_dual_surface_non_surname_candidate_count": len(
+            independent_common_proper_non_surname_candidates
+        ),
+        "independent_case_dual_surface_non_surname_candidate_keys": (
+            independent_common_proper_non_surname_candidates
+        ),
         "independent_noun_dual_surface_candidate_count": sum(
             1 for r in audited if r["independent_noun_dual_surface_candidate"]
         ),
