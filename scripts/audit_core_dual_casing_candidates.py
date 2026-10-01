@@ -97,16 +97,23 @@ def main() -> int:
             })
 
     # Class distributions count each candidate key once per distinct class; combinations preserve the full per-key class signature.
-    proper_class_distribution = Counter()
-    proper_class_combination_distribution = Counter()
-    for row in rows:
-        classes = sorted({
+    proper_class_distribution = Counter(
+        cls
+        for row in rows
+        for cls in sorted({
+            value
+            for item in row["proper_analyses"]
+            for value in item["classes"]
+        })
+    )
+    proper_class_combination_distribution = Counter(
+        " + ".join(sorted({
             cls
             for item in row["proper_analyses"]
             for cls in item["classes"]
-        })
-        proper_class_distribution.update(classes)
-        proper_class_combination_distribution[" + ".join(classes)] += 1
+        }))
+        for row in rows
+    )
 
     summary = {
         "mode": "immutable-core-dual-casing-candidate-audit",
