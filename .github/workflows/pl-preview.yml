@@ -208,7 +208,7 @@ jobs:
           resolver = m._morfeusz_obj.getIdResolver()
 
           print("MORFEUSZ VERSION", morfeusz2.__version__)
-          print("DICT ID", m.getDictID())
+          print("DICT ID", m._morfeusz_obj.getDictID())
           print("TAGSET ID", resolver.getTagsetId())
           print("TAGS COUNT", resolver.getTagsCount())
           print("NAMES COUNT", resolver.getNamesCount())
