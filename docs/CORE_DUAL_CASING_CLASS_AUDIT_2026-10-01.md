@@ -97,6 +97,26 @@ Każdy kandydat jest tu liczony raz według pełnego zbioru konkurencyjnych klas
 
 To potwierdza, że wcześniejsza liczba 1713 zawierała dokładnie 11 przypadków wynikających z alternatywnego zapisu klasy pospolitej, a nie z rzeczywistej homonimii kapitalizacyjnej.
 
+## Dodatkowy rozkład grupy 254: nazwisko + inna klasa
+
+W tej grupie pełna kombinacja po odrzuceniu samego @@nazwisko@@ wygląda następująco:
+
+| Pozostała klasa / klasy | Kandydaci |
+|---|---:|
+| @@nazwa_geograficzna@@ | 164 |
+| @@imię@@ | 57 |
+| @@człon_nazwy_geograficznej@@ | 18 |
+| @@imię + nazwa_geograficzna@@ | 6 |
+| @@nazwa_własna_astronomiczna@@ | 5 |
+| @@człon_nazwiska + imię + nazwa_własna_astronomiczna@@ | 1 |
+| @@człon_nazwy_geograficznej + nazwa_własna_astronomiczna@@ | 1 |
+| @@imię + nazwa_własna_astronomiczna@@ | 1 |
+| @@nazwa_instytucji@@ | 1 |
+
+Suma: 254.
+
+To pokazuje, dlaczego nie wolno filtrować całej grupy @@nazwisko + inna klasa@@ jednym warunkiem. @@Warszawa@@ i @@Malina@@ należą do tej grupy, ale ich dodatkowe klasy są różne.
+
 ## Wniosek roboczy
 
 Nie należy jeszcze traktować wszystkich 1702 rekordów jako kandydatów do dwóch widocznych powierzchni w klawiaturze.
