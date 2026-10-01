@@ -161,6 +161,42 @@ została utworzona z oficjalnej gałęzi:
 Runtime CleverKeys pozostaje źródłem referencyjnym od przypiętego SHA
 `263bd0abc03dec420f60fa073a9d2c5e25a176b5`, ale artefakty eksperymentu runtime są w tym projekcie przechowywane jako patch/specyfikacja do czasu ich zastosowania w odpowiednim źródle runtime. Nie należy twierdzić, że kod runtime został zmodyfikowany, jeśli zmiana istnieje tylko jako patch.
 
+
+
+## Aktualizacja 2026-10-01 — badanie dwutorowe: pakiet PL + aplikacja
+
+Bieżące badanie ma dwa równoległe, wzajemnie zależne tory:
+
+### Tor A — pakiet językowy
+- repo: `jakamilek/CleverKeys-langpack-pl`
+- branch: `ops/baseline-sync-2026-09-20`
+- commit źródłowy ostatniego zweryfikowanego buildu: `a1fa0193fc504e5fe81d9d43c23fd9a1e52ad307`
+- ostatni preview: workflow `Polish language pack preview`, run `382`, zakończony `success`
+- artifact: `cleverkeys-pl-preview`, GitHub artifact id `11189614575`
+- SHA-256 archiwum artifactu: `827a20f8489fad51023e1c0d58319dca030d304f7e213ef4973141251c3ad9ff`
+- wewnętrzny pakiet CKDT: SHA-256 `301b0b9c7c4c7b96ac7a2545bf27745b6ee38c87f5d04133ede490008d861945`
+- manifest CKDT: `wordCount=106363`, `version=2`, `hasPrefixBoost=false`
+- audyt: immutable core = 100000; module-only = 6363; registry conflicts = 0; capitalization violations = 0
+- poprawka w `scripts/audit_capitalization_common_noun_homonyms.py` zachowuje oficjalne powierzchnie nazw z łącznikiem; nie jest wyjątkiem dla jednej nazwy.
+
+Stary `CleverKeys-PL-size-100k-final.zip` jest artefaktem historycznym i nie jest bazą bieżącego benchmarku.
+
+### Tor B — aplikacja/runtime
+- repo robocze: `jakamilek/CleverKeysPL`
+- branch: `exp/context-reranking-runtime-2026-10-01`
+- dokładna baza: `263bd0abc03dec420f60fa073a9d2c5e25a176b5`
+- aktualny HEAD po poprawce builda i pomocniczej konfiguracji eksperymentalnej: `a290afac1aca086224d3c54c838a95f073eb9a3b`
+- porównanie z pinned runtime: 7 commitów ahead, 0 behind
+- eksperyment capture nie zmienia rankingu produkcyjnego; zapisuje `decoder_candidates` przed casingiem, context rerankingiem i augmentation.
+- błąd ostatniego builda APK (run `36915350017`) był jednoznaczny: `SuggestionHandler.kt:782:9 Unresolved reference 'swipeData'`.
+- poprawka: commit `97aa20c04357fcead23bba32ef8b28e8ccaee1a1` pobiera `inputCoordinator.getCurrentSwipeData()` przed rerankingiem i używa tego samego obiektu dalej.
+- poprzedni build zatrzymał się na `compileDebugKotlin`; `clean`, generowanie ikon i wcześniejsze zadania Gradle przeszły poprawnie.
+- pełna kompilacja poprawionego runtime nie została jeszcze potwierdzona przez nowy GitHub Actions run; lokalna próba była niemożliwa z powodu braku rozwiązywania DNS dla GitHuba w środowisku roboczym.
+- dodano eksperymentalny workflow `.github/workflows/experimental-runtime-build.yml`; GitHub nie utworzył dotąd runu dla tej gałęzi, więc nie traktować tego jako zielonego CI.
+
+### Zasada powiązania obu torów
+Benchmark kontekstowy ma korzystać z pakietu wygenerowanego z aktualnego, zweryfikowanego commitu toru A oraz z dokładnie określonego runtime/candidate-set capture z toru B. Nie mieszać starego ZIP-a z nowym runtime bez jawnego oznaczenia artefaktu i provenance.
+
 ## Reguła nadrzędna: ZERO DOMYSŁÓW
 
 Obowiązuje `docs/PROJECT_RULE_NO_GUESSING_2026-10-01.md`.
