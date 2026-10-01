@@ -144,3 +144,20 @@ Stan zapisany w GitHub:
 - decyzja architektoniczna: `docs/DUAL_CASING_RUNTIME_DESIGN_2026-10-01.md`;
 - audyt runtime: `docs/CLEVERKEYS_RUNTIME_DUAL_CASING_AUDIT_2026-10-01.md`;
 - audyt 1702: `docs/CORE_DUAL_CASING_CLASS_AUDIT_2026-10-01.md`.
+
+## Aktualizacja 2026-10-01 — repozytorium robocze potwierdzone
+
+Użytkownik potwierdził, że jedynym właściwym repozytorium roboczym projektu jest:
+`jakamilek/CleverKeys-langpack-pl`.
+
+Nie należy próbować używać `jakamilek/CleverKeys-animated-gif` ani żadnego innego forka użytkownika.
+
+Gałąź eksperymentalna dla bieżącego etapu:
+`exp/dual-casing-runtime-2026-10-01`
+
+została utworzona z oficjalnej gałęzi:
+`ops/baseline-sync-2026-09-20`.
+
+Runtime CleverKeys pozostaje źródłem referencyjnym od przypiętego SHA
+`263bd0abc03dec420f60fa073a9d2c5e25a176b5`, ale artefakty eksperymentu runtime są w tym projekcie przechowywane jako patch/specyfikacja do czasu ich zastosowania w odpowiednim źródle runtime. Nie należy twierdzić, że kod runtime został zmodyfikowany, jeśli zmiana istnieje tylko jako patch.
+
