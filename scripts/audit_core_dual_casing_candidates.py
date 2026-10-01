@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections import Counter
 from pathlib import Path
 
 
@@ -95,8 +96,19 @@ def main() -> int:
                 ],
             })
 
+    proper_class_distribution = Counter()
+    proper_class_combination_distribution = Counter()
+    for row in rows:
+        classes = sorted({
+            cls
+            for item in row["proper_analyses"]
+            for cls in item["classes"]
+        })
+        proper_class_distribution.update(classes)
+        proper_class_combination_distribution[" + ".join(classes)] += 1
+
     summary = {
-        "mode": "immutable-core-dual-casing-candidate-audit",
+"        "mode": "immutable-core-dual-casing-candidate-audit",
         "authority": "independent Morfeusz 2 / SGJP only",
         "modules_consulted": False,
         "core_keys": len(base),
@@ -108,6 +120,8 @@ def main() -> int:
             "inflected_forms_excluded": True,
         },
         "candidate_keys": [row["surface_key"] for row in rows],
+        "proper_class_distribution_by_candidate": dict(sorted(proper_class_distribution.items())),
+        "proper_class_combination_distribution": dict(sorted(proper_class_combination_distribution.items())),
         "candidates": rows,
     }
 
@@ -132,6 +146,9 @@ def main() -> int:
     print(json.dumps({
         "candidate_count": len(rows),
         "sample_first_50": [row["surface_key"] for row in rows[:50]],
+        "all_candidate_keys": [row["surface_key"] for row in rows],
+        "proper_class_distribution_by_candidate": dict(sorted(proper_class_distribution.items())),
+        "proper_class_combination_distribution": dict(sorted(proper_class_combination_distribution.items())),
         "sample_checks": {
             key: next((row for row in rows if row["surface_key"] == key), None)
             for key in ("warszawa", "łódź", "malina", "bardo")
