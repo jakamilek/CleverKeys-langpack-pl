@@ -19,6 +19,7 @@ on:
       - "sources/staging/historical_name_candidates.tsv"
       - "sources/staging/first_name_source_exclusions.tsv"
       - "scripts/capitalization_rules.py"
+      - "scripts/audit_core_dual_casing_candidates.py"
       - "scripts/audit_name_history.py"
       - "scripts/generate_first_name_inflections.py"
       - "scripts/fetch_teryt_simc.py"
@@ -169,6 +170,13 @@ jobs:
       - name: Build immutable 100k core for phone test
         run: |
           python3 scripts/build_pl_preview.py             --base-only             --top 300000             --first-name-source-exclusions sources/staging/first_name_source_exclusions.tsv             --band 100000             --limit 100000             --aosp build/aosp/pl_wordlist.combined.gz             --out-wordlist build/base100k.txt             --out-report build/base100k-report.json
+
+      - name: Audit immutable-core dual-casing candidates without modules
+        run: |
+          python3 scripts/audit_core_dual_casing_candidates.py \
+            --base build/base100k.txt \
+            --out-json build/pl-core-dual-casing-candidates.json \
+            --out-tsv build/pl-core-dual-casing-candidates.tsv
 
       - name: Validate global multiword surface tokenizer
         run: |
