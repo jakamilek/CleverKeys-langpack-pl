@@ -1472,3 +1472,13 @@ Następny krok:
 
 Nie zmieniać immutable 100k, modułów PL, geometrii swipe ani `main`.
 
+## Reguła nadrzędna: ZERO DOMYSŁÓW
+
+Obowiązuje `docs/PROJECT_RULE_NO_GUESSING_2026-10-01.md`.
+
+**NIE WOLNO ZGADYWAĆ.** Informacji niepotwierdzonych w aktualnym GitHub, obowiązującym handoffie/promptcie albo wprost przez użytkownika nie wolno uzupełniać przez skojarzenie, podobieństwo, pamięć modelu ani prawdopodobieństwo.
+
+Przed każdą operacją zależną od repozytorium, gałęzi, SHA, pliku, statusu CI lub decyzji projektowej należy ją zweryfikować. Przy konflikcie informacji trzeba ustalić stan z aktualnego GitHub HEAD; przy braku możliwości weryfikacji informacja pozostaje **NIEZNANA** i nie wolno wykonywać zależnej od niej operacji.
+
+Innego repozytorium, forka lub gałęzi nie wolno traktować jako zamiennika tylko dlatego, że nazwa lub zawartość są podobne. Pamięć rozmowy może wskazać, co sprawdzić, ale nie zastępuje weryfikacji.
+
