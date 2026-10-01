@@ -10,6 +10,8 @@ Runtime reference baseline:
 Project experiment branch:
 `exp/dual-casing-runtime-2026-10-01`
 
+Gałąź eksperymentalna nie zmienia `main`.
+
 ## Etap 1 — czysty resolver
 
 Gotowy i wcześniej zweryfikowany:
@@ -21,62 +23,117 @@ Gotowy i wcześniej zweryfikowany:
 
 ## Etap 2 — projekcja paska
 
-Patch:
+**Obowiązujący patch integracyjny V2:**
+`docs/runtime-patches/DUAL_CASING_RUNTIME_INTEGRATION_V2_PATCH_2026-10-01.patch`
+
+Blob SHA patcha:
+`a771440c28d235c08256fa72f2d237521502bbd4`
+
+Poprzedni:
 `docs/runtime-patches/DUAL_CASING_RUNTIME_INTEGRATION_PATCH_2026-10-01.patch`
 
-Dodane elementy:
+jest **SUPERSEDED ("zastąpiony")** i nie należy go nakładać. Pozostaje w repozytorium wyłącznie jako ślad wcześniejszej wersji eksperymentu.
+
+V2 zawiera:
 - `CaseVariantExperiment` — trzy kontrolowane przypadki: `malina/Malina`, `łódź/Łódź`, `warszawa/Warszawa`;
 - `CaseVariantCatalog` — mapowanie jednego klucza na warianty;
 - `CaseVariantPreferenceTracker` — tymczasowe uczenie in-memory wyłącznie dla katalogu eksperymentalnego;
-- `CaseVariantProjector` — po rankingu tworzy `primary + alternate`, z tym samym score i wskaźnikiem źródłowego kandydata;
-- testy czystej logiki projekcji i uczenia.
+- `CaseVariantProjector` — pozycjonowanie `primary + alternate` z tym samym score ("wynikiem") i wskaźnikiem źródłowego kandydata;
+- testy logiki projekcji, preferencji oraz progu 5 + 2.
 
-### Ważna kolejność runtime
+### Kolejność runtime
 
-Projekcja dual-casing jest przewidziana dopiero po:
-- rankingu;
-- ML capture;
-- auto-insert top prediction.
+Projekcja dual-casing jest przewidziana:
+1. po rankingu silnika;
+2. po przygotowaniu danych ML;
+3. **przed auto-insert top prediction**;
+4. następnie ten sam stan prezentacji pozostaje na pasku sugestii.
 
-Dzięki temu alternatywna powierzchnia nie jest traktowana jako drugi kandydat silnika i nie trafia do rankingu leksykalnego.
+Dzięki temu:
+- alternatywna powierzchnia nie staje się drugim kandydatem leksykalnym;
+- ranking silnika pozostaje niezmieniony;
+- wybrana preferencja może zmienić tylko powierzchnię prezentowaną jako primary;
+- auto-insert korzysta z aktualnej primary;
+- oba warianty pozostają dostępne na pasku.
 
 ### Kapitalizacja początku zdania
 
 Dual-casing jest wyłączony dla:
 - aktywnego Shift;
 - Caps Lock;
-- aktywnego sentence-start autocap.
+- aktywnego sentence-start autocap ("automatycznej kapitalizacji początku zdania").
 
 Te mechanizmy pozostają niezależne i nie są używane jako sygnał preferencji leksykalnej.
 
 ### Uczenie
 
-- ręczny wybór wariantu jest czystym sygnałem preferencji;
-- auto-insert primary może być obserwacją tylko bez Shift/Caps/auto-cap;
-- preference tracker jest wyłącznie in-memory w eksperymencie;
+- ręczny wybór wariantu jest sygnałem preferencji;
+- obserwacja auto-insert primary jest dopuszczona tylko bez Shift/Caps/auto-cap;
+- oba kanały uczenia respektują istniejące bramki `LearningGate` i `fieldAllowsPersonalizedLearning`;
+- tracker jest wyłącznie in-memory w tym eksperymencie;
 - trwałe przechowywanie zostanie zaprojektowane dopiero po walidacji pierwszego eksperymentu.
 
 ## Weryfikacja
 
-Lokalna kompilacja czystych klas Kotlin/JVM zakończona:
-`DUAL_CASING_INTEGRATION_LOGIC_SELFTEST=PASS`
+### Czysta logika Kotlin/JVM
 
-Zakres tego testu:
+Uruchomiony ponownie czysty test host-JVM:
+`CASE_VARIANT_HOST_JVM_SELFTEST=PASS`
+
+Zakres:
 - `malina` -> `malina`, `Malina`;
-- learned capitalized preference -> `Malina`, `malina`;
+- wyuczona preferencja kapitalizowana -> `Malina`, `malina`;
 - `łódź` i `warszawa`;
-- zachowanie `bardo` bez dodatkowego wariantu;
-- próg 5 + lead 2;
-- source-index duplication.
+- `bardo` pozostaje bez dodatkowego wariantu;
+- próg 5 obserwacji + przewaga 2;
+- zachowanie source-index.
 
-Nie wykonano jeszcze projektu Android/Gradle ani testu instrumentowanego paska. Nie należy tego nazywać testem runtime.
+To jest test logiki host-JVM, **nie** test Android/Gradle ani test pełnego runtime.
+
+### Zgodność patcha z przypiętym runtime
+
+Na dokładnym pliku:
+`tribixbite/CleverKeys/src/main/kotlin/tribixbite/cleverkeys/SuggestionHandler.kt`
+
+dla SHA:
+`263bd0abc03dec420f60fa073a9d2c5e25a176b5`
+
+zweryfikowano wszystkie **7 kontekstów hunks** patcha V2. Każdy blok starego kontekstu występuje w pliku bazowym.
+
+Dodatkowo:
+- brak błędnych markerów typu `+@@`;
+- brak linii `++import`;
+- brak nieprefiksowanych linii w sekcjach `Add File`.
+
+Nie wykonano jeszcze rzeczywistego `git apply` + Android/Gradle build na checkoutcie runtime, ponieważ zapis do repozytorium runtime nie jest obecnie potwierdzony jako dostępny.
+
+## Aktualny stan aplikacji klawiatury
+
+**Actual runtime source / APK: UNCHANGED ("bez zmian").**
+
+Nie zmodyfikowano:
+- `tribixbite/CleverKeys`;
+- `CandidateRanker`;
+- `PredictionResult`;
+- `SuggestionBar`;
+- `SuggestionHandler` w repo runtime;
+- geometrii swipe;
+- `main`.
+
+Patch V2 jest wyłącznie zapisanym eksperymentem/specyfikacją w repozytorium pakietu językowego.
+
+Zweryfikowane repozytoria użytkownika obejmują:
+- `jakamilek/CleverKeys-langpack-pl` — właściwe repo projektu pakietu językowego;
+- `jakamilek/CleverKeys-animated-gif` — repo odrębnego eksperymentu GIF, **nie** jest repo runtime dla dual-casing.
+
+Brak potwierdzonego zapisu do właściwego repo runtime pozostaje ograniczeniem eksperymentu.
 
 ## Następny etap
 
-1. Zweryfikować patch syntaktycznie na dokładnym checkoutcie runtime SHA `263bd0...`.
-2. Uruchomić `runPureTests` dla nowych testów.
-3. Dopiero po green przejść do minimalnego testu paska/suggestion selection.
-4. Po walidacji zaprojektować sposób dostarczenia katalogu wariantów z generatora/CKDT.
+1. Uzyskać potwierdzony zapis do właściwego repo runtime albo pozostawić runtime jako reference-only.
+2. Na checkoutcie dokładnego SHA `263bd0...` uruchomić rzeczywisty `git apply`, `runPureTests` i build/test Android.
+3. Dopiero po green przejść do minimalnego testu paska i wyboru wariantu.
+4. Dopiero później zaprojektować dostarczanie katalogu wariantów z generatora/CKDT.
 
 ## Ograniczenia
 
@@ -85,4 +142,5 @@ Nie wykonano jeszcze projektu Android/Gradle ani testu instrumentowanego paska. 
 - brak zmian `CandidateRanker`;
 - brak zmian geometrii swipe;
 - brak zmian `main`;
-- brak traktowania dwóch wariantów jako dwóch niezależnych kandydatów.
+- brak traktowania dwóch wariantów jako dwóch niezależnych kandydatów;
+- brak trwałego przechowywania preferencji w tej wersji eksperymentu.
