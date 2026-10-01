@@ -238,7 +238,8 @@
      private val contractionManager: ContractionManager,
      private val keyeventhandler: KeyEventHandler
  ) {
-+    private val caseVariantPreferenceTracker = CaseVariantPreferenceTracker()
++    private val caseVariantPreferenceTracker =
+        CaseVariantPreferenceTracker(CaseVariantExperiment.CATALOG)
 @@
          if (LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
              fieldAllowsPersonalizedLearning
