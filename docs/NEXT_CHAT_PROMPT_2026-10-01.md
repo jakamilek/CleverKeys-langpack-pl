@@ -267,27 +267,23 @@ Zweryfikowane repozytoria właściciela `jakamilek`:
 
 Nie wolno używać `CleverKeys-animated-gif` jako zastępnika.
 
-Na moment ostatniej weryfikacji nie było potwierdzonego fork/gałęzi runtime użytkownika, do którego można zapisać kod aplikacji. Runtime `tribixbite/CleverKeys` pozostaje reference-only.
+Weryfikacja wykonana w tym oknie (2026-10-01):
+- nie znaleziono potwierdzonego forka/gałęzi runtime użytkownika z prawem zapisu;
+- połączenie dostępne dla `tribixbite/CleverKeys` pozostaje reference-only;
+- wyszukiwanie repozytoriów właściciela `jakamilek` znalazło `CleverKeys-langpack-pl` oraz `CleverKeys-animated-gif`; drugie repozytorium pozostaje odrębnym eksperymentem GIF i nie jest zamiennikiem runtime.
 
 To ograniczenie należy zweryfikować ponownie w nowym oknie przed wykonaniem jakiejkolwiek operacji zapisu.
 
-## 10. Aktualne gałęzie i SHA projektu — zweryfikowane
+## 10. Aktualne gałęzie i SHA projektu — zweryfikowany checkpoint
 
-Oficjalny branch:
-`ops/baseline-sync-2026-09-20`
+Checkpoint zweryfikowany bezpośrednio przed zmianą tej dokumentacji:
+- oficjalny branch: `ops/baseline-sync-2026-09-20`;
+- HEAD baseline: `7665aa1968082ec19068ba2dd30e8e1b58dd5ad5`;
+- gałąź eksperymentalna: `exp/dual-casing-runtime-2026-10-01`;
+- HEAD eksperymentalny: `3dade89c47814b5226ac4c28ea329cae1da5b038`;
+- eksperymentalna gałąź: 9 commitów ahead względem baseline, 0 behind.
 
-ostatnio zweryfikowany HEAD:
-`7665aa1968082ec19068ba2dd30e8e1b58dd5ad5`
-
-Gałąź eksperymentalna:
-`exp/dual-casing-runtime-2026-10-01`
-
-ostatnio zweryfikowany HEAD:
-`0c213ca66b93e52948c6c973b2ce9ff6564a866b`
-
-Eksperymentalna gałąź jest:
-- 8 commitów ahead względem baseline;
-- 0 behind.
+**Uwaga:** zapis tej aktualizacji dokumentacji tworzy nowy commit, więc powyższy SHA jest checkpointem poprzedzającym ten commit. Następne okno ma obowiązek zweryfikować rzeczywisty HEAD ponownie.
 
 Jej commity dotyczą zapisanej dokumentacji/patchy eksperymentu dual-casing i nie są zmianą aplikacji runtime.
 
