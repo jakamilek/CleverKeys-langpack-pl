@@ -139,9 +139,7 @@ Definicja pomiaru:
 - kandydat = jednocześnie `subst:sg:nom + nazwa_pospolita` oraz konkurencyjna `subst:sg:nom` z nie-pospolitą klasą własną;
 - formy odmiany inne niż mianownik są wykluczone.
 
-Pierwszy pomiar z tego kryterium:
-- **11 499 kandydatów**.
-To jest wynik diagnostyczny. Nie traktować go jeszcze jako liczby wpisów, które należy automatycznie podwoić. Klasy własne są szerokie, więc należy przeprowadzić dalsze grupowanie (np. geograficzna / imię / nazwisko / marka / firma / organizacja / osoba / inne) i ocenić właściwą granicę.
+Uwaga: liczba **11 499** z wcześniejszego runu NIE jest wynikiem tego ścisłego kryterium. Była wynikiem szerszej diagnostyki i obejmowała również liczne formy/klasy własne. Ścisły audyt mianownika został dopiero dodany do Preview #369. Jego rzeczywisty wynik trzeba odczytać z logu kroku „Audit immutable-core dual-casing candidates without modules”.
 
 Kluczowa zmiana podejścia:
 - problem `Warszawa` nie powinien być rozwiązywany przez ręczny wyjątek;
