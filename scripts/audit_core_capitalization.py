@@ -282,19 +282,46 @@ def main() -> int:
         independent_noun_dual_surface_candidate = bool(
             independent_common_noun_matches and independent_proper_noun_matches
         )
+        independent_proper_non_surname_matches = [
+            item for item in independent_proper_matches
+            if any(cls != "nazwisko" for cls in item.get("proper_name_classes", []))
+        ]
+        independent_proper_noun_non_surname_matches = [
+            item for item in independent_proper_noun_matches
+            if any(cls != "nazwisko" for cls in item.get("proper_name_classes", []))
+        ]
+        common_noun_nom_sg = any(
+            "subst:sg:" in str(item.get("tag", ""))
+            and "nom" in str(item.get("tag", "")).split(":")[2].split(".")
+            for item in independent_common_noun_matches
+        )
+        proper_noun_nom_sg = any(
+            "subst:sg:" in str(item.get("tag", ""))
+            and "nom" in str(item.get("tag", "")).split(":")[2].split(".")
+            for item in independent_proper_noun_matches
+        )
+        proper_noun_non_surname_nom_sg = any(
+            "subst:sg:" in str(item.get("tag", ""))
+            and "nom" in str(item.get("tag", "")).split(":")[2].split(".")
+            for item in independent_proper_noun_non_surname_matches
+        )
         independent_noun_dual_surface_nom_sg_candidate = (
             bool(independent_noun_dual_surface_candidate)
-            and any(
-                "subst:sg:" in str(item.get("tag", ""))
-                and "nom" in str(item.get("tag", "")).split(":")[2].split(".")
-                for item in independent_common_noun_matches
-            )
-            and any(
-                "subst:sg:" in str(item.get("tag", ""))
-                and "nom" in str(item.get("tag", "")).split(":")[2].split(".")
-                for item in independent_proper_noun_matches
-            )
+            and common_noun_nom_sg
+            and proper_noun_nom_sg
         )
+        independent_case_dual_surface_non_surname_candidate = bool(
+            independent_common_matches and independent_proper_non_surname_matches
+        )
+        independent_noun_dual_surface_nom_sg_non_surname_candidate = (
+            bool(independent_noun_dual_surface_candidate)
+            and common_noun_nom_sg
+            and proper_noun_non_surname_nom_sg
+        )
+        if independent_case_dual_surface_candidate:
+            independent_common_proper_candidates.append(key)
+        if independent_case_dual_surface_non_surname_candidate:
+            independent_common_proper_non_surname_candidates.append(key)
 
         rows = evidence.get(key, [])
         policies = {str(r["policy"]) for r in rows if r["policy"] in {"lowercase", "capitalized"}}
@@ -440,6 +467,7 @@ def main() -> int:
             }),
             "independent_noun_dual_surface_candidate": independent_noun_dual_surface_candidate,
             "independent_noun_dual_surface_nom_sg_candidate": independent_noun_dual_surface_nom_sg_candidate,
+            "independent_noun_dual_surface_nom_sg_non_surname_candidate": independent_noun_dual_surface_nom_sg_non_surname_candidate,
             "independent_noun_dual_surface_proper_name_classes": sorted({
                 cls
                 for item in independent_proper_noun_matches
