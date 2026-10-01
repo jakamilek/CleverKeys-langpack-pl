@@ -121,3 +121,47 @@ Przeczytaj także nowy dokument: docs/ARCHITECTURE_DECISION_2026-09-30.md.
 - Commit `7af161c9fa1b639b8f0cb08843178eb8aa07f3e3` dodatkowo wyłącza zwykłą ścieżkę `Morfeusz.generate()` dla nazw z łącznikiem; takie nazwy są obsługiwane wyłącznie przez model hyphenowany kategorii miast.
 - Świeże CI na `7af161c...`: Preview #357 / run `36770877395`; Size-study #268 / run `36770877795`.
 - Nie uznawać jeszcze wyniku za zielony checkpoint.
+
+
+## Migracja 2026-10-01 — najnowszy stan i nowe zadanie
+
+Ostatni istotny commit diagnostyczny:
+- `e70bc404b95659dd3ed94e5c84e6962683b05895` — dodał skrypt niezależnego audytu kandydatów dwóch kapitalizacji;
+- `34164d869fc4e90c651129d9fd9e413121bfabdd` — dodał ten audyt do Preview CI.
+
+Nowy skrypt:
+`scripts/audit_core_dual_casing_candidates.py`
+
+Definicja pomiaru:
+- tylko immutable 100k core;
+- moduły nie są używane do kwalifikacji;
+- Morfeusz 2 / SGJP jest jedynym źródłem;
+- kandydat = jednocześnie `subst:sg:nom + nazwa_pospolita` oraz konkurencyjna `subst:sg:nom` z nie-pospolitą klasą własną;
+- formy odmiany inne niż mianownik są wykluczone.
+
+Pierwszy pomiar z tego kryterium:
+- **11 499 kandydatów**.
+To jest wynik diagnostyczny. Nie traktować go jeszcze jako liczby wpisów, które należy automatycznie podwoić. Klasy własne są szerokie, więc należy przeprowadzić dalsze grupowanie (np. geograficzna / imię / nazwisko / marka / firma / organizacja / osoba / inne) i ocenić właściwą granicę.
+
+Kluczowa zmiana podejścia:
+- problem `Warszawa` nie powinien być rozwiązywany przez ręczny wyjątek;
+- trzeba rozważyć możliwość przechowywania dwóch powierzchni kapitalizacyjnych dla rzeczywistego homonimu, np. `łódź` + `Łódź`, `malina` + `Malina`;
+- użytkownik trafiając na niewłaściwy wariant powinien móc wybrać drugi z paska podpowiedzi bez edycji pierwszej litery;
+- mała/wielka litera ma być częścią powierzchni, ale członkostwo klucza case-insensitive pozostaje jednym kluczem.
+
+BARDZO WAŻNE:
+Aktualny CleverKeys ma ścieżki, które deduplikują kandydatów case-insensitive. Nie wolno zakładać, że dwa wpisy różniące się tylko wielką literą automatycznie pokażą się jako dwa osobne przyciski. Trzeba sprawdzić rzeczywisty runtime/CKDT. Generator naszego packa obecnie również wymusza unikalność kluczy case-insensitive.
+
+Następny etap:
+1. Pobierz wynik audytu 11 499 i pogrupuj kandydatów według klas Morfeusza.
+2. Ustal osobno grupę „rzeczywiście sensowne dwie powierzchnie” oraz przypadki, dla których jedna powierzchnia jest wystarczająca.
+3. Sprawdź na przypiętym CleverKeys SHA `263bd0abc03dec420f60fa073a9d2c5e25a176b5`, czy CKDT może zwrócić jednocześnie `łódź` i `Łódź` jako dwa używalne warianty, jeżeli oba są fizycznie zapisane.
+4. Dopiero po tym zaprojektować ewentualną zmianę formatu/lookupu. Nie zmieniać jeszcze immutable 100k.
+5. Nadal nie wykonywać merge/promote do `main`.
+
+Najnowszy CI:
+- Preview #369 / run `36829489035` dla commitu `34164d869fc4e90c651129d9fd9e413121bfabdd` był podczas migracji uruchomiony i w ostatnim sprawdzeniu pozostawał `in_progress`.
+- Poprzedni Size-study #272 / run `36775273277` dla `424b8b1811dfb9d791d4380b049d8711e9f335a2` zakończył się `success`.
+- Preview #364 / run `36775273327` dla `424b8b...` zakończył się `failure` dopiero na końcowym kroku weryfikacji CKDT; wcześniejsze etapy kapitalizacji przechodziły.
+
+Nie uznawać obecnego Preview za checkpoint, dopóki GitHub nie poda świeżego wyniku.
