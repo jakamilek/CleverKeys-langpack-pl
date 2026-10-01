@@ -5,9 +5,10 @@ This audit is deliberately module-independent. It inspects only the immutable 10
 core and Morfeusz 2 / SGJP analyses.
 
 A dual-casing candidate is intentionally narrow:
-- the key is a singular nominative common noun (subst:sg:nom), and
-- the same case-folded surface also has a distinct singular nominative proper-name
-  noun analysis (subst:sg:nom) with a non-common lexical class.
+- the key is a singular nominative common noun (subst:sg:nom), using either
+  SGJP common-name spelling "nazwa_pospolita" or "nazwa pospolita", and
+- the same case-folded surface also has a distinct singular nominative
+  noun analysis (subst:sg:nom) with at least one non-common lexical class.
 
 Inflected forms, adjectives, surnames used only as inflectional analyses, and other
 non-nominative surfaces are excluded from the count. The result estimates the set
@@ -151,7 +152,7 @@ def main() -> int:
         "core_keys": len(base),
         "candidate_count": len(rows),
         "definition": {
-            "common_side": "subst + sg + nom + nazwa_pospolita",
+            "common_side": "subst + sg + nom + (nazwa_pospolita OR nazwa pospolita)",
             "proper_side": "subst + sg + nom + non-nazwa_pospolita lexical class",
             "casefolded_surface": True,
             "inflected_forms_excluded": True,
