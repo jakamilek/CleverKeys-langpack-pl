@@ -525,6 +525,15 @@ def main() -> int:
             for r in audited
             if r["independent_noun_dual_surface_nom_sg_candidate"]
         ],
+        "independent_noun_dual_surface_nom_sg_non_surname_candidate_count": sum(
+            1 for r in audited
+            if r["independent_noun_dual_surface_nom_sg_non_surname_candidate"]
+        ),
+        "independent_noun_dual_surface_nom_sg_non_surname_candidate_keys": [
+            r["surface_key"]
+            for r in audited
+            if r["independent_noun_dual_surface_nom_sg_non_surname_candidate"]
+        ],
         "module_verification_conflict_count": 0,
         "module_verification_conflict_keys": [],
         "module_source_policy_disagreement_count": sum(
@@ -590,6 +599,11 @@ def main() -> int:
         for row in audited
         if row["independent_noun_dual_surface_nom_sg_candidate"]
     ]
+    noun_dual_surface_nom_sg_non_surname_keys = [
+        row["surface_key"]
+        for row in audited
+        if row["independent_noun_dual_surface_nom_sg_non_surname_candidate"]
+    ]
     print(
         "Independent Morfeusz common/proper dual-surface candidate count (all POS): "
         + str(len(dual_surface_keys))
@@ -601,6 +615,10 @@ def main() -> int:
     print(
         "Independent Morfeusz common-noun/proper-noun dual-surface candidate count (nom.sg): "
         + str(len(noun_dual_surface_nom_sg_keys))
+    )
+    print(
+        "Independent Morfeusz common-noun/proper-noun dual-surface candidate count (nom.sg, excluding surname-only): "
+        + str(len(noun_dual_surface_nom_sg_non_surname_keys))
     )
     if noun_dual_surface_keys:
         print(
