@@ -28,8 +28,12 @@ jobs:
           sudo apt-get install -y hunspell hunspell-pl
 
       - name: Install pinned audit dependencies
+        env:
+          PIP_DEFAULT_TIMEOUT: "300"
+          PIP_RETRIES: "10"
         run: |
           python3 -m pip install --disable-pip-version-check \
+            --timeout 300 --retries 10 \
             git+https://github.com/rspeer/wordfreq@912caf64b657478d1dff1138efdc078947d54bb1 \
             morfeusz2==1.99.15
 
