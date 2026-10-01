@@ -83,7 +83,7 @@ Priorytetem staje się minimalizacja obciążenia użytkownika, ponieważ słown
 
 Pomiar musi być wykonywany wyłącznie na immutable 100k core i niezależnym Morfeuszu/SGJP, bez używania modułów jako źródła kwalifikacji. Pierwszy poprawiony audyt definiuje kandydata wąsko: rzeczownik `subst:sg:nom` z analizą `nazwa_pospolita` oraz równoległą analizą rzeczownikową `subst:sg:nom` z nie-pospolitą klasą własną. Odmiana i przypadki inne niż mianownik są wyłączone.
 
-Pierwszy uruchomiony pomiar tego kryterium dał 11 499 kandydatów. Ta liczba jest wynikiem diagnostycznym, nie decyzją produkcyjną: szeroka klasa własna obejmuje także liczne nazwiska i inne homonimie, więc przed zmianą generatora trzeba ustalić, które klasy rzeczywiście powinny dostawać dwie powierzchnie.
+Uwaga korekcyjna: wcześniejszy wynik 11 499 nie pochodził jeszcze z tego zawężonego audytu mianownika; był wynikiem szerszej diagnostyki opartej na dowolnych analizach rzeczownikowych Morfeusza i obejmował także liczne formy/klasy własne. Nie jest to liczba kandydatów do dwóch powierzchni. Ścisły audyt opisany powyżej został dodany do CI i jego wynik należy pobrać z nowego runu Preview #369.
 
 Nie wolno zakładać, że samo zapisanie `Malina` + `malina` albo `Łódź` + `łódź` rozwiąże problem. W przypiętym runtime CleverKeys istnieją mechanizmy case-insensitive „bez rozróżniania wielkości liter” i testy deduplikujące równoważne kandydaty, więc możliwość pokazania obu powierzchni jednocześnie musi zostać zweryfikowana na rzeczywistym CKDT/runtime.
 
