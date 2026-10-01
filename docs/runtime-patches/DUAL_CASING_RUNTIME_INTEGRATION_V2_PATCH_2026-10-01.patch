@@ -1,0 +1,332 @@
+*** Begin Patch
+*** Add File: src/main/kotlin/tribixbite/cleverkeys/casing/CaseVariantExperiment.kt
++package tribixbite.cleverkeys.casing
++
++/**
++ * Temporary runtime experiment catalog.
++ *
++ * This is NOT a dictionary source and must not become the production generator
++ * format. It exists only to exercise the runtime seam before a CKDT metadata
++ * format is designed.
++ */
++object CaseVariantExperiment {
++    const val ENABLED = true
++
++    val CATALOG: CaseVariantCatalog = CaseVariantCatalog(
++        listOf(
++            CaseVariantSet("malina", "malina", "Malina"),
++            CaseVariantSet("łódź", "łódź", "Łódź"),
++            CaseVariantSet("warszawa", "Warszawa", "warszawa"),
++        )
++    )
++}
++
++data class CaseVariantCatalog(
++    val entries: List<CaseVariantSet>,
++) {
++    private val byKey: Map<String, CaseVariantSet> = entries.associateBy { it.key }
++
++    init {
++        require(byKey.size == entries.size) { "case-variant keys must be unique" }
++    }
++
++    fun get(surface: String): CaseVariantSet? =
++        byKey[surface.lowercase(java.util.Locale.ROOT)]
++
++    fun keys(): Set<String> = byKey.keys
++}
++
+*** Add File: src/main/kotlin/tribixbite/cleverkeys/casing/CaseVariantPreferenceTracker.kt
++package tribixbite.cleverkeys.casing
++
++import java.util.Locale
++
++/**
++ * In-memory preference tracker scoped to the audited experiment catalog.
++ *
++ * Persistence is deliberately outside this first experiment.
++ */
++class CaseVariantPreferenceTracker(
++    private val catalog: CaseVariantCatalog,
++) {
++    private val preferences = mutableMapOf<String, CaseVariantPreference>()
++
++    fun get(key: String): CaseVariantPreference =
++        preferences[key.lowercase(Locale.ROOT)] ?: CaseVariantPreference()
++
++    fun observe(surface: String): CaseVariantPreference {
++        val variants = catalog.get(surface) ?: return get(surface)
++        val key = variants.key.lowercase(Locale.ROOT)
++        val lower = key
++        val capitalized = key.replaceFirstChar {
++            if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString()
++        }
++        val current = preferences[key] ?: CaseVariantPreference()
++        val next = when (surface) {
++            lower -> current.copy(lowercaseUses = current.lowercaseUses + 1)
++            capitalized -> current.copy(capitalizedUses = current.capitalizedUses + 1)
++            else -> current
++        }
++        preferences[key] = next
++        return next
++    }
++}
++
+*** Add File: src/main/kotlin/tribixbite/cleverkeys/casing/CaseVariantProjector.kt
++package tribixbite.cleverkeys.casing
++
++import java.util.Locale
++
++/**
++ * Projects one ranked lexical slate into a display slate.
++ *
++ * A matching lexical key gets primary + alternate surfaces with the same
++ * lexical score and the same source index. The alternate is presentation-only.
++ */
++data class CaseVariantProjection(
++    val words: List<String>,
++    val scores: List<Int>,
++    val sourceIndices: List<Int>,
++)
++
++class CaseVariantProjector(
++    private val resolver: CaseVariantResolver = CaseVariantResolver(),
++) {
++    fun project(
++        words: List<String>,
++        scores: List<Int>,
++        catalog: CaseVariantCatalog,
++        preferences: Map<String, CaseVariantPreference> = emptyMap(),
++    ): CaseVariantProjection {
++        require(words.size == scores.size) { "words and scores must have equal size" }
++
++        val projectedWords = ArrayList<String>(words.size * 2)
++        val projectedScores = ArrayList<Int>(scores.size * 2)
++        val sourceIndices = ArrayList<Int>(words.size * 2)
++
++        for (index in words.indices) {
++            val variants = catalog.get(words[index])
++            if (variants == null) {
++                projectedWords.add(words[index])
++                projectedScores.add(scores[index])
++                sourceIndices.add(index)
++                continue
++            }
++
++            val selection = resolver.resolve(
++                variants = variants,
++                preference = preferences[variants.key.lowercase(Locale.ROOT)]
++                    ?: CaseVariantPreference(),
++            )
++            projectedWords.add(selection.primary)
++            projectedScores.add(scores[index])
++            sourceIndices.add(index)
++            projectedWords.add(selection.alternate)
++            projectedScores.add(scores[index])
++            sourceIndices.add(index)
++        }
++
++        return CaseVariantProjection(
++            words = projectedWords,
++            scores = projectedScores,
++            sourceIndices = sourceIndices,
++        )
++    }
++}
++
+*** Add File: src/test/kotlin/tribixbite/cleverkeys/casing/CaseVariantIntegrationTest.kt
++package tribixbite.cleverkeys.casing
++
++import com.google.common.truth.Truth.assertThat
++import org.junit.Test
++
++class CaseVariantIntegrationTest {
++
++    private val catalog = CaseVariantCatalog(
++        listOf(
++            CaseVariantSet("malina", "malina", "Malina"),
++            CaseVariantSet("łódź", "łódź", "Łódź"),
++            CaseVariantSet("warszawa", "Warszawa", "warszawa"),
++        )
++    )
++
++    @Test
++    fun projectionKeepsLexicalScoreAndProvenance() {
++        val result = CaseVariantProjector().project(
++            words = listOf("malina", "dom"),
++            scores = listOf(700, 100),
++            catalog = catalog,
++        )
++
++        assertThat(result.words).containsExactly("malina", "Malina", "dom").inOrder()
++        assertThat(result.scores).containsExactly(700, 700, 100).inOrder()
++        assertThat(result.sourceIndices).containsExactly(0, 0, 1).inOrder()
++    }
++
++    @Test
++    fun learnedCapitalizedPreferenceChangesPrimaryButKeepsAlternate() {
++        val result = CaseVariantProjector().project(
++            words = listOf("Malina"),
++            scores = listOf(900),
++            catalog = catalog,
++            preferences = mapOf(
++                "malina" to CaseVariantPreference(
++                    lowercaseUses = 2,
++                    capitalizedUses = 8,
++                )
++            ),
++        )
++
++        assertThat(result.words).containsExactly("Malina", "malina").inOrder()
++        assertThat(result.scores).containsExactly(900, 900).inOrder()
++    }
++
++    @Test
++    fun trackerRequiresMinimumEvidenceAndLead() {
++        val tracker = CaseVariantPreferenceTracker(catalog)
++        repeat(4) { tracker.observe("malina") }
++        repeat(4) { tracker.observe("Malina") }
++
++        val variants = CaseVariantSet("malina", "malina", "Malina")
++        assertThat(
++            CaseVariantResolver().resolve(variants, tracker.get("malina")).primary
++        ).isEqualTo("malina")
++
++        tracker.observe("Malina")
++        assertThat(
++            CaseVariantResolver().resolve(variants, tracker.get("malina")).primary
++        ).isEqualTo("malina")
++
++        tracker.observe("Malina")
++        assertThat(
++            CaseVariantResolver().resolve(variants, tracker.get("malina")).primary
++        ).isEqualTo("Malina")
++    }
++
++    @Test
++    fun nonCatalogWordsAreUntouched() {
++        val tracker = CaseVariantPreferenceTracker(catalog)
++        val before = tracker.get("dom")
++        val after = tracker.observe("dom")
++        assertThat(after).isEqualTo(before)
++
++        val result = CaseVariantProjector().project(
++            words = listOf("bardo", "dom"),
++            scores = listOf(200, 100),
++            catalog = catalog,
++        )
++        assertThat(result.words).containsExactly("bardo", "dom").inOrder()
++    }
++}
++
+*** Update File: src/main/kotlin/tribixbite/cleverkeys/SuggestionHandler.kt
++@@
++ import tribixbite.cleverkeys.ml.PlaygroundTraceRecorder
++ import tribixbite.cleverkeys.ml.SwipeMLData
+++import tribixbite.cleverkeys.casing.CaseVariantExperiment
+++import tribixbite.cleverkeys.casing.CaseVariantPreferenceTracker
+++import tribixbite.cleverkeys.casing.CaseVariantProjector
++ import tribixbite.cleverkeys.autocorrect.AutocorrectContextGuard
++ import tribixbite.cleverkeys.swipe.SwipeContextRescorer
++ import tribixbite.cleverkeys.swipe.ctc.CtcLanguageSupport
++
++@@
++ class SuggestionHandler(
++     private val context: Context,
++     private var config: Config,
++     private val contextTracker: PredictionContextTracker,
++     private val predictionCoordinator: PredictionCoordinator,
++     private val contractionManager: ContractionManager,
++     private val keyeventhandler: KeyEventHandler
++ ) {
+++    private val caseVariantPreferenceTracker =
+++        CaseVariantPreferenceTracker(CaseVariantExperiment.CATALOG)
++
++@@
++         if (LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
++             fieldAllowsPersonalizedLearning
++         ) {
++             predictionCoordinator.getAdaptationManager()?.recordSelection(processedWord.trim())
++         }
++
+++        if (CaseVariantExperiment.ENABLED &&
+++            isManualSelection &&
+++            LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
+++            fieldAllowsPersonalizedLearning
+++        ) {
+++            caseVariantPreferenceTracker.observe(processedWord.trim())
+++        }
++
++@@
++             bar.setShowDebugScores(config.swipe_show_debug_scores)
++             bar.setShowOriginMarkers(config.suggestion_provenance_markers)
++-            bar.setSuggestionsWithScores(barWords, barScores, barMetas)
++
+++            // ML capture above deliberately sees the raw ranked engine slate. Projection below is
+++            // presentation-only and therefore cannot create a second lexical rank.
+++            val caseVariantProjection =
+++                if (CaseVariantExperiment.ENABLED &&
+++                    !shiftActive &&
+++                    !shiftLocked &&
+++                    !autocapAtCursor
+++                ) {
+++                    CaseVariantProjector().project(
+++                        words = barWords,
+++                        scores = barScores,
+++                        catalog = CaseVariantExperiment.CATALOG,
+++                        preferences = CaseVariantExperiment.CATALOG.keys().associateWith {
+++                            caseVariantPreferenceTracker.get(it)
+++                        }
+++                    )
+++                } else {
+++                    null
+++                }
+++
+++            val displayWords = caseVariantProjection?.words ?: barWords
+++            val displayScores = caseVariantProjection?.scores ?: barScores
+++            val displayMetas =
+++                caseVariantProjection?.sourceIndices?.map { barMetas[it] } ?: barMetas
+++
+++            bar.setSuggestionsWithScores(displayWords, displayScores, displayMetas)
++
++             // Auto-insert the top (highest-scoring) prediction through THE single commit engine
++
++@@
++                 contextTracker.setLastAutoInsertedWord(
++                     committedWord ?: topPrediction.removePrefix("raw:")
++                 )
++
+++                if (CaseVariantExperiment.ENABLED &&
+++                    committedWord != null &&
+++                    !shiftActive &&
+++                    !shiftLocked &&
+++                    !autocapAtCursor &&
+++                    LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
+++                    fieldAllowsPersonalizedLearning
+++                ) {
+++                    caseVariantPreferenceTracker.observe(committedWord.trim())
+++                }
++
++                 contextTracker.setLastCommitSource(PredictionSource.SWIPE)
++
++@@
++                 // Re-display the augmented+transformed correction list (D1: possessives persist in
++-                // the final swipe bar).
++-                bar.setSuggestionsWithScores(barWords, barScores, barMetas)
+++                // the final swipe bar). Dual-casing is already projected before auto-insert; this
+++                // re-display keeps the same presentation slate after commit.
+++                bar.setSuggestionsWithScores(displayWords, displayScores, displayMetas)
++
++@@
++                 // entries. Generation runs on the predictionTasks executor (L3 —
++                 // the first lookup of a language lazily loads its persisted
++                 // n-gram blobs, which janked the UI thread when this ran inline).
++-                appendNextWordToSwipeAlternates(bar, barWords, barScores, barMetas, editorInfo)
+++                appendNextWordToSwipeAlternates(
+++                    bar,
+++                    displayWords.toMutableList(),
+++                    displayScores.toMutableList(),
+++                    displayMetas.toMutableList(),
+++                    editorInfo
+++                )
+*** End Patch
