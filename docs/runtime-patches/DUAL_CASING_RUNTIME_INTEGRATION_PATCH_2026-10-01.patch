@@ -208,7 +208,9 @@
 +
 +    @Test
 +    fun trackerNeedsObservedEvidenceBeforeSwitching() {
-+        val tracker = CaseVariantPreferenceTracker()
++        val tracker = CaseVariantPreferenceTracker(
+            CaseVariantCatalog(listOf(CaseVariantSet("malina", "malina", "Malina")))
+        )
 +        repeat(4) { tracker.observe("Malina") }
 +
 +        val set = CaseVariantSet("malina", "malina", "Malina")
