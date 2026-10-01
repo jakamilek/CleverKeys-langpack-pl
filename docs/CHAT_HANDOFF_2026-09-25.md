@@ -1423,3 +1423,52 @@ Następny etap projektu nie wymaga dalszej zmiany architektury nazw łącznikowy
 5. dopiero na podstawie wyników runtime decydować o ewentualnych zmianach rankingu, geometrii lub dalszych dodatkach.
 
 Nie zmieniać immutable 100k membership z powodu testów runtime. Nie wykonywać merge/promote do `main`.
+
+## Aktualizacja ciągłości — 2026-10-01 — eksperyment dual-casing
+
+Zaakceptowano architekturę wariantów kapitalizacyjnych i wykonano pierwszy czysty eksperyment logiki runtime.
+
+Dokument decyzji:
+- `docs/DUAL_CASING_RUNTIME_DESIGN_2026-10-01.md`
+
+Audyt przypiętego runtime:
+- `docs/CLEVERKEYS_RUNTIME_DUAL_CASING_AUDIT_2026-10-01.md`
+- runtime SHA: `263bd0abc03dec420f60fa073a9d2c5e25a176b5`
+
+Ustalenia runtime:
+- `CandidateRanker` deduplikuje po lowercase;
+- `PredictionResult` nie niesie jeszcze wariantów powierzchni;
+- `SuggestionHandler` ma osobną warstwę transformacji powierzchniowej po rankingu;
+- istniejące `userWordOriginalCase` przechowuje tylko jedną powierzchnię na klucz i nie rozwiązuje dual-casing.
+
+Pierwszy eksperyment:
+- czysty `CaseVariantResolver`;
+- jedna tożsamość leksykalna + dwa warianty powierzchni;
+- preferencja uczona dopiero po minimalnej liczbie obserwacji i przewadze nad drugim wariantem;
+- zdarzenie pojedyncze nie może przełączyć preferencji;
+- oba warianty pozostają dostępne;
+- brak zmian dictionary membership, rankingu i geometrii.
+
+Trwały patch:
+- `docs/runtime-patches/DUAL_CASING_RUNTIME_PATCH_2026-10-01.patch`
+- instrukcja: `docs/runtime-patches/DUAL_CASING_RUNTIME_PATCH_2026-10-01.md`
+- lokalny test host-JVM: `CASE_VARIANT_RESOLVER_SELFTEST=PASS`
+
+Planowane parametry eksperymentu (jeszcze nie produkcyjna decyzja):
+- minimum 5 obserwacji wariantu;
+- minimum 2 obserwacje przewagi nad konkurencyjnym wariantem.
+
+Repo runtime:
+- `jakamilek/CleverKeys-animated-gif` zawiera przypięty SHA i jest własnym forkiem;
+- integracja GitHub pozwala odczyt, ale odmawia zarówno `create_branch`, jak i `create_file` (HTTP 403), więc patch nie został zapisany w repo runtime;
+- nie wolno obchodzić tej blokady przez modyfikację `main` ani przez zmianę upstream;
+- po udostępnieniu zapisu/gałęzi patch należy zastosować najpierw jako zmiana nieaktywna, potem dopiero zintegrować z pipeline.
+
+Następny krok:
+1. nanieść patch na branch runtime oparty dokładnie na `263bd0abc03dec420f60fa073a9d2c5e25a176b5`;
+2. uruchomić test `CaseVariantResolverTest`;
+3. dopiero po zielonym pure-JVM teście zaprojektować przeniesienie metadanych wariantów przez `PredictionResult` / pipeline i integrację z paskiem sugestii;
+4. testy funkcjonalne dla `malina/Malina`, `łódź/Łódź`, `warszawa/Warszawa`.
+
+Nie zmieniać immutable 100k, modułów PL, geometrii swipe ani `main`.
+
