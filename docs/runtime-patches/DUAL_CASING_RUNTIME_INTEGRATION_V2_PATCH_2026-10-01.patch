@@ -220,113 +220,113 @@
 +}
 +
 *** Update File: src/main/kotlin/tribixbite/cleverkeys/SuggestionHandler.kt
-+@@
-+ import tribixbite.cleverkeys.ml.PlaygroundTraceRecorder
-+ import tribixbite.cleverkeys.ml.SwipeMLData
-++import tribixbite.cleverkeys.casing.CaseVariantExperiment
-++import tribixbite.cleverkeys.casing.CaseVariantPreferenceTracker
-++import tribixbite.cleverkeys.casing.CaseVariantProjector
-+ import tribixbite.cleverkeys.autocorrect.AutocorrectContextGuard
-+ import tribixbite.cleverkeys.swipe.SwipeContextRescorer
-+ import tribixbite.cleverkeys.swipe.ctc.CtcLanguageSupport
+@@
+ import tribixbite.cleverkeys.ml.PlaygroundTraceRecorder
+ import tribixbite.cleverkeys.ml.SwipeMLData
++import tribixbite.cleverkeys.casing.CaseVariantExperiment
++import tribixbite.cleverkeys.casing.CaseVariantPreferenceTracker
++import tribixbite.cleverkeys.casing.CaseVariantProjector
+ import tribixbite.cleverkeys.autocorrect.AutocorrectContextGuard
+ import tribixbite.cleverkeys.swipe.SwipeContextRescorer
+ import tribixbite.cleverkeys.swipe.ctc.CtcLanguageSupport
+
+@@
+ class SuggestionHandler(
+     private val context: Context,
+     private var config: Config,
+     private val contextTracker: PredictionContextTracker,
+     private val predictionCoordinator: PredictionCoordinator,
+     private val contractionManager: ContractionManager,
+     private val keyeventhandler: KeyEventHandler
+ ) {
++    private val caseVariantPreferenceTracker =
++        CaseVariantPreferenceTracker(CaseVariantExperiment.CATALOG)
+
+@@
+         if (LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
+             fieldAllowsPersonalizedLearning
+         ) {
+             predictionCoordinator.getAdaptationManager()?.recordSelection(processedWord.trim())
+         }
+
++        if (CaseVariantExperiment.ENABLED &&
++            isManualSelection &&
++            LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
++            fieldAllowsPersonalizedLearning
++        ) {
++            caseVariantPreferenceTracker.observe(processedWord.trim())
++        }
+
+@@
+             bar.setShowDebugScores(config.swipe_show_debug_scores)
+             bar.setShowOriginMarkers(config.suggestion_provenance_markers)
+-            bar.setSuggestionsWithScores(barWords, barScores, barMetas)
+
++            // ML capture above deliberately sees the raw ranked engine slate. Projection below is
++            // presentation-only and therefore cannot create a second lexical rank.
++            val caseVariantProjection =
++                if (CaseVariantExperiment.ENABLED &&
++                    !shiftActive &&
++                    !shiftLocked &&
++                    !autocapAtCursor
++                ) {
++                    CaseVariantProjector().project(
++                        words = barWords,
++                        scores = barScores,
++                        catalog = CaseVariantExperiment.CATALOG,
++                        preferences = CaseVariantExperiment.CATALOG.keys().associateWith {
++                            caseVariantPreferenceTracker.get(it)
++                        }
++                    )
++                } else {
++                    null
++                }
 +
-+@@
-+ class SuggestionHandler(
-+     private val context: Context,
-+     private var config: Config,
-+     private val contextTracker: PredictionContextTracker,
-+     private val predictionCoordinator: PredictionCoordinator,
-+     private val contractionManager: ContractionManager,
-+     private val keyeventhandler: KeyEventHandler
-+ ) {
-++    private val caseVariantPreferenceTracker =
-++        CaseVariantPreferenceTracker(CaseVariantExperiment.CATALOG)
++            val displayWords = caseVariantProjection?.words ?: barWords
++            val displayScores = caseVariantProjection?.scores ?: barScores
++            val displayMetas =
++                caseVariantProjection?.sourceIndices?.map { barMetas[it] } ?: barMetas
 +
-+@@
-+         if (LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
-+             fieldAllowsPersonalizedLearning
-+         ) {
-+             predictionCoordinator.getAdaptationManager()?.recordSelection(processedWord.trim())
-+         }
-+
-++        if (CaseVariantExperiment.ENABLED &&
-++            isManualSelection &&
-++            LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
-++            fieldAllowsPersonalizedLearning
-++        ) {
-++            caseVariantPreferenceTracker.observe(processedWord.trim())
-++        }
-+
-+@@
-+             bar.setShowDebugScores(config.swipe_show_debug_scores)
-+             bar.setShowOriginMarkers(config.suggestion_provenance_markers)
-+-            bar.setSuggestionsWithScores(barWords, barScores, barMetas)
-+
-++            // ML capture above deliberately sees the raw ranked engine slate. Projection below is
-++            // presentation-only and therefore cannot create a second lexical rank.
-++            val caseVariantProjection =
-++                if (CaseVariantExperiment.ENABLED &&
-++                    !shiftActive &&
-++                    !shiftLocked &&
-++                    !autocapAtCursor
-++                ) {
-++                    CaseVariantProjector().project(
-++                        words = barWords,
-++                        scores = barScores,
-++                        catalog = CaseVariantExperiment.CATALOG,
-++                        preferences = CaseVariantExperiment.CATALOG.keys().associateWith {
-++                            caseVariantPreferenceTracker.get(it)
-++                        }
-++                    )
-++                } else {
-++                    null
-++                }
-++
-++            val displayWords = caseVariantProjection?.words ?: barWords
-++            val displayScores = caseVariantProjection?.scores ?: barScores
-++            val displayMetas =
-++                caseVariantProjection?.sourceIndices?.map { barMetas[it] } ?: barMetas
-++
-++            bar.setSuggestionsWithScores(displayWords, displayScores, displayMetas)
-+
-+             // Auto-insert the top (highest-scoring) prediction through THE single commit engine
-+
-+@@
-+                 contextTracker.setLastAutoInsertedWord(
-+                     committedWord ?: topPrediction.removePrefix("raw:")
-+                 )
-+
-++                if (CaseVariantExperiment.ENABLED &&
-++                    committedWord != null &&
-++                    !shiftActive &&
-++                    !shiftLocked &&
-++                    !autocapAtCursor &&
-++                    LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
-++                    fieldAllowsPersonalizedLearning
-++                ) {
-++                    caseVariantPreferenceTracker.observe(committedWord.trim())
-++                }
-+
-+                 contextTracker.setLastCommitSource(PredictionSource.SWIPE)
-+
-+@@
-+                 // Re-display the augmented+transformed correction list (D1: possessives persist in
-+-                // the final swipe bar).
-+-                bar.setSuggestionsWithScores(barWords, barScores, barMetas)
-++                // the final swipe bar). Dual-casing is already projected before auto-insert; this
-++                // re-display keeps the same presentation slate after commit.
-++                bar.setSuggestionsWithScores(displayWords, displayScores, displayMetas)
-+
-+@@
-+                 // entries. Generation runs on the predictionTasks executor (L3 —
-+                 // the first lookup of a language lazily loads its persisted
-+                 // n-gram blobs, which janked the UI thread when this ran inline).
-+-                appendNextWordToSwipeAlternates(bar, barWords, barScores, barMetas, editorInfo)
-++                appendNextWordToSwipeAlternates(
-++                    bar,
-++                    displayWords.toMutableList(),
-++                    displayScores.toMutableList(),
-++                    displayMetas.toMutableList(),
-++                    editorInfo
-++                )
++            bar.setSuggestionsWithScores(displayWords, displayScores, displayMetas)
+
+             // Auto-insert the top (highest-scoring) prediction through THE single commit engine
+
+@@
+                 contextTracker.setLastAutoInsertedWord(
+                     committedWord ?: topPrediction.removePrefix("raw:")
+                 )
+
++                if (CaseVariantExperiment.ENABLED &&
++                    committedWord != null &&
++                    !shiftActive &&
++                    !shiftLocked &&
++                    !autocapAtCursor &&
++                    LearningGate.canLearnAdaptation(config.on_device_learning_enabled) &&
++                    fieldAllowsPersonalizedLearning
++                ) {
++                    caseVariantPreferenceTracker.observe(committedWord.trim())
++                }
+
+                 contextTracker.setLastCommitSource(PredictionSource.SWIPE)
+
+@@
+                 // Re-display the augmented+transformed correction list (D1: possessives persist in
+-                // the final swipe bar).
+-                bar.setSuggestionsWithScores(barWords, barScores, barMetas)
++                // the final swipe bar). Dual-casing is already projected before auto-insert; this
++                // re-display keeps the same presentation slate after commit.
++                bar.setSuggestionsWithScores(displayWords, displayScores, displayMetas)
+
+@@
+                 // entries. Generation runs on the predictionTasks executor (L3 —
+                 // the first lookup of a language lazily loads its persisted
+                 // n-gram blobs, which janked the UI thread when this ran inline).
+-                appendNextWordToSwipeAlternates(bar, barWords, barScores, barMetas, editorInfo)
++                appendNextWordToSwipeAlternates(
++                    bar,
++                    displayWords.toMutableList(),
++                    displayScores.toMutableList(),
++                    displayMetas.toMutableList(),
++                    editorInfo
++                )
 *** End Patch
