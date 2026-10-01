@@ -73,3 +73,18 @@ Wniosek architektoniczny:
 - regresja dla `warszawa` powinna więc wymuszać lowercase, a nie kapitalizację.
 
 Ta decyzja zastępuje wcześniejszy przykład zakładający `warszawa -> Warszawa` bez uwzględnienia nadrzędnej analizy `nazwa_pospolita`.
+
+
+## Nowy kierunek analizy homonimii kapitalizacyjnej — 2026-10-01
+
+Rozmowa o `Warszawa` ujawniła, że sama reguła „istnieje analiza `nazwa_pospolita` -> lowercase” jest zbyt uboga semantycznie dla powierzchni, dla której Morfeusz równocześnie pokazuje konkurencyjny leksem własny. Dla `warszawa` CI wykazało zarówno analizę `warszawa + nazwa_pospolita`, jak i `Warszawa:Sf + nazwa_geograficzna`.
+
+Priorytetem staje się minimalizacja obciążenia użytkownika, ponieważ słownik nie zna pełnego kontekstu zdania. Rozważany jest więc model przechowywania obu wariantów kapitalizacji dla rzeczywistych homonimów, tak aby użytkownik mógł wybrać właściwą powierzchnię z podpowiedzi bez ręcznej edycji już wpisanej pierwszej litery.
+
+Pomiar musi być wykonywany wyłącznie na immutable 100k core i niezależnym Morfeuszu/SGJP, bez używania modułów jako źródła kwalifikacji. Pierwszy poprawiony audyt definiuje kandydata wąsko: rzeczownik `subst:sg:nom` z analizą `nazwa_pospolita` oraz równoległą analizą rzeczownikową `subst:sg:nom` z nie-pospolitą klasą własną. Odmiana i przypadki inne niż mianownik są wyłączone.
+
+Pierwszy uruchomiony pomiar tego kryterium dał 11 499 kandydatów. Ta liczba jest wynikiem diagnostycznym, nie decyzją produkcyjną: szeroka klasa własna obejmuje także liczne nazwiska i inne homonimie, więc przed zmianą generatora trzeba ustalić, które klasy rzeczywiście powinny dostawać dwie powierzchnie.
+
+Nie wolno zakładać, że samo zapisanie `Malina` + `malina` albo `Łódź` + `łódź` rozwiąże problem. W przypiętym runtime CleverKeys istnieją mechanizmy case-insensitive „bez rozróżniania wielkości liter” i testy deduplikujące równoważne kandydaty, więc możliwość pokazania obu powierzchni jednocześnie musi zostać zweryfikowana na rzeczywistym CKDT/runtime.
+
+Do czasu zakończenia tego pomiaru i testu runtime nie należy zmieniać ogólnej reguły kapitalizacji rdzenia ani dodawać ręcznych wyjątków dla `Warszawa`, `Łódź` lub `Malina`.
