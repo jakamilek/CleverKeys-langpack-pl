@@ -38,19 +38,24 @@ jobs:
           set -euo pipefail
           mkdir -p build/aosp
           expected_sha="75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
-          expected_tree="2b550379fe38213f9b1dcb75478ef2133682685"
-          curl --fail --retry 3 --retry-delay 3 --retry-max-time 60 --retry-all-errors \
-            --user-agent 'CleverKeys-PL-Core-Dual-Casing-Audit/1.0' \
-            --location \
-            "https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/refs/heads/main/dictionaries/pl_wordlist.combined.gz?format=TEXT" \
-            -o build/aosp/pl_wordlist.combined.gz.base64
-          base64 --decode build/aosp/pl_wordlist.combined.gz.base64 > build/aosp/pl_wordlist.combined.gz
-          test "$(sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}')" = "$expected_sha"
-          git init build/aosp/LatinIME
-          git -C build/aosp/LatinIME remote add origin https://android.googlesource.com/platform/packages/inputmethods/LatinIME
-          git -C build/aosp/LatinIME fetch --depth=1 --filter=blob:none origin refs/heads/main
-          tree_sha="$(git -C build/aosp/LatinIME rev-parse FETCH_HEAD:dictionaries)"
-          test "$tree_sha" = "$expected_tree"
+          selected_ref=""
+          for ref in "refs/tags/aml_doc_351311000" "refs/heads/main"; do
+            echo "Trying official AOSP Gitiles ref: ${ref}"
+            rm -f build/aosp/pl_wordlist.combined.gz.base64 build/aosp/pl_wordlist.combined.gz
+            if curl --fail --retry 3 --retry-delay 3 --retry-max-time 60 --retry-all-errors \
+              --user-agent 'CleverKeys-PL-Core-Dual-Casing-Audit/1.0' \
+              --location \
+              "https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/${ref}/dictionaries/pl_wordlist.combined.gz?format=TEXT" \
+              -o build/aosp/pl_wordlist.combined.gz.base64; then
+              base64 --decode build/aosp/pl_wordlist.combined.gz.base64 > build/aosp/pl_wordlist.combined.gz
+              if test "$(sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}')" = "$expected_sha"; then
+                selected_ref="$ref"
+                break
+              fi
+            fi
+          done
+          test -n "$selected_ref"
+          printf '%s\n' "$selected_ref" "sha256=$expected_sha" > build/aosp/source-ref.txt
 
       - name: Build immutable 100k core
         run: |
