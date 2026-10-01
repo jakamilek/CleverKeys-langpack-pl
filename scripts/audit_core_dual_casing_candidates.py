@@ -96,7 +96,7 @@ def main() -> int:
                 ],
             })
 
-    proper_class_distribution = Counter()
+    # Class distributions count each candidate key once per distinct class; combinations preserve the full per-key class signature.\n    proper_class_distribution = Counter()
     proper_class_combination_distribution = Counter()
     for row in rows:
         classes = sorted({
