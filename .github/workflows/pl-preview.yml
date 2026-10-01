@@ -202,7 +202,57 @@ jobs:
         run: |
           python3 - <<'PY'
           import morfeusz2
+          from collections import Counter
+
           m = morfeusz2.Morfeusz()
+          resolver = m.getIdResolver()
+
+          print("MORFEUSZ VERSION", morfeusz2.__version__)
+          print("DICT ID", m.getDictID())
+          print("TAGSET ID", resolver.getTagsetId())
+          print("TAGS COUNT", resolver.getTagsCount())
+          print("NAMES COUNT", resolver.getNamesCount())
+          print("LABEL COMBINATIONS COUNT", resolver.getLabelsCount())
+
+          tag_values = []
+          for idx in range(resolver.getTagsCount()):
+              try:
+                  tag_values.append(resolver.getTag(idx))
+              except Exception:
+                  pass
+          name_values = []
+          for idx in range(resolver.getNamesCount()):
+              try:
+                  name_values.append(resolver.getName(idx))
+              except Exception:
+                  pass
+
+          atomic_labels = set()
+          label_combinations = []
+          for idx in range(resolver.getLabelsCount()):
+              try:
+                  labels = tuple(sorted(resolver.getLabels(idx)))
+              except Exception:
+                  continue
+              label_combinations.append(labels)
+              atomic_labels.update(labels)
+
+          print("UNIQUE TAG STRINGS", len(set(tag_values)))
+          print("UNIQUE POS CLASSES", len({
+              tag.split(":", 1)[0]
+              for tag in set(tag_values)
+              if tag
+          }))
+          print("POS CLASSES", sorted({
+              tag.split(":", 1)[0]
+              for tag in set(tag_values)
+              if tag
+          }))
+          print("NAMED ENTITY TYPES", sorted(set(name_values)))
+          print("UNIQUE ATOMIC LABELS", len(atomic_labels))
+          print("ATOMIC LABELS", sorted(atomic_labels))
+          print("LABEL COMBINATIONS ENUMERATED", len(label_combinations))
+
           for word in ["absorbuje", "abidżan", "kowalski", "bardo", "łódź", "tomaszów", "warszawa", "nazwisko", "Jakub"]:
               print("WORD", word)
               variants = [word.lower()]
