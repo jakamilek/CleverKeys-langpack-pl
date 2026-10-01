@@ -97,22 +97,49 @@ def main() -> int:
             })
 
     # Class distributions count each candidate key once per distinct class; combinations preserve the full per-key class signature.
-    proper_class_distribution = Counter(
-        cls
-        for row in rows
-        for cls in sorted({
-            value
-            for item in row["proper_analyses"]
-            for value in item["classes"]
-        })
-    )
-    proper_class_combination_distribution = Counter(
-        " + ".join(sorted({
+    # A candidate is counted once per atomic NAME class present in its
+    # competing proper-name analyses. We also retain exact candidate keys per
+    # class so the next analysis stage can inspect categories independently.
+    candidate_classes: dict[str, set[str]] = {}
+    for row in rows:
+        classes = {
             cls
             for item in row["proper_analyses"]
             for cls in item["classes"]
-        }))
-        for row in rows
+        }
+        candidate_classes[row["surface_key"]] = classes
+
+    proper_class_distribution = Counter(
+        cls
+        for classes in candidate_classes.values()
+        for cls in sorted(classes)
+    )
+    proper_class_candidate_keys = {
+        cls: sorted(
+            key for key, classes in candidate_classes.items()
+            if cls in classes
+        )
+        for cls in sorted({
+            cls
+            for classes in candidate_classes.values()
+            for cls in classes
+        })
+    }
+    proper_class_combination_distribution = Counter(
+        " + ".join(sorted(classes))
+        for classes in candidate_classes.values()
+    )
+    surname_only_candidate_count = sum(
+        bool(classes) and classes == {"nazwisko"}
+        for classes in candidate_classes.values()
+    )
+    non_surname_candidate_count = sum(
+        any(cls != "nazwisko" for cls in classes)
+        for classes in candidate_classes.values()
+    )
+    surname_plus_other_class_candidate_count = sum(
+        "nazwisko" in classes and any(cls != "nazwisko" for cls in classes)
+        for classes in candidate_classes.values()
     )
 
     summary = {
@@ -129,7 +156,11 @@ def main() -> int:
         },
         "candidate_keys": [row["surface_key"] for row in rows],
         "proper_class_distribution_by_candidate": dict(sorted(proper_class_distribution.items())),
+        "proper_class_candidate_keys": proper_class_candidate_keys,
         "proper_class_combination_distribution": dict(sorted(proper_class_combination_distribution.items())),
+        "surname_only_candidate_count": surname_only_candidate_count,
+        "non_surname_candidate_count": non_surname_candidate_count,
+        "surname_plus_other_class_candidate_count": surname_plus_other_class_candidate_count,
         "candidates": rows,
     }
 
@@ -157,6 +188,9 @@ def main() -> int:
         "all_candidate_keys": [row["surface_key"] for row in rows],
         "proper_class_distribution_by_candidate": dict(sorted(proper_class_distribution.items())),
         "proper_class_combination_distribution": dict(sorted(proper_class_combination_distribution.items())),
+        "surname_only_candidate_count": surname_only_candidate_count,
+        "non_surname_candidate_count": non_surname_candidate_count,
+        "surname_plus_other_class_candidate_count": surname_plus_other_class_candidate_count,
         "sample_checks": {
             key: next((row for row in rows if row["surface_key"] == key), None)
             for key in ("warszawa", "łódź", "malina", "bardo")
