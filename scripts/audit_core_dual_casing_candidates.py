@@ -47,8 +47,10 @@ def main() -> int:
     import morfeusz2
 
     morfeusz = morfeusz2.Morfeusz()
-    common_class = "nazwa_pospolita"
-    ignored = {"nazwa_pospolita"}
+    # SGJP currently exposes the common-name classification in two NAME spellings
+    # in this dictionary snapshot. Both mean common-name evidence for this audit.
+    common_classes = {"nazwa_pospolita", "nazwa pospolita"}
+    ignored = set(common_classes)
     rows: list[dict[str, object]] = []
 
     for key in sorted(base):
@@ -75,7 +77,7 @@ def main() -> int:
                 if not is_singular_nominative_noun(tag):
                     continue
 
-                if common_class in classes:
+                if any(common_class in classes for common_class in common_classes):
                     seen_common.add((orth, lemma, classes))
                     continue
 
