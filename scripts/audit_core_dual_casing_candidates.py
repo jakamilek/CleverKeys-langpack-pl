@@ -108,7 +108,7 @@ def main() -> int:
         proper_class_combination_distribution[" + ".join(classes)] += 1
 
     summary = {
-"        "mode": "immutable-core-dual-casing-candidate-audit",
+        "mode": "immutable-core-dual-casing-candidate-audit",
         "authority": "independent Morfeusz 2 / SGJP only",
         "modules_consulted": False,
         "core_keys": len(base),
