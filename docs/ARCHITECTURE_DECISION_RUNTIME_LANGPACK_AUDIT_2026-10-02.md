@@ -4,20 +4,20 @@
 This document records the language-side consequences of the verified audit of the experimental CleverKeysPL runtime branches.
 
 ## Binding architecture
-CleverKeysPL and CleverKeys-langpack-pl remain separate repositories.
+`CleverKeysPL` and `CleverKeys-langpack-pl` remain separate repositories.
 
 The integration model is:
 runtime -> Language Intelligence API -> versioned language package artifact -> Polish langpack
 
-CleverKeys-langpack-pl remains the source of truth for Polish language intelligence. It must not be copied permanently into the runtime repository as source data.
+`CleverKeys-langpack-pl` remains the source of truth for Polish language intelligence. It must not be copied permanently into the runtime repository as source data.
 
 ## Audit conclusions
 
-The experimental exp/context-reranking-runtime-2026-10-01 branch demonstrated an existing runtime context-reranking integration point. Therefore the next task is not to invent a second context reranker in the langpack repository.
+The experimental `exp/context-reranking-runtime-2026-10-01` branch demonstrated an existing runtime context-reranking integration point. Therefore the next task is not to invent a second context reranker in the langpack repository.
 
 The language repository should instead define and provide the language intelligence consumed by the runtime contract.
 
-The experimental exp/unified-pl-project-2026-10-01 branch is historical provenance only. Its embedded langpack-pl/ snapshot is not a reason to merge repositories.
+The experimental `exp/unified-pl-project-2026-10-01` branch is historical provenance only. Its embedded `langpack-pl/` snapshot is not a reason to merge repositories.
 
 ## Language-side responsibilities
 - Polish dictionary and language data;

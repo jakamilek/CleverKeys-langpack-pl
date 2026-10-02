@@ -8,11 +8,11 @@ Ten dokument jest obowiązkowym punktem synchronizacji przy przechodzeniu do kol
 
 Repozytorium:
 
-jakamilek/CleverKeys-langpack-pl
+`jakamilek/CleverKeys-langpack-pl`
 
 Branch roboczy:
 
-ops/baseline-sync-2026-09-20
+`ops/baseline-sync-2026-09-20`
 
 Założenia nienaruszalne:
 
@@ -56,16 +56,24 @@ Sam fakt występowania słowa w nazwie własnej nie oznacza wielkiej litery.
 
 Przykład:
 
-Tomaszów Mazowiecki
+`Tomaszów Mazowiecki`
 
 Dla CKDT analizujemy słowa:
 
 - Tomaszów — nazwa własna rzeczownikowa → Tomaszów,
 - mazowiecki — przymiotnik od Mazowsze → mazowiecki.
 
-Nie zapisujemy automatycznie Mazowiecki, tylko dlatego że pochodzi z nazwy miasta.
+Nie zapisujemy automatycznie `Mazowiecki`, tylko dlatego że pochodzi z nazwy miasta.
 
 Ta zasada dotyczy wszystkich modułów.
+
+Przykładowe klasy:
+
+- mazowiecki,
+- pomorski,
+- śląski,
+- krakowski,
+- warszawski.
 
 ## Nazwy wieloczłonowe
 
@@ -113,17 +121,17 @@ Kontynuujemy istniejący projekt CleverKeys-langpack-pl.
 GitHub jest jedynym źródłem prawdy.
 
 Repo:
-https://github.com/jakamilek/CleverKeys-langpack-pl
+`https://github.com/jakamilek/CleverKeys-langpack-pl`
 
 Branch:
-ops/baseline-sync-2026-09-20
+`ops/baseline-sync-2026-09-20`
 
 Najpierw sprawdź aktualny HEAD branch, dokumenty handoff oraz GitHub Actions. Nie zaczynaj projektu od początku i nie zakładaj zmian poza GitHub.
 
 Przeczytaj:
-- docs/CHAT_HANDOFF_2026-09-25.md
-- docs/NEXT_CHAT_PROMPT_2026-09-25.md
-- docs/CHAT_HANDOFF_2026-09-26_CAPITALIZATION_POLICY.md
+- `docs/CHAT_HANDOFF_2026-09-25.md`
+- `docs/NEXT_CHAT_PROMPT_2026-09-25.md`
+- `docs/CHAT_HANDOFF_2026-09-26_CAPITALIZATION_POLICY.md`
 
 Kontynuujemy budowę polskiego pakietu językowego CleverKeys.
 
@@ -151,91 +159,3 @@ Tomaszów Mazowiecki:
 Nie zapisujemy automatycznie członu wielką literą tylko dlatego, że pochodzi z nazwy własnej.
 
 Kontynuuj od aktualnego stanu kodu i pipeline. Najpierw audytuj stan, potem wykonuj zmiany. Każdą istotną zmianę zapisuj od razu w GitHub.
-
-## Aktualizacja ciągłości — 2026-09-26 18:36 UTC
-
-Stan po wznowieniu migracji kapitalizacji:
-- bieżący HEAD branch: 1261f675cbfb8902cb76c604f0a32ce5690312c3;
-- commit 3d583b45ad6d401729ece1644dcb25591c136eb3: usunięto pozostały odwołujący się do nieistniejącej polityki imion parametr special_policy/name_policy z scripts/audit_core_capitalization.py;
-- commit 8de68ba49f0b8ebdd69f6320a850c3adc3b9dddd: scripts/build_additive_phone_test.py stał się resolver-only — nie czyta registry kapitalizacji i nie ma własnego fallbacku lowercase/capitalized; dla klucza module-only wymaga decyzji z module_capitalization_audit;
-- commit ac169ba3c3d2b591f5f8c29ecea0bdbffaa7a191: poprawiono wiring workflow, tak aby registry pozostało wejściem do audytów core/module, ale nie do phone-test buildera.
-
-Stan CI:
-- preview #258 na fb9ce...: failure; bezpośrednia przyczyna: NameError: name_policy is not defined w audit_core_capitalization.py:154;
-- preview #260 na 8de68...: cancelled;
-- preview #261 na ac169...: in_progress;
-- size-study #200 na 3d583...: in_progress.
-
-Nie uznawać projektu za green przed rzeczywistym conclusion=success nowych runów. Po green CI sprawdzić świeże artefakty, CKDT, net-new union i kapitalizację regresji. Nie wykonuj merge/promote.
-
-## Aktualizacja ciągłości — 2026-09-26 18:43 UTC
-
-- bieżący kod migracji kapitalizacji jest w commitcie b188a614fb09917578307f026f55ac72598eb080: modułowy audit przekazuje każdy module-only key przez wspólny scripts/capitalization_rules.py, także lowercase-only; builder nie posiada własnego fallbacku kapitalizacji;
-- commit 5657aca1bcbb7d8a00610fa40a89907eb94fd490 zmienia wyłącznie komentarz workflow i służy do ponownego wyzwolenia CI;
-- preview #263 działa na b188a614...; size-study #201 działa na b188a614...;
-- wyników tych runów nie wolno uznać za green przed rzeczywistym conclusion=success oraz kontrolą artefaktów;
-- błąd preview #261 (aleksandrowski: brak decyzji auditowej) został usunięty architektonicznie: audit modułowy nie pomija już lowercase-only keys.
-
-Po zakończeniu #263/#201 kolejny krok to kontrola świeżych raportów/artefaktów, CKDT i net-new union. Nie wykonuj merge/promote.
-
-## Aktualizacja ciągłości — 2026-09-26 18:49 UTC
-
-Weryfikacja runów po migracji kapitalizacji:
-- preview #263 na b188a614... zakończył się failure w build_additive_phone_test.py przez pozostałe odwołanie do nieistniejącego overrides; nie był to błąd resolvera.
-- size-study #201 na b188a614... zakończył się success i potwierdził net_additions_over_100k_base = 5688, final_unique_keys = 105688.
-- poprawka a1592d927f4d40632ffdeb6c3201f4633c0afe21 usunęła ostatnie odwołanie do overrides w builderze.
-- aktualny branch HEAD: 6d9ce9d635e9975c57b617977e6237ddbbd08343; jedyne wystąpienie słowa override w builderze jest komentarzem opisującym, że builder nie wyprowadza ani nie nadpisuje kapitalizacji.
-- po triggerze przez ścieżkę objętą workflow działają teraz: preview #267 oraz size-study #202, oba na 6d9ce9d...; na tę chwilę bez konkluzji.
-
-Nie traktuj #263 ani #201 jako wyników ostatecznego buildera po a1592d9.... Po green #267/#202 należy odczytać świeże artefakty i sprawdzić CKDT, kapitalizację regresji oraz net-new union. Nie wykonuj merge/promote.
-
-## Aktualizacja ciągłości — 2026-09-26 19:xx UTC
-
-Po zakończeniu poprzedniej serii runów:
-- preview #267 / SHA 6d9ce9d... zakończył się failure z powodu składni w skrypcie weryfikacji; poprawki newline zostały zapisane w e815df35... i 56835bd9....
-- size-study #202 / SHA 6d9ce9d... zakończył się failure z tym samym problemem składniowym.
-- preview na 56835bd980184470344a7c62b7df14e887a11fc1 przeszedł audyty kapitalizacji i zbudował CKDT/ZIP, ale końcowa bramka zatrzymała się na assert "Jakubowi" in expected_inflection_surfaces. To nie był błąd CKDT: wcześniejszy audyt core rozstrzygał klucz jakubowi jako lowercase mimo źródłowej powierzchni Jakubowi.
-- size-study run 36264286627 na SHA e815df35... zakończył się success, a świeży raport potwierdził 100000 core i 105688 końcowych kluczy / 5688 net-new.
-- diagnostyczna poprawka architektoniczna:
-  - 71cd49823f56560bff6f2a1497fd8fa9b2a967fb: wspólny resolver otrzymuje proper_lemma_keys; wspólna reguła common-noun nie traktuje niezwiązanej analizy leksykalnej jako kolizji.
-  - cb1d6ced738955beb59cf5629a740509d313f59e: audit core przekazuje lineage lematów źródłowych.
-  - e4053d0d8b5037897d697538810f5a0033144f9c: audit modułowy przekazuje tę samą informację; wszystkie moduły nadal korzystają z jednego resolvera, bez wyjątków dla konkretnych imion.
-- po e4053d0d... wystartował size-study run 36264971952; nie uznawać go za zweryfikowany.
-- Nie wykonuj merge/promote.
-
-## Aktualizacja ciągłości — korekta testu Jakubowi — 2026-09-26
-
-- Przypadek Jakubowi nie jest błędem resolvera. Ta sama powierzchnia występuje jako odmiana imienia w konstrukcji typu „dałem Jakubowi” oraz jako przymiotnik w konstrukcji typu „synowie jakubowi”.
-- Obowiązująca nadrzędna reguła projektu mówi: każda analiza przymiotnikowa -> lowercase, niezależnie od modułu źródłowego. Dlatego dla wspólnego, case-insensitive klucza jakubowi kanoniczna powierzchnia CKDT może i powinna być jakubowi.
-- Poprzednia bramka preview wymagała błędnie Jakubowi z wielkiej litery. Została poprawiona w commicie 7ed6c2a1510fb611c571ae0087bcfa5cc223b43: oczekiwane są Jakub, Jakuba, jakubowi, Jakubem, Jakubie, a Jakubowi z wielkiej litery jest jawnie odrzucane.
-- Nie należy dodawać wyjątku imiennego. To zastosowanie wspólnego resolvera, a nie reguła first-name-specific.
-
-## Aktualizacja ciągłości — TERC jako dowód, nie finalna powierzchnia — 2026-09-26
-
-- Preview #274 / SHA ee6286002eebc0f5d5c0d286518e7030a6446e28 zakończył się failure nie z powodu samej zasady kapitalizacji, lecz dlatego, że bramka końcowa porównywała powierzchnie wygenerowanych odmian TERC bezpośrednio z ckdt_raw, zamiast z końcowym wynikiem wspólnego audytu.
-- Dotyczyło to zarówno nazw TERC, jak i wygenerowanych odmian. case_policy w TERC jest wyłącznie evidencją źródłową; oczekiwana powierzchnia CKDT musi pochodzić z core-capitalization-audit lub module-capitalization-audit.
-- Commit e49ace6886899dc72bc1e0fcdf06fc6b0bc8423c poprawił bramkę tak, aby odmiany TERC były również sprawdzane względem finalnej decyzji resolvera.
-- Ważny przypadek diagnostyczny: bardo występuje w 100k core. Sam fakt, że surowy core ma tę powierzchnię małą literą, nie może blokować korekty kapitalizacji przez audyt core. Przynależność do core jest niezmienna, ale canonical surface może zostać skorygowana przez audyt zgodnie z zasadami ortografii i evidence źródłowym.
-- Bardo jako nazwa miejscowości powinno być reprezentowane przez wspólny audyt jako Bardo, o ile nie wystąpi nadrzędna, udokumentowana kolizja leksykalna. Nie dodawać ręcznego wyjątku dla Bardo; najpierw potwierdzić wynik wspólnego resolvera w świeżym CI.
-- Aktualny preview #275 / run 36266428522 działa na SHA e49ace6886899dc72bc1e0fcdf06fc6b0bc8423c.
-
-## Aktualizacja ciągłości — regresja Bardo — 2026-09-26
-
-- Commit 85fa4b17728bc5891561931d51095f1a8299d3e8 dodał do preview jawny regression guard dla klucza bardo: wspólny audyt musi zwrócić dokładnie Bardo, a CKDT musi zawierać Bardo i nie może zawierać bardo.
-- Jest to wyłącznie test oczekiwanej reguły ortograficznej dla nazwy miejscowości; nie wolno implementować tego jako ręcznego wyjątku w resolverze.
-- Najnowszy preview: #276 / run 36266520815, SHA 85fa4b17728bc5891561931d51095f1a8299d3e8.
-
-## Aktualizacja ciągłości — pełny audyt kapitalizacji core — 2026-09-26
-
-- Commit e9efaa0f87aedcb8e02fc35c75a09c3afef67b55 poprawił audyt core tak, aby każdy z 100 000 kluczy był przepuszczany przez wspólny resolver, niezależnie od tego, czy istnieje dla niego evidence z modułów.
-- Commit 03e6640e2beacc0a1c2fcbef7042127b7ece7555 dodatkowo umożliwił uruchomienie audytu core bez dostarczania modułów; brak modułu nie może już powodować pominięcia klucza core.
-- Commit 15c071d93fff855517c2ef936b2412531234ab4a dodał do preview wymaganie: core_audyt musi raportować 100000 core_keys_audited i 100000 resolved_core_keys, a rozstrzygnięcie klucza bardo musi mieć powierzchnię Bardo.
-- Zasada architektoniczna: członkostwo w 100k pozostaje niezmienne, ale canonical surface każdego klucza core podlega temu samemu audytowi kapitalizacji co powierzchnie modułowe.
-- Najnowszy preview #280 / run 36267146528 działa na SHA e9efaa0f87aedcb8e02fc35c75a09c3afef67b55; wynik nie jest jeszcze green.
-
-## Aktualizacja ciągłości — jawna polityka powierzchni a niejednoznaczność analizatora — 2026-09-26
-
-- Preview #280 / run 36267146528 ujawnił, że po objęciu wszystkich 100000 kluczy pełnym audytem core klucz tomaszów został rozstrzygnięty inaczej niż dotychczasowy modułowy przebieg. Bramka zatrzymała się na oczekiwanej powierzchni Tomaszów.
-- W repozytorium istnieje jawnie audytowana polityka tomaszów -> Tomaszów w sources/staging/surface_registry_policy.tsv, oparta na WSJP PAN. To nie jest wyjątek first-name ani ręczna poprawka wynikająca z przypadku CI.
-- Wspólny resolver został zmieniony w commicie 8ed618b61cd72db0140302115281c6fdf3aad4d0, tak aby jawna, niezależnie udokumentowana polityka powierzchni dla dokładnego klucza była stosowana przed rozstrzyganiem niejednoznaczności analizatora. Reguła przymiotnik -> lowercase pozostaje domyślną regułą dla powierzchni bez takiej jawnej decyzji.
-- Nie wolno wykorzystywać tej zmiany do tworzenia wyjątków dla pojedynczych słów poza audytowaną polityką powierzchni. Nadal obowiązuje jakubowi -> jakubowi, ponieważ brak dla niego takiej jawnej polityki, a analiza przymiotnikowa daje regułę lowercase.
