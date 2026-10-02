@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "fixtureKind": "constructed_acceptance_examples_not_user_traces",
+  "cases": [
+    {
+      "id": "case001",
+      "beforeCursor": "Rozmawiamy o polskich miastach i ich historii. W tym przykładzie jest to ",
+      "candidates": [{"surface": "łódź", "engineScore": 650}, {"surface": "lód", "engineScore": 250}],
+      "expected": {"languageCode": "pl", "surfaceKey": "łódź", "surface": "Łódź"}
+    },
+    {
+      "id": "case002",
+      "beforeCursor": "Oglądamy stare drewniane jednostki pływające. W tym przykładzie jest to ",
+      "candidates": [{"surface": "łódź", "engineScore": 650}, {"surface": "lód", "engineScore": 250}],
+      "expected": {"languageCode": "pl", "surfaceKey": "łódź", "surface": "łódź"}
+    },
+    {
+      "id": "case003",
+      "beforeCursor": "Na brzegu stała niewielka drewniana ",
+      "candidates": [{"surface": "łódź", "engineScore": 800}, {"surface": "lód", "engineScore": 100}],
+      "expected": {"languageCode": "pl", "surfaceKey": "łódź", "surface": "łódź"}
+    },
+    {
+      "id": "case004",
+      "beforeCursor": "Pod względem historii przemysłu moim ulubionym miastem jest ",
+      "candidates": [{"surface": "łódź", "engineScore": 600}, {"surface": "lód", "engineScore": 300}],
+      "expected": {"languageCode": "pl", "surfaceKey": "łódź", "surface": "Łódź"}
+    },
+    {
+      "id": "case005",
+      "beforeCursor": "Dodaję kostki, żeby napój był chłodny. Potrzebny jest ",
+      "candidates": [{"surface": "lód", "engineScore": 600}, {"surface": "łódź", "engineScore": 300}],
+      "expected": {"languageCode": "pl", "surfaceKey": "lód", "surface": "lód"}
+    },
+    {
+      "id": "case006",
+      "beforeCursor": "Na mapie zaznaczono region ",
+      "candidates": [{"surface": "mazowiecki", "engineScore": 700}],
+      "expected": {"languageCode": "pl", "surfaceKey": "mazowiecki", "surface": "mazowiecki"}
+    },
+    {
+      "id": "case007",
+      "beforeCursor": "To osoba, którą przedstawił mi kolega. Nazywa się ",
+      "candidates": [{"surface": "malina", "engineScore": 600}],
+      "expected": {"languageCode": "pl", "surfaceKey": "malina", "surface": "Malina"}
+    },
+    {
+      "id": "case008",
+      "beforeCursor": "Na krzaku dojrzała kolejna ",
+      "candidates": [{"surface": "malina", "engineScore": 600}],
+      "expected": {"languageCode": "pl", "surfaceKey": "malina", "surface": "malina"}
+    },
+    {
+      "id": "case009",
+      "beforeCursor": "Wypłynęliśmy rano.\n",
+      "caseMode": "sentence_start",
+      "candidates": [{"surface": "łódź", "engineScore": 750}, {"surface": "lód", "engineScore": 150}],
+      "expected": {"languageCode": "pl", "surfaceKey": "łódź", "surface": "Łódź"}
+    },
+    {
+      "id": "case010",
+      "beforeCursor": "Nagłówek: ",
+      "caseMode": "caps_lock",
+      "candidates": [{"surface": "łódź", "engineScore": 700}],
+      "expected": {"languageCode": "pl", "surfaceKey": "łódź", "surface": "ŁÓDŹ"}
+    },
+    {
+      "id": "case011",
+      "beforeCursor": "Uruchomiłem narzędzie ",
+      "candidates": [{"surface": "ChatGPT", "engineScore": 700}],
+      "expected": {"languageCode": "pl", "surfaceKey": "chatgpt", "surface": "ChatGPT"}
+    },
+    {
+      "id": "case012",
+      "beforeCursor": "Moim ulubionym miastem jest ",
+      "candidates": [{"surface": "lód", "engineScore": 900}],
+      "expected": {"languageCode": "pl", "surfaceKey": "łódź", "surface": "Łódź"}
+    },
+    {
+      "id": "case013",
+      "beforeCursor": "",
+      "candidates": [{"surface": "łódź", "engineScore": 650}, {"surface": "Łódź", "engineScore": 200}],
+      "expected": {"languageCode": "pl", "surfaceKey": "łódź", "surface": "łódź"}
+    },
+    {
+      "id": "case014",
+      "beforeCursor": "Nazwy miejsc: ",
+      "caseMode": "shift",
+      "candidates": [{"surface": "łódź", "engineScore": 500}, {"surface": "lód", "engineScore": 350}],
+      "expected": {"languageCode": "pl", "surfaceKey": "łódź", "surface": "Łódź"}
+    }
+  ]
+}

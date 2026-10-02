@@ -1,0 +1,30 @@
+name: Context surface prototype
+
+on:
+  push:
+    paths:
+      - 'experiments/context_surface_v1/**'
+      - '.github/workflows/context-surface-prototype.yml'
+  pull_request:
+    paths:
+      - 'experiments/context_surface_v1/**'
+      - '.github/workflows/context-surface-prototype.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prototype:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regression tests
+        run: python3 -m unittest discover -s experiments/context_surface_v1 -p 'test_*.py' -v
+      - name: Prepare requests and neutral baseline
+        run: |
+          python3 experiments/context_surface_v1/prototype.py prepare --cases experiments/context_surface_v1/cases-fixture.json --sidecar experiments/context_surface_v1/sidecar-fixture.json --output build/context-surface/requests.json
+          python3 experiments/context_surface_v1/prototype.py evaluate --cases experiments/context_surface_v1/cases-fixture.json --sidecar experiments/context_surface_v1/sidecar-fixture.json --output build/context-surface/neutral-baseline.json
