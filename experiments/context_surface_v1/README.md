@@ -2,7 +2,9 @@
 
 To działający prototyp offline w Pythonie 3.12. Harness i testy używają
 standard library; opcjonalny adapter modelu wymaga torch/transformers.
-Aktualny etap: [SENSE_RESULTS.md](SENSE_RESULTS.md), znaczenia i top 3.
+Nowa zamrożona próba: [NATURAL_PROTOCOL.md](NATURAL_PROTOCOL.md), nowe zdania,
+przymiotniki, formy odmienione i kilka znaczeń tej samej pisowni.
+Poprzedni etap: [SENSE_RESULTS.md](SENSE_RESULTS.md), znaczenia i top 3.
 Poprzednia diagnoza: [DIAGNOSTIC_RESULTS.md](DIAGNOSTIC_RESULTS.md),
 protokół: [DIAGNOSTIC_PROTOCOL.md](DIAGNOSTIC_PROTOCOL.md).
 Kolejny eksperyment: [SENSE_PROTOCOL.md](SENSE_PROTOCOL.md), jawne znaczenia
