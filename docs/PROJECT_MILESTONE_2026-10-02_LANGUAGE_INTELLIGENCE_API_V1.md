@@ -10,7 +10,7 @@
 Po zapisaniu finalnego kontraktu bieżący `main`:
 
 - `jakamilek/CleverKeysPL`: HEAD `e26d70da385e20a175ecf9e1884233746587ca3d`
-- `jakamilek/CleverKeys-langpack-pl`: HEAD `168f1f83a7df49e572518f1c87037485bc5bee5d`
+- `jakamilek/CleverKeys-langpack-pl`: HEAD `c83ec27534d828cb7f2e7e136a56a79993986124`
 
 W tym etapie zmieniono wyłącznie dokumentację.
 
