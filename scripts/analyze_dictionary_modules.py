@@ -21,6 +21,8 @@ import argparse
 import json
 from pathlib import Path
 
+from surface_components import component_surfaces
+
 
 def load_lines(path: Path) -> set[str]:
     words: set[str] = set()
@@ -35,8 +37,30 @@ def load_lines(path: Path) -> set[str]:
 def load_column(path: Path, column: str) -> set[str]:
     import csv
 
+    # Some reviewed staging TSVs intentionally have their schema documented in
+    # comments rather than a machine-readable header.  Their second/third
+    # fields contain semicolon-separated dictionary surfaces.  Support those
+    # files explicitly so the module-cost report measures words, not metadata.
+    if column == "__family_forms__":
+        values: set[str] = set()
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            fields = line.split("\t")
+            if len(fields) < 2:
+                continue
+            start = 2 if path.name == "reviewed_morphology.tsv" else 1
+            if len(fields) <= start:
+                continue
+            for surface in fields[start].split(";"):
+                surface = surface.strip()
+                if surface:
+                    values.update(component_surfaces(surface))
+        return values
+
     with path.open(encoding="utf-8", newline="") as handle:
-        reader = csv.DictReader(handle, delimiter="\t")
+        rows = (line for line in handle if line.strip() and not line.lstrip().startswith("#"))
+        reader = csv.DictReader(rows, delimiter="\t")
         if column not in (reader.fieldnames or []):
             raise SystemExit(
                 f"Module source {path} has no column {column!r}; "
@@ -46,7 +70,7 @@ def load_column(path: Path, column: str) -> set[str]:
         for row in reader:
             value = row[column].strip()
             if value:
-                values.add(value)
+                values.update(component_surfaces(value))
         return values
 
 
