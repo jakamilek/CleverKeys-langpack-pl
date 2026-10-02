@@ -1,13 +1,16 @@
-# Zamrożony protokół: Polish RoBERTa v2
+# Zamrożony protokół: Polbert cased
 
 Ustalony i commitowany przed inferencją, bez zmiany score po obejrzeniu wyników.
 
-Model `sdadas/polish-roberta-base-v2`, rewizja
-`4a0bda6ba39e467e204c913cd642700544fc4d3a`, Apache 2.0.
-Autorzy: Dadas, Perełkiewicz, Poświata (2020).
-[Model card](https://huggingface.co/sdadas/polish-roberta-base-v2),
-[oficjalne zasoby autorów](https://github.com/sdadas/polish-nlp-resources),
-[publikacja](https://arxiv.org/abs/2006.04229).
+Model `dkleczek/bert-base-polish-cased-v1`, rewizja
+`fed744e81ebd16cf099b5c64c40688bc3e6ace67`.
+Autor: Darek Kłeczek, [model card](https://huggingface.co/dkleczek/bert-base-polish-cased-v1).
+Gotowy model z pretrainingu MLM + NSP, whole-word masking. Ładujemy całe
+AutoModelForPreTraining, korzystamy wyłącznie z prediction_logits MLM.
+Nie ustalono jawnej licencji redystrybucji: wagi nie są dodawane do repo/pakietu;
+licencja musi zostać wyjaśniona przed potencjalnym zastosowaniem produkcyjnym.
+Preflight tokenizatora potwierdził łódź=[16772], Łódź=[17041]; formy malina/Malina
+mają po dwa subwordy. Taki preflight nie ocenia jakości i nie używa gold labels.
 
 1. Model widzi wyłącznie lewe okno kontekstu i maski w miejscu kandydata.
    Cała powierzchnia jest zamaskowana jednocześnie, także przy kilku subwordach.
@@ -21,7 +24,8 @@ Autorzy: Dadas, Perełkiewicz, Poświata (2020).
    512 pozycji obejmuje BOS, EOS i największą liczbę masek w grupie.
    Nadmiar najstarszych tokenów jest odcinany i oznaczany w raporcie.
 5. Wagi/głowica MLM muszą być kompletne: brakujące, dodatkowe lub niedopasowane
-   klucze przerywają pomiar. Safetensors, trust_remote_code=False, CPU float32,
+   klucze przerywają pomiar. Pinned pytorch_model.bin, torch 2.6.0,
+   trust_remote_code=False, CPU float32,
    eval/inference_mode, 2 wątki. Zero treningu i losowej głowicy.
 6. Wyniki porównujemy tylko między wariantami tego samego klucza. EngineScore
    i kolejność kluczy nie zmieniają się. Puste okno zachowuje słownikowy default;
@@ -43,13 +47,24 @@ jawnego kontraktu MLM, przed uzyskaniem wyników jakości. HerBERT opublikował
 config z architecture=BertModel; w tym etapie nie sprawdzono jego wag MLM.
 To nie dowód, że którykolwiek z tych modeli jest bezużyteczny.
 
+## Zatrzymana próba Polish RoBERTa v2
+
+Commit `175375420189d792b7c413ce01b6edaea2b9f96c` próbował tego samego
+whole-word-mask score na sdadas/polish-roberta-base-v2, rewizji
+4a0bda6ba39e467e204c913cd642700544fc4d3a. Model/głowica załadowały się bez
+brakujących wag, ale published tokenizer.json koduje Łódź jako [12,3,4584],
+czyli ['▁','<unk>','ódź']. Łódź nie jest poprawnie reprezentowana. Kontrola
+odrzuciła wynik przed scoringiem pierwszego przykładu i zapisem JSON.
+Nie traktujemy unk jako oceny pisowni; nie poprawiamy na ślepo tokenizatora.
+Wybór Polbert nastąpił przed jakimkolwiek uzyskanym wynikiem jakości.
+
 ## Odtworzenie
 
 Instalacja jak w MODEL_PROTOCOL.md, te same przypięte pakiety, następnie:
 
 ```bash
-.venv-model/bin/python experiments/context_surface_v1/mlm_adapter.py --requests build/context-surface/requests.json --output build/context-surface/roberta-predictions.json
-python3 experiments/context_surface_v1/prototype.py evaluate --cases experiments/context_surface_v1/cases-fixture.json --sidecar experiments/context_surface_v1/sidecar-fixture.json --predictions build/context-surface/roberta-predictions.json --output build/context-surface/roberta-report.json
+.venv-model/bin/python experiments/context_surface_v1/mlm_adapter.py --requests build/context-surface/requests.json --output build/context-surface/polbert-predictions.json
+python3 experiments/context_surface_v1/prototype.py evaluate --cases experiments/context_surface_v1/cases-fixture.json --sidecar experiments/context_surface_v1/sidecar-fixture.json --predictions build/context-surface/polbert-predictions.json --output build/context-surface/polbert-report.json
 ```
 
 Aktualny adapter znajduje się w mlm_adapter.py. plt5_adapter.py zachowano jako

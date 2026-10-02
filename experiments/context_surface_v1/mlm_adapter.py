@@ -13,9 +13,9 @@ from pathlib import Path
 from prototype import canonical_bytes, validate_predictions
 from plt5_adapter import check_request
 
-MODEL_ID = "sdadas/polish-roberta-base-v2"
-MODEL_REVISION = "4a0bda6ba39e467e204c913cd642700544fc4d3a"
-ADAPTER_VERSION = "roberta-whole-word-mask-v1"
+MODEL_ID = "dkleczek/bert-base-polish-cased-v1"
+MODEL_REVISION = "fed744e81ebd16cf099b5c64c40688bc3e6ace67"
+ADAPTER_VERSION = "polbert-whole-word-mask-v1"
 MAX_INPUT_TOKENS = 512
 
 
@@ -32,14 +32,14 @@ def shared_context_suffix(context_ids, variant_lengths, budget=MAX_INPUT_TOKENS)
 def run(request):
     check_request(request)
     import torch
-    from transformers import AutoModelForMaskedLM, AutoTokenizer
+    from transformers import AutoModelForPreTraining, AutoTokenizer
 
     torch.set_num_threads(2)
     began = time.perf_counter()
     tokenizer = AutoTokenizer.from_pretrained(
         MODEL_ID, revision=MODEL_REVISION, use_fast=True, trust_remote_code=False)
-    model, info = AutoModelForMaskedLM.from_pretrained(
-        MODEL_ID, revision=MODEL_REVISION, use_safetensors=True,
+    model, info = AutoModelForPreTraining.from_pretrained(
+        MODEL_ID, revision=MODEL_REVISION, use_safetensors=False,
         trust_remote_code=False, output_loading_info=True)
     for field in ("missing_keys", "unexpected_keys", "mismatched_keys", "error_msgs"):
         if info.get(field):
@@ -48,6 +48,8 @@ def run(request):
         raise ValueError("model revision or mask-token contract mismatch")
     if tokenizer.num_special_tokens_to_add(pair=False) != 2:
         raise ValueError("this protocol requires exactly BOS and EOS")
+    if tokenizer.cls_token_id is None or tokenizer.sep_token_id is None:
+        raise ValueError("missing CLS/SEP tokens")
     model.eval()
     load_seconds = time.perf_counter() - began
     results, measurements, inventory = [], [], {}
@@ -67,8 +69,9 @@ def run(request):
             if any(i in tokenizer.all_special_ids for ids in targets for i in ids):
                 raise ValueError("variant contains unknown or special tokens")
             suffix, truncated = shared_context_suffix(context_ids, list(map(len, targets)))
-            inputs = [tokenizer.build_inputs_with_special_tokens(
-                suffix + [tokenizer.mask_token_id] * len(ids)) for ids in targets]
+            inputs = [[tokenizer.cls_token_id] + suffix +
+                      [tokenizer.mask_token_id] * len(ids) + [tokenizer.sep_token_id]
+                      for ids in targets]
             padded = torch.full((len(inputs), max(map(len, inputs))),
                                 tokenizer.pad_token_id, dtype=torch.long)
             attention = torch.zeros_like(padded)
@@ -76,7 +79,7 @@ def run(request):
                 padded[index, :len(ids)] = torch.tensor(ids)
                 attention[index, :len(ids)] = 1
             with torch.inference_mode():
-                logits = model(input_ids=padded, attention_mask=attention).logits
+                logits = model(input_ids=padded, attention_mask=attention).prediction_logits
                 log_probs = torch.log_softmax(logits, dim=-1)
                 for index, (surface, ids) in enumerate(zip(group["variants"], targets)):
                     positions = [p for p, token in enumerate(inputs[index])
