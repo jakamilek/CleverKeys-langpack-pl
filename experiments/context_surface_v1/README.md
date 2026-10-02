@@ -2,8 +2,9 @@
 
 To działający prototyp offline w Pythonie 3.12. Harness i testy używają
 standard library; opcjonalny adapter modelu wymaga torch/transformers.
-Aktualny pomiar: [MLM_RESULTS.md](MLM_RESULTS.md),
-protokół: [MLM_PROTOCOL.md](MLM_PROTOCOL.md).
+Aktualna diagnoza: [DIAGNOSTIC_RESULTS.md](DIAGNOSTIC_RESULTS.md),
+protokół: [DIAGNOSTIC_PROTOCOL.md](DIAGNOSTIC_PROTOCOL.md).
+Pierwszy pomiar zachowano w [MLM_RESULTS.md](MLM_RESULTS.md).
 Nie zmienia klawiatury Android ani produkcyjnego rankingu słów.
 
 ## Co sprawdza
