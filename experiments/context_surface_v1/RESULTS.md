@@ -46,3 +46,8 @@ Następnie większy zbiór, rzeczywiste slates, koszt telefonu i integracja runt
 Nie zmieniono kolejności słów, engineScore, dictionary.bin ani membership 100k.
 Nie naprawiono w tym eksperymencie CTC ł i nie podłączono prototypu do aplikacji.
 Status CI gałęzi należy sprawdzić po push; ten raport opisuje wykonane testy lokalne.
+# Aktualizacja — rzeczywista inferencja
+
+Ten plik opisuje historyczny neutralny baseline. Wykonany pomiar Polbert,
+porównanie długości okna i kompletne artefakty są w [MLM_RESULTS.md](MLM_RESULTS.md).
+

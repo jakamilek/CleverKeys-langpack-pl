@@ -1,5 +1,9 @@
 # Zamrożony protokół pierwszej inferencji
 
+**Status historyczny: próba zablokowana przed scoringiem.** Standardowe
+sentinel-e nie są obsługiwane przez opublikowany tokenizer plT5.
+Aktywny protokół i wykonana inferencja: [MLM_PROTOCOL.md](MLM_PROTOCOL.md).
+
 Ustalony przed wykonaniem pomiaru. Bez dostrajania modelu, promptu, progu ani
 metody punktowania na podstawie etykiet tych 14 przykładów.
 

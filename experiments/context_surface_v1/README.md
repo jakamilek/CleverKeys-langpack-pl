@@ -1,7 +1,10 @@
 # Eksperyment: dłuższy kontekst i warianty powierzchni
 
-To działający prototyp offline w Pythonie 3.12 (tylko standard library),
-nie zmiana klawiatury Android ani nowy polski reranker.
+To działający prototyp offline w Pythonie 3.12. Harness i testy używają
+standard library; opcjonalny adapter modelu wymaga torch/transformers.
+Aktualny pomiar: [MLM_RESULTS.md](MLM_RESULTS.md),
+protokół: [MLM_PROTOCOL.md](MLM_PROTOCOL.md).
+Nie zmienia klawiatury Android ani produkcyjnego rankingu słów.
 
 ## Co sprawdza
 
@@ -97,14 +100,14 @@ To sprawdza, że krótka historia usuwa potrzebną informację, nie że model ju
 potrafi ją wykorzystać. Case012 celowo nie ma poprawnego słowa w slate.
 
 Nie wdrożono:
-- inferencji gotowego modelu, adaptera HerBERT/plT5 ani treningu;
+- inferencji HerBERT/plT5 ani treningu; wykonano pretrained Polbert cased;
 - nowego rankingu słów: engineScore i kolejność kluczy pozostają niezmienione;
 - integracji Android, odczytu InputConnection, tap-to-replace i uczenia wariantów;
 - naprawy CTC `ł`, importera sidecara ani zmian CKDT/100k.
 
-Kolejny eksperyment to rzeczywisty adapter gotowego modelu cased oceniany na
-tych samych żądaniach, a potem na większym, oddzielnym zbiorze z prawdziwymi
-slates. Adapter powinien obsługiwać słowa wielotokenowe, używać tylko lewego
-kontekstu, nie korzystać z gold labels, a porównanie długości okna musi używać
-tej samej rewizji modelu. Dopiero wynik i koszt na urządzeniu uzasadniają
-integrację oraz ewentualną zmianę kolejności słów.
+Pierwszy pomiar gotowego modelu dał 12/14 poprawnych powierzchni top-1 dla
+obu okien, wobec neutralnego 10/14. Dłuższe okno nie naprawiło ani nie
+zepsuło top-1 na tym fixture. Kolejny etap: większa oddzielna próba,
+zweryfikowane modele o poprawnym kontrakcie tokenizatora i rzeczywiste slates.
+Case001 nadal pokazuje porażkę rozróżnienia miasta z poprzedniego zdania.
+Integracja wymaga lepszego dowodu jakości i pomiaru urządzenia.
