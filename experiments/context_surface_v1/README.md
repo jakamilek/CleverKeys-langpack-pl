@@ -4,6 +4,8 @@ To działający prototyp offline w Pythonie 3.12. Harness i testy używają
 standard library; opcjonalny adapter modelu wymaga torch/transformers.
 Aktualna diagnoza: [DIAGNOSTIC_RESULTS.md](DIAGNOSTIC_RESULTS.md),
 protokół: [DIAGNOSTIC_PROTOCOL.md](DIAGNOSTIC_PROTOCOL.md).
+Kolejny eksperyment: [SENSE_PROTOCOL.md](SENSE_PROTOCOL.md), jawne znaczenia
+powiązane z wariantami oraz główne kryterium poprawnej formy w top 3.
 Pierwszy pomiar zachowano w [MLM_RESULTS.md](MLM_RESULTS.md).
 Nie zmienia klawiatury Android ani produkcyjnego rankingu słów.
 
@@ -101,14 +103,17 @@ To sprawdza, że krótka historia usuwa potrzebną informację, nie że model ju
 potrafi ją wykorzystać. Case012 celowo nie ma poprawnego słowa w slate.
 
 Nie wdrożono:
-- inferencji HerBERT/plT5 ani treningu; wykonano pretrained Polbert cased;
+- treningu modeli ani inferencji plT5; wykonano pretrained Polbert i HerBERT,
+  a ich aktualne wyniki są w DIAGNOSTIC_RESULTS.md;
 - nowego rankingu słów: engineScore i kolejność kluczy pozostają niezmienione;
 - integracji Android, odczytu InputConnection, tap-to-replace i uczenia wariantów;
 - naprawy CTC `ł`, importera sidecara ani zmian CKDT/100k.
 
-Pierwszy pomiar gotowego modelu dał 12/14 poprawnych powierzchni top-1 dla
+Historyczny pierwszy pomiar gotowego modelu dał 12/14 poprawnych powierzchni top-1 dla
 obu okien, wobec neutralnego 10/14. Dłuższe okno nie naprawiło ani nie
 zepsuło top-1 na tym fixture. Kolejny etap: większa oddzielna próba,
 zweryfikowane modele o poprawnym kontrakcie tokenizatora i rzeczywiste slates.
-Case001 nadal pokazuje porażkę rozróżnienia miasta z poprzedniego zdania.
+Case001 w pierwszym pomiarze pokazywał porażkę rozróżnienia miasta z poprzedniego
+zdania. Kolejna diagnostyka wykazała naprawę przez HerBERT lub Polbert full PLL;
+pełne wyniki i ograniczenia: DIAGNOSTIC_RESULTS.md.
 Integracja wymaga lepszego dowodu jakości i pomiaru urządzenia.
