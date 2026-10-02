@@ -1,0 +1,116 @@
+name: Core dual-casing class audit
+
+on:
+  push:
+    branches:
+      - "ops/baseline-sync-2026-09-20"
+    paths:
+      - ".github/workflows/pl-core-dual-casing-audit.yml"
+      - "scripts/build_pl_preview.py"
+      - "scripts/audit_core_dual_casing_candidates.py"
+      - "scripts/requirements-pl-audit.txt"
+      - "sources/staging/first_name_source_exclusions.tsv"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout language project
+        uses: actions/checkout@v4
+
+      - name: Install spelling tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y hunspell hunspell-pl
+
+      - name: Install pinned audit dependencies
+        env:
+          PIP_DEFAULT_TIMEOUT: "300"
+          PIP_RETRIES: "10"
+        run: |
+          python3 -m pip install --disable-pip-version-check \
+            --timeout 300 --retries 10 \
+            git+https://github.com/rspeer/wordfreq@912caf64b657478d1dff1138efdc078947d54bb1 \
+            morfeusz2==1.99.15
+
+      - name: Acquire pinned AOSP Polish dictionary
+        run: |
+          set -euo pipefail
+          mkdir -p build/aosp
+          expected_sha="75a7a488e014ec3b9dbdb2527f09bca6bb28c250232d9ba50cb0ee1f8738ea45"
+          selected_ref=""
+          for ref in "refs/tags/aml_doc_351311000" "refs/heads/main"; do
+            echo "Trying official AOSP Gitiles ref: ${ref}"
+            rm -f build/aosp/pl_wordlist.combined.gz.base64 build/aosp/pl_wordlist.combined.gz
+            if curl --fail --retry 3 --retry-delay 3 --retry-max-time 60 --retry-all-errors \
+              --user-agent 'CleverKeys-PL-Core-Dual-Casing-Audit/1.0' \
+              --location \
+              "https://android.googlesource.com/platform/packages/inputmethods/LatinIME/+/${ref}/dictionaries/pl_wordlist.combined.gz?format=TEXT" \
+              -o build/aosp/pl_wordlist.combined.gz.base64; then
+              base64 --decode build/aosp/pl_wordlist.combined.gz.base64 > build/aosp/pl_wordlist.combined.gz
+              if test "$(sha256sum build/aosp/pl_wordlist.combined.gz | awk '{print $1}')" = "$expected_sha"; then
+                selected_ref="$ref"
+                break
+              fi
+            fi
+          done
+          test -n "$selected_ref"
+          printf '%s\n' "$selected_ref" "sha256=$expected_sha" > build/aosp/source-ref.txt
+
+      - name: Build immutable 100k core
+        run: |
+          python3 scripts/build_pl_preview.py \
+            --base-only \
+            --top 300000 \
+            --first-name-source-exclusions sources/staging/first_name_source_exclusions.tsv \
+            --band 100000 \
+            --limit 100000 \
+            --aosp build/aosp/pl_wordlist.combined.gz \
+            --out-wordlist build/base100k.txt \
+            --out-report build/base100k-report.json
+
+      - name: Audit immutable-core candidates by Morfeusz NAME class
+        run: |
+          python3 scripts/audit_core_dual_casing_candidates.py \
+            --base build/base100k.txt \
+            --out-json build/pl-core-dual-casing-candidates.json \
+            --out-tsv build/pl-core-dual-casing-candidates.tsv
+
+      - name: Print class audit summary
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          audit = json.loads(Path("build/pl-core-dual-casing-candidates.json").read_text(encoding="utf-8"))
+          print("CORE KEYS", audit["core_keys"])
+          print("CANDIDATES", audit["candidate_count"])
+          print("SURNAME-ONLY", audit["surname_only_candidate_count"])
+          print("NON-SURNAME", audit["non_surname_candidate_count"])
+          print("SURNAME+OTHER", audit["surname_plus_other_class_candidate_count"])
+          print("CLASS COUNTS")
+          for key, value in audit["proper_class_distribution_by_candidate"].items():
+              print(f"  {key}\t{value}")
+          print("CLASS COMBINATIONS")
+          for key, value in audit["proper_class_combination_distribution"].items():
+              print(f"  {key}\t{value}")
+          for key in ("warszawa", "łódź", "malina", "bardo"):
+              print("SAMPLE", key, json.dumps(
+                  next((row for row in audit["candidates"] if row["surface_key"] == key), None),
+                  ensure_ascii=False
+              ))
+          PY
+
+      - name: Publish audit artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pl-core-dual-casing-class-audit
+          path: |
+            build/base100k.txt
+            build/base100k-report.json
+            build/pl-core-dual-casing-candidates.json
+            build/pl-core-dual-casing-candidates.tsv

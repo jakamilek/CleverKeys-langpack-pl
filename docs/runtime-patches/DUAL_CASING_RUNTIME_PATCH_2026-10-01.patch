@@ -1,0 +1,182 @@
+*** Begin Patch
+*** Add File: src/main/kotlin/tribixbite/cleverkeys/casing/CaseVariantResolver.kt
++package tribixbite.cleverkeys.casing
++
++import java.util.Locale
++
++/**
++ * Pure resolver for a lexical key that has two first-letter casing surfaces.
++ *
++ * The lexical key remains case-insensitive and singular. This class only decides
++ * which already-audited surface should be primary in the suggestion projection.
++ *
++ * No sentence context is inferred here. Sentence-start auto-cap, Shift and Caps
++ * Lock remain outside this resolver.
++ */
++data class CaseVariantSet(
++    val key: String,
++    val defaultPrimary: String,
++    val alternate: String,
++) {
++    init {
++        require(key.isNotBlank()) { "key must not be blank" }
++        val folded = key.lowercase(Locale.ROOT)
++        require(key == folded) { "key must be the lowercase lexical identity" }
++        require(defaultPrimary.lowercase(Locale.ROOT) == folded) {
++            "defaultPrimary must belong to key"
++        }
++        require(alternate.lowercase(Locale.ROOT) == folded) {
++            "alternate must belong to key"
++        }
++        require(defaultPrimary != alternate) {
++            "defaultPrimary and alternate must be distinct surfaces"
++        }
++        require(
++            setOf(defaultPrimary, alternate) == setOf(
++                folded,
++                key.replaceFirstChar {
++                    if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString()
++                },
++            )
++        ) {
++            "the experimental resolver currently supports lowercase + first-letter-capitalized surfaces only"
++        }
++    }
++}
++
++/**
++ * Local preference counters. Persistence belongs to the runtime storage layer.
++ */
++data class CaseVariantPreference(
++    val lowercaseUses: Long = 0,
++    val capitalizedUses: Long = 0,
++) {
++    init {
++        require(lowercaseUses >= 0) { "lowercaseUses must be >= 0" }
++        require(capitalizedUses >= 0) { "capitalizedUses must be >= 0" }
++    }
++}
++
++/** Resolved presentation order. Both surfaces remain available. */
++data class CaseVariantSelection(
++    val primary: String,
++    val alternate: String,
++)
++
++/**
++ * Pure dual-casing policy.
++ *
++ * A minimum amount of evidence and a lead over the competing variant are
++ * required before changing the preferred surface. One accidental selection
++ * therefore cannot flip a user's normal spelling.
++ */
++class CaseVariantResolver(
++    private val minimumObservedUsesToSwitch: Long = 5,
++    private val minimumLeadToSwitch: Long = 2,
++) {
++    init {
++        require(minimumObservedUsesToSwitch > 0)
++        require(minimumLeadToSwitch > 0)
++    }
++
++    fun resolve(
++        variants: CaseVariantSet,
++        preference: CaseVariantPreference = CaseVariantPreference(),
++    ): CaseVariantSelection {
++        val lower = variants.key.lowercase(Locale.ROOT)
++        val capitalized = variants.key.replaceFirstChar {
++            if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString()
++        }
++
++        val primary = when {
++            preference.capitalizedUses >= minimumObservedUsesToSwitch &&
++                preference.capitalizedUses >= preference.lowercaseUses + minimumLeadToSwitch -> capitalized
++
++            preference.lowercaseUses >= minimumObservedUsesToSwitch &&
++                preference.lowercaseUses >= preference.capitalizedUses + minimumLeadToSwitch -> lower
++
++            else -> variants.defaultPrimary
++        }
++
++        val alternate = if (primary == lower) capitalized else lower
++        return CaseVariantSelection(primary = primary, alternate = alternate)
++    }
++}
+*** Add File: src/test/kotlin/tribixbite/cleverkeys/casing/CaseVariantResolverTest.kt
++package tribixbite.cleverkeys.casing
++
++import com.google.common.truth.Truth.assertThat
++import org.junit.Test
++
++class CaseVariantResolverTest {
++
++    @Test
++    fun oneLexicalKeyExposesLowercaseAndCapitalizedSurfaces() {
++        val variants = CaseVariantSet("malina", "malina", "Malina")
++        val result = CaseVariantResolver().resolve(variants)
++        assertThat(result.primary).isEqualTo("malina")
++        assertThat(result.alternate).isEqualTo("Malina")
++    }
++
++    @Test
++    fun existingCanonicalCapitalizationCanRemainTheDefault() {
++        val variants = CaseVariantSet("warszawa", "Warszawa", "warszawa")
++        val result = CaseVariantResolver().resolve(variants)
++        assertThat(result.primary).isEqualTo("Warszawa")
++        assertThat(result.alternate).isEqualTo("warszawa")
++    }
++
++    @Test
++    fun oneAccidentalCapitalizedUseDoesNotFlipLowercaseDefault() {
++        val variants = CaseVariantSet("malina", "malina", "Malina")
++        val result = CaseVariantResolver().resolve(
++            variants,
++            CaseVariantPreference(lowercaseUses = 12, capitalizedUses = 1),
++        )
++        assertThat(result.primary).isEqualTo("malina")
++        assertThat(result.alternate).isEqualTo("Malina")
++    }
++
++    @Test
++    fun repeatedCapitalizedUseCanMakeCapitalizedSurfacePrimary() {
++        val variants = CaseVariantSet("malina", "malina", "Malina")
++        val result = CaseVariantResolver().resolve(
++            variants,
++            CaseVariantPreference(lowercaseUses = 2, capitalizedUses = 8),
++        )
++        assertThat(result.primary).isEqualTo("Malina")
++        assertThat(result.alternate).isEqualTo("malina")
++    }
++
++    @Test
++    fun repeatedLowercaseUseCanMovePreferenceBack() {
++        val variants = CaseVariantSet("malina", "malina", "Malina")
++        val result = CaseVariantResolver().resolve(
++            variants,
++            CaseVariantPreference(lowercaseUses = 8, capitalizedUses = 2),
++        )
++        assertThat(result.primary).isEqualTo("malina")
++        assertThat(result.alternate).isEqualTo("Malina")
++    }
++
++    @Test
++    fun equalEvidenceKeepsAuditedDefaultInsteadOfOscillating() {
++        val variants = CaseVariantSet("warszawa", "Warszawa", "warszawa")
++        val result = CaseVariantResolver().resolve(
++            variants,
++            CaseVariantPreference(lowercaseUses = 20, capitalizedUses = 20),
++        )
++        assertThat(result.primary).isEqualTo("Warszawa")
++        assertThat(result.alternate).isEqualTo("warszawa")
++    }
++
++    @Test(expected = IllegalArgumentException::class)
++    fun differentLexicalKeysAreRejected() {
++        CaseVariantSet("malina", "Malina", "Łódź")
++    }
++
++    @Test(expected = IllegalArgumentException::class)
++    fun allUppercaseExperimentalSurfaceIsRejected() {
++        CaseVariantSet("malina", "MALINA", "malina")
++    }
++}

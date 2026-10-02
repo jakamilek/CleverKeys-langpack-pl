@@ -1,0 +1,100 @@
+name: Morfeusz category inventory
+
+on:
+  push:
+    branches:
+      - "ops/baseline-sync-2026-09-20"
+    paths:
+      - ".github/workflows/morfeusz-category-inventory.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pinned Morfeusz
+        run: python3 -m pip install --disable-pip-version-check morfeusz2==1.99.15
+
+      - name: Inventory Morfeusz tags names and labels
+        run: |
+          python3 - <<'PY'
+          import morfeusz2
+
+          m = morfeusz2.Morfeusz()
+          engine = m._morfeusz_obj
+          resolver = engine.getIdResolver()
+
+          def safe_call(label, fn):
+              try:
+                  value = fn()
+                  print(label, repr(value))
+                  return value
+              except Exception as exc:
+                  print(label, "ERROR", type(exc).__name__, str(exc))
+                  return None
+
+          print("MORFEUSZ VERSION", morfeusz2.__version__)
+          safe_call("DICT ID", engine.getDictID)
+          tagset_id = safe_call("TAGSET ID", resolver.getTagsetId)
+          tags_count = safe_call("TAGS COUNT", resolver.getTagsCount)
+          names_count = safe_call("NAMES COUNT", resolver.getNamesCount)
+          labels_count = safe_call("LABEL COMBINATIONS COUNT", resolver.getLabelsCount)
+
+          tags = []
+          if isinstance(tags_count, int):
+              for idx in range(tags_count):
+                  value = safe_call(f"TAG {idx}", lambda idx=idx: resolver.getTag(idx))
+                  if value is not None:
+                      tags.append(value)
+
+          names = []
+          if isinstance(names_count, int):
+              for idx in range(names_count):
+                  value = safe_call(f"NAME {idx}", lambda idx=idx: resolver.getName(idx))
+                  if value is not None:
+                      names.append(value)
+
+          label_combinations = []
+          atomic_labels = set()
+          if isinstance(labels_count, int):
+              for idx in range(labels_count):
+                  value = safe_call(f"LABELS {idx}", lambda idx=idx: sorted(resolver.getLabels(idx)))
+                  if value is not None:
+                      combo = tuple(value)
+                      label_combinations.append(combo)
+                      atomic_labels.update(combo)
+
+          print("SUMMARY UNIQUE TAG STRINGS", len(set(tags)))
+          print("SUMMARY UNIQUE NAME VALUES", len(set(names)))
+          print("SUMMARY NAME VALUES", sorted(set(names)))
+          print("SUMMARY UNIQUE ATOMIC LABELS", len(atomic_labels))
+          print("SUMMARY ATOMIC LABELS", sorted(atomic_labels))
+          print("SUMMARY UNIQUE LABEL COMBINATIONS ACTUALLY ENUMERATED", len(set(label_combinations)))
+
+          pos_classes = {
+              tag.split(":", 1)[0]
+              for tag in set(tags)
+              if tag
+          }
+          print("SUMMARY UNIQUE POS CLASSES", len(pos_classes))
+          print("SUMMARY POS CLASSES", sorted(pos_classes))
+
+          for word in ["bardo", "łódź", "malina", "warszawa", "Jakub", "kowalski", "abidżan"]:
+              print("WORD", word)
+              lower = word.lower()
+              cap = lower[:1].upper() + lower[1:] if lower else lower
+              for variant in dict.fromkeys([lower, cap]):
+                  print("PROBE", variant)
+                  for item in m.analyse(variant):
+                      payload = item[2]
+                      print("  RAW", repr(item))
+                      print("  TAG", repr(payload[2]))
+                      print("  NAME", repr(payload[3]))
+                      print("  LABELS", repr(payload[4]))
+          PY

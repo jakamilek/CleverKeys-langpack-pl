@@ -1,0 +1,7 @@
+surface_key	canonical_surface	case_policy	basis	source
+miński	miński	lowercase	WSJP PAN: miński jest przymiotnikiem od Mińsk; zachowujemy wspólną powierzchnię słownikową z przymiotnikiem administracyjnym/geo	https://wsjp.pl/haslo/podglad/44984/minski
+łódź	łódź	lowercase	WSJP PAN: rzeczownik pospolity łódź jest pisany małą literą; przy wspólnym kluczu z nazwą miasta Łódź wybieramy powierzchnię leksykalną rzeczownika pospolitego	https://wsjp.pl/haslo/podglad/3513/lodz
+łodzi	łodzi	lowercase	WSJP PAN: forma „łodzi” należy do odmiany rzeczownika pospolitego „łódź”; kolizję z nazwą miasta Łódź rozstrzygamy na rzecz powierzchni leksykalnej rzeczownika	https://wsjp.pl/haslo/podglad/3513/lodz
+łodzią	łodzią	lowercase	WSJP PAN: forma „łodzią” należy do odmiany rzeczownika pospolitego „łódź”; kolizję z nazwą miasta Łódź rozstrzygamy na rzecz powierzchni leksykalnej rzeczownika	https://wsjp.pl/haslo/podglad/3513/lodz
+tomaszów	Tomaszów	capitalized	WSJP PAN: Tomaszów jest nazwą własną miejscowości; nie ma podstawy leksykalnej do traktowania powierzchni „tomaszów” jako rzeczownika pospolitego. Dodatkowo Tomaszów jest formą odmiany imienia Tomasz.	https://wsjp.pl/haslo/podglad/90872/tomaszow
+kłodzki	kłodzki	lowercase	TERC: powiat kłodzki jest nazwą administracyjną o powierzchni przymiotnikowej lowercase; ta polityka rozstrzyga kolizję z członem nazwy miejscowości Kłodzki w nazwach wieloczłonowych	https://bdl.stat.gov.pl/bdl/dane/teryt/jednostka/524

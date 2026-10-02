@@ -1,0 +1,71 @@
+name: Polish 20-year first-name history audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "ops/baseline-sync-2026-09-20"
+    paths:
+      - "scripts/audit_name_history.py"
+      - ".github/workflows/pl-name-history-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  name-history-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout language project
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Audit 20 full years of official first-name statistics
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_name_history.py             --out-report build/pl-name-history-report.json             --out-tsv build/pl-name-history.tsv             --out-core build/pl-name-history-core-215-each-gender.txt             --out-buffer build/pl-name-history-buffer-216-300.tsv             --workdir build/pl-name-history-sources             --core-per-gender 215             --buffer-end-rank 300
+
+      - name: Verify history audit
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("build/pl-name-history-report.json").read_text(encoding="utf-8")
+          )
+          assert report["mode"] == "audit-only"
+          assert report["promotion"] is False
+          assert report["scope"]["years"] == list(range(2006, 2026))
+          assert report["scope"]["year_count"] == 20
+          assert report["counts"]["resources"] == 13
+          assert report["counts"]["female_names_seen"] > 0
+          assert report["counts"]["male_names_seen"] > 0
+          assert report["selection_policy"]["core_per_gender"] == 215
+          assert report["selection_policy"]["buffer_rank_start_per_gender"] == 216
+          assert report["selection_policy"]["buffer_rank_end_per_gender"] == 300
+          assert report["selection_policy"]["buffer_is_audit_only"] is True
+          assert len(report["core_advisory"]) == 430
+
+          print(json.dumps({
+              "scope": report["scope"],
+              "counts": report["counts"],
+              "thresholds": report["thresholds"],
+              "ranking_definition": report["ranking_definition"],
+          }, ensure_ascii=False, indent=2))
+          PY
+
+      - name: Publish 20-year first-name audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleverkeys-pl-name-history-audit
+          path: |
+            build/pl-name-history-report.json
+            build/pl-name-history.tsv
+            build/pl-name-history-core-215-each-gender.txt
+            build/pl-name-history-buffer-216-300.tsv
+            build/pl-name-history-sources/

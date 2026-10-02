@@ -1,0 +1,306 @@
+# Polish dictionary architecture: immutable frequency core + additive modules
+Date: 2026-09-25
+
+## Decision
+
+The production dictionary is not defined by a single hard total such as 150,000.
+It consists of:
+
+1. an immutable **100,000-word frequency core**;
+2. additive, auditable **category modules**.
+
+The 100k core is selected from the Polish wordfreq candidate universe after the normal linguistic and quality filters. Category modules must not remove or displace a core key.
+
+## Key identity and deduplication
+
+Dictionary identity is case-insensitive for the purpose of capacity accounting.
+
+Therefore:
+
+- warszawa already present in the 100k core + module entry Warszawa = **one dictionary key**;
+- the module may replace the core surface with the audited canonical surface Warszawa, but it does not consume another slot;
+- a module form absent from the core consumes one additional unique key;
+- the same key appearing in several modules is stored once and carries multiple category/provenance attributes.
+
+The final size is therefore:
+
+100,000 + net-new unique keys from all modules.
+
+## Current modules
+
+### First names
+
+Source selection is the audited official first-name set. Singular forms are generated through Morfeusz 2 / SGJP and the surface policy controls capitalization and common-noun homonyms.
+
+### Polish localities
+
+Current official city names are sourced from GUS TERYT/SIMC. Singular inflection is generated from Morfeusz 2 / SGJP and reviewed overrides where the official proper-name form needs additional source-backed evidence.
+
+### Polish administrative units
+
+Planned module based on GUS TERYT/TERC. TERC contains the names and identifiers of the three-level territorial division: voivodeships, powiats and gminas, with distinct types including cities with powiat rights and Warsaw districts/delegations.
+
+### Countries and capitals
+
+Planned module based on the official KSNG/GUGiK 2025 list. This source provides recommended Polish spellings of country and capital names, selected inflection information, country adjectives and inhabitant names.
+
+### Manual / custom
+
+Active permanent category for explicitly hand-selected dictionary surfaces.
+
+Current bootstrap:
+- 75 forms carried forward from the retired reviewed-morphology pilot after verification that they were absent from the 100k core and active name/city modules at the last complete measurement.
+- Source: sources/staging/custom_manual.tsv.
+- Every row carries an explicit capitalization policy, basis and provenance.
+- The category is intended for future hand-added words that do not naturally belong to an existing structured source category.
+- Manual additions still pass the same final quality, deduplication and capitalization gates as all other modules.
+
+The archived reviewed-morphology pilot is not restored as a category; its eligible unique forms are now represented here as explicit manual entries.
+
+### Brands / trade names
+
+Planned as a **controlled practical-keyboard module**, not as an import of all registered trademarks.
+
+A brand candidate should have:
+
+1. evidence that the name is an actual current brand/trade name;
+2. evidence of practical relevance in Polish usage;
+3. a provenance record identifying the evidence and date;
+4. a separate linguistic decision about capitalization and whether Polish inflection is actually used.
+
+UPRP and EUIPO/TMview are suitable for verifying trademark existence. Independent market/brand research can be used only as a selection signal, not as the linguistic source of the spelling.
+
+Registered-trademark databases alone must not be used as a dump: they contain many marks that are irrelevant to normal keyboard typing.
+
+## Retired early proper-noun pilot
+
+The former `reviewed_proper_nouns` pilot was created for early runtime testing and
+anchor/regression probing. It is **not an active production module** and is not
+included in module capacity accounting or retention decisions.
+
+Its historical source is preserved at:
+- `sources/archive/reviewed_proper_nouns_pilot_2026-09-25.tsv`
+
+The archived entries must not be automatically promoted. A future reuse requires
+fresh assignment to the appropriate category (for example first names or a
+controlled locality/country/brand module), fresh source audit, and explicit
+inclusion. Duplicate keys already represented by the 100k core or another active
+module do not justify retaining a second proper-noun entry.
+
+## Retired reviewed morphology pilot
+
+The former `reviewed_morphology` pilot was created as a small diagnostic layer for
+specific observed missing forms during runtime/screenshot testing. It is **not an
+active production category** and is excluded from current capacity accounting,
+frequency-retention calibration, and CKDT generation.
+
+Its historical source is preserved at:
+- `sources/archive/reviewed_morphology_pilot_2026-09-25.tsv`
+
+The archived forms must not be automatically promoted. A future reuse requires
+fresh assignment to an appropriate real category or an explicitly defined new
+category, a fresh source audit, and explicit inclusion.
+
+## Category admission and inflection protocol
+
+Adding a new category is a defined two-stage process.
+
+### Stage 1 — build the category completely enough to measure it
+
+1. Prepare the audited set of **base words/items** for the category.
+2. Validate provenance, identity and capitalization of those base items.
+3. Generate the **complete validated singular inflection paradigm** for every applicable base item.
+4. Validate the generated forms linguistically and record provenance.
+5. Deduplicate case-insensitively against the immutable 100k core and all already-active modules.
+6. Measure the category's:
+   - number of base items;
+   - number of generated surface forms;
+   - unique case-insensitive keys;
+   - overlap with the 100k core;
+   - net-new keys versus the core;
+   - overlap with earlier modules;
+   - incremental contribution to the final union.
+
+The capacity decision is made **after this measurement**, not before.
+
+### Stage 2 — choose the retained set
+
+**Default:** when the measured category size is comfortably within its agreed capacity envelope, retain **all validated base items and all validated inflection forms**.
+
+A category capacity envelope is not assumed globally. It is established per category only when needed, based on the actual measured cost of that category and the current remaining dictionary capacity.
+
+When the measured category would exceed that envelope:
+
+- retain all validated base items unless a separate quality/provenance rule excludes an item;
+- retain inflection forms selectively;
+- use frequency evidence together with grammatical usefulness and source confidence;
+- prefer a transparent, deterministic retention order;
+- preserve the full generated paradigm and the evidence for every excluded form in the audit artifacts;
+- after selection, re-measure the category and its **net-new contribution**, including cross-module deduplication.
+
+### Important refinement
+
+Capacity should be evaluated primarily on the **net-new union contribution**, not on the raw count of generated forms. This prevents the same word appearing in several categories from consuming multiple capacity slots.
+
+Frequency is a selection signal only when capacity is genuinely constrained. A low-frequency but linguistically valid form must not be removed merely because it is rare when there is sufficient room.
+
+No arbitrary frequency threshold is introduced before the category has been measured. The threshold, if one is eventually necessary, is calibrated from the observed distribution for that category and documented in the commit that introduces the constraint.
+
+This protocol applies to every future category, including administrative units, countries/capitals and controlled brands.
+
+## Capitalization gate
+
+Every retained surface must pass a final capitalization gate before CKDT creation.
+
+Policies are:
+
+- ordinary vocabulary: lowercase;
+- adjectives derived from proper/geographical names: lowercase;
+- proper names and their grammatical forms: audited capitalization;
+- city and administrative names: canonical capitalization from the controlled source.
+
+A capitalization violation fails the build.
+
+## Retention decision after clean module measurement (2026-09-25)
+
+The clean post-pilot measurement previously found 2,611 net-new unique keys over the protected
+100k core, but that figure still included the now-retired reviewed-morphology pilot.
+It is therefore **superseded**. After removing that pilot from active production
+accounting, the active-module union must be measured again before a new net-new
+total is recorded.
+
+Capacity is not a reason to cut validated low-frequency inflection forms when the
+measured active union is comfortably within the available category/capacity envelope.
+
+Therefore the current active modules use the **full-retention default**: validated
+base items and validated generated forms are retained unless there is a separate
+quality/provenance/capitalization/regression reason to exclude them.
+
+The frequency-aware selection branch remains available as a **capacity-control
+mechanism for future category expansion**, but it is not applied merely because a
+form is rare. If a future category exceeds its agreed capacity envelope, the
+selection is made after full-paradigm generation and measurement, and the retained
+set is chosen deterministically using frequency, grammatical usefulness and source
+confidence while preserving the complete excluded-form audit trail.
+
+No numeric frequency threshold is to be invented for the current 2,611-key active
+addition set.
+
+## Capacity policy
+
+The 100k frequency core is protected.
+
+Module accounting must report for every module:
+
+- source surface count;
+- unique case-insensitive keys;
+- overlap with the 100k core;
+- net-new keys versus the core;
+- overlap with earlier modules;
+- cumulative final key count.
+
+Only after all modules are measured should the final CKDT capacity be chosen.
+
+The previous 150k experiment remains a diagnostic measurement, not the definition of the final production size.
+
+## Practical consequence
+
+The correct question is not:
+
+"Can we squeeze everything into 150k?"
+
+It is:
+
+"How large is the union of the protected 100k core and the validated modules?"
+
+If that union is 112k, the production dictionary should be about 112k.
+If it is 137k, the production dictionary should be about 137k.
+If it grows substantially beyond that, we can then use frequency-based inflection retention to control only the additional forms, without sacrificing core words.
+
+## Audit principle
+
+No module may silently displace a word from the 100k core.
+
+The build system must make every net-new module key and every replacement of a core surface traceable to its source and category.
+
+## Frequency evidence for additive modules
+
+For additive module retention, frequency is measured independently of the immutable 100k core. Absence from the core is not treated as zero frequency.
+
+The primary batch signal is the pinned NKJP1M tagged frequency table derived from the manually annotated one-million-word NKJP subcorpus. The table provides word form, lemma, grammatical tag and frequency; its provenance is pinned to ENIAM revision be02836cf3aa0286ad8961d2e4528cdc2f72d044. The project audit records the downloaded file SHA-256 and explicitly labels the corpus scope as NKJP1M rather than the full searchable NKJP corpus.
+
+The secondary signal is pinned wordfreq Polish frequency. It is used as an independent cross-check and can provide evidence for forms absent from the NKJP1M snapshot.
+
+The two measurements are stored separately. They are not silently combined into one invented frequency number.
+
+Retention tiers are not hard-coded before measurement. First the observed distribution of module-form frequencies is recorded; only then are retention thresholds calibrated together with grammatical usefulness and source confidence. A rare module item therefore does not automatically disappear merely because it falls outside the 100k core, and a frequent module item can remain fully inflected even when all of its forms are net-new keys.
+
+For names and places, source-specific importance (for example official name statistics or controlled geographic status) is treated as a separate evidence dimension, not as a substitute for linguistic corpus frequency.
+
+
+## Aktualizacja 2026-09-29 — absolutne pierwszeństwo rzeczownika pospolitego
+
+Wspólny resolver kapitalizacji (`scripts/capitalization_rules.py`) stosuje obecnie bezwarunkową regułę:
+
+**Jeżeli dla danego klucza case-insensitive istnieje zweryfikowana analiza rzeczownikowa z klasą `nazwa_pospolita`, powierzchnia słownikowa musi być lowercase. Rzeczownik pospolity ma pierwszeństwo przed nazwą własną, dowodem modułowym, jawną polityką surface registry i innymi regułami kapitalizacji.**
+
+`proper_lemma_keys` pozostaje informacją provenance/diagnostyczną; nie może wyłączać rzeczywistej analizy rzeczownika pospolitego z decyzji kapitalizacyjnej.
+
+Praktyczna konsekwencja: `Bardo` jako nazwa miejscowości nie może przebić wspólnego klucza rzeczownika pospolitego `bardo`; kanoniczną powierzchnią CKDT jest `bardo`. `Tomaszów` pozostaje wielką literą, o ile dla tego klucza nie istnieje zweryfikowana analiza rzeczownika pospolitego.
+
+
+## Aktualizacja 2026-09-29 — niezależny audyt kapitalizacji immutable 100k
+
+Dotychczasowy audyt rdzenia przechodził przez wszystkie 100 000 kluczy, ale wykorzystywał dane modułów jako podstawowy sygnał rozpoznania kapitalizacji. To nie zapewniało kompletności: klucz będący nazwiskiem, którego nie było w aktywnym module, mógł pozostać lowercase.
+
+Docelowa zasada została zmieniona:
+
+- kapitalizacja immutable 100k jest decyzją niezależnego lingwistycznego oracle opartego na Morfeusz 2 / SGJP;
+- moduły imion, miast, TERC, państw, stolic, własnych itd. nie decydują o kapitalizacji klucza należącego do rdzenia;
+- informacje modułowe pozostają w raporcie jako weryfikacja krzyżowa (cross-check), umożliwiająca wykrywanie rozbieżności i braków pokrycia;
+- explicit surface-registry policy może być użyte tylko jako jawny, ręcznie audytowany fallback dla luki słownikowej i nie może przebić sprzecznej analizy językowej;
+- brak analizy językowej i brak jawnego fallbacku dla klucza rdzenia nie jest już automatycznie traktowany jako lowercase — jest raportowany jako unresolved;
+- każdy klucz rdzenia musi nadal zostać zbadany.
+
+Wspólny resolver (scripts/capitalization_rules.py) interpretuje klasyfikację pospolitości/nazwy własnej przekazywaną przez Morfeusz 2 / SGJP ogólnie. Poza nazwa_pospolita rozpoznawane są wszystkie niepuste klasy klasyfikacyjne z tego pola jako dowód nazwy własnej, dzięki czemu reguła obejmuje m.in. imiona, nazwiska, nazwy geograficzne, marki, firmy, organizacje i inne klasy bez tworzenia osobnych gałęzi dla każdej kategorii.
+
+Precedencja pozostaje następująca: zweryfikowany rzeczownik pospolity -> lowercase, następnie zwykła forma przymiotnikowa -> lowercase, następnie zweryfikowana klasyfikacja nazwy własnej -> capitalized, następnie zwykła analiza leksykalna -> lowercase. To zapewnia, że rzeczownik pospolity nadal zawsze wygrywa z nazwą własną dla tego samego klucza case-insensitive.
+
+Źródło Morfeusz 2: https://morfeusz.sgjp.pl/doc/about/ oraz dokumentacja interfejsu: https://download.sgjp.pl/morfeusz/Morfeusz2.pdf
+
+## Aktualizacja 2026-09-29 — case-sensitive probing w niezależnym oracle kapitalizacji
+
+Diagnostyka Preview #295 wykazała, że analiza Morfeusza musi zachować wielkość liter zapytania. Przykładowo zapis lowercase może otrzymać `ign`, podczas gdy pierwsza litera zapisana wielką literą może ujawnić klasyfikację nazwy własnej. Dlatego resolver nie wykonuje już wyłącznie zapytania lowercase.
+
+Nowy mechanizm dla każdego klucza immutable 100k:
+1. normalizuje klucz do lowercase;
+2. wykonuje osobne zapytanie Morfeusz 2 / SGJP dla lowercase;
+3. wykonuje drugie zapytanie dla wariantu z pierwszą literą wielką;
+4. scala wyniki morfologiczne bez duplikowania identycznych analiz;
+5. rozstrzyga kapitalizację wyłącznie z tych niezależnych analiz, przed użyciem modułów jako cross-checku.
+
+Precedencja resolvera jest teraz:
+- zweryfikowana `nazwa_pospolita` -> lowercase, absolutnie;
+- dowolna niepusta klasyfikacja nazwy własnej poza `nazwa_pospolita`, znaleziona w jednym z obu probe -> capitalized;
+- analiza przymiotnikowa bez konkurencyjnej klasyfikacji nazwy własnej -> lowercase;
+- inna znana analiza leksykalna -> lowercase;
+- jawna, ręcznie audytowana surface-registry policy -> fallback dla luki;
+- brak dowodu -> unresolved.
+
+Ta kolejność zachowuje kluczową zasadę projektu: `bardo` pozostaje lowercase mimo istnienia miejscowości Bardo. Jednocześnie pozwala wykryć nazwisko lub nazwę geograficzną, która przy lowercase wygląda jak zwykłe słowo lub `ign`, ale przy poprawnej kapitalizacji ma klasyfikację własną.
+
+Moduły nadal nie podejmują decyzji dla immutable 100k. Ich polityki pozostają wyłącznie w raporcie jako niezależny cross-check konfliktów i pokrycia.
+
+
+## Aktualizacja 2026-09-30 — zakres reguły dla nazw łącznikowych
+
+Przyjęto świadome ograniczenie specjalnej obsługi nazw wieloczłonowych do nazw, których człony są połączone rozpoznanym łącznikiem.
+
+- Specjalna ścieżka odmiany/rekompozycji dotyczy wyłącznie znaków: `-` (U+002D), `‐` (U+2010) oraz `‑` (U+2011).
+- Zwykła spacja nie uruchamia tej ścieżki.
+- `–` (U+2013, półpauza), `—` (U+2014, pauza), ukośnik i inne znaki interpunkcyjne nie są traktowane jako łączniki.
+- Nazwy wielowyrazowe rozdzielone spacją mogą nadal być rozbijane na komponenty na potrzeby membership, audytu i proweniencji, ale samo rozbicie nie oznacza automatycznej odmiany całej frazy.
+- Wspólne rozpoznanie łącznika znajduje się w `scripts/surface_components.py`; generatory modułów mają korzystać z tej definicji zamiast własnych ad-hoc testów znaków.
+- Sama obecność łącznika nie rozstrzyga gramatyki wszystkich komponentów. Każdy generator nadal musi mieć odpowiedni, zweryfikowany model odmiany dla danej kategorii.
+
+W praktyce usuwa to potrzebę tworzenia wyjątku wyłącznie dla województw. TERC może wykorzystywać wspólną detekcję nazw łącznikowych, natomiast przyszłe moduły mogą użyć tej samej warstwy tylko tam, gdzie mają źródłowo uzasadnioną odmianę.
