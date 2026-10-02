@@ -75,6 +75,14 @@ PLL jest kosztowną metodą diagnostyczną, nie obietnicą latencji klawiatury.
 Tokenizacja, truncation, rewizje, SHA runnera i kompletne wyniki są zapisywane.
 Pusty kontekst zachowuje default jak v1.
 
+Optymalizacja wykonawcza: pierwszą nieukończoną próbę zatrzymano przed zapisem
+wyników i ewaluacją. Pełna projekcja vocab na każdej pozycji była zbędnym kosztem.
+Runner używa oryginalnego model.bert oraz oryginalnego model.cls.predictions
+wyłącznie na pozycjach podlegających scoringowi. Przed inferencją sprawdza
+allclose z pełnym forward (atol=1e-4, rtol=1e-5), zapisując błąd numeryczny.
+Nie zmieniono metod, danych, progów ani kryteriów. Zmiana kodu zostanie
+ponownie przypięta w GitHub przed ukończoną inferencją.
+
 Nie ma progu wdrożenia na podstawie tych szablonów. Wynik może uzasadnić
 wybór kandydata do oddzielnej ewaluacji z rzeczywistymi slates, ale nie
 promocję do main/runtime. Różnic nie wolno nazywać statystycznie istotnymi

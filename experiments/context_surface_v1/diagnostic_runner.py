@@ -67,12 +67,22 @@ def score_tasks(model, tokenizer, tasks, torch):
             inputs[i, :len(task[0])] = torch.tensor(task[0])
             attention[i, :len(task[0])] = 1
         with torch.inference_mode():
-            output = model(input_ids=inputs, attention_mask=attention)
-            logits = output.prediction_logits if hasattr(output, "prediction_logits") else output.logits
+            hidden = model.bert(input_ids=inputs, attention_mask=attention).last_hidden_state
+            # Project only masked positions to the vocabulary. This uses the
+            # original pretrained prediction head, with the same math as a full
+            # model forward, without projecting every unscored sequence position.
+            batch_indices, positions_flat = [], []
+            for i, task in enumerate(batch):
+                for position in task[1]:
+                    batch_indices.append(i)
+                    positions_flat.append(position)
+            logits = model.cls.predictions(hidden[batch_indices, positions_flat, :])
+            offset = 0
             for i, (_, positions, target_ids, part) in enumerate(batch):
-                selected = torch.log_softmax(logits[i, positions, :], dim=-1)
+                selected = torch.log_softmax(logits[offset:offset + len(positions)], dim=-1)
                 value = sum(selected[j, token].item() for j, token in enumerate(target_ids))
                 contributions.append((part, value))
+                offset += len(positions)
     return contributions
 
 
@@ -96,6 +106,19 @@ def load_model(preset):
     if any(v is None for v in (tokenizer.cls_token_id, tokenizer.sep_token_id, tokenizer.mask_token_id)):
         raise ValueError("required special token missing")
     model.eval()
+    # Verify the optimized projection against the unmodified full forward.
+    example = tokenizer('To jest polskie ' + tokenizer.mask_token, return_tensors='pt')
+    positions = (example['input_ids'][0] == tokenizer.mask_token_id).nonzero().flatten()
+    with torch.inference_mode():
+        full_output = model(**example)
+        full = full_output.prediction_logits if hasattr(full_output, 'prediction_logits') else full_output.logits
+        hidden = model.bert(**example).last_hidden_state
+        selected = model.cls.predictions(hidden[0, positions, :])
+        expected = full[0, positions, :]
+        error = (selected - expected).abs().max().item()
+        if not torch.allclose(selected, expected, atol=1e-4, rtol=1e-5):
+            raise ValueError(f'optimized projection parity failed: {error}')
+    info['selectedPositionParityMaxAbsLogitError'] = error
     return model, tokenizer, torch, info
 
 

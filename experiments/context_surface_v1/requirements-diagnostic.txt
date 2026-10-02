@@ -1,0 +1,2 @@
+-r requirements-model.txt
+sacremoses==0.1.1
