@@ -1,0 +1,47 @@
+name: Source casing variant trial
+
+on:
+  push:
+    branches: ['feature/source-variants-trial-v1']
+  pull_request:
+    paths:
+      - 'scripts/build_variant_trial.py'
+      - 'tests/test_variant_trial.py'
+      - 'tests/fixtures/source-casing-proof-v1.json'
+      - 'docs/VARIANT_TRIAL_NOTICE.txt'
+      - '.github/workflows/variant-trial.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  trial:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test producer and source contract
+        run: python3 -m unittest discover -s tests -p 'test_variant_trial.py' -v
+      - name: Retrieve the pinned successful preview
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 36916501466
+          name: cleverkeys-pl-preview
+          path: build/variant-source
+      - name: Build the trial without changing CKDT
+        run: |
+          python3 scripts/build_variant_trial.py \
+            --base-pack build/variant-source/build/cleverkeys-langpack-pl-preview.zip \
+            --evidence tests/fixtures/source-casing-proof-v1.json \
+            --evidence-sha256 6bbdf928c338d44ab3eddb76f8a1fe9f0b4a789cb1d51f55740f55826a21e2e2 \
+            --notice docs/VARIANT_TRIAL_NOTICE.txt \
+            --out-dir build/variant-trial
+      - name: Save the trial and audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleverkeys-pl-variants-trial
+          path: build/variant-trial/*
