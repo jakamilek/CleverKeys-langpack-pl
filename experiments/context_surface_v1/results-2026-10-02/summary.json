@@ -1,0 +1,121 @@
+{
+  "pairedChangedTop1": 0,
+  "pairedFixed": 0,
+  "pairedBroken": 0,
+  "paired": [
+    {
+      "caseId": "case001",
+      "twoWords": "łódź",
+      "long": "łódź",
+      "twoWordsCorrect": false,
+      "longCorrect": false
+    },
+    {
+      "caseId": "case002",
+      "twoWords": "łódź",
+      "long": "łódź",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case003",
+      "twoWords": "łódź",
+      "long": "łódź",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case004",
+      "twoWords": "Łódź",
+      "long": "Łódź",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case005",
+      "twoWords": "lód",
+      "long": "lód",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case006",
+      "twoWords": "mazowiecki",
+      "long": "mazowiecki",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case007",
+      "twoWords": "Malina",
+      "long": "Malina",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case008",
+      "twoWords": "malina",
+      "long": "malina",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case009",
+      "twoWords": "Łódź",
+      "long": "Łódź",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case010",
+      "twoWords": "ŁÓDŹ",
+      "long": "ŁÓDŹ",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case011",
+      "twoWords": "ChatGPT",
+      "long": "ChatGPT",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case012",
+      "twoWords": "lód",
+      "long": "lód",
+      "twoWordsCorrect": false,
+      "longCorrect": false
+    },
+    {
+      "caseId": "case013",
+      "twoWords": "łódź",
+      "long": "łódź",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    },
+    {
+      "caseId": "case014",
+      "twoWords": "Łódź",
+      "long": "Łódź",
+      "twoWordsCorrect": true,
+      "longCorrect": true
+    }
+  ],
+  "latency": {
+    "two_words": {
+      "measuredActiveRequests": 10,
+      "medianMs": 77.60862400004953,
+      "minMs": 73.17178600033003,
+      "maxMs": 88.66922200013505,
+      "warmupExcluded": false
+    },
+    "long": {
+      "measuredActiveRequests": 10,
+      "medianMs": 94.7822035000172,
+      "minMs": 70.13005799990424,
+      "maxMs": 110.48296599983587,
+      "warmupExcluded": false
+    }
+  }
+}

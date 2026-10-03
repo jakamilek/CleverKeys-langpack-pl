@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    {
+      "name": "decisions-herbert-pll_full_mean.json",
+      "bytes": 19831,
+      "sha256": "99ac05f1c79fff24b406c11ab709a7a28e6203ff783066b08c81db37a087de47"
+    },
+    {
+      "name": "decisions-herbert-pll_variant.json",
+      "bytes": 19724,
+      "sha256": "23523912ea894ab3622f5a75b9217079b343ee7be7e1885dd461f5995966534f"
+    },
+    {
+      "name": "decisions-herbert-wwm.json",
+      "bytes": 19724,
+      "sha256": "307d0ef85a89abe899f9d53f637b2c351935ef42ce9daa3151953ccd1d35224a"
+    },
+    {
+      "name": "decisions-polbert-pll_full_mean.json",
+      "bytes": 19838,
+      "sha256": "9cfeaf68348b966e134a5c7c1ce8abfdf731287dcb4be68f937e89c859b9fae6"
+    },
+    {
+      "name": "decisions-polbert-pll_variant.json",
+      "bytes": 19765,
+      "sha256": "bdfe941367735c0a2360a9d38ce35383808f6b4c66bf0d2a5c26ac0a82da1f6d"
+    },
+    {
+      "name": "decisions-polbert-wwm.json",
+      "bytes": 19763,
+      "sha256": "2691bef07f60ce0102576e034d5f96c54becfce6e97b0430a3d9ca73b2cc65fd"
+    },
+    {
+      "name": "diagnostic-cases.json",
+      "bytes": 22142,
+      "sha256": "5edf0754c931be2ec299ad864aecfdda1a409a34ece17e77dc1d370522104777"
+    },
+    {
+      "name": "diagnostic-herbert-metadata.json",
+      "bytes": 38549,
+      "sha256": "c370e768993a0ca7035d1151766f647c075aa755e5a9fb8764d420a0add31140"
+    },
+    {
+      "name": "diagnostic-herbert-pll_full_mean.json",
+      "bytes": 22474,
+      "sha256": "ea801dff2d1aaffda466e1ea96bdb2cafff0885bf21a7c48be12b9c24dd79e71"
+    },
+    {
+      "name": "diagnostic-herbert-pll_variant.json",
+      "bytes": 22492,
+      "sha256": "dd1cd9c2482b9939d5e9692dcd5e47ee790e111767b58e25e14ce91da1b9e33e"
+    },
+    {
+      "name": "diagnostic-herbert-wwm.json",
+      "bytes": 22462,
+      "sha256": "1abad61bf50c48b678bdc1e8bcc886da6aaf291a67f257f34b69875bf4ff8c2c"
+    },
+    {
+      "name": "diagnostic-polbert-metadata.json",
+      "bytes": 38359,
+      "sha256": "1245447c0ae5477e93529f81d643d012c3c5228c93f5be4a7533b4725635eb0b"
+    },
+    {
+      "name": "diagnostic-polbert-pll_full_mean.json",
+      "bytes": 22496,
+      "sha256": "1393f49d1b138ddb84681844fad7814ca239bfd4beb94f1a7c89f203c29f9dd5"
+    },
+    {
+      "name": "diagnostic-polbert-pll_variant.json",
+      "bytes": 22526,
+      "sha256": "7ca8f21a31b37ab5bb4102048cf59d77e473f38ba89dc3c4fe1f75a024c2c12f"
+    },
+    {
+      "name": "diagnostic-polbert-wwm.json",
+      "bytes": 22506,
+      "sha256": "1b069bf13ef091b4c9e504ba191979046d82afd02bbc3989431346400661ac5f"
+    },
+    {
+      "name": "diagnostic-requests.json",
+      "bytes": 52866,
+      "sha256": "f8b0004b48b55154b1a87017cdd85a8ab5cc48422a9dc469444411ad00b15289"
+    },
+    {
+      "name": "diagnostic-sidecar.json",
+      "bytes": 1208,
+      "sha256": "c49a2d45c77e5cda7f16ec3bccdd272d437280dbef6e2b1ad2c7466658514557"
+    },
+    {
+      "name": "environment-freeze.txt",
+      "bytes": 515,
+      "sha256": "7285f7468347c271fb294f0b22b67039d70b6d0c541ee318149fabc88e4bbd2a"
+    },
+    {
+      "name": "execution-checks.json",
+      "bytes": 320,
+      "sha256": "4df5398154e722ab26e47a7049bade0ba37587fce41e05647768dbcd331b0b4c"
+    },
+    {
+      "name": "legacy-decisions-herbert-pll_full_mean.json",
+      "bytes": 1969,
+      "sha256": "a281f3dcd33785361127a88f9861f7335df708b51a387d5230130acbf0436993"
+    },
+    {
+      "name": "legacy-decisions-herbert-pll_variant.json",
+      "bytes": 1970,
+      "sha256": "f23dbc26c794848cbde12e8081a3a2c30532f9938518caa85f8b0de3dc1291f4"
+    },
+    {
+      "name": "legacy-decisions-herbert-wwm.json",
+      "bytes": 1969,
+      "sha256": "a281f3dcd33785361127a88f9861f7335df708b51a387d5230130acbf0436993"
+    },
+    {
+      "name": "legacy-decisions-polbert-pll_full_mean.json",
+      "bytes": 1969,
+      "sha256": "a281f3dcd33785361127a88f9861f7335df708b51a387d5230130acbf0436993"
+    },
+    {
+      "name": "legacy-decisions-polbert-pll_variant.json",
+      "bytes": 1970,
+      "sha256": "a76b1de87d2a6c481f50fd99600f2668424bd9070ce47842196d6a4b37440282"
+    },
+    {
+      "name": "legacy-decisions-polbert-wwm.json",
+      "bytes": 1970,
+      "sha256": "a76b1de87d2a6c481f50fd99600f2668424bd9070ce47842196d6a4b37440282"
+    },
+    {
+      "name": "legacy-herbert-metadata.json",
+      "bytes": 9733,
+      "sha256": "e3fd1ed8c3ec3801b2b24b1af6f38e47d5c162784540969a90597aa2a7f42b17"
+    },
+    {
+      "name": "legacy-herbert-pll_full_mean.json",
+      "bytes": 5362,
+      "sha256": "d03b1914e0618bbe62a2c697f1531dcda02c907a5d2a086b1f4de20aedc3334f"
+    },
+    {
+      "name": "legacy-herbert-pll_variant.json",
+      "bytes": 5367,
+      "sha256": "3080c5b2532aff75fa055d7e3473b7cb91092d6288b88b232c479eda3e9a2b32"
+    },
+    {
+      "name": "legacy-herbert-wwm.json",
+      "bytes": 5351,
+      "sha256": "68cd2d02bf2e6e91b6248fd2fd6aea6b8b396c3d286a2fe9bba508dc30937adc"
+    },
+    {
+      "name": "legacy-polbert-metadata.json",
+      "bytes": 9624,
+      "sha256": "12625c2567a4cc761a396f21a9dd1536b6a4b7f98720114633a5a07e266306aa"
+    },
+    {
+      "name": "legacy-polbert-pll_full_mean.json",
+      "bytes": 5376,
+      "sha256": "33e0ca9bb6e612f3dc6a7c054a8880bfa7a7cd87584fffb510ba563239fc8476"
+    },
+    {
+      "name": "legacy-polbert-pll_variant.json",
+      "bytes": 5382,
+      "sha256": "c1105968588435ebe4a2239ba4cce02b663989ee30d3a4dca5494979d9d28607"
+    },
+    {
+      "name": "legacy-polbert-wwm.json",
+      "bytes": 5369,
+      "sha256": "d4b6a03245583321cb88227fff0578fdb9beffca6af373e7476cf0fe740f1e87"
+    },
+    {
+      "name": "models-manifest.json",
+      "bytes": 2975,
+      "sha256": "8936b4aa37f7996a577608cc33f0d91643413fa7e2afa2dfd1bcda6d380fdd8e"
+    },
+    {
+      "name": "summary.json",
+      "bytes": 8557,
+      "sha256": "2489085be07f13b5801bbb9256937ae143975e86f2be0cea739a0d80f7ccfb02"
+    }
+  ]
+}

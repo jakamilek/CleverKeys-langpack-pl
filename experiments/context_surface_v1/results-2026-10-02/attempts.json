@@ -1,0 +1,37 @@
+{
+  "attempts": [
+    {
+      "model": "allegro/plt5-small",
+      "status": "blocked_before_scoring",
+      "reason": "published tokenizer extra_ids=0; standard sentinel IDs unknown"
+    },
+    {
+      "model": "sdadas/polish-roberta-base-v2",
+      "status": "blocked_before_scoring",
+      "reason": "Łódź encoded as [12,3,4584], with unk ID3"
+    }
+  ],
+  "files": [
+    {
+      "modelId": "allegro/plt5-small",
+      "revision": "6ab71258c53f77f075fdda380992c0e691703f6b",
+      "file": "tokenizer_config.json",
+      "bytes": 141,
+      "sha256": "7069e7523a7817105b348aa6119bc8dfb0f5a1b551f583326b400b13ca0fb442"
+    },
+    {
+      "modelId": "allegro/plt5-small",
+      "revision": "6ab71258c53f77f075fdda380992c0e691703f6b",
+      "file": "spiece.model",
+      "bytes": 1124950,
+      "sha256": "a200b4b9d7106b32ea2340e5cd27033a5c03ae5ece9241ab6e1f685b938800b9"
+    },
+    {
+      "modelId": "sdadas/polish-roberta-base-v2",
+      "revision": "4a0bda6ba39e467e204c913cd642700544fc4d3a",
+      "file": "tokenizer.json",
+      "bytes": 3355536,
+      "sha256": "108af881c403092a16ee515c2ad4a9a72122a3846cfd5c9f2bb860a3fd2bdafa"
+    }
+  ]
+}
