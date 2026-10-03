@@ -25,11 +25,16 @@ Tap and swipe share the live capitalization decision. If editor caps are zero or
 Explicitly returning the caret immediately after a word now permits toggling its first letter, as at its start/interior. Ordinary typing acknowledgements still do not arm an edit. Updated pure/editor tests cover every position.
 
 ## 9. Validation state
-New BackspaceGestureTest, BackspaceHoldTest, PointersBackspaceHoldTest and capitalization regressions are registered through scripts/gradle-guard.sh. Static review/readback complete. Local Android toolchain is unavailable; v5 compilation, pure/mock execution and device acceptance are PENDING. Actions: https://github.com/jakamilek/CleverKeysPL/actions?query=branch%3Adocs%2Fsource-variants-integration-v1 . No continuous monitoring; stop within 60 seconds and let the maintainer report completion.
-Previous code 383137f8a60f372215cb887c57a4c115b46a488f passed debug assembly and 2779 pure + 172 focused mock checks (2951), run 37143960348. This evidence belongs to v4, not v5. Existing SubkeyAssignActivity lint and site/bun.lock devalue HIGH findings remain unmodified; gates stay enabled.
+Debug assembly PASS; **2790 pure + 195 focused mock tests PASS (2985 total)** for code 4ed1706ef37c715170e2585abee9f5dbf7493dbc, [CI 37148132597](https://github.com/jakamilek/CleverKeysPL/actions/runs/37148132597). Includes BackspaceHoldTest 12, PointersBackspaceHoldTest 6, SwipeAutocapCommitTest 16, AutocapitalisationTest 18 and all existing editor/import/casing/spacing suites. Code Quality PASS.
+
+[Debug APK artifact 11282318484](https://github.com/jakamilek/CleverKeysPL/actions/runs/37148132597/artifacts/11282318484), marker backspace-gesture-v5, ZIP 96899904 bytes, expires 2026-10-10T19:41:56Z. GitHub artifact digest sha256:0893c511c01c6255961f188247a89853e60feaad07b939e6895ed30c7d41f08c is metadata for the ZIP, not an individual APK hash or local byte verification.
+
+Whole CI remains failure: existing ProduceStateDoesNotAssignValue at popover/SubkeyAssignActivity.kt:148 (1 error, 210 warnings) and four HIGH devalue 5.8.1 findings in site/bun.lock (fixed upstream in 5.9.3). Release lint and APK Size Analysis skipped. Gates remain enabled. Instrumented, minified release, performance and phone acceptance of v5 remain pending. Local Android toolchain is unavailable; these executed results come from Actions. No continuous monitoring.
+
+Previous v4 evidence remains 2951 passed checks in run 37143960348; it is distinct from the v5 result above.
 
 ## 10. Producer and pack
 CleverKeys-langpack-pl producer code and pack are unchanged (producer code 75a06570cc9eaac72f1e7c4376a4efd068be73fb). Pack SHA-256 4c5c82c2ede9e9085bc8773ce3f3b8be53ba210a6f9e9b19b297127e90c7eec7; CKDT 087f99e39ccc9108d7bf5315c902ec5f6899620925e481cfb872d95e8df68e20. Geometric decoder retained; no AI/CTC, duplicated dictionary keys or manual definitions added.
 
 ## 11. Next acceptance checks
-After successful CI, install v5 and test tap after swipe/autocorrection; hold deletion from “olej mleko ” to “olej ”; left/right reversal across other keys and at edges; shrink to zero; touch cancel and field/caret changes; Shift at all positions including word end; punctuation after ordinary words and numbers; cut/paste and dictionary-add integrity. Ale/Lub casing diagnosis remains pending. Phone verification does not follow from mocks.
+With debug assembly and test suites passing, install the v5 debug artifact and test tap after swipe/autocorrection; hold deletion from “olej mleko ” to “olej ”; left/right reversal across other keys and at edges; shrink to zero; touch cancel and field/caret changes; Shift at all positions including word end; punctuation after ordinary words and numbers; cut/paste and dictionary-add integrity. Ale/Lub casing diagnosis remains pending. Phone verification does not follow from mocks.
