@@ -35,3 +35,11 @@ Android JNI scores, finalny APK i rzeczywiste Nubia timings nadal nieweryfikowan
 Konteksty archived mają najwyżej 13 słów; nie rozstrzygają trafności okien 32 vs 64.
 Przygotowany runtime wybiera 32 jako default i porównuje czas obu limitów na syntetycznym
 benchmarku. To porównanie wydajności, nie dowód równej trafności.
+
+Android workflow repair run 37232458354 at 73627fa SUCCESS: compile, JUnitCore
+OK(2835), mandatory original conformance, 83 focused regressions, debug/vital lint,
+assembly, APK ZIP audit i upload ARM64 PASS. APK artifact 11314463703 /35697510 B,
+raw APK 35696490 B, SHA256
+70c3e0e94f10e0a6e7ec4f9b6e043767cd9e41e7e21f14f21586958b07e07958.
+APK verified przez CI logs/audit, nie lokalny download/scan. Phone JNI/timing/accuracy
+nadal pending; live SI wyłączone. Instrukcja w runtime docs/HERBERT_FP32_PHONE_TRIAL_V1.md.
