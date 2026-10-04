@@ -1,0 +1,1434 @@
+{
+  "cases": [
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódź"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "łódź",
+      "id": "form-łódź-1",
+      "leftContext": "Po remoncie silnika na wodę wróciła nasza",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódź"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Łódź",
+      "id": "form-łódź-2",
+      "leftContext": "Nie wybieramy się nad jezioro. Planujemy zwiedzanie miasta, a kolejnym punktem podróży jest",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódź"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "łódź",
+      "id": "form-łódź-3",
+      "leftContext": "Przewoźnik ma nowy sprzęt pływający. Po sprawdzeniu wyposażenia do rejsu była gotowa",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódź"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Łódź",
+      "id": "form-łódź-4",
+      "leftContext": "Rozmawiamy o miastach wojewódzkich. Na liście pozostała jeszcze",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "malina"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "malina",
+      "id": "form-malina-1",
+      "leftContext": "Do deseru dodaję owoce, a na samym wierzchu będzie jedna",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "malina"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Malina",
+      "id": "form-malina-2",
+      "leftContext": "Nowy kierownik podpisał dokument nazwiskiem",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "malina"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "malina",
+      "id": "form-malina-3",
+      "leftContext": "Zbieraliśmy owoce z krzewów. W koszyku została tylko jedna",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "malina"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Malina",
+      "id": "form-malina-4",
+      "leftContext": "To zebranie pracowników, a nie rozmowa o roślinach. Odpowiedzialny za projekt jest pan",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jagoda"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "jagoda",
+      "id": "form-jagoda-1",
+      "leftContext": "Na palcu został mi sok z owocu, bo pękła dojrzała",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jagoda"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Jagoda",
+      "id": "form-jagoda-2",
+      "leftContext": "Rodzice wybrali córce imię",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jagoda"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "jagoda",
+      "id": "form-jagoda-3",
+      "leftContext": "Jesteśmy w lesie i zbieramy owoce. Na dnie naczynia została jeszcze jedna",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jagoda"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Jagoda",
+      "id": "form-jagoda-4",
+      "leftContext": "Ustalamy listę uczestniczek szkolenia. Jako pierwsza zgłosiła się",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "róża"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "róża",
+      "id": "form-róża-1",
+      "leftContext": "W bukiecie obok tulipanów znalazła się biała",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "róża"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Róża",
+      "id": "form-róża-2",
+      "leftContext": "Nasza sąsiadka ma na imię",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "róża"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "róża",
+      "id": "form-róża-3",
+      "leftContext": "Pielęgnuję kwiaty na rabacie. W tym miejscu najlepiej przyjęła się",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "róża"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Róża",
+      "id": "form-róża-4",
+      "leftContext": "To spotkanie z nową koleżanką. Na zaproszeniu widnieje imię",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "warszawska"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "warszawska",
+      "id": "form-warszawska-1",
+      "leftContext": "W zestawieniu cen wyróżnia się średnia",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "warszawska"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Warszawska",
+      "id": "form-warszawska-2",
+      "leftContext": "Protokół podpisała pani",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "warszawska"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "warszawska",
+      "id": "form-warszawska-3",
+      "leftContext": "Porównujemy oferty z różnych miast. Najdroższa okazała się propozycja",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "warszawska"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Warszawska",
+      "id": "form-warszawska-4",
+      "leftContext": "Chodzi o nazwisko osoby prowadzącej spotkanie. W dokumentach zapisana jest pani",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "ale"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "ale",
+      "id": "form-ale-1",
+      "leftContext": "Chciałem przyjechać wcześniej,",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "ale"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Ale",
+      "id": "form-ale-2",
+      "leftContext": "W grupie są dwie dziewczyny o imieniu Ala. Do konkursu zgłosiły się obie",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "ale"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "ale",
+      "id": "form-ale-3",
+      "leftContext": "Plan był już gotowy. Wydawało się, że wszystko pójdzie sprawnie,",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "ale"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Ale",
+      "id": "form-ale-4",
+      "leftContext": "Dwie uczestniczki noszą imię Ala. Z całej listy zaproszeń odpowiedziały właśnie te dwie",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lub"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "lub",
+      "id": "form-lub-1",
+      "leftContext": "Na śniadanie możesz wybrać kaszę",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lub"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Lub",
+      "id": "form-lub-2",
+      "leftContext": "Znam dwie kobiety o imieniu Luba. Nie pamiętam adresów obu",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lub"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "lub",
+      "id": "form-lub-3",
+      "leftContext": "W menu są dwie propozycje. Kelner zapytał, czy zamówimy kawę",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lub"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Lub",
+      "id": "form-lub-4",
+      "leftContext": "W archiwum są dwie osoby o imieniu Luba. Brakuje akt obu",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "tutaj"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "tutaj",
+      "id": "form-tutaj-1",
+      "leftContext": "Nie odkładaj tego na półkę, zostaw to",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "tutaj"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Tutaj",
+      "id": "form-tutaj-2",
+      "leftContext": "Nazwisko nowego członka komisji to",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "tutaj"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "tutaj",
+      "id": "form-tutaj-3",
+      "leftContext": "Pokazuję miejsce na mapie. Przygotowany znacznik należy postawić właśnie",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "tutaj"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Tutaj",
+      "id": "form-tutaj-4",
+      "leftContext": "Rozmawiamy o osobie podpisującej umowę. W rubryce nazwisko widnieje",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lis"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "lis",
+      "id": "form-lis-1",
+      "leftContext": "Z lasu wyszedł rudy",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lis"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Lis",
+      "id": "form-lis-2",
+      "leftContext": "Umowę podpisał pan",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lis"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "lis",
+      "id": "form-lis-3",
+      "leftContext": "Obserwujemy dzikie zwierzęta. Po dłuższej chwili z zarośli wybiegł",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lis"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Lis",
+      "id": "form-lis-4",
+      "leftContext": "To sprawa nazwiska autora raportu. Na okładce zapisano doktor",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "wilk"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "wilk",
+      "id": "form-wilk-1",
+      "leftContext": "Na skraju lasu pojawił się szary",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "wilk"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Wilk",
+      "id": "form-wilk-2",
+      "leftContext": "Kierownik przedstawił się jako pan",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "wilk"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "wilk",
+      "id": "form-wilk-3",
+      "leftContext": "Rozmawiamy o drapieżnikach. Najbliżej kamery zatrzymał się",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "wilk"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Wilk",
+      "id": "form-wilk-4",
+      "leftContext": "Ustalamy dane osoby upoważnionej do podpisu. Nazwisko tej osoby to",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kruk"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "kruk",
+      "id": "form-kruk-1",
+      "leftContext": "Na gałęzi usiadł czarny",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kruk"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Kruk",
+      "id": "form-kruk-2",
+      "leftContext": "Nowy lekarz nosi nazwisko",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kruk"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "kruk",
+      "id": "form-kruk-3",
+      "leftContext": "Obserwujemy ptaki przy karmniku. Jako ostatni przyleciał",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kruk"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Kruk",
+      "id": "form-kruk-4",
+      "leftContext": "Przeglądamy listę pracowników. Dyżur pełni dziś doktor",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "sowa"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "sowa",
+      "id": "form-sowa-1",
+      "leftContext": "Z dziupli wyglądała mała",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "sowa"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Sowa",
+      "id": "form-sowa-2",
+      "leftContext": "List zaadresowano do pana",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "sowa"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "sowa",
+      "id": "form-sowa-3",
+      "leftContext": "Badamy nocne ptaki. Na zdjęciu została wyraźnie uchwycona",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "sowa"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Sowa",
+      "id": "form-sowa-4",
+      "leftContext": "Nie chodzi o ptaka, tylko o nazwisko rozmówcy. Telefon odebrał pan",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "piła"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "piła",
+      "id": "form-piła-1",
+      "leftContext": "Do cięcia drewna przyda się ostra",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "piła"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Piła",
+      "id": "form-piła-2",
+      "leftContext": "Na trasie kolejowej znajduje się miasto",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "piła"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "piła",
+      "id": "form-piła-3",
+      "leftContext": "Warsztat kupił nowe narzędzia. Jako pierwsza została uruchomiona",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "piła"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Piła",
+      "id": "form-piła-4",
+      "leftContext": "Planujemy podróż po miastach. Kolejną miejscowością na liście jest",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "buk"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "buk",
+      "id": "form-buk-1",
+      "leftContext": "W parku rośnie stary",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "buk"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Buk",
+      "id": "form-buk-2",
+      "leftContext": "Pismo podpisał pan",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "buk"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "buk",
+      "id": "form-buk-3",
+      "leftContext": "Oglądamy drzewa w ogrodzie. Największy cień daje tam",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "buk"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Buk",
+      "id": "form-buk-4",
+      "leftContext": "Rozmowa dotyczy autora dokumentu. Jego nazwisko brzmi",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "zając"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "zając",
+      "id": "form-zając-1",
+      "leftContext": "Przez łąkę przebiegł mały",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "zając"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Zając",
+      "id": "form-zając-2",
+      "leftContext": "Protokół sporządził pan",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "zając"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "zając",
+      "id": "form-zając-3",
+      "leftContext": "Śledzimy zwierzęta przy polu. Po chwili z wysokiej trawy wyskoczył",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "zając"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Zając",
+      "id": "form-zając-4",
+      "leftContext": "Sprawdzamy nazwiska świadków. Na końcu listy znajduje się pan",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kot"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "kot",
+      "id": "form-kot-1",
+      "leftContext": "Na parapecie zasnął domowy",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kot"
+        }
+      ],
+      "contextType": "direct",
+      "goldSurface": "Kot",
+      "id": "form-kot-2",
+      "leftContext": "Zamówienie odebrał pan",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kot"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "kot",
+      "id": "form-kot-3",
+      "leftContext": "Opowiadamy o zwierzętach w domu. Na fotelu drzemie nasz",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kot"
+        }
+      ],
+      "contextType": "distant",
+      "goldSurface": "Kot",
+      "id": "form-kot-4",
+      "leftContext": "To dane osoby, a nie opis zwierzęcia. W rubryce nazwisko wpisano",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 251,
+          "key": "olej"
+        },
+        {
+          "engineScore": 236,
+          "key": "olek"
+        },
+        {
+          "engineScore": 120,
+          "key": "oliwek"
+        },
+        {
+          "engineScore": 82,
+          "key": "ołówek"
+        },
+        {
+          "engineScore": 61,
+          "key": "innej"
+        }
+      ],
+      "goldSurface": "olej",
+      "id": "replay-1",
+      "leftContext": "Na patelni rozgrzałem",
+      "sourceSlate": "olej",
+      "suite": "recorded_replay"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 251,
+          "key": "olej"
+        },
+        {
+          "engineScore": 236,
+          "key": "olek"
+        },
+        {
+          "engineScore": 120,
+          "key": "oliwek"
+        },
+        {
+          "engineScore": 82,
+          "key": "ołówek"
+        },
+        {
+          "engineScore": 61,
+          "key": "innej"
+        }
+      ],
+      "goldSurface": "Olek",
+      "id": "replay-2",
+      "leftContext": "Pod drzwiami czeka mój kolega",
+      "sourceSlate": "olej",
+      "suite": "recorded_replay"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 184,
+          "key": "mleko"
+        },
+        {
+          "engineScore": 139,
+          "key": "mieli"
+        },
+        {
+          "engineScore": 107,
+          "key": "miękko"
+        },
+        {
+          "engineScore": 89,
+          "key": "miękki"
+        },
+        {
+          "engineScore": 84,
+          "key": "mięli"
+        }
+      ],
+      "goldSurface": "mleko",
+      "id": "replay-3",
+      "leftContext": "Do ciasta dodaję",
+      "sourceSlate": "mleko",
+      "suite": "recorded_replay"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 184,
+          "key": "mleko"
+        },
+        {
+          "engineScore": 139,
+          "key": "mieli"
+        },
+        {
+          "engineScore": 107,
+          "key": "miękko"
+        },
+        {
+          "engineScore": 89,
+          "key": "miękki"
+        },
+        {
+          "engineScore": 84,
+          "key": "mięli"
+        }
+      ],
+      "goldSurface": "miękko",
+      "id": "replay-4",
+      "leftContext": "Materac ugina się bardzo",
+      "sourceSlate": "mleko",
+      "suite": "recorded_replay"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 318,
+          "key": "karton"
+        },
+        {
+          "engineScore": 88,
+          "key": "kwestiom"
+        },
+        {
+          "engineScore": 81,
+          "key": "karsin"
+        },
+        {
+          "engineScore": 61,
+          "key": "kewin"
+        },
+        {
+          "engineScore": 56,
+          "key": "jesion"
+        }
+      ],
+      "goldSurface": "karton",
+      "id": "replay-5",
+      "leftContext": "Rzeczy spakowałem w",
+      "sourceSlate": "karton",
+      "suite": "recorded_replay"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 318,
+          "key": "karton"
+        },
+        {
+          "engineScore": 88,
+          "key": "kwestiom"
+        },
+        {
+          "engineScore": 81,
+          "key": "karsin"
+        },
+        {
+          "engineScore": 61,
+          "key": "kewin"
+        },
+        {
+          "engineScore": 56,
+          "key": "jesion"
+        }
+      ],
+      "goldSurface": "Karsin",
+      "id": "replay-6",
+      "leftContext": "Miejscowość na trasie nosi nazwę",
+      "sourceSlate": "karton",
+      "suite": "recorded_replay"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 190,
+          "key": "łódź"
+        },
+        {
+          "engineScore": 129,
+          "key": "kosz"
+        },
+        {
+          "engineScore": 95,
+          "key": "łotysz"
+        },
+        {
+          "engineScore": 86,
+          "key": "klisz"
+        },
+        {
+          "engineScore": 63,
+          "key": "łudź"
+        }
+      ],
+      "goldSurface": "Łódź",
+      "id": "replay-7",
+      "leftContext": "Na mapie zaznaczyłem miasto",
+      "sourceSlate": "łódź",
+      "suite": "recorded_replay"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 190,
+          "key": "łódź"
+        },
+        {
+          "engineScore": 129,
+          "key": "kosz"
+        },
+        {
+          "engineScore": 95,
+          "key": "łotysz"
+        },
+        {
+          "engineScore": 86,
+          "key": "klisz"
+        },
+        {
+          "engineScore": 63,
+          "key": "łudź"
+        }
+      ],
+      "goldSurface": "kosz",
+      "id": "replay-8",
+      "leftContext": "Przy bramie stoi duży",
+      "sourceSlate": "łódź",
+      "suite": "recorded_replay"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jan"
+        }
+      ],
+      "goldSurface": "Jan",
+      "id": "single-jan-0",
+      "leftContext": "Na liście pojawia się",
+      "suite": "single_variant"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jan"
+        }
+      ],
+      "goldSurface": "Jan",
+      "id": "single-jan-1",
+      "leftContext": "Rozmawialiśmy długo. W dokumencie widnieje",
+      "suite": "single_variant"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "maria"
+        }
+      ],
+      "goldSurface": "Maria",
+      "id": "single-maria-0",
+      "leftContext": "Na liście pojawia się",
+      "suite": "single_variant"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "maria"
+        }
+      ],
+      "goldSurface": "Maria",
+      "id": "single-maria-1",
+      "leftContext": "Rozmawialiśmy długo. W dokumencie widnieje",
+      "suite": "single_variant"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódzki"
+        }
+      ],
+      "goldSurface": "łódzki",
+      "id": "single-łódzki-0",
+      "leftContext": "Na liście pojawia się",
+      "suite": "single_variant"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódzki"
+        }
+      ],
+      "goldSurface": "łódzki",
+      "id": "single-łódzki-1",
+      "leftContext": "Rozmawialiśmy długo. W dokumencie widnieje",
+      "suite": "single_variant"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódź"
+        }
+      ],
+      "goldSurface": null,
+      "id": "ambiguous-łódź",
+      "leftContext": "Zapisz jeszcze",
+      "suite": "ambiguous"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "malina"
+        }
+      ],
+      "goldSurface": null,
+      "id": "ambiguous-malina",
+      "leftContext": "Zapisz jeszcze",
+      "suite": "ambiguous"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "tutaj"
+        }
+      ],
+      "goldSurface": null,
+      "id": "ambiguous-tutaj",
+      "leftContext": "Zapisz jeszcze",
+      "suite": "ambiguous"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lis"
+        }
+      ],
+      "goldSurface": null,
+      "id": "ambiguous-lis",
+      "leftContext": "Zapisz jeszcze",
+      "suite": "ambiguous"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "mleko"
+        }
+      ],
+      "goldSurface": "Łódź",
+      "id": "missing-łódź",
+      "leftContext": "Nazwa w dokumentach to",
+      "suite": "missing_key"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "mleko"
+        }
+      ],
+      "goldSurface": "Malina",
+      "id": "missing-malina",
+      "leftContext": "Nazwa w dokumentach to",
+      "suite": "missing_key"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-1",
+      "leftContext": "Wiem",
+      "nextWord": "że",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-2",
+      "leftContext": "Nie pamiętam",
+      "nextWord": "czy",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-3",
+      "leftContext": "Powiedz mi",
+      "nextWord": "kiedy",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-4",
+      "leftContext": "To osoba",
+      "nextWord": "która",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-5",
+      "leftContext": "Zostałem w domu",
+      "nextWord": "ponieważ",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-6",
+      "leftContext": "Zadzwoń",
+      "nextWord": "zanim",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-7",
+      "leftContext": "Przyszedłem",
+      "nextWord": "żeby",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-8",
+      "leftContext": "Nie było łatwo",
+      "nextWord": "ale",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-9",
+      "leftContext": "Nie on",
+      "nextWord": "lecz",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-10",
+      "leftContext": "Było trudno",
+      "nextWord": "jednak",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "punct-11",
+      "leftContext": "Kupiłem chleb",
+      "nextWord": "i",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "punct-12",
+      "leftContext": "Wybierz kawę",
+      "nextWord": "lub",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "punct-13",
+      "leftContext": "Nie kupiłem chleba",
+      "nextWord": "ani",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "punct-14",
+      "leftContext": "Odpowiedź brzmi tak",
+      "nextWord": "albo",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "punct-15",
+      "leftContext": "Usiądź",
+      "nextWord": "tutaj",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "punct-16",
+      "leftContext": "Przyszedłem",
+      "nextWord": "po",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-17",
+      "leftContext": "To moje zadanie",
+      "nextWord": "a",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "punct-18",
+      "leftContext": "Zabierz parasol",
+      "nextWord": "bo",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "punct-19",
+      "leftContext": "Pracuję",
+      "nextWord": "w",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "punct-20",
+      "leftContext": "Spotkajmy się",
+      "nextWord": "jutro",
+      "options": [
+        "",
+        ","
+      ],
+      "suite": "punctuation_before_word"
+    }
+  ],
+  "dataKind": "authored-diagnostic-with-recorded-slate-replays",
+  "schemaVersion": 1
+}

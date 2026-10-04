@@ -1,0 +1,33 @@
+{
+  "modelId": "dkleczek/bert-base-polish-cased-v1",
+  "modelRevision": "fed744e81ebd16cf099b5c64c40688bc3e6ace67",
+  "weightsRedistributed": false,
+  "license": "not_established",
+  "files": [
+    {
+      "name": "config.json",
+      "bytes": 459,
+      "sha256": "e0422bc40261c03ffc272c9f0781890419497232d1e900db7c7ae985ad4ec784"
+    },
+    {
+      "name": "pytorch_model.bin",
+      "bytes": 531146786,
+      "sha256": "79cf0790d5ad0c8343ecd61ad103240dbdaf0410328f8f0ddc9975c2d7ca3655"
+    },
+    {
+      "name": "special_tokens_map.json",
+      "bytes": 112,
+      "sha256": "303df45a03609e4ead04bc3dc1536d0ab19b5358db685b6f3da123d05ec200e3"
+    },
+    {
+      "name": "tokenizer_config.json",
+      "bytes": 30,
+      "sha256": "72e8780824be2cc2331d6addd13dc976948857a7cda3389c2b95d1a7c3206b68"
+    },
+    {
+      "name": "vocab.txt",
+      "bytes": 489360,
+      "sha256": "b886e91d3cd2226e4e8c49c4f66bdd68f80cd6243f07ed08287dc5a9acfe6946"
+    }
+  ]
+}

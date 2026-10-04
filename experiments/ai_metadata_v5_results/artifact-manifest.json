@@ -1,0 +1,53 @@
+{
+  "runId": 37221672371,
+  "inferenceCommit": "bc5c4f46895a4bd8a64d5c0736d3d58357ef12a7",
+  "recomputedComparisonExact": true,
+  "reusedRankingsMatchPrevious": {
+    "perModel": 336,
+    "changed": 0
+  },
+  "artifacts": [
+    {
+      "id": 11310334856,
+      "model": "herbert",
+      "zipSha256": "12cdd2d8040bb87a49a4eb1d963dbceb44b60068791a1d19c5ba2201f41f8b45"
+    },
+    {
+      "id": 11310541139,
+      "model": "minilm",
+      "zipSha256": "98ed96fe2edd6aa07777069ae6d218b051a0363b6782ac0f52480554ebfc7f8b"
+    },
+    {
+      "id": 11311776435,
+      "model": "qwen",
+      "zipSha256": "f9426b69ab0d6099f2b1e078133bdf0687482ff801ad94dd4b186b0e52389e3e"
+    },
+    {
+      "id": 11312225106,
+      "model": "comparison",
+      "zipSha256": "f35be46a6d1e5d6612e78c4e3d36756c822ef549ce8be4e977d4c21366d8c103"
+    }
+  ],
+  "files": {
+    "RESULTS.md": {
+      "bytes": 8330,
+      "sha256": "85f886ee01de12a0e40dbf6fff05c25ab2e5fea9eca76525d3e3cc730e77ffdd"
+    },
+    "comparison.json": {
+      "bytes": 812152,
+      "sha256": "10d29808316b893b9213c1c5f99e6a2de3665394b8aaa4c7486e51f59848e53e"
+    },
+    "herbert/predictions.json": {
+      "bytes": 638411,
+      "sha256": "91f6418fac859c9367cc647a9a89b03ab5aa3ac5302a19089f9c766b0666f4bc"
+    },
+    "minilm/predictions.json": {
+      "bytes": 483847,
+      "sha256": "3ed9f44194a171a204f099bd8802dcd309ecfbd6b2ecd383888bad2f08748156"
+    },
+    "qwen/predictions.json": {
+      "bytes": 661499,
+      "sha256": "b9b239da5c8f7ac289aff8772bce35d20581ee679ad78dcc81ed5b01942643e4"
+    }
+  }
+}

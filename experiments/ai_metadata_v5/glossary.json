@@ -1,0 +1,22 @@
+{
+  "source": "https://download.sgjp.pl/morfeusz/Morfeusz2.pdf (2026-01-22, tabela 1)",
+  "scope": "Rozwinięcia kodów gramatycznych i nazw kategorii; kwalifikatory pozostają dosłowne.",
+  "partOfSpeech": {
+    "adj": "przymiotnik",
+    "adv": "przysłówek",
+    "conj": "spójnik",
+    "depr": "rzeczownik, forma deprecjatywna",
+    "fin": "czasownik, forma nieprzeszła",
+    "impt": "czasownik, tryb rozkazujący",
+    "interj": "wykrzyknik",
+    "part": "partykuła",
+    "praet": "czasownik, forma przeszła (pseudoimiesłów)",
+    "subst": "rzeczownik"
+  },
+  "nameClasses": {
+    "imię": "imię osoby",
+    "nazwa_geograficzna": "nazwa geograficzna",
+    "nazwa_pospolita": "nazwa pospolita",
+    "nazwisko": "nazwisko osoby"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "sameScoredIdentities": true,
+  "maxAbsScoreDifference": 6.67572021484375e-06,
+  "referenceRevision": "fed744e81ebd16cf099b5c64c40688bc3e6ace67/polbert-whole-word-mask-v1",
+  "partialRunExcluded": true,
+  "polbertStandaloneCompletedBeforeRedundantHerbertLaunchCancelled": true,
+  "designatedHerbertRunExitCode": 0
+}

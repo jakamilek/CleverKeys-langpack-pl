@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "languageCode": "pl",
+  "entries": [
+    {
+      "surfaceKey": "łódź",
+      "capitalization": {
+        "defaultSurface": "łódź",
+        "variants": [
+          {"surface": "łódź", "casePolicy": "lowercase"},
+          {"surface": "Łódź", "casePolicy": "capitalized"}
+        ]
+      },
+      "commonNoun": true,
+      "properName": true,
+      "metadata": {"source": "API v1 illustrative example; test data, not production audit output"}
+    },
+    {
+      "surfaceKey": "lód",
+      "capitalization": {
+        "defaultSurface": "lód",
+        "variants": [{"surface": "lód", "casePolicy": "lowercase"}]
+      },
+      "metadata": {"source": "constructed test fixture"}
+    },
+    {
+      "surfaceKey": "mazowiecki",
+      "capitalization": {
+        "defaultSurface": "mazowiecki",
+        "variants": [{"surface": "mazowiecki", "casePolicy": "lowercase"}]
+      },
+      "metadata": {"source": "API v1 casing example; test fixture"}
+    },
+    {
+      "surfaceKey": "malina",
+      "capitalization": {
+        "defaultSurface": "malina",
+        "variants": [
+          {"surface": "malina", "casePolicy": "lowercase"},
+          {"surface": "Malina", "casePolicy": "capitalized"}
+        ]
+      },
+      "commonNoun": true,
+      "properName": true,
+      "metadata": {"source": "dual-casing design example; test fixture"}
+    }
+  ]
+}

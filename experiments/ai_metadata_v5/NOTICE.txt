@@ -1,0 +1,19 @@
+Metadata guidance v5 is an isolated comparison using the same source-backed subset
+and model revisions as experiments/ai_compare_v5. Read that directory's NOTICE.txt
+and frozen PROTOCOL.md for source/model attribution and scope.
+
+Source: Polish langpack v5 from jakamilek/CleverKeys-langpack-pl commit
+041b28ae4587c531ef73e62933e9151cadb84c33, derived from Morfeusz/SGJP.
+Morfeusz 2 documentation, Marcin Woliński, 2026-01-22:
+https://download.sgjp.pl/morfeusz/Morfeusz2.pdf
+https://morfeusz.sgjp.pl/doc/about/
+Glossary expands grammatical codes only; it is not a new lexical meaning database.
+All lexical descriptions are generated from the existing lemma/POS/NAME/labels/forms.
+Authored contexts and expected spellings are diagnostic annotations, not dictionary
+attributes. New contexts were written after prior results and are not a blind corpus.
+
+Models: allegro/herbert-base-cased (CC BY 4.0),
+MoritzLaurer/multilingual-MiniLMv2-L6-mnli-xnli (MIT),
+Qwen/Qwen3-0.6B (Apache-2.0), exact revisions inherited and frozen.
+No weights or full SGJP dictionary are redistributed. No production license conclusion
+or mobile deployment is implied by the experiment.

@@ -1,0 +1,4 @@
+# Install torch separately from its CPU wheel index; see MODEL_PROTOCOL.md.
+transformers==4.57.6
+sentencepiece==0.2.1
+numpy==2.2.6

@@ -1,0 +1,73 @@
+{
+  "files": {
+    "SOURCE_CATEGORY_RESULTS.md": {
+      "bytes": 11315,
+      "sha256": "f639753e035164a06746d9219669e2c05080cdcf75e059a1f3866430532e148d"
+    },
+    "source-category-results-2026-10-02/decisions-herbert-wwm.json": {
+      "bytes": 281723,
+      "sha256": "10cfb080f55d7600eff01ef47603bb22ff94111dd667ed3f5f65b151b1e8fcb9"
+    },
+    "source-category-results-2026-10-02/decisions-neutral.json": {
+      "bytes": 267955,
+      "sha256": "4ab7f760426620fa6d23e92960e3783cadfa962e4f1942600993cf3da1f4559c"
+    },
+    "source-category-results-2026-10-02/decisions-nli-no_attributes.json": {
+      "bytes": 282217,
+      "sha256": "0f5d54b3b6c757efb3a458f4a5f9ec7292d724a79fdd76e3287f9b66c80185f9"
+    },
+    "source-category-results-2026-10-02/decisions-nli-source_categories.json": {
+      "bytes": 286658,
+      "sha256": "bdc17b67719b7a29227e12b99688603c8f96862340d0fd2098420de2752a6ebf"
+    },
+    "source-category-results-2026-10-02/decisions-polbert-wwm.json": {
+      "bytes": 281815,
+      "sha256": "932bc9055e24ecea394c33c4ccd46068bcc6eed41d56d8a5395eb696ac7ccb14"
+    },
+    "source-category-results-2026-10-02/environment-freeze.txt": {
+      "bytes": 534,
+      "sha256": "9334c7cf1e5855a2d3e76e518bfd5b319da89ad52974732061a610cf31ee5541"
+    },
+    "source-category-results-2026-10-02/execution-checks.json": {
+      "bytes": 710,
+      "sha256": "8412574b1039734cbc930d44713e28e0e646b57436b2b9e0acbbf2035c906ab5"
+    },
+    "source-category-results-2026-10-02/herbert-metadata.json": {
+      "bytes": 59225,
+      "sha256": "b14ed9cc62ec4f394bc13d47460b934c88dd40600e8c13cf087534058612c440"
+    },
+    "source-category-results-2026-10-02/herbert-wwm.json": {
+      "bytes": 108589,
+      "sha256": "923a67609a08271eff0376da594e0470c5a69a453dd0ec78e698a363181ee93a"
+    },
+    "source-category-results-2026-10-02/model-manifest-reference.json": {
+      "bytes": 6004,
+      "sha256": "5dfab85570b9ddd6f2bcfa52ca1ef197b367e96d03162d35e7341382d63ca10a"
+    },
+    "source-category-results-2026-10-02/nli-metadata.json": {
+      "bytes": 95080,
+      "sha256": "60aa7055cc56a253cb062ed3b10a5feef05f2650d0d854c189a5979aa98ea24f"
+    },
+    "source-category-results-2026-10-02/nli-no_attributes.json": {
+      "bytes": 118111,
+      "sha256": "1c6890ce8a5e7bfe1a40edfc0600e51ff9e58940d0ccd4a65ff757ffd44a30c0"
+    },
+    "source-category-results-2026-10-02/nli-source_categories.json": {
+      "bytes": 278192,
+      "sha256": "2abeefac19681906b25213ae354a7a3b6b27491d922bdbbe362ba5e3fe76d68e"
+    },
+    "source-category-results-2026-10-02/polbert-metadata.json": {
+      "bytes": 59120,
+      "sha256": "33d300d4926b4e8b9899cfa52c87a60de1710134575faac94fa7bc8513841e30"
+    },
+    "source-category-results-2026-10-02/polbert-wwm.json": {
+      "bytes": 108666,
+      "sha256": "62fe4ae043cb7accb65da8207a738807c9554de5a2cd6a85b3a8e0ed7179a366"
+    },
+    "source-category-results-2026-10-02/summary.json": {
+      "bytes": 23805,
+      "sha256": "4c43746730e5e80c1853267aa7d9b0bd2d35965a2a1724d91f79b8d62033ef15"
+    }
+  },
+  "freezeCommit": "e654720e5bcbe9825747b74df2b7d82cdfac4eaa"
+}

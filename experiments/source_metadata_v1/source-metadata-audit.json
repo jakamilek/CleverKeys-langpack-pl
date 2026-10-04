@@ -1,0 +1,832 @@
+{
+  "artifact": {
+    "artifactId": 11189614575,
+    "binarySurfaceSetVerified": true,
+    "dictionarySha256": "087f99e39ccc9108d7bf5315c902ec5f6899620925e481cfb872d95e8df68e20",
+    "manifest": {
+      "author": "jakamilek/CleverKeys-langpack-pl",
+      "code": "pl",
+      "hasPrefixBoost": false,
+      "name": "Polish",
+      "version": 2,
+      "wordCount": 106363
+    },
+    "packageMembers": [
+      "dictionary.bin",
+      "manifest.json",
+      "unigrams.txt"
+    ],
+    "packageSha256": "301b0b9c7c4c7b96ac7a2545bf27745b6ee38c87f5d04133ede490008d861945",
+    "runId": 36916501466,
+    "sha256": "827a20f8489fad51023e1c0d58319dca030d304f7e213ef4973141251c3ad9ff",
+    "sourceCommit": "a1fa0193fc504e5fe81d9d43c23fd9a1e52ad307",
+    "sourceFileHashes": {
+      "pl-city-inflections.tsv": "51ac50c8b115c41ee5a8c1997deb7f6d221f183ad103289b020644c3d43ea46b",
+      "pl-city-source.tsv": "9682a2d40eca06e40c1b73b33bd1eef1b375782d9a41f2960a52d5bb9b84a3d4",
+      "pl-first-name-inflections.tsv": "a7535d7b840ec4c11bcb39287a5eae2256fc36b79a9a0997db27240b57d4084e"
+    },
+    "wordlistSha256": "418428fc87bb5f7f0e0ee040a6de32f0e4642f29aa4e63eb7663d5470ecfc4e3"
+  },
+  "auditVersion": "source-metadata-v1",
+  "coverage": {
+    "common_and_other_name_class": 12459,
+    "common_name_class_present": 46410,
+    "keys": 106363,
+    "labels_present": 8813,
+    "multiple_lemmas": 29970,
+    "multiple_pos": 16500,
+    "name_class_present": 56497,
+    "recognized_any_probe": 102203,
+    "recognized_lower_probe": 102203,
+    "unrecognized_complete_token": 4160
+  },
+  "limitations": [
+    "Historical successful preview artifact, not a regenerated current build.",
+    "Coverage is morphological recognition, not semantic accuracy.",
+    "No per-word semantic glosses, street classifications or absent surnames invented.",
+    "No production sidecar, candidate ranking, model inference or Android changes."
+  ],
+  "morfeusz": {
+    "caseHandling": "CONDITIONALLY_CASE_SENSITIVE",
+    "dictionaryId": "pl.sgjp.sgjp-2026.06.01",
+    "fields": [
+      "orth",
+      "lemma",
+      "tag",
+      "nameClasses",
+      "labels"
+    ],
+    "tagsetId": "pl.sgjp.morfeusz-0.8.0",
+    "version": "1.99.15"
+  },
+  "nameClassKeyCounts": {
+    "człon_nazwiska": 9,
+    "człon_nazwiska_(herb)": 2,
+    "człon_nazwy_geograficznej": 1018,
+    "człon_nazwy_instytucji": 1,
+    "człon_nazwy_organizacji": 17,
+    "człon_nazwy_własnej": 17,
+    "człon_pseudonimu": 1,
+    "człon_tytułu": 4,
+    "imię": 2612,
+    "marka": 21,
+    "nazwa pospolita": 39,
+    "nazwa_członka_rodu": 14,
+    "nazwa_firmy": 28,
+    "nazwa_geograficzna": 11022,
+    "nazwa_instytucji": 27,
+    "nazwa_kroju_pisma": 3,
+    "nazwa_organizacji": 40,
+    "nazwa_pospolita": 46410,
+    "nazwa_własna": 13,
+    "nazwa_własna_astronomiczna": 101,
+    "nazwa_własna_budowli": 12,
+    "nazwa_własna_środka_lokomocji": 1,
+    "nazwa_święta": 7,
+    "nazwisko": 13266,
+    "przydomek": 18,
+    "pseudonim": 13,
+    "tytuł": 31
+  },
+  "posKeyCounts": {
+    "adj": 24229,
+    "adjc": 8,
+    "adjp": 135,
+    "adv": 1593,
+    "bedzie": 6,
+    "brev": 70,
+    "comp": 45,
+    "conj": 42,
+    "depr": 2692,
+    "fin": 6397,
+    "frag": 52,
+    "ger": 6245,
+    "imps": 590,
+    "impt": 1067,
+    "inf": 3669,
+    "interj": 179,
+    "num": 180,
+    "pact": 2558,
+    "pant": 9,
+    "part": 147,
+    "pcon": 738,
+    "ppas": 6369,
+    "ppron12": 20,
+    "ppron3": 22,
+    "praet": 6981,
+    "pred": 25,
+    "prep": 99,
+    "romandig": 5,
+    "siebie": 4,
+    "subst": 56418,
+    "winien": 18
+  },
+  "recognizedOnlyWithCapitalizedProbe": {
+    "count": 0,
+    "examples": []
+  },
+  "selectedExamples": [
+    {
+      "packCanonicalSurface": "łódź",
+      "probes": {
+        "Łódź": [
+          {
+            "labels": [],
+            "lemma": "Łódź",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Łódź",
+            "tag": "subst:sg:acc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Łódź",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Łódź",
+            "tag": "subst:sg:nom:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "Łódź",
+            "tag": "subst:sg:acc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "Łódź",
+            "tag": "subst:sg:nom:f"
+          }
+        ],
+        "łódź": [
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "łódź",
+            "tag": "subst:sg:acc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "łódź",
+            "tag": "subst:sg:nom:f"
+          }
+        ]
+      },
+      "sourceRecords": {
+        "pl-city-inflections.tsv": [
+          {
+            "case": "nom",
+            "form": "Łódź",
+            "gender": "",
+            "layer": "city",
+            "morfeusz_version": "1.99.15",
+            "name": "Łódź",
+            "source": "Morfeusz 2 / SGJP generated from GUS TERYT SIMC city lemma"
+          },
+          {
+            "case": "acc",
+            "form": "Łódź",
+            "gender": "",
+            "layer": "city",
+            "morfeusz_version": "1.99.15",
+            "name": "Łódź",
+            "source": "Morfeusz 2 / SGJP generated from GUS TERYT SIMC city lemma"
+          }
+        ],
+        "pl-city-source.tsv": [
+          {
+            "name": "Łódź",
+            "rm": "96",
+            "simc": "0957650",
+            "source": "GUS TERYT SIMC",
+            "stan_na": "2026-01-01"
+          }
+        ],
+        "pl-first-name-inflections.tsv": []
+      },
+      "surfaceKey": "łódź"
+    },
+    {
+      "packCanonicalSurface": "łodzi",
+      "probes": {
+        "Łodzi": [
+          {
+            "labels": [
+              "hom."
+            ],
+            "lemma": "Łodzia",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:pl:gen:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Łodzia",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:sg:dat.loc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Łodzia",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:sg:gen:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Łódź",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:pl:gen:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Łódź",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:sg:dat.loc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Łódź",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:sg:gen:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Łódź",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:sg:voc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:pl:gen:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:sg:dat.loc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:sg:gen:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "Łodzi",
+            "tag": "subst:sg:voc:f"
+          }
+        ],
+        "łodzi": [
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "łodzi",
+            "tag": "subst:pl:gen:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "łodzi",
+            "tag": "subst:sg:dat.loc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "łodzi",
+            "tag": "subst:sg:gen:f"
+          },
+          {
+            "labels": [],
+            "lemma": "łódź",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "łodzi",
+            "tag": "subst:sg:voc:f"
+          }
+        ]
+      },
+      "sourceRecords": {
+        "pl-city-inflections.tsv": [
+          {
+            "case": "gen",
+            "form": "Łodzi",
+            "gender": "",
+            "layer": "city",
+            "morfeusz_version": "1.99.15",
+            "name": "Łódź",
+            "source": "Morfeusz 2 / SGJP generated from GUS TERYT SIMC city lemma"
+          },
+          {
+            "case": "dat",
+            "form": "Łodzi",
+            "gender": "",
+            "layer": "city",
+            "morfeusz_version": "1.99.15",
+            "name": "Łódź",
+            "source": "Morfeusz 2 / SGJP generated from GUS TERYT SIMC city lemma"
+          },
+          {
+            "case": "loc",
+            "form": "Łodzi",
+            "gender": "",
+            "layer": "city",
+            "morfeusz_version": "1.99.15",
+            "name": "Łódź",
+            "source": "Morfeusz 2 / SGJP generated from GUS TERYT SIMC city lemma"
+          },
+          {
+            "case": "voc",
+            "form": "Łodzi",
+            "gender": "",
+            "layer": "city",
+            "morfeusz_version": "1.99.15",
+            "name": "Łódź",
+            "source": "Morfeusz 2 / SGJP generated from GUS TERYT SIMC city lemma"
+          }
+        ],
+        "pl-city-source.tsv": [],
+        "pl-first-name-inflections.tsv": []
+      },
+      "surfaceKey": "łodzi"
+    },
+    {
+      "packCanonicalSurface": "łódzki",
+      "probes": {
+        "Łódzki": [
+          {
+            "labels": [],
+            "lemma": "łódzki",
+            "nameClasses": [],
+            "orth": "Łódzki",
+            "tag": "adj:sg:acc:m3:pos"
+          },
+          {
+            "labels": [],
+            "lemma": "łódzki",
+            "nameClasses": [],
+            "orth": "Łódzki",
+            "tag": "adj:sg:nom.voc:m1.m2.m3:pos"
+          }
+        ],
+        "łódzki": [
+          {
+            "labels": [],
+            "lemma": "łódzki",
+            "nameClasses": [],
+            "orth": "łódzki",
+            "tag": "adj:sg:acc:m3:pos"
+          },
+          {
+            "labels": [],
+            "lemma": "łódzki",
+            "nameClasses": [],
+            "orth": "łódzki",
+            "tag": "adj:sg:nom.voc:m1.m2.m3:pos"
+          }
+        ]
+      },
+      "sourceRecords": {
+        "pl-city-inflections.tsv": [],
+        "pl-city-source.tsv": [],
+        "pl-first-name-inflections.tsv": []
+      },
+      "surfaceKey": "łódzki"
+    },
+    {
+      "packCanonicalSurface": "malina",
+      "probes": {
+        "Malina": [
+          {
+            "labels": [],
+            "lemma": "Malin",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Malina",
+            "tag": "subst:sg:gen:m3"
+          },
+          {
+            "labels": [],
+            "lemma": "Malina:Sf",
+            "nameClasses": [
+              "imię",
+              "nazwa_geograficzna",
+              "nazwisko"
+            ],
+            "orth": "Malina",
+            "tag": "subst:sg:nom:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Malina:Sm1",
+            "nameClasses": [
+              "nazwisko"
+            ],
+            "orth": "Malina",
+            "tag": "subst:sg:nom:m1"
+          },
+          {
+            "labels": [],
+            "lemma": "malina",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "Malina",
+            "tag": "subst:sg:nom:f"
+          }
+        ],
+        "malina": [
+          {
+            "labels": [],
+            "lemma": "malina",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "malina",
+            "tag": "subst:sg:nom:f"
+          }
+        ]
+      },
+      "sourceRecords": {
+        "pl-city-inflections.tsv": [],
+        "pl-city-source.tsv": [],
+        "pl-first-name-inflections.tsv": [
+          {
+            "case": "nom",
+            "form": "Malina",
+            "gender": "F",
+            "layer": "modern",
+            "morfeusz_version": "1.99.15",
+            "name": "Malina",
+            "source": "Morfeusz 2 / SGJP"
+          }
+        ]
+      },
+      "surfaceKey": "malina"
+    },
+    {
+      "packCanonicalSurface": "jagoda",
+      "probes": {
+        "Jagoda": [
+          {
+            "labels": [],
+            "lemma": "Jagoda:Sf",
+            "nameClasses": [
+              "imię",
+              "nazwisko"
+            ],
+            "orth": "Jagoda",
+            "tag": "subst:sg:nom:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Jagoda:Sm1",
+            "nameClasses": [
+              "nazwisko"
+            ],
+            "orth": "Jagoda",
+            "tag": "subst:sg:nom:m1"
+          },
+          {
+            "labels": [],
+            "lemma": "jagoda",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "Jagoda",
+            "tag": "subst:sg:nom:f"
+          }
+        ],
+        "jagoda": [
+          {
+            "labels": [],
+            "lemma": "jagoda",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "jagoda",
+            "tag": "subst:sg:nom:f"
+          }
+        ]
+      },
+      "sourceRecords": {
+        "pl-city-inflections.tsv": [],
+        "pl-city-source.tsv": [],
+        "pl-first-name-inflections.tsv": [
+          {
+            "case": "nom",
+            "form": "Jagoda",
+            "gender": "F",
+            "layer": "modern",
+            "morfeusz_version": "1.99.15",
+            "name": "Jagoda",
+            "source": "Morfeusz 2 / SGJP"
+          }
+        ]
+      },
+      "surfaceKey": "jagoda"
+    },
+    {
+      "packCanonicalSurface": "róża",
+      "probes": {
+        "Róża": [
+          {
+            "labels": [],
+            "lemma": "Róż:Sm1",
+            "nameClasses": [
+              "nazwisko"
+            ],
+            "orth": "Róża",
+            "tag": "subst:sg:gen.acc:m1"
+          },
+          {
+            "labels": [],
+            "lemma": "Róża",
+            "nameClasses": [
+              "imię",
+              "nazwa_geograficzna"
+            ],
+            "orth": "Róża",
+            "tag": "subst:sg:nom:f"
+          },
+          {
+            "labels": [],
+            "lemma": "róża",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "Róża",
+            "tag": "subst:sg:nom:f"
+          }
+        ],
+        "róża": [
+          {
+            "labels": [],
+            "lemma": "róża",
+            "nameClasses": [
+              "nazwa_pospolita"
+            ],
+            "orth": "róża",
+            "tag": "subst:sg:nom:f"
+          }
+        ]
+      },
+      "sourceRecords": {
+        "pl-city-inflections.tsv": [],
+        "pl-city-source.tsv": [],
+        "pl-first-name-inflections.tsv": [
+          {
+            "case": "nom",
+            "form": "Róża",
+            "gender": "F",
+            "layer": "modern",
+            "morfeusz_version": "1.99.15",
+            "name": "Róża",
+            "source": "Morfeusz 2 / SGJP"
+          }
+        ]
+      },
+      "surfaceKey": "róża"
+    },
+    {
+      "packCanonicalSurface": "polska",
+      "probes": {
+        "Polska": [
+          {
+            "labels": [],
+            "lemma": "Polska:Sf~ej",
+            "nameClasses": [
+              "nazwisko"
+            ],
+            "orth": "Polska",
+            "tag": "subst:sg:nom:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Polska:Sf~ej",
+            "nameClasses": [
+              "nazwisko"
+            ],
+            "orth": "Polska",
+            "tag": "subst:sg:voc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Polska:Sf~i",
+            "nameClasses": [
+              "nazwa_geograficzna"
+            ],
+            "orth": "Polska",
+            "tag": "subst:sg:nom:f"
+          },
+          {
+            "labels": [],
+            "lemma": "polski:A",
+            "nameClasses": [],
+            "orth": "Polska",
+            "tag": "adj:sg:nom.voc:f:pos"
+          },
+          {
+            "labels": [],
+            "lemma": "polski:A",
+            "nameClasses": [],
+            "orth": "Polska",
+            "tag": "adjp:gen"
+          }
+        ],
+        "polska": [
+          {
+            "labels": [],
+            "lemma": "polski:A",
+            "nameClasses": [],
+            "orth": "polska",
+            "tag": "adj:sg:nom.voc:f:pos"
+          },
+          {
+            "labels": [],
+            "lemma": "polski:A",
+            "nameClasses": [],
+            "orth": "polska",
+            "tag": "adjp:gen"
+          }
+        ]
+      },
+      "sourceRecords": {
+        "pl-city-inflections.tsv": [],
+        "pl-city-source.tsv": [],
+        "pl-first-name-inflections.tsv": []
+      },
+      "surfaceKey": "polska"
+    },
+    {
+      "packCanonicalSurface": "warszawska",
+      "probes": {
+        "Warszawska": [
+          {
+            "labels": [],
+            "lemma": "Warszawska",
+            "nameClasses": [
+              "nazwisko"
+            ],
+            "orth": "Warszawska",
+            "tag": "subst:sg:nom:f"
+          },
+          {
+            "labels": [],
+            "lemma": "Warszawska",
+            "nameClasses": [
+              "nazwisko"
+            ],
+            "orth": "Warszawska",
+            "tag": "subst:sg:voc:f"
+          },
+          {
+            "labels": [],
+            "lemma": "warszawski",
+            "nameClasses": [],
+            "orth": "Warszawska",
+            "tag": "adj:sg:nom.voc:f:pos"
+          }
+        ],
+        "warszawska": [
+          {
+            "labels": [],
+            "lemma": "warszawski",
+            "nameClasses": [],
+            "orth": "warszawska",
+            "tag": "adj:sg:nom.voc:f:pos"
+          }
+        ]
+      },
+      "sourceRecords": {
+        "pl-city-inflections.tsv": [],
+        "pl-city-source.tsv": [],
+        "pl-first-name-inflections.tsv": []
+      },
+      "surfaceKey": "warszawska"
+    },
+    {
+      "packCanonicalSurface": "warszawski",
+      "probes": {
+        "Warszawski": [
+          {
+            "labels": [],
+            "lemma": "Warszawski",
+            "nameClasses": [
+              "nazwisko"
+            ],
+            "orth": "Warszawski",
+            "tag": "subst:sg:nom:m1"
+          },
+          {
+            "labels": [],
+            "lemma": "Warszawski",
+            "nameClasses": [
+              "nazwisko"
+            ],
+            "orth": "Warszawski",
+            "tag": "subst:sg:voc:m1"
+          },
+          {
+            "labels": [],
+            "lemma": "warszawski",
+            "nameClasses": [],
+            "orth": "Warszawski",
+            "tag": "adj:sg:acc:m3:pos"
+          },
+          {
+            "labels": [],
+            "lemma": "warszawski",
+            "nameClasses": [],
+            "orth": "Warszawski",
+            "tag": "adj:sg:nom.voc:m1.m2.m3:pos"
+          }
+        ],
+        "warszawski": [
+          {
+            "labels": [],
+            "lemma": "warszawski",
+            "nameClasses": [],
+            "orth": "warszawski",
+            "tag": "adj:sg:acc:m3:pos"
+          },
+          {
+            "labels": [],
+            "lemma": "warszawski",
+            "nameClasses": [],
+            "orth": "warszawski",
+            "tag": "adj:sg:nom.voc:m1.m2.m3:pos"
+          }
+        ]
+      },
+      "sourceRecords": {
+        "pl-city-inflections.tsv": [],
+        "pl-city-source.tsv": [],
+        "pl-first-name-inflections.tsv": []
+      },
+      "surfaceKey": "warszawski"
+    }
+  ]
+}
