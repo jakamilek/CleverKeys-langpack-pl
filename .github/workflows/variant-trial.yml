@@ -6,6 +6,9 @@ on:
   pull_request:
     paths:
       - 'scripts/build_variant_trial.py'
+      - 'scripts/build_function_word_trial.py'
+      - 'scripts/capitalization_rules.py'
+      - 'tests/test_function_word_trial.py'
       - 'tests/test_variant_trial.py'
       - 'tests/fixtures/source-casing-proof-v1.json'
       - 'docs/VARIANT_TRIAL_NOTICE.txt'
@@ -25,6 +28,10 @@ jobs:
           python-version: '3.12'
       - name: Test producer and source contract
         run: python3 -m unittest discover -s tests -p 'test_variant_trial.py' -v
+      - name: Install pinned casing oracle
+        run: python3 -m pip install morfeusz2==1.99.15
+      - name: Test function-word casing and binary invariants
+        run: python3 -m unittest discover -s tests -p 'test_function_word_trial.py' -v
       - name: Retrieve the pinned successful preview
         uses: actions/download-artifact@v4
         with:
@@ -40,8 +47,15 @@ jobs:
             --evidence-sha256 6bbdf928c338d44ab3eddb76f8a1fe9f0b4a789cb1d51f55740f55826a21e2e2 \
             --notice docs/VARIANT_TRIAL_NOTICE.txt \
             --out-dir build/variant-trial
-      - name: Save the trial and audit
+      - name: Correct source-attested function-word defaults (pack v4)
+        run: |
+          python3 scripts/build_function_word_trial.py \
+            --base-pack build/variant-trial/cleverkeys-pl-variants-trial.zip \
+            --out-dir build/function-word-trial
+      - name: Compare corrected artifact with reviewed report
+        run: cmp build/function-word-trial/function-word-trial-report.json docs/function-word-trial-v1/function-word-trial-report.json
+      - name: Save the corrected trial and audit
         uses: actions/upload-artifact@v4
         with:
-          name: cleverkeys-pl-variants-trial
-          path: build/variant-trial/*
+          name: cleverkeys-pl-function-words-trial
+          path: build/function-word-trial/*

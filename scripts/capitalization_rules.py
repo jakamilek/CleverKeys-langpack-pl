@@ -15,13 +15,15 @@ module-only keys; they are not used to decide capitalization of core keys.
 
 Project precedence:
 1. verified common-noun analysis -> lowercase, absolutely;
-2. proper-name classification from either case probe -> capitalized;
-3. adjective analysis without competing proper-name evidence -> lowercase;
-4. other ordinary Polish lexical analysis -> lowercase;
-5. explicit audited surface policy -> fallback only when linguistic evidence
+2. adjective analysis -> lowercase, absolutely;
+3. attested lowercase conjunction/complementizer/particle/preposition -> lowercase;
+4. proper-name classification from either case probe -> capitalized;
+5. other ordinary Polish lexical analysis -> lowercase (unless secondary
+   linguistic evidence resolves it as a proper name);
+6. explicit audited surface policy -> fallback only when linguistic evidence
    does not determine the surface;
-6. module source policy -> fallback only for module-only keys;
-7. no evidence -> unresolved.
+7. official source spelling, then module policy -> fallback only;
+8. no evidence -> unresolved.
 
 There is deliberately no first-name-, city-, surname-, country- or
 category-specific capitalization branch.
@@ -51,6 +53,17 @@ ORDINARY_POS = {
     "subst", "adj", "adv", "verb", "part", "prep", "conj",
     "num", "ger", "ppron", "pron",
 }
+# SGJP tagset classes, not a list of word exceptions. These closed-class
+# readings must be attested for the exact lowercase token, without a NAME
+# classification. Nouns, verbs, abbreviations and unknown words do not qualify.
+FUNCTION_WORD_POS = {"conj", "comp", "part", "prep"}
+
+
+def function_word_matches(analyses, normalized):
+    return [item for item in analyses
+            if item["probe"] == normalized and item["orth"] == normalized
+            and item["pos"] in FUNCTION_WORD_POS
+            and not item["proper_name_classes"]]
 
 
 def _payload(item):
@@ -82,6 +95,7 @@ def _analyses(morfeusz, surface: str) -> list[dict[str, object]]:
             if cls != COMMON_NOUN_CLASS
         ]
         out.append({
+            "probe": surface,
             "orth": orth,
             "lemma": lemma,
             "tag": tag,
@@ -289,6 +303,7 @@ def resolve_capitalization(
     ]
 
     base = {
+        "function_word_matches": function_word_matches(analyses, normalized),
         "common_lexical_matches": lexical,
         "common_adjective_matches": adjectives,
         "common_noun_matches": common_noun,
@@ -339,8 +354,26 @@ def resolve_capitalization(
             **base,
         }
 
-    # Proper-name evidence is considered only after the unconditional
-    # adjective rule.
+    # Prefer the ordinary grammatical reading of functional words over a
+    # coincident inflected name (e.g. Ale from Ala, Lub from Luba). This also
+    # precedes secondary/source spelling evidence. It does not erase the
+    # proper-name analyses: they remain available in the diagnostic payload.
+    if base["function_word_matches"]:
+        return {
+            "resolved": True,
+            "surface": normalized,
+            "policy": "lowercase",
+            "reason": "attested-function-word-default-lowercase",
+            "linguistic_basis": "function-word",
+            "explicit_policy_conflict": bool(
+                explicit_policy is not None
+                and explicit_policy[1] != "lowercase"
+            ),
+            **base,
+        }
+
+    # Proper-name evidence is considered after common nouns, adjectives and
+    # attested lowercase function words.
     if proper_names:
         return {
             "resolved": True,

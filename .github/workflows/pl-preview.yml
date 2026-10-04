@@ -333,7 +333,7 @@ jobs:
                   assert policy == "lowercase", row
               elif basis == "proper-name":
                   assert policy == "capitalized", row
-              elif basis == "ordinary-lexical":
+              elif basis in {"ordinary-lexical", "function-word"}:
                   assert policy == "lowercase", row
 
           # Modules are a cross-check, not the core capitalization authority.
