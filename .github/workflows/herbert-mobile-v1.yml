@@ -1,0 +1,71 @@
+name: HerBERT mobile export v1
+
+on:
+  push:
+    branches: ['experiment/herbert-mobile-v1']
+    paths:
+      - 'experiments/herbert_mobile_v1/**'
+      - '.github/workflows/herbert-mobile-v1.yml'
+  pull_request:
+    paths:
+      - 'experiments/herbert_mobile_v1/**'
+      - '.github/workflows/herbert-mobile-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Validate frozen conversion gates
+        run: |
+          python3 -m unittest discover -s experiments/herbert_mobile_v1 -p 'test_*.py' -v
+          python3 experiments/herbert_mobile_v1/contract_mobile.py
+
+  export:
+    if: github.event_name != 'pull_request'
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install pinned export runtime
+        run: |
+          python3 -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python3 -m pip install -r experiments/ai_compare_v5/requirements.txt -r experiments/herbert_mobile_v1/requirements.txt
+          python3 -m pip freeze > mobile-environment.txt
+      - name: Export real model and compare full frozen plain requests
+        run: python3 experiments/herbert_mobile_v1/export_validate.py --out build/herbert-mobile-v1
+      - name: Preserve reports even when conversion fails
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: herbert-mobile-v1-reports
+          path: |
+            build/herbert-mobile-v1/reports/
+            mobile-environment.txt
+          retention-days: 30
+      - name: Preserve attributed INT8 candidate only after both gates
+        if: success() && hashFiles('build/herbert-mobile-v1/candidate-bundle/manifest.json') != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: herbert-mobile-v1-int8-candidate
+          path: build/herbert-mobile-v1/candidate-bundle/
+          retention-days: 30
+      - name: Publish measured summary
+        if: always() && hashFiles('build/herbert-mobile-v1/reports/SUMMARY.md') != ''
+        run: cat build/herbert-mobile-v1/reports/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"

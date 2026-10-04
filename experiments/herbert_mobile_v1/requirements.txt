@@ -1,0 +1,3 @@
+# Torch CPU 2.8.0 and the frozen ai_compare_v5 requirements installed first.
+onnx==1.17.0
+onnxruntime==1.21.1
