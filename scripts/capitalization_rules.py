@@ -17,13 +17,14 @@ Project precedence:
 1. verified common-noun analysis -> lowercase, absolutely;
 2. adjective analysis -> lowercase, absolutely;
 3. attested lowercase conjunction/complementizer/particle/preposition -> lowercase;
-4. proper-name classification from either case probe -> capitalized;
-5. other ordinary Polish lexical analysis -> lowercase (unless secondary
+4. exact generated ordinary lowercase form (any known POS) -> lowercase;
+5. proper-name classification from either case probe -> capitalized;
+6. other ordinary Polish lexical analysis -> lowercase (unless secondary
    linguistic evidence resolves it as a proper name);
-6. explicit audited surface policy -> fallback only when linguistic evidence
+7. explicit audited surface policy -> fallback only when linguistic evidence
    does not determine the surface;
-7. official source spelling, then module policy -> fallback only;
-8. no evidence -> unresolved.
+8. official source spelling, then module policy -> fallback only;
+9. no evidence -> unresolved.
 
 There is deliberately no first-name-, city-, surname-, country- or
 category-specific capitalization branch.
@@ -64,6 +65,24 @@ def function_word_matches(analyses, normalized):
             if item["probe"] == normalized and item["orth"] == normalized
             and item["pos"] in FUNCTION_WORD_POS
             and not item["proper_name_classes"]]
+
+
+def attested_ordinary_matches(morfeusz, analyses, normalized):
+    """Require a generated exact lowercase form; a case-insensitive probe is insufficient."""
+    generate = getattr(morfeusz, 'generate', None)
+    if not callable(generate):
+        return []
+    result = []
+    for item in analyses:
+        if (item['probe'] != normalized or item['orth'] != normalized
+                or item['pos'] in {'ign', 'interp'} or item['proper_name_classes']):
+            continue
+        for form in generate(item['lemma']):
+            if (len(form) >= 5 and form[0] == normalized and form[1] == item['lemma']
+                    and form[2] == item['tag'] and sorted(form[3]) == sorted(item['classes'])):
+                result.append(item)
+                break
+    return result
 
 
 def _payload(item):
@@ -372,8 +391,25 @@ def resolve_capitalization(
             **base,
         }
 
-    # Proper-name evidence is considered after common nouns, adjectives and
-    # attested lowercase function words.
+    # Generalize beyond function words: a generated lowercase ordinary reading
+    # has priority over a coincident surname/name, with every known POS eligible.
+    # Source name interpretations stay in the diagnostic payload.
+    ordinary_attested = attested_ordinary_matches(morfeusz, analyses, normalized)
+    if ordinary_attested:
+        return {
+            "resolved": True,
+            "surface": normalized,
+            "policy": "lowercase",
+            "reason": "attested-ordinary-form-default-lowercase",
+            "linguistic_basis": "ordinary-generated-form",
+            "ordinary_generated_form_matches": ordinary_attested,
+            "explicit_policy_conflict": bool(
+                explicit_policy is not None and explicit_policy[1] != "lowercase"
+            ),
+            **base,
+        }
+
+    # Proper-name evidence follows all exact ordinary lowercase readings.
     if proper_names:
         return {
             "resolved": True,

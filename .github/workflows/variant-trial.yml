@@ -7,6 +7,8 @@ on:
     paths:
       - 'scripts/build_variant_trial.py'
       - 'scripts/build_function_word_trial.py'
+      - 'scripts/build_global_casing_trial.py'
+      - 'tests/test_global_casing_trial.py'
       - 'scripts/capitalization_rules.py'
       - 'tests/test_function_word_trial.py'
       - 'tests/test_variant_trial.py'
@@ -54,6 +56,20 @@ jobs:
             --out-dir build/function-word-trial
       - name: Compare corrected artifact with reviewed report
         run: cmp build/function-word-trial/function-word-trial-report.json docs/function-word-trial-v1/function-word-trial-report.json
+      - name: Test global casing, source readings and Android limits
+        run: python3 -m unittest discover -s tests -p 'test_global_casing_trial.py' -v
+      - name: Audit every key and export case homonyms (pack v5)
+        run: |
+          python3 scripts/build_global_casing_trial.py \
+            --base-pack build/function-word-trial/cleverkeys-pl-function-words-trial.zip \
+            --out-dir build/global-casing-trial
+      - name: Compare global artifact with reviewed report
+        run: cmp build/global-casing-trial/global-casing-reviewed-summary.json docs/global-casing-trial-v1/global-casing-reviewed-summary.json
+      - name: Save global casing pack and full source audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleverkeys-pl-global-casing-trial
+          path: build/global-casing-trial/*
       - name: Save the corrected trial and audit
         uses: actions/upload-artifact@v4
         with:
