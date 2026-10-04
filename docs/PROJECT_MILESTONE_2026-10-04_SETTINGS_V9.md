@@ -6,6 +6,8 @@ The maintainer accepts the v8 hold/drag/release behavior but reports a narrow st
 ## 2. Revision
 Runtime f25d41740fb2e68835ed20a1200c3c0536ca3040, parent c0442972047e1ef1fd691bc13d981577234e5bff, branch docs/source-variants-integration-v1, draft PR #1. Marker editing-settings-v9. All 66 changed files were read back at the pushed commit and matched the prepared contents. No merge, tag, release or version bump.
 
+Follow-up 897edfa3e3e9ea28abaf75a32c99417233e6a6d2, parent f25d41740fb2e68835ed20a1200c3c0536ca3040: only the Filipino hold-selection title is shortened from 42 to 38 code points. The label retains the long-press meaning. The one changed file was read back exactly after push. Runtime behavior, test thresholds and the empty translation exception list are unchanged.
+
 ## 3. Unified Backspace action
 One short-tap dropdown replaces the obsolete swipe/autocorrect checkboxes: character/space deletion (default), undo the preceding autocorrection, or remove the verified last swiped token. Undo requires a collapsed cursor and a complete matching token, is excluded from passwords/technical fields and does not apply to repeats. Autocorrect undo replaces one verified selection in a single commit. Invalid enum values and old true/true preferences do not enable destructive word deletion.
 
@@ -25,12 +27,16 @@ Source-backed case variants, add-word chip first and returning the suggestion st
 Eighteen typed options use shared product defaults, safe bounded reads and backup validation. Immutable EditBehaviorOptions is captured in ConfigSnapshot at pointer-down. Compose reactive reload, preference notifications, generated search with actual parent mappings, 22 resource sets and scoped reset buttons are wired. Deprecated undo keys are omitted from exports and ignored on import; historical Config symbols/test names are retained for RELEASE_RECORD compatibility. Canonical guide, specs, handbook, TOC and todo are updated on the runtime branch.
 
 ## 9. Validation status
-Local static checks PASS: XML parse/unique resource names, 22-locale copy coverage and distinctness, literal-percent formatting, 18 runtime-reader/UI-writer links, generated search entries and correct parent sections; obsolete UI state/readers are absent. Twenty-five regression cases were added: nine pure and sixteen focused mock cases. Existing suites remain enabled.
+Initial v9 [run 37182681723](https://github.com/jakamilek/CleverKeysPL/actions/runs/37182681723) on f25d41740fb2e68835ed20a1200c3c0536ca3040: debug assembly PASS; pure suite executed 2804 checks, with 2803 passing and one failure. TranslationLengthTest.constrainedStringsDoNotExpandPastTheThresholds rejected fil/edit_backspace_hold_select_title (42 code points versus English 19, limit 2.0 times). Focused mock suites, APK artifact upload and lint were skipped after this failure. Code Quality PASS. The interruption was a translation-length assertion, not a compilation or demonstrated gesture failure.
 
-V9 compilation and Kotlin/JVM execution are PENDING in [CI run 37182681723](https://github.com/jakamilek/CleverKeysPL/actions/runs/37182681723); the observed status was in_progress, not a pass. No Android SDK/Gradle/Kotlin compiler is installed locally. CI uses scripts/gradle-guard.sh with the existing memory cap. There is no validated v9 APK yet. A single status check was made within 24 seconds of push; monitoring stopped without waiting for completion.
+Follow-up 897edfa3e3e9ea28abaf75a32c99417233e6a6d2 shortens that title to 38 code points. A local Python check of the existing length policy across all 21 translated locales and XML parsing PASS. This does not substitute for the Kotlin/JUnit rerun; no test limit was relaxed and no exception was added.
+
+Compilation, all 2804 pure checks and focused mock suites are PENDING in [follow-up CI run 37183355586](https://github.com/jakamilek/CleverKeysPL/actions/runs/37183355586). No uploaded/validated v9 APK is available yet. A single status check was made within 15 seconds of push, then monitoring stopped. No local Android SDK/Gradle/Kotlin compiler; CI keeps scripts/gradle-guard.sh and the existing memory cap.
+
+Initial local checks also passed XML/resource uniqueness, 22-resource-set coverage/distinctness, literal-percent formatting, 18 runtime-reader/UI-writer links and generated search parent sections. Twenty-five regression cases were added (nine pure, sixteen focused mock); focused execution remains pending.
 
 ## 10. Existing blockers and producer
-V8 full CI reported the unchanged ProduceStateDoesNotAssignValue lint error at popover/SubkeyAssignActivity.kt:148 and four HIGH devalue 5.8.1 findings in site/bun.lock; upstream fixed version 5.9.3. These are historical baseline observations, not a new v9 result. Gates remain enabled. Instrumented, minified and performance checks remain pending.
+The first v9 security job again reported four HIGH devalue 5.8.1 findings (zero CRITICAL), with fixed version 5.9.3. Its lint steps were skipped after the pure-test failure. V8 full CI previously reported the ProduceStateDoesNotAssignValue lint error at popover/SubkeyAssignActivity.kt:148 and four HIGH devalue 5.8.1 findings in site/bun.lock; upstream fixed version 5.9.3. The lint finding is a historical baseline observation; no v9 lint result has been obtained. Gates remain enabled. Instrumented, minified and performance checks remain pending.
 
 Producer code 75a06570cc9eaac72f1e7c4376a4efd068be73fb unchanged. Pack SHA-256 4c5c82c2ede9e9085bc8773ce3f3b8be53ba210a6f9e9b19b297127e90c7eec7; CKDT 087f99e39ccc9108d7bf5315c902ec5f6899620925e481cfb872d95e8df68e20. No AI/CTC, dictionary duplicates, manual descriptions or lexical changes.
 
