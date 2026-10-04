@@ -1,0 +1,104 @@
+name: Polish metadata guidance v5
+
+on:
+  push:
+    branches: ['experiment/context-surface-window-v1']
+    paths:
+      - 'experiments/ai_metadata_v5/**'
+      - '.github/workflows/ai-metadata-v5.yml'
+  pull_request:
+    paths:
+      - 'experiments/ai_metadata_v5/**'
+      - '.github/workflows/ai-metadata-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # verified v5 ref
+        with:
+          python-version: '3.12'
+      - name: Validate frozen cases and source contract
+        run: |
+          python3 -m unittest discover -s experiments/ai_metadata_v5 -p 'test_*.py' -v
+          python3 experiments/ai_metadata_v5/contract_meta.py
+
+  inference:
+    if: github.event_name != 'pull_request'
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        model: [herbert, minilm, qwen]
+    env:
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Download exact successful v5 pack
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: jakamilek/CleverKeys-langpack-pl
+          run-id: 37202645255
+          name: cleverkeys-pl-global-casing-trial
+          path: build/source-v5
+      - name: Verify package and source snapshot byte-for-byte
+        run: python3 experiments/ai_compare_v5/extract_sources.py --pack build/source-v5/cleverkeys-pl-global-casing-trial.zip --verify
+      - name: Install pinned CPU inference dependencies
+        run: |
+          python3 -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python3 -m pip install -r experiments/ai_compare_v5/requirements.txt
+          python3 -m pip freeze > build/inference-environment.txt
+      - name: Run actual pinned model inference
+        run: python3 experiments/ai_metadata_v5/run_metadata.py --model ${{ matrix.model }} --out build/ai-metadata-v5/${{ matrix.model }}
+      - name: Preserve predictions, checks and environment (no model weights)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ai-metadata-v5-${{ matrix.model }}
+          path: |
+            build/ai-metadata-v5/
+            build/inference-environment.txt
+          retention-days: 30
+
+  comparison:
+    if: always() && github.event_name != 'pull_request'
+    needs: [contract, inference]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: ai-metadata-v5-*
+          merge-multiple: false
+          path: build/metadata-comparison
+      - name: Revalidate predictions and compare all three models
+        run: |
+          python3 experiments/ai_metadata_v5/collect_metadata.py --root build/metadata-comparison
+          cat build/metadata-comparison/COMPARISON.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve comparison
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ai-metadata-v5-comparison
+          path: |
+            build/metadata-comparison/COMPARISON.md
+            build/metadata-comparison/comparison.json
+          retention-days: 30
