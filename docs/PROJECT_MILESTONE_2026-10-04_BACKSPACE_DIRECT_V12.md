@@ -1,10 +1,10 @@
 # Backspace: bezpośrednie przeciąganie i kolejne usuwanie słów — v12
 
 ## 1. Zweryfikowany stan i data
-2026-10-04, przed dodaniem tego dokumentu: main CleverKeysPL
-11834cdbdc39008254e5833b21143950f219ece0; main CleverKeys-langpack-pl
-a20b8454a30204616c7f4800057e430cc27a68fc. Oba mainy otrzymają wyłącznie nowy
-dokument ciągłości. Runtime docs/source-variants-integration-v1 przesunięto
+2026-10-04, przed aktualizacją wyniku CI: main CleverKeysPL
+beee16c9f1cf3aecddd4f2c58d2bc435cb6b8c1b; main CleverKeys-langpack-pl
+ee026fd2b055579824040ea0f56c295d8a6a5027. Oba mainy otrzymują wyłącznie
+aktualizację tego dokumentu ciągłości. Runtime docs/source-variants-integration-v1 przesunięto
 fast-forward z 5200f718a0a9f2cf29135d6e8607c171d308f889 do
 23b6f6923344f69a11df14e6f01d22f0e8abecd8. Draft PR #1 pozostaje otwarty.
 Odczyt wszystkich 18 zmienionych blobów tego commita zgadza się z hashami
@@ -64,9 +64,15 @@ się do plików. Pierwsze wywołanie build:termux nie znalazło bun na PATH;
 poprawiono PATH i właściwy build zakończył się sukcesem. Lockfile nie zmienił się.
 
 [CI run 37189695279](https://github.com/jakamilek/CleverKeysPL/actions/runs/37189695279)
-jest uruchomiony dla 23b6f692; w jednym odczycie miał queued. Nie potwierdzamy
-sukcesu kompilacji/testów/lint ani dostępności nowego APK. Monitorowanie zakończone;
-obowiązuje maksymalnie 60 sekund łącznie na build. Telefon jeszcze nie testował v12.
+zakończył się SUCCESS dla dokładnego head 23b6f692. Logi potwierdzają 2804 testy
+pure JVM i 240 testów skupionych (łącznie 3044), w tym 34 BackspaceHoldTest
+oraz 20 PointersBackspaceHoldTest. assembleDebug, lint debug i release,
+Code Quality Checks, Security Scan (gate fixed HIGH/CRITICAL) i APK Size Analysis
+zakończyły się sukcesem. Upload test results zgłosił brak build/reports/tests/:
+wynik testów potwierdzają logi JUnit, nie osobny artefakt raportów.
+APK i lint-results są dostępne. Odczyt po zgłoszeniu użytkownika zakończył weryfikację;
+obowiązuje maksymalnie 60 sekund monitorowania łącznie na build.
+Telefon jeszcze nie testował v12.
 
 ## 7. Gałęzie i historia
 Runtime trial pozostaje na docs/source-variants-integration-v1, draft PR #1.
@@ -85,8 +91,13 @@ unieważniane, a kontynuacja wyrazu instalowana przed commitText, by odebrać
 synchroniczne potwierdzenie kursora. Przy kolejnym podglądzie sprawdza połączenie,
 EditorInfo, pozycję, zaznaczony tekst i pozostający fragment przed kursorem.
 
-Nowy APK dopiero ma powstać w powyższym CI; brak potwierdzonego artifact ID/hashu.
-Ostatni zielony APK: artifact 11296828695 / run 37185565077, odniesienie w
+Nowy [apk-debug, artifact 11298891131](https://github.com/jakamilek/CleverKeysPL/actions/runs/37189695279/artifacts/11298891131)
+ma 97046331 bajtów; GitHub podaje digest ZIP
+sha256:d37038a4e1124085809ee09a12ca1c259e876509a7caba5ae3d6f3cbcb010972
+oraz wygaśnięcie 2026-10-11T08:51:58Z. To digest artefaktu ZIP, nie pojedynczego APK.
+lint-results: artifact 11299075649, 15640 bajtów, digest ZIP
+sha256:b9c86d04cf5ffc242cea9dbe23c5953e514392817bab29fab4bce016c8983993.
+Ostatni wcześniejszy zielony APK pozostaje opisany w
 [poprzedniej stabilizacji](PROJECT_MILESTONE_2026-10-04_CI_STABILIZATION.md).
 Langpack i producer nie zmieniły się w tym etapie. Hash lokalnego packa v4
 3767c76dbf87589182d6b26b8f8d64d80ec635764cee15d350015b60d41e21af i jego
@@ -105,14 +116,16 @@ usuniętych słów, ale nie kasuje aktualnego podglądu. Brak nowych kluczy usta
 i zmian formatu backupu. Pełne phone/instrumented/minified/performance nadal otwarte.
 
 ## 10. Następny krok
-Po zgłoszeniu zakończenia runu odczytać compile/test/lint i artifact nowego APK,
-następnie przetestować: przeciągnięcie bez hold, trzy kolejne wyrazy przy hold,
-puszczenie między wyrazami, przejście od podglądu do DRAG oraz hamowanie i cofanie
-bez wznowienia cyklu słów. Zachować limit monitorowania.
+Zainstalować APK v12 z potwierdzonego artefaktu i przetestować na telefonie:
+przeciągnięcie bez hold, trzy kolejne wyrazy przy nieruchomym hold, puszczenie
+między wyrazami, przejście od podglądu do DRAG oraz hamowanie i cofanie bez
+wznowienia cyklu słów. Sprawdzić zachowanie separatorów i brak aktywacji innych
+klawiszy podczas przeciągania. Zachować limit monitorowania kolejnych buildów.
 
 ## 11. Różnica wobec poprzedniego kamienia
 [Poprzedni etap](PROJECT_MILESTONE_2026-10-04_FUNCTION_WORD_CASING.md) naprawił dane
 Ale/Lub w producer i przygotował pack v4. Ten etap zmienia wyłącznie runtime
 Backspace zgodnie z nową instrukcją użytkownika, uaktualnia polskie opisy i
 specyfikacje oraz dodaje 13 regresji. Lokalne kontrole dokumentacji są zielone;
-nowy CI i akceptacja telefonu pozostają niepotwierdzone.
+nowy CI potwierdza kompilację, 3044 testy i oba lint. APK v12 jest dostępne;
+akceptacja gestów na telefonie pozostaje otwarta.
