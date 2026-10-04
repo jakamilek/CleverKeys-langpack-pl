@@ -41,6 +41,13 @@ Przypięte źródło potwierdza tutaj/adv oraz Tutaj/nazwisko, ale/conj/part/int
 i Ale/imię, lub/conj oraz impt od lubić i Lub/imię/nazwisko od Luba:Sf.
 Nie dopowiadamy opisów znaczeń ani ulic/miast na podstawie nazwiska.
 
+
+Aktualizacja po testach telefonu (2026-10-04): użytkownik zgłasza „działa świetnie”.
+To ogólna akceptacja użytkowa dostarczonego etapu, nie pomiar RAM/latencji ani
+osobne potwierdzenie każdego punktu checklisty/wersji pliku. Nie przypisujemy tej
+wypowiedzi wyniku oczekującego CI 6b3b2580. Użytkownik odkłada nowe opcje czasu BS
+do następnej zmiany klawiatury i wskazuje wybór SI jako kolejny temat.
+
 ## 4. Rozwiązania odrzucone
 Brak blacklisty słów, ręcznych opisów, duplikowania CKDT przez case i nowej listy
 ręcznych kategorii. Nie traktujemy sondy z dużą literą jako dowodu nazwy.
@@ -55,6 +62,42 @@ i szersze źródła dla nierozpoznanych form pozostają osobnymi etapami.
 Nie wykonano pełnego głównego preview pipeline. Inne tłumaczenia pozostają w backlogu.
 Globalny audyt nie oznacza metadanych wszystkich wyrazów w pamięci klawiatury:
 runtime zawiera konflikty/poprawki/kontrole; pełna analiza wszystkich jest w audycie.
+
+
+Backlog zaakceptowany przez użytkownika — czasy stacjonarnego Backspace:
+1. „Czas przytrzymania BS”: od naciśnięcia do podglądu/zaznaczenia pierwszego słowa.
+2. „Czas podglądu słowa”: od zaznaczenia do zweryfikowanego usunięcia; obecnie 350 ms.
+3. „Przerwa między słowami”: od usunięcia do zaznaczenia kolejnego słowa; obecnie 200 ms.
+Cykl 2–3 powtarza się do podniesienia palca; przejście do przesuwania zachowuje
+przyjęty gest i jego guards. Dokładne zakresy/krok/default pierwszej opcji ustalić
+z istniejącym timeoutem, nie zgadywać. Wdrożyć przy następnej zmianie aplikacji:
+typed preferences, polskie tytuły/opisy, wyszukiwarka ustawień, backup/import/export
+i właściwy reset. Nie zmieniono teraz kodu, zachowania ani istniejących czasów.
+
+Kolejny etap SI to wybór na podstawie porównania, nie natychmiastowa instalacja:
+- Kandydaci: istniejący HerBERT MLM, MiniLM NLI oraz mały generatywny Qwen
+  (do kwalifikacji Qwen3-0.6B / nowszy Qwen3.5-0.8B w trybie tekstowym).
+  Dokumentacja modeli jest przesłanką do eksperymentu, nie wynikiem polskiej klawiatury.
+- Wejście: aktualne interpretacje/formy z v5, zachowana pisownia/interpunkcja
+  dłuższego kontekstu, rzeczywiste slates i engineScore. Bez ręcznych opisów słów,
+  przywiązania do dawnego dziewięciowpisowego próbnego sidecara czy nowych duplikatów CKDT.
+- Przed inferencją zamrozić nowe dane i metryki; porównać ten sam model z metadanymi
+  i bez, krótsze/dłuższe okno oraz neutralny baseline v5. Kontrolować wpływ długości
+  tokenizacji. Baseline może już umieszczać obie formy w top 3: sam taki wynik nie
+  dowodzi przewagi SI. Osobno mierzyć top 1, dokładny klucz/zapis w top 3, regresje,
+  alternatywy i przypadki, gdy poprawny klucz dekodera nie jest pierwszy.
+- Interpunkcja: oddzielna próba znak/brak znaku; przyszła funkcja może korzystać
+  z tego samego interfejsu, ale nie zakładamy, że wymaga tych samych wag/modelu.
+- Finalny wybór obejmuje kwantyzację/parity, licencję wag/runtime, opóźnienie p50/p95,
+  pamięć/start i energię na docelowym telefonie. Geometric pozostaje dekoderem;
+  SI ocenia dopuszczalne kandydatury i nie blokuje wpisania słowa ani nie zmienia
+  już zatwierdzonego tekstu spóźnionym wynikiem. CTC nie jest warunkiem tego etapu.
+- Nie uruchomiono w tej aktualizacji modeli, nowego benchmarku ani integracji Androida.
+  Źródła: https://huggingface.co/allegro/herbert-base-cased,
+  https://huggingface.co/MoritzLaurer/multilingual-MiniLMv2-L6-mnli-xnli,
+  https://huggingface.co/Qwen/Qwen3-0.6B, https://huggingface.co/Qwen/Qwen3.5-0.8B.
+  Historyczne wyniki: PROJECT_MILESTONE_2026-10-02_NATURAL_CONTEXTS.md oraz
+  PROJECT_MILESTONE_2026-10-02_SOURCE_METADATA.md; nie są ewaluacją v5.
 
 ## 6. Weryfikacja i jej granice
 42 testy lokalnie PASS: 21 istniejących wariantów, 8 funkcyjnych, 13 nowych.
@@ -140,6 +183,8 @@ nie dowodzi kosztu pamięci ani akceptacji UX. Pisownia użytkownika może mieć
 Nie kasujemy jego danych. Osiem dawnych par i kontrola łódzki zostają.
 
 ## 10. Następny krok
+Priorytet po ogólnej akceptacji telefonu: protokół i porównanie SI na rzeczywistych
+metadanych v5. Opcje czasów BS pozostają zapisanym backlogiem kolejnej zmiany aplikacji.
 Dostarczono linki do zweryfikowanych artifacts v15 APK i v5 langpack.
 Po kolejnym zgłoszeniu zakończenia runu sprawdzić 6b3b2580 i wykonanie obu nowych
 zestawów; nie oczekiwać na Actions w aktywnej sesji.
@@ -158,4 +203,5 @@ i wariantów dla konfliktów. Zastępuje ograniczony zakres
 [korekty funkcyjnej](PROJECT_MILESTONE_2026-10-04_FUNCTION_WORD_CASING.md)
 nowym packiem v5; runtime/API, rangi i klucze pozostają. Lokalnie i CI 42 PASS;
 CI runtime v15 3052 PASS. Odczyt ujawnił niewykonywane nowe testy paska; workflow
-naprawiono osobnym commitem. Import/telefon oraz wynik tego follow-up nadal oczekują.
+naprawiono osobnym commitem. Użytkownik zgłasza ogólną akceptację telefonu; pomiary i wynik follow-up CI nadal oczekują.
+Zapisano odłożone ustawienia czasów BS i plan porównania SI; bez zmiany aplikacji.
