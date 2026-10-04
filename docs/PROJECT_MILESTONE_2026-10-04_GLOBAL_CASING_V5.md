@@ -9,7 +9,10 @@ bb55e87f5bfa2c7ce2a3eb2214cf5a7f3031205f do 041b28ae4587c531ef73e62933e9151cadb8
 Nowe drzewo: 8129d6d8456b0bf5df4734bf86b2e52e0328f328; wszystkie siedem zmienionych blobów
 zgadza się z lokalnymi plikami i zostały odczytane dokładnie z nowego commita.
 Runtime trial docs/source-variants-integration-v1 pozostaje na
-4e51c3b45285fdbfdc93531bd80e228444601818, draft PR #1, bez nowego APK commita.
+4e51c3b45285fdbfdc93531bd80e228444601818 był headem zweryfikowanego APK v15.
+Po odczycie runów trial przesunięto do 6b3b2580094170384e1e0f9a4b72138546ebd884:
+zmieniono wyłącznie workflow CI, aby wykonywał dwa pominięte zestawy regresji.
+Draft PR #1 pozostaje otwarty; kod aplikacji i wersja bez zmian.
 
 Wspólny zapis: [CleverKeysPL](https://github.com/jakamilek/CleverKeysPL/blob/main/docs/PROJECT_MILESTONE_2026-10-04_GLOBAL_CASING_V5.md)
 i [CleverKeys-langpack-pl](https://github.com/jakamilek/CleverKeys-langpack-pl/blob/main/docs/PROJECT_MILESTONE_2026-10-04_GLOBAL_CASING_V5.md).
@@ -67,17 +70,32 @@ Struktura wszystkich 16199 wpisów odpowiada kontraktowi kluczy/case/manifestu
 odczytanemu z runtime; to kontrola hostowa, nie wykonany parser Androida.
 Sidecar 11542814 bajtów / 751535 węzłów mieści się w
 32 MiB / 1 000 000 / 120 000 wpisów bez podnoszenia limitów.
-Nowego CI, bieżących runów runtime i artefaktu v5 nie odczytywano ani nie monitorowano.
-Import, parser Androida, pamięć/start i telefon v5 pozostają do potwierdzenia.
+Po zgłoszeniu „Runy zakończone” odczytano wyniki właściwych commitów:
+- Runtime v15 4e51c3b4: CI 37201055281 SUCCESS; 2801 pure JVM + 251 focused = 3052
+  testy w logach JUnit, assembleDebug, debug lint, lintVitalRelease, Code Quality,
+  gate fixed HIGH/CRITICAL i APK Size Analysis PASS. Brak plików raportu testowego
+  przy uploadzie jest ostrzeżeniem; liczbę testów potwierdzają logi, nie pusty artifact.
+- Luka wykonania: trzy nowe SuggestionStripScrollTest i trzy nowe metody w
+  LearningFunnelBookkeepingTest były zarejestrowane w build.gradle, ale oba zestawy
+  pominięto w liście wywołań workflow. Zielony v15 ich nie dowodzi. Naprawiono workflow
+  w 6b3b2580094170384e1e0f9a4b72138546ebd884: 18 jawnych guarded wywołań zamiast 16.
+  Dokładny readback pliku i commit diff są weryfikowane; nowego runu nie monitorujemy.
+- Producer v5 041b28ae: push 37202645255 i PR 37202647650 SUCCESS. Log wybranego push
+  potwierdza 21+8+13 = 42 testy, audyt 106363 kluczy/736 korekt/16199 wpisów,
+  dokładny SHA ZIP i udane cmp summary z zatwierdzonym plikiem.
+Import, parser Androida na realnym v5, pamięć/start, SimpleX i telefon v15
+pozostają do potwierdzenia. Test hostowy importu nie zastępuje nowej paczki na telefonie.
 Limit monitorowania 60 sekund łącznie na build obowiązuje.
 
 ## 7. Gałęzie i historia
-Producer trial nowy commit 041b28ae4587c531ef73e62933e9151cadb84c33; runtime v15 i draft PR #1 bez zmian.
+Producer trial commit 041b28ae4587c531ef73e62933e9151cadb84c33; runtime ma po v15
+workflow-only follow-up 6b3b2580094170384e1e0f9a4b72138546ebd884; draft PR #1 zachowany.
 V4 ZIP pozostaje identyczny i zaakceptowany na telefonie pod względem korekty,
 ale użytkownik żąda szerszego modelu danych. Poprzedni producer run 37188544526
 był wcześniej potwierdzony SUCCESS; nie dowodzi nowego v5.
-V14 poprawka SimpleX i v15 reset listy zachowują oczekujące wyniki/telefon.
-W tym etapie nie odczytywano ich Actions ani nie kasowano/ponawiano runów.
+V14 run 37199887090 odczytano jako completed/SUCCESS dla 95f302c1d528bd9d006e5660697f6a307b983ce2.
+V15 zawiera jego poprawkę; jej wynik na telefonie w SimpleX pozostaje nieznany.
+Nie kasowano ani nie ponawiano istniejących runów.
 
 ## 8. Artefakty, hashe i integracja
 Pack version 5, 106363 kluczy, 736 korekt (673 na małą,
@@ -94,9 +112,19 @@ sidecar SHA 5e0eac9b056861903d33664c6ba3d4a9d895044530e78be72ff0ad1596ba884d
 pełny audyt SHA 06031fee57cc32b6c795cc36f0a728449e7bc7bd841b09bb23d0fb33012c7454
 lista zmian SHA 50215963bff5ed9ab0332202309181b26ff7257b51ea51c2e267c6c323c1de3d
 Audyt JSONL ma 81566499 bajtów, jest osobnym plikiem artefaktu.
-Nie są to hashe/ID jeszcze potwierdzonego artefaktu GitHuba.
+CI v5 wydrukowało identyczny wewnętrzny ZIP SHA; cmp reviewed summary PASS.
+[Artifact v5 11303920512](https://github.com/jakamilek/CleverKeys-langpack-pl/actions/runs/37202645255/artifacts/11303920512):
+cleverkeys-pl-global-casing-trial, 10341499 bajtów, expired=false,
+wygaśnięcie 2027-01-02T12:35:39Z. Digest zewnętrznego ZIP artifact:
+sha256:66e0480ea158385bb3cdb5bd2e4efda7c3d16ae5b5ae5ec6f114b0f6454ba740.
+[APK v15 artifact 11303261365](https://github.com/jakamilek/CleverKeysPL/actions/runs/37201055281/artifacts/11303261365):
+apk-debug, 97027740 bajtów, expired=false, wygaśnięcie 2026-10-11T12:17:11Z.
+Digest zewnętrznego ZIP artifact:
+sha256:ba43c19a3644dc6ccc962a4344b439d5b30b2ba6e8ed5a3352f15cac6ecd644b.
+Metadane API i upload log potwierdzają oba ID/digesty. Binarnych artefaktów ponownie
+nie pobierano; outer SHA nie jest SHA pojedynczego APK ani inner langpack ZIP.
 
-Workflow ma wydać artifact cleverkeys-pl-global-casing-trial z wewnętrznym ZIP,
+Workflow wydał artifact cleverkeys-pl-global-casing-trial z wewnętrznym ZIP,
 raportem, audytem i summary. Raport v4 zmienił tylko fingerprint resolvera;
 jego ZIP SHA 3767c76dbf87589182d6b26b8f8d64d80ec635764cee15d350015b60d41e21af
 pozostaje identyczny. CI v5 porównuje summary z zatwierdzonym wynikiem i hashem pełnej listy.
@@ -112,7 +140,9 @@ nie dowodzi kosztu pamięci ani akceptacji UX. Pisownia użytkownika może mieć
 Nie kasujemy jego danych. Osiem dawnych par i kontrola łódzki zostają.
 
 ## 10. Następny krok
-Po zgłoszeniu zakończenia runów sprawdzić właściwe commity, testy i artefakty.
+Dostarczono linki do zweryfikowanych artifacts v15 APK i v5 langpack.
+Po kolejnym zgłoszeniu zakończenia runu sprawdzić 6b3b2580 i wykonanie obu nowych
+zestawów; nie oczekiwać na Actions w aktywnej sesji.
 Dla producer v5 importować wewnętrzny cleverkeys-pl-global-casing-trial.zip,
 nie zewnętrzny wrapper z audytem. Sprawdzić w środku zdania ale/lub/tutaj:
 mała forma domyślna i nazwa obok, a następnie Jan, Łódź/łódź, Shift/kropkę,
@@ -126,5 +156,6 @@ dotyczył resetu paska i dostarczenia v4. Ten etap zmienia wyłącznie producer:
 audyt wszystkich kluczy, ogólną politykę POS oraz automatyczny eksport interpretacji
 i wariantów dla konfliktów. Zastępuje ograniczony zakres
 [korekty funkcyjnej](PROJECT_MILESTONE_2026-10-04_FUNCTION_WORD_CASING.md)
-nowym packiem v5; runtime/API, rangi i klucze pozostają. Lokalnie 42 PASS,
-CI/import/telefon oczekują.
+nowym packiem v5; runtime/API, rangi i klucze pozostają. Lokalnie i CI 42 PASS;
+CI runtime v15 3052 PASS. Odczyt ujawnił niewykonywane nowe testy paska; workflow
+naprawiono osobnym commitem. Import/telefon oraz wynik tego follow-up nadal oczekują.
