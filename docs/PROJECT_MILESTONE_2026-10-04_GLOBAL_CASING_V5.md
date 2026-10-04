@@ -75,6 +75,15 @@ typed preferences, polskie tytuły/opisy, wyszukiwarka ustawień, backup/import/
 i właściwy reset. Nie zmieniono teraz kodu, zachowania ani istniejących czasów.
 
 Kolejny etap SI to wybór na podstawie porównania, nie natychmiastowa instalacja:
+Telefon docelowy podany przez użytkownika (2026-10-04): Nubia Z60 Ultra LV,
+12 GB RAM / 512 GB pamięci. Zachowujemy oznaczenie „LV” z wypowiedzi; SoC,
+wersja Androida, konfiguracja zRAM i wolna pamięć nie zostały tu odczytane.
+Pomiary telefonu mają obejmować zimny start i rozgrzaną pojedynczą listę kandydatów,
+opóźnienie p50/p95 całej oceny, szczyt/stan ustalony RAM i płynność szybkiego pisania.
+Pojemność całego telefonu nie jest budżetem procesu klawiatury. Porównujemy
+początkowo małe modele z powyższej listy; większy model tylko przy wykazanej
+przewadze jakości i akceptowalnym koszcie. Zapis sprzętu nie jest benchmarkiem.
+
 - Kandydaci: istniejący HerBERT MLM, MiniLM NLI oraz mały generatywny Qwen
   (do kwalifikacji Qwen3-0.6B / nowszy Qwen3.5-0.8B w trybie tekstowym).
   Dokumentacja modeli jest przesłanką do eksperymentu, nie wynikiem polskiej klawiatury.
