@@ -1,0 +1,29 @@
+{
+  "runId": 37227484110,
+  "codeCommit": "f4f994d3fd890402d6f4106ae4f75f4ebab76838",
+  "artifactId": 11313090360,
+  "zipSha256": "fda36d777a04a4502cc19efecf857899f1bb4f64f7fc4a3dc327228adbd2747d",
+  "recomputedComparisonsExact": true,
+  "files": {
+    "SUMMARY.md": {
+      "bytes": 359,
+      "sha256": "7837f7d4f4b2717d0682c11d812b71c0a95094b3cea5dcb59854123b794cdd63"
+    },
+    "android-score-vectors.json": {
+      "bytes": 117232,
+      "sha256": "4060ec03ebdf2b951ae37b1bf80d7b8b1e3714f040499168ed27af996da5e539"
+    },
+    "conversion-report.json": {
+      "bytes": 19290,
+      "sha256": "c900e52ba08a6fa7d0e2b69a24e22b175c519e0387c5a88e31b111f7bd3d36b5"
+    },
+    "scores.json": {
+      "bytes": 64115,
+      "sha256": "83b76a812a910b1ccca0de4db25b48c60b53a35c382c49290ba26d875dc69c3b"
+    },
+    "tokenizer-conformance.json": {
+      "bytes": 20481,
+      "sha256": "c6e8a4f3be142294021acff2d84318f4dcaca6fd66effb4ad28410fe34547d93"
+    }
+  }
+}
