@@ -27,8 +27,10 @@ z własnym kompletem pinned identities. Manifest SHA256
 
 To paczka diagnostyczna: phoneReady=false, independentQualityValidated=false,
 bez live IME. Dotychczasowy INT8 preservation FAIL pozostaje FAIL. Nie ma nowych
-niezależnych wyników trafności ani pomiarów telefonu. Runtime Kotlin token/feed parity,
-Android JNI scores i rzeczywiste Nubia timings wymagają oddzielnej weryfikacji.
+niezależnych wyników trafności ani pomiarów telefonu. Runtime Kotlin token/feed parity potwierdzono w run 37231774451 (90615f0):
+2471 token vectors, wszystkie pięć feeds /232 batches/532 candidates PASS, JUnitCore
+OK(2835), compile PASS. Workflow zatrzymał potem nieobecny rg (exit127), nie test.
+Android JNI scores, finalny APK i rzeczywiste Nubia timings nadal nieweryfikowane.
 
 Konteksty archived mają najwyżej 13 słów; nie rozstrzygają trafności okien 32 vs 64.
 Przygotowany runtime wybiera 32 jako default i porównuje czas obu limitów na syntetycznym
