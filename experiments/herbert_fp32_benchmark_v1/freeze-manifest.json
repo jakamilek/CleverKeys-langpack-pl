@@ -1,0 +1,17 @@
+{
+  "files": {
+    ".github/workflows/herbert-fp32-benchmark-v1.yml": "bd74ac555a7dc102de2edaa30a73cd4ba38a47da873e163fbc2908207c414b28",
+    "experiments/herbert_fp32_benchmark_v1/NOTICE.txt": "b9b8af816cbed0c0a5e7565a224407399d028313b2b2ff2a089a86d67d70bc28",
+    "experiments/herbert_fp32_benchmark_v1/PROTOCOL.md": "2ddc143bd299b800719f43ab3a923426bfb0307305f5782f344d6279e615284a",
+    "experiments/herbert_fp32_benchmark_v1/export_benchmark.py": "77cefd1b9cc0c2d59e55602b4b013cbfd234d20293a5d9d736c8642533692121",
+    "experiments/herbert_fp32_benchmark_v1/portable.py": "54e54372b56f1b314a73376d256f448c5e1d364099baa4865d6da1f41f2235f4",
+    "experiments/herbert_fp32_benchmark_v1/requirements.txt": "0377f90010a0935651d42a9530cb9e5a9d0cc7f7db1c806eef15322ee70b4001",
+    "experiments/herbert_fp32_benchmark_v1/test_portable.py": "39ec458ff11551b6e67462a95c2574f842e2a9ac0aa464fa62f5f1dba5de2d0e"
+  },
+  "modelSha256": "f851436ba9ca35d0c7313ff873cd869b744b295a8a16fc95b4571d5e11b299f2",
+  "previousProducerCommit": "1fb12ad350a8091e84edb561b0422d6f891b8c25",
+  "previousRuntimeCommit": "b1c829cf28886391cdc98a7b8d7b0bd16bf6b65e",
+  "protocol": "herbert-fp32-benchmark-v1",
+  "schemaVersion": 1,
+  "tokenizersVersion": "0.22.2"
+}

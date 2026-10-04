@@ -1,0 +1,27 @@
+HerBERT FP32 benchmark package v1, 2026-10-04.
+
+Original model: allegro/herbert-base-cased, revision
+50e33e0567be0c0b313832314c586e3df0dc2297, CC BY 4.0.
+Authors: Allegro Machine Learning Research Team and Linguistic Engineering Group,
+Institute of Computer Science, Polish Academy of Sciences.
+Model card: https://huggingface.co/allegro/herbert-base-cased
+Paper: Mroczkowski, Wroblewska and Gawlik, HerBERT: Efficiently Pretrained
+Transformer-based Language Model for Polish (2021):
+https://aclanthology.org/2021.bsnlp-1.1/
+License: https://creativecommons.org/licenses/by/4.0/
+
+Changes: converted masked-candidate mean/sum log-probability graph to FP32 ONNX.
+No training and no quantization. Original fast tokenizer exported; derived portable
+vocabulary/merge/Unicode tables preserve its behaviour and are tested separately.
+No endorsement by original authors is implied. Preserve attribution and identify
+conversion/table derivation as modifications with any redistribution of this package.
+
+Tokenizer behaviour is based on Hugging Face tokenizers 0.22.2 (BertNormalizer,
+BertPreTokenizer and cased Char-BPE) and transformers 4.57.6 HerbertTokenizerFast.
+Those libraries are Apache-2.0; see https://github.com/huggingface/tokenizers and
+https://github.com/huggingface/transformers. The portable interpreter is independently
+implemented from exported tables and publicly documented algorithms.
+
+Frozen source subset and diagnostic contexts are inherited from ai_metadata_v5 and
+ai_compare_v5; see their PROTOCOL/NOTICE files. No full SGJP dictionary is included.
+Benchmark only: no phone performance claim, production activation or release authority.
