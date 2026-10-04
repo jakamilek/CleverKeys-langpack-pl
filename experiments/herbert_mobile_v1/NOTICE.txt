@@ -1,0 +1,22 @@
+HerBERT mobile export trial v1, 2026-10-04.
+
+Original model: allegro/herbert-base-cased, revision
+50e33e0567be0c0b313832314c586e3df0dc2297, CC BY 4.0.
+Authors: Allegro Machine Learning Research Team and Linguistic Engineering Group,
+Institute of Computer Science, Polish Academy of Sciences.
+Model card: https://huggingface.co/allegro/herbert-base-cased
+Paper: Mroczkowski, Wroblewska and Gawlik, HerBERT: Efficiently Pretrained
+Transformer-based Language Model for Polish (2021):
+https://aclanthology.org/2021.bsnlp-1.1/
+License: https://creativecommons.org/licenses/by/4.0/
+
+Changes: exported masked-candidate mean/sum log-probability graph to ONNX,
+dynamic INT8 quantization of constant matrix weights. No model training.
+Original tokenizer exported with conformance vectors; tokenization is unchanged.
+No endorsement by original authors is implied. Preserve this attribution with
+redistributed weights and identify conversion/quantization as modifications.
+
+Source subset and authored diagnostic contexts are inherited from the frozen
+ai_metadata_v5 and ai_compare_v5 trials; see their PROTOCOL/NOTICE files.
+No full SGJP dictionary is redistributed. This is not an Android performance
+claim. A passing conversion check does not authorize production use or release.
