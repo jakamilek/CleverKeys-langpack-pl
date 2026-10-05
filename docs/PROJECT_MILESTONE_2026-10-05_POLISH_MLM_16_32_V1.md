@@ -44,8 +44,8 @@ CPU torch2.8.0/transformers4.57.6 float32 threads2/1, osobne runnery. Host RSS/t
 per populacja/okno, faktyczne parametry; brak telefonu/energii/kwantyzacji.
 
 ## 7. Zamrożenie
-freeze-manifest wiąże13 nowych plików (manifest nie hashuje sam siebie), odziedziczone
-source contract/cases/snapshot, workflow i revisions. Wyniki wiążą canonical manifest.
+freeze-manifest wiąże 12 nowych plików wykonania/danych/dokumentacji i 3 odziedziczone
+source contract/cases/snapshot (sam manifest nie hashuje siebie), workflow i revisions. Wyniki wiążą canonical manifest.
 Request SHA a859aac5acf8dc950c07df415873aced44a46f9a4585818504e3f2af6377449b.
 Protokół/kod/dane atomowo zapisane przed inferencją. Naprawy jawne/refreeze;
 zmiana metod lub etykiet po wyniku to nowa próba. Bez weights w Git/artifact/APK.
