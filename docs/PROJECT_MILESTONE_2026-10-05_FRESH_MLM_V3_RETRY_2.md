@@ -1,9 +1,9 @@
 # Kamień milowy: ponowienie próby MLM v3 — attempt 2
-Data weryfikacji: 2026-10-05 (Europe/Warsaw). Attempt 2 przyjęty i queued; brak wyników jakości v3.
+Data weryfikacji: 2026-10-05 (Europe/Warsaw). Attempt 2: oba zadania modeli ponownie cancelled bez runnera; brak wyników jakości v3.
 
 ## 1. Zweryfikowane repozytoria i zakres
-Main przed tym dokumentem: CleverKeysPL 8560c4c119b8d163d0bcab655689e747024e3959;
-CleverKeys-langpack-pl 2d785a9aa478e324e69a42c1586548dea1fd78e5.
+Main przed aktualizacją22:14: CleverKeysPL ab6f539be6370d7d21f627eb57b639afe9799286;
+CleverKeys-langpack-pl 51c412f4d9b1e7bfda4440b18259655d177d15cc.
 GitHub API sprawdzone. Ten sam dokument docs-only na obu main, bez zmiany kodu.
 Producer experiment/polish-mlm-fresh-v3 kod c1e9d3a7895f2a380bc75772985c88a53db32a4b,
 runtime docs trial/herbert-fp32-benchmark-v1 0367b334f770d4ad2b1925dc445850e9c19e9b78.
@@ -44,7 +44,10 @@ Artifact API attempt1: pusta lista. Żaden model nie otrzymał runnera/nie wykon
 Brak report/predictions; nie można oceniać jakości/RAM/latencji v3.
 Na polecenie użytkownika ponowiono nieudane zadania przez rerun-failed-jobs.
 API potwierdziło attempt2 QUEUED, ten sam kod c1e9d3a7895f2a380bc75772985c88a53db32a4b.
-Nowe inference distil111950695899 i herbert111950696064 QUEUED.
+Odczyt 2026-10-05 około22:14 Europe/Warsaw: inference distil111950695899 i herbert111950696064
+COMPLETED CANCELLED. Created19:49:16UTC, completed20:04:17UTC, steps=[], runner_id=0,
+runner_name pusty — ponownie około15min bez uruchomienia żadnego kroku.
+Attempt2 run37363474711 nadal QUEUED; comparison111955909414 QUEUED od20:04:18UTC.
 Udany contract widoczny jako SUCCESS111950697565. Porównanie ma zależność od obu modeli.
 Rerun response success=true; nie deklarować inferencji rozpoczętej lub jakości PASS.
 
@@ -76,13 +79,20 @@ Brak native model wyników v3, brak testu >32 słów/prywatnych rozmów.
 
 ## 10. Następny uzasadniony krok
 Retry wykonany: attempt2 tego samego runu i frozen commitu; nie powielono udanego PR.
-Po informacji użytkownika o zakończeniu sprawdzić oba nowe model jobs i pełny collector.
+Attempt2 znowu zablokowany przez brak przydzielenia runnerów; oba modele cancelled.
+Oficjalny GitHub Status przy odczycie22:14 nadal Actions Degraded Performance;
+update19:15UTC mówi o opóźnieniach przydzielania runners. Związek z anulowaniem jest
+wnioskiem, dokładnej przyczyny cancellation API nie podało. Bez kolejnego retry teraz.
+Kolejna próba dopiero po ustabilizowaniu Actions i wiadomości użytkownika, potem pełny collector.
 Nie dodawać kolejnych retry podczas oczekiwania; nie zmieniono danych/metody/bramek.
 Nie czekać/watch/sleep: <=60s TOTAL monitorowania/run, następny odczyt po wiadomości użytkownika.
 Dopiero complete wyniki: artifact SHA/size, dokładne collector recomputation, all regressions,
 ocena16/32; następnie uzasadniony export/nativefixtures/telefon. Licencja dalej deferred.
 
 ## 11. Różnica wobec poprzedniego stanu
+Aktualizacja22:14: second attempt oba model jobs cancelled bez runnera, comparison queued.
+Nie uruchomiono attempt3 i nie zmieniono metody/kodu. Nadal brak wyników jakości.
+Historyczna informacja o przyjęciu retry:
 Poprzedni docs/PROJECT_MILESTONE_2026-10-05_FRESH_MLM_V3_RUNNER_INTERRUPTION.md:
 oba model jobs cancelled, comparison queued. Teraz attempt1 comparisonFAIL z powodu
 braku wyników, retry przyjęty i attempt2 queued z nowymi model jobs.
