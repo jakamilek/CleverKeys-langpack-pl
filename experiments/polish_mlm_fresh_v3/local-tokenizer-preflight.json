@@ -1,0 +1,18 @@
+{
+  "allTargetsAndSelectedSourcePairsPass": true,
+  "candidateSpans": 512,
+  "environment": {
+    "tokenizers": "0.22.2",
+    "transformers": "4.57.6"
+  },
+  "maxInputTokens": 39,
+  "model": "BartekK/distilHerBERT-base-cased",
+  "phoneMeasured": false,
+  "qualityMeasured": false,
+  "requests": 256,
+  "requestsSha256": "a20cad29b09554a9718f1d520d68c4e695c9274aac0b708801463f498097f53d",
+  "revision": "7276461b7a8fd668aaf30313c03a68bd11aad642",
+  "tokenizerBackendSha256": "94193cdc17926964a0946b7b2c3a2bb80f48080c7c2620b5499475dcc65c2dc1",
+  "tokenizerClass": "HerbertTokenizerFast",
+  "weightsLoaded": false
+}
