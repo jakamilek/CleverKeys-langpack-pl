@@ -1,0 +1,73 @@
+name: HerBERT FP32 benchmark package v1
+
+on:
+  push:
+    branches: ['experiment/herbert-fp32-benchmark-v1']
+    paths:
+      - 'experiments/herbert_fp32_benchmark_v1/**'
+      - '.github/workflows/herbert-fp32-benchmark-v1.yml'
+  pull_request:
+    paths:
+      - 'experiments/herbert_fp32_benchmark_v1/**'
+      - '.github/workflows/herbert-fp32-benchmark-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Preserve old gates and check new portable contract
+        run: |
+          python3 -m unittest discover -s experiments/herbert_mobile_v1 -p 'test_*.py' -v
+          python3 -m unittest discover -s experiments/herbert_fp32_benchmark_v1 -p 'test_*.py' -v
+          python3 experiments/herbert_mobile_v1/contract_mobile.py
+
+  package:
+    if: github.event_name != 'pull_request'
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install pinned export runtime
+        run: |
+          python3 -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python3 -m pip install -r experiments/ai_compare_v5/requirements.txt -r experiments/herbert_mobile_v1/requirements.txt -r experiments/herbert_fp32_benchmark_v1/requirements.txt
+          python3 -m pip freeze > benchmark-environment.txt
+      - name: Reproduce verified FP32 and validate exact portable tokenizer
+        run: python3 experiments/herbert_fp32_benchmark_v1/export_benchmark.py --out build/herbert-fp32-benchmark-v1
+      - name: Preserve small metadata reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: herbert-fp32-benchmark-v1-reports
+          path: |
+            build/herbert-fp32-benchmark-v1/reports/
+            benchmark-environment.txt
+          retention-days: 30
+      - name: Preserve FP32 benchmark only after all host gates
+        if: success() && hashFiles('build/herbert-fp32-benchmark-v1/bundle/manifest.json') != ''
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: herbert-fp32-benchmark-v1-model
+          path: build/herbert-fp32-benchmark-v1/bundle/
+          compression-level: 0
+          retention-days: 14
+      - name: Publish measured summary
+        if: always() && hashFiles('build/herbert-fp32-benchmark-v1/reports/SUMMARY.md') != ''
+        run: cat build/herbert-fp32-benchmark-v1/reports/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,21 @@
+{
+  "commit": "d831e17b6cb99590d6ba036e92a72b6c3fd0cc7c",
+  "manifest": {
+    "bytes": 1243,
+    "sha256": "667bd4fee413a13ca8edca75f5b7defff2c58d0450d8d87ab8e9ccef948026b0"
+  },
+  "model": {
+    "artifactId": 11312693984,
+    "bytes": 657295441,
+    "expiresAt": "2026-10-18T19:57:49Z",
+    "locallyDownloaded": false,
+    "sha256": "36c2183acca3ae6dca4afb54c28fe4d9d4cb37ec26f3230c94b4e007b494587f"
+  },
+  "reports": {
+    "artifactId": 11312569320,
+    "bytes": 1299643,
+    "locallyDownloadedAndVerified": true,
+    "sha256": "2310649ba6e8c9b72e40952687d88a50940a71d6cfadb186ca055138bdea91d6"
+  },
+  "run": 37230171787
+}

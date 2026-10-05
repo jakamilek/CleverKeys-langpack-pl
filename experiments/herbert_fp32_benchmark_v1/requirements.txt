@@ -1,0 +1,2 @@
+# Original reference tokenizer is part of the protocol, not a floating dependency.
+tokenizers==0.22.2
