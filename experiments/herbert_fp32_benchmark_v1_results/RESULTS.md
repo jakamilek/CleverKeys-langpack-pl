@@ -43,3 +43,19 @@ raw APK 35696490 B, SHA256
 70c3e0e94f10e0a6e7ec4f9b6e043767cd9e41e7e21f14f21586958b07e07958.
 APK verified przez CI logs/audit, nie lokalny download/scan. Phone JNI/timing/accuracy
 nadal pending; live SI wyłączone. Instrukcja w runtime docs/HERBERT_FP32_PHONE_TRIAL_V1.md.
+
+## First phone/native report — 2026-10-05
+
+Maintainer reports successful import and native conformance on nubia NX721J /Android 15 /
+arm64-v8a: 2471 tokenizer examples, 232 batches, maximum displayed score error 0.000062;
+benchmark return requires unchanged archived rankings. Default 32 timing total p50/p95
+82.2/229.0 ms, 64 total 81.7/326.9 ms. Load including hash 1256.2 ms; maximum sampled
+whole-process PSS 2699.3 MiB. One reported execution; neither model-only memory nor quality.
+
+Raw phone report and source-based measurement limits:
+https://github.com/jakamilek/CleverKeysPL/blob/93f5d1c9b314c4bfc43476b6c66ce640749012d0/docs/eval/2026-10-05-herbert-fp32-nubia-phone-v1.md
+
+Current benchmark shares one session across conformance and timings and has no PSS
+baseline/phase split. Need intended two-form memory/latency per context and independent
+quality before live integration. Arena retention is a hypothesis to measure, not proven.
+Producer weights/package/protocol and failed INT8 gate remain unchanged; no fresh CI/export.
