@@ -1,0 +1,2114 @@
+{
+  "__metadata__": {
+    "format": "pt",
+    "cls.predictions.decoder.weight": "bert.embeddings.word_embeddings.weight",
+    "cls.predictions.decoder.bias": "cls.predictions.bias"
+  },
+  "bert.embeddings.position_ids": {
+    "dtype": "I64",
+    "shape": [
+      1,
+      512
+    ],
+    "data_offsets": [
+      0,
+      4096
+    ]
+  },
+  "bert.embeddings.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      4096,
+      7168
+    ]
+  },
+  "bert.embeddings.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      7168,
+      10240
+    ]
+  },
+  "bert.embeddings.position_embeddings.weight": {
+    "dtype": "F32",
+    "shape": [
+      512,
+      768
+    ],
+    "data_offsets": [
+      10240,
+      1583104
+    ]
+  },
+  "bert.embeddings.token_type_embeddings.weight": {
+    "dtype": "F32",
+    "shape": [
+      2,
+      768
+    ],
+    "data_offsets": [
+      1583104,
+      1589248
+    ]
+  },
+  "bert.embeddings.word_embeddings.weight": {
+    "dtype": "F32",
+    "shape": [
+      22397,
+      768
+    ],
+    "data_offsets": [
+      1589248,
+      70392832
+    ]
+  },
+  "bert.encoder.layer.0.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      70392832,
+      70395904
+    ]
+  },
+  "bert.encoder.layer.0.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      70395904,
+      70398976
+    ]
+  },
+  "bert.encoder.layer.0.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      70398976,
+      70402048
+    ]
+  },
+  "bert.encoder.layer.0.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      70402048,
+      72761344
+    ]
+  },
+  "bert.encoder.layer.0.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      72761344,
+      72764416
+    ]
+  },
+  "bert.encoder.layer.0.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      72764416,
+      75123712
+    ]
+  },
+  "bert.encoder.layer.0.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      75123712,
+      75126784
+    ]
+  },
+  "bert.encoder.layer.0.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      75126784,
+      77486080
+    ]
+  },
+  "bert.encoder.layer.0.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      77486080,
+      77489152
+    ]
+  },
+  "bert.encoder.layer.0.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      77489152,
+      79848448
+    ]
+  },
+  "bert.encoder.layer.0.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      79848448,
+      79860736
+    ]
+  },
+  "bert.encoder.layer.0.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      79860736,
+      89297920
+    ]
+  },
+  "bert.encoder.layer.0.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      89297920,
+      89300992
+    ]
+  },
+  "bert.encoder.layer.0.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      89300992,
+      89304064
+    ]
+  },
+  "bert.encoder.layer.0.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      89304064,
+      89307136
+    ]
+  },
+  "bert.encoder.layer.0.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      89307136,
+      98744320
+    ]
+  },
+  "bert.encoder.layer.1.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      98744320,
+      98747392
+    ]
+  },
+  "bert.encoder.layer.1.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      98747392,
+      98750464
+    ]
+  },
+  "bert.encoder.layer.1.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      98750464,
+      98753536
+    ]
+  },
+  "bert.encoder.layer.1.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      98753536,
+      101112832
+    ]
+  },
+  "bert.encoder.layer.1.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      101112832,
+      101115904
+    ]
+  },
+  "bert.encoder.layer.1.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      101115904,
+      103475200
+    ]
+  },
+  "bert.encoder.layer.1.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      103475200,
+      103478272
+    ]
+  },
+  "bert.encoder.layer.1.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      103478272,
+      105837568
+    ]
+  },
+  "bert.encoder.layer.1.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      105837568,
+      105840640
+    ]
+  },
+  "bert.encoder.layer.1.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      105840640,
+      108199936
+    ]
+  },
+  "bert.encoder.layer.1.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      108199936,
+      108212224
+    ]
+  },
+  "bert.encoder.layer.1.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      108212224,
+      117649408
+    ]
+  },
+  "bert.encoder.layer.1.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      117649408,
+      117652480
+    ]
+  },
+  "bert.encoder.layer.1.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      117652480,
+      117655552
+    ]
+  },
+  "bert.encoder.layer.1.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      117655552,
+      117658624
+    ]
+  },
+  "bert.encoder.layer.1.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      117658624,
+      127095808
+    ]
+  },
+  "bert.encoder.layer.10.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      127095808,
+      127098880
+    ]
+  },
+  "bert.encoder.layer.10.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      127098880,
+      127101952
+    ]
+  },
+  "bert.encoder.layer.10.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      127101952,
+      127105024
+    ]
+  },
+  "bert.encoder.layer.10.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      127105024,
+      129464320
+    ]
+  },
+  "bert.encoder.layer.10.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      129464320,
+      129467392
+    ]
+  },
+  "bert.encoder.layer.10.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      129467392,
+      131826688
+    ]
+  },
+  "bert.encoder.layer.10.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      131826688,
+      131829760
+    ]
+  },
+  "bert.encoder.layer.10.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      131829760,
+      134189056
+    ]
+  },
+  "bert.encoder.layer.10.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      134189056,
+      134192128
+    ]
+  },
+  "bert.encoder.layer.10.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      134192128,
+      136551424
+    ]
+  },
+  "bert.encoder.layer.10.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      136551424,
+      136563712
+    ]
+  },
+  "bert.encoder.layer.10.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      136563712,
+      146000896
+    ]
+  },
+  "bert.encoder.layer.10.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      146000896,
+      146003968
+    ]
+  },
+  "bert.encoder.layer.10.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      146003968,
+      146007040
+    ]
+  },
+  "bert.encoder.layer.10.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      146007040,
+      146010112
+    ]
+  },
+  "bert.encoder.layer.10.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      146010112,
+      155447296
+    ]
+  },
+  "bert.encoder.layer.11.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      155447296,
+      155450368
+    ]
+  },
+  "bert.encoder.layer.11.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      155450368,
+      155453440
+    ]
+  },
+  "bert.encoder.layer.11.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      155453440,
+      155456512
+    ]
+  },
+  "bert.encoder.layer.11.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      155456512,
+      157815808
+    ]
+  },
+  "bert.encoder.layer.11.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      157815808,
+      157818880
+    ]
+  },
+  "bert.encoder.layer.11.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      157818880,
+      160178176
+    ]
+  },
+  "bert.encoder.layer.11.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      160178176,
+      160181248
+    ]
+  },
+  "bert.encoder.layer.11.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      160181248,
+      162540544
+    ]
+  },
+  "bert.encoder.layer.11.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      162540544,
+      162543616
+    ]
+  },
+  "bert.encoder.layer.11.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      162543616,
+      164902912
+    ]
+  },
+  "bert.encoder.layer.11.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      164902912,
+      164915200
+    ]
+  },
+  "bert.encoder.layer.11.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      164915200,
+      174352384
+    ]
+  },
+  "bert.encoder.layer.11.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      174352384,
+      174355456
+    ]
+  },
+  "bert.encoder.layer.11.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      174355456,
+      174358528
+    ]
+  },
+  "bert.encoder.layer.11.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      174358528,
+      174361600
+    ]
+  },
+  "bert.encoder.layer.11.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      174361600,
+      183798784
+    ]
+  },
+  "bert.encoder.layer.2.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      183798784,
+      183801856
+    ]
+  },
+  "bert.encoder.layer.2.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      183801856,
+      183804928
+    ]
+  },
+  "bert.encoder.layer.2.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      183804928,
+      183808000
+    ]
+  },
+  "bert.encoder.layer.2.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      183808000,
+      186167296
+    ]
+  },
+  "bert.encoder.layer.2.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      186167296,
+      186170368
+    ]
+  },
+  "bert.encoder.layer.2.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      186170368,
+      188529664
+    ]
+  },
+  "bert.encoder.layer.2.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      188529664,
+      188532736
+    ]
+  },
+  "bert.encoder.layer.2.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      188532736,
+      190892032
+    ]
+  },
+  "bert.encoder.layer.2.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      190892032,
+      190895104
+    ]
+  },
+  "bert.encoder.layer.2.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      190895104,
+      193254400
+    ]
+  },
+  "bert.encoder.layer.2.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      193254400,
+      193266688
+    ]
+  },
+  "bert.encoder.layer.2.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      193266688,
+      202703872
+    ]
+  },
+  "bert.encoder.layer.2.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      202703872,
+      202706944
+    ]
+  },
+  "bert.encoder.layer.2.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      202706944,
+      202710016
+    ]
+  },
+  "bert.encoder.layer.2.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      202710016,
+      202713088
+    ]
+  },
+  "bert.encoder.layer.2.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      202713088,
+      212150272
+    ]
+  },
+  "bert.encoder.layer.3.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      212150272,
+      212153344
+    ]
+  },
+  "bert.encoder.layer.3.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      212153344,
+      212156416
+    ]
+  },
+  "bert.encoder.layer.3.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      212156416,
+      212159488
+    ]
+  },
+  "bert.encoder.layer.3.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      212159488,
+      214518784
+    ]
+  },
+  "bert.encoder.layer.3.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      214518784,
+      214521856
+    ]
+  },
+  "bert.encoder.layer.3.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      214521856,
+      216881152
+    ]
+  },
+  "bert.encoder.layer.3.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      216881152,
+      216884224
+    ]
+  },
+  "bert.encoder.layer.3.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      216884224,
+      219243520
+    ]
+  },
+  "bert.encoder.layer.3.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      219243520,
+      219246592
+    ]
+  },
+  "bert.encoder.layer.3.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      219246592,
+      221605888
+    ]
+  },
+  "bert.encoder.layer.3.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      221605888,
+      221618176
+    ]
+  },
+  "bert.encoder.layer.3.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      221618176,
+      231055360
+    ]
+  },
+  "bert.encoder.layer.3.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      231055360,
+      231058432
+    ]
+  },
+  "bert.encoder.layer.3.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      231058432,
+      231061504
+    ]
+  },
+  "bert.encoder.layer.3.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      231061504,
+      231064576
+    ]
+  },
+  "bert.encoder.layer.3.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      231064576,
+      240501760
+    ]
+  },
+  "bert.encoder.layer.4.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      240501760,
+      240504832
+    ]
+  },
+  "bert.encoder.layer.4.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      240504832,
+      240507904
+    ]
+  },
+  "bert.encoder.layer.4.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      240507904,
+      240510976
+    ]
+  },
+  "bert.encoder.layer.4.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      240510976,
+      242870272
+    ]
+  },
+  "bert.encoder.layer.4.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      242870272,
+      242873344
+    ]
+  },
+  "bert.encoder.layer.4.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      242873344,
+      245232640
+    ]
+  },
+  "bert.encoder.layer.4.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      245232640,
+      245235712
+    ]
+  },
+  "bert.encoder.layer.4.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      245235712,
+      247595008
+    ]
+  },
+  "bert.encoder.layer.4.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      247595008,
+      247598080
+    ]
+  },
+  "bert.encoder.layer.4.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      247598080,
+      249957376
+    ]
+  },
+  "bert.encoder.layer.4.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      249957376,
+      249969664
+    ]
+  },
+  "bert.encoder.layer.4.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      249969664,
+      259406848
+    ]
+  },
+  "bert.encoder.layer.4.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      259406848,
+      259409920
+    ]
+  },
+  "bert.encoder.layer.4.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      259409920,
+      259412992
+    ]
+  },
+  "bert.encoder.layer.4.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      259412992,
+      259416064
+    ]
+  },
+  "bert.encoder.layer.4.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      259416064,
+      268853248
+    ]
+  },
+  "bert.encoder.layer.5.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      268853248,
+      268856320
+    ]
+  },
+  "bert.encoder.layer.5.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      268856320,
+      268859392
+    ]
+  },
+  "bert.encoder.layer.5.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      268859392,
+      268862464
+    ]
+  },
+  "bert.encoder.layer.5.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      268862464,
+      271221760
+    ]
+  },
+  "bert.encoder.layer.5.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      271221760,
+      271224832
+    ]
+  },
+  "bert.encoder.layer.5.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      271224832,
+      273584128
+    ]
+  },
+  "bert.encoder.layer.5.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      273584128,
+      273587200
+    ]
+  },
+  "bert.encoder.layer.5.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      273587200,
+      275946496
+    ]
+  },
+  "bert.encoder.layer.5.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      275946496,
+      275949568
+    ]
+  },
+  "bert.encoder.layer.5.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      275949568,
+      278308864
+    ]
+  },
+  "bert.encoder.layer.5.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      278308864,
+      278321152
+    ]
+  },
+  "bert.encoder.layer.5.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      278321152,
+      287758336
+    ]
+  },
+  "bert.encoder.layer.5.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      287758336,
+      287761408
+    ]
+  },
+  "bert.encoder.layer.5.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      287761408,
+      287764480
+    ]
+  },
+  "bert.encoder.layer.5.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      287764480,
+      287767552
+    ]
+  },
+  "bert.encoder.layer.5.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      287767552,
+      297204736
+    ]
+  },
+  "bert.encoder.layer.6.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      297204736,
+      297207808
+    ]
+  },
+  "bert.encoder.layer.6.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      297207808,
+      297210880
+    ]
+  },
+  "bert.encoder.layer.6.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      297210880,
+      297213952
+    ]
+  },
+  "bert.encoder.layer.6.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      297213952,
+      299573248
+    ]
+  },
+  "bert.encoder.layer.6.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      299573248,
+      299576320
+    ]
+  },
+  "bert.encoder.layer.6.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      299576320,
+      301935616
+    ]
+  },
+  "bert.encoder.layer.6.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      301935616,
+      301938688
+    ]
+  },
+  "bert.encoder.layer.6.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      301938688,
+      304297984
+    ]
+  },
+  "bert.encoder.layer.6.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      304297984,
+      304301056
+    ]
+  },
+  "bert.encoder.layer.6.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      304301056,
+      306660352
+    ]
+  },
+  "bert.encoder.layer.6.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      306660352,
+      306672640
+    ]
+  },
+  "bert.encoder.layer.6.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      306672640,
+      316109824
+    ]
+  },
+  "bert.encoder.layer.6.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      316109824,
+      316112896
+    ]
+  },
+  "bert.encoder.layer.6.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      316112896,
+      316115968
+    ]
+  },
+  "bert.encoder.layer.6.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      316115968,
+      316119040
+    ]
+  },
+  "bert.encoder.layer.6.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      316119040,
+      325556224
+    ]
+  },
+  "bert.encoder.layer.7.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      325556224,
+      325559296
+    ]
+  },
+  "bert.encoder.layer.7.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      325559296,
+      325562368
+    ]
+  },
+  "bert.encoder.layer.7.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      325562368,
+      325565440
+    ]
+  },
+  "bert.encoder.layer.7.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      325565440,
+      327924736
+    ]
+  },
+  "bert.encoder.layer.7.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      327924736,
+      327927808
+    ]
+  },
+  "bert.encoder.layer.7.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      327927808,
+      330287104
+    ]
+  },
+  "bert.encoder.layer.7.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      330287104,
+      330290176
+    ]
+  },
+  "bert.encoder.layer.7.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      330290176,
+      332649472
+    ]
+  },
+  "bert.encoder.layer.7.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      332649472,
+      332652544
+    ]
+  },
+  "bert.encoder.layer.7.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      332652544,
+      335011840
+    ]
+  },
+  "bert.encoder.layer.7.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      335011840,
+      335024128
+    ]
+  },
+  "bert.encoder.layer.7.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      335024128,
+      344461312
+    ]
+  },
+  "bert.encoder.layer.7.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      344461312,
+      344464384
+    ]
+  },
+  "bert.encoder.layer.7.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      344464384,
+      344467456
+    ]
+  },
+  "bert.encoder.layer.7.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      344467456,
+      344470528
+    ]
+  },
+  "bert.encoder.layer.7.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      344470528,
+      353907712
+    ]
+  },
+  "bert.encoder.layer.8.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      353907712,
+      353910784
+    ]
+  },
+  "bert.encoder.layer.8.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      353910784,
+      353913856
+    ]
+  },
+  "bert.encoder.layer.8.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      353913856,
+      353916928
+    ]
+  },
+  "bert.encoder.layer.8.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      353916928,
+      356276224
+    ]
+  },
+  "bert.encoder.layer.8.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      356276224,
+      356279296
+    ]
+  },
+  "bert.encoder.layer.8.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      356279296,
+      358638592
+    ]
+  },
+  "bert.encoder.layer.8.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      358638592,
+      358641664
+    ]
+  },
+  "bert.encoder.layer.8.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      358641664,
+      361000960
+    ]
+  },
+  "bert.encoder.layer.8.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      361000960,
+      361004032
+    ]
+  },
+  "bert.encoder.layer.8.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      361004032,
+      363363328
+    ]
+  },
+  "bert.encoder.layer.8.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      363363328,
+      363375616
+    ]
+  },
+  "bert.encoder.layer.8.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      363375616,
+      372812800
+    ]
+  },
+  "bert.encoder.layer.8.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      372812800,
+      372815872
+    ]
+  },
+  "bert.encoder.layer.8.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      372815872,
+      372818944
+    ]
+  },
+  "bert.encoder.layer.8.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      372818944,
+      372822016
+    ]
+  },
+  "bert.encoder.layer.8.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      372822016,
+      382259200
+    ]
+  },
+  "bert.encoder.layer.9.attention.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      382259200,
+      382262272
+    ]
+  },
+  "bert.encoder.layer.9.attention.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      382262272,
+      382265344
+    ]
+  },
+  "bert.encoder.layer.9.attention.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      382265344,
+      382268416
+    ]
+  },
+  "bert.encoder.layer.9.attention.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      382268416,
+      384627712
+    ]
+  },
+  "bert.encoder.layer.9.attention.self.key.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      384627712,
+      384630784
+    ]
+  },
+  "bert.encoder.layer.9.attention.self.key.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      384630784,
+      386990080
+    ]
+  },
+  "bert.encoder.layer.9.attention.self.query.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      386990080,
+      386993152
+    ]
+  },
+  "bert.encoder.layer.9.attention.self.query.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      386993152,
+      389352448
+    ]
+  },
+  "bert.encoder.layer.9.attention.self.value.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      389352448,
+      389355520
+    ]
+  },
+  "bert.encoder.layer.9.attention.self.value.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      389355520,
+      391714816
+    ]
+  },
+  "bert.encoder.layer.9.intermediate.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      3072
+    ],
+    "data_offsets": [
+      391714816,
+      391727104
+    ]
+  },
+  "bert.encoder.layer.9.intermediate.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      3072,
+      768
+    ],
+    "data_offsets": [
+      391727104,
+      401164288
+    ]
+  },
+  "bert.encoder.layer.9.output.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      401164288,
+      401167360
+    ]
+  },
+  "bert.encoder.layer.9.output.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      401167360,
+      401170432
+    ]
+  },
+  "bert.encoder.layer.9.output.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      401170432,
+      401173504
+    ]
+  },
+  "bert.encoder.layer.9.output.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      3072
+    ],
+    "data_offsets": [
+      401173504,
+      410610688
+    ]
+  },
+  "cls.predictions.bias": {
+    "dtype": "F32",
+    "shape": [
+      22397
+    ],
+    "data_offsets": [
+      410610688,
+      410700276
+    ]
+  },
+  "cls.predictions.transform.LayerNorm.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      410700276,
+      410703348
+    ]
+  },
+  "cls.predictions.transform.LayerNorm.weight": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      410703348,
+      410706420
+    ]
+  },
+  "cls.predictions.transform.dense.bias": {
+    "dtype": "F32",
+    "shape": [
+      768
+    ],
+    "data_offsets": [
+      410706420,
+      410709492
+    ]
+  },
+  "cls.predictions.transform.dense.weight": {
+    "dtype": "F32",
+    "shape": [
+      768,
+      768
+    ],
+    "data_offsets": [
+      410709492,
+      413068788
+    ]
+  }
+}
