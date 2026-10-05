@@ -31,7 +31,7 @@ Zamiast ogólnego błędu dostępne są kody STORAGE, READ, ZIP, CONTENTS, IDENT
 Raport używa wyłącznie stałych kodów, tłumaczenia i tożsamości telefonu/Androida. Nie zawiera surowego wyjątku, URI, ścieżki, wybranego filename ani wpisanego tekstu.
 
 ## 7. Testy i ograniczenia sprawdzenia
-Dodano osiem testów do zarejestrowanego HerbertBundleImportTest: STORED+deskryptor, dotychczasowy DEFLATED, odmowa zmienionych sum/duplikatów/traversal/braku plików, manipulacja o stałym rozmiarze, ograniczenia katalogu i kontenera, anulowanie kopii, budżet miejsca.
+Dodano siedem testów do zarejestrowanego HerbertBundleImportTest: STORED+deskryptor, dotychczasowy DEFLATED, odmowa zmienionych sum/duplikatów/traversal/braku plików, manipulacja o stałym rozmiarze, ograniczenia katalogu i kontenera, anulowanie kopii, budżet miejsca.
 Małe pozytywne próbki badają czytnik kontenera i weryfikację SHA, nie uwierzytelniają fikcyjnego modelu. Zaufany hash pełnego FP32 pozostaje wymagany.
 Lokalnie: rzeczywista próba Java formatu PASS, struktura 27 zasobów base/Polish i zgodność formatów PASS, kolejka TODO <500 linii. Nie ma lokalnego Kotlin/Android SDK; kompilacja, testy Kotlin, lint i nowe APK oczekują CI.
 Zachowano obowiązkowe 2471 wektorów tokenizera /232 batche /532 kandydatów oraz istniejące testy edytora, lint i audyt APK.
