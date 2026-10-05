@@ -1,0 +1,532 @@
+{
+  "id": "Geotrend/bert-base-pl-cased",
+  "revision": "5c87e45fdc3ce85e1dc718daddc39c9e3d3dbf40",
+  "metadata": {
+    "id": "Geotrend/bert-base-pl-cased",
+    "revision": "5c87e45fdc3ce85e1dc718daddc39c9e3d3dbf40",
+    "gated": false,
+    "files": [
+      ".gitattributes",
+      "README.md",
+      "config.json",
+      "flax_model.msgpack",
+      "model.safetensors",
+      "pytorch_model.bin",
+      "tf_model.h5",
+      "tokenizer_config.json",
+      "vocab.txt"
+    ],
+    "safetensors": {
+      "parameters": {
+        "I64": 512,
+        "F32": 103266173
+      },
+      "total": 103266685
+    },
+    "cardData": {
+      "language": "pl",
+      "datasets": "wikipedia",
+      "license": "apache-2.0"
+    },
+    "downloaded": [
+      {
+        "path": "config.json",
+        "bytes": 752,
+        "sha256": "68b14fe45a56473eb6b95e105451f755b555c6c79a32e986ab860721796712b3"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 49,
+        "sha256": "0f6d13e6f4da6f9e24f22ada6bc3be571123d858d7c0c05a8a7cd55a9c23c2e8"
+      },
+      {
+        "path": "vocab.txt",
+        "bytes": 141081,
+        "sha256": "2295866ac8491577834e0f877641c23fd747037da1874e958e82491dc6014043"
+      },
+      {
+        "path": "README.md",
+        "bytes": 1347,
+        "sha256": "ed36323d9e2ab0d4fffd8c8aaea7b7693073f3a0036628fdb686d9224d81b9ab"
+      }
+    ]
+  },
+  "originalConfig": {
+    "_name_or_path": "new-models/bert-base-pl-cased",
+    "architectures": [
+      "BertForMaskedLM"
+    ],
+    "attention_probs_dropout_prob": 0.1,
+    "directionality": "bidi",
+    "gradient_checkpointing": false,
+    "hidden_act": "gelu",
+    "hidden_dropout_prob": 0.1,
+    "hidden_size": 768,
+    "initializer_range": 0.02,
+    "intermediate_size": 3072,
+    "layer_norm_eps": 1e-12,
+    "max_position_embeddings": 512,
+    "model_type": "bert",
+    "num_attention_heads": 12,
+    "num_hidden_layers": 12,
+    "pad_token_id": 0,
+    "pooler_fc_size": 768,
+    "pooler_num_attention_heads": 12,
+    "pooler_num_fc_layers": 3,
+    "pooler_size_per_head": 128,
+    "pooler_type": "first_token_transform",
+    "position_embedding_type": "absolute",
+    "type_vocab_size": 2,
+    "vocab_size": 22397
+  },
+  "tokenizerClass": "BertTokenizerFast",
+  "backendSha256": "1b4f1a67ac9ed88010f8b7dcc0ba7eae1eb3a3f37f99c187fca3e03eef956a8a",
+  "dictionaryKeys": 106363,
+  "sourceSurfaces": 122480,
+  "multiVariantKeys": 16117,
+  "unknownSourceSurfaces": [
+    {
+      "surface": "ą",
+      "ids": [
+        10
+      ]
+    },
+    {
+      "surface": "ę",
+      "ids": [
+        10
+      ]
+    }
+  ],
+  "emptySourceSurfaces": [],
+  "collapsedSourcePairs": [],
+  "unknownSourcePairs": [],
+  "requests": 384,
+  "candidateSpans": 836,
+  "requestFailures": [],
+  "maxInputTokens": 62,
+  "unknownContextRequests": 0,
+  "probes": {
+    "Łódź": {
+      "ids": [
+        10884
+      ],
+      "tokens": [
+        "Łódź"
+      ],
+      "unknown": false
+    },
+    "łódź": {
+      "ids": [
+        137,
+        8218,
+        15796
+      ],
+      "tokens": [
+        "ł",
+        "##ód",
+        "##ź"
+      ],
+      "unknown": false
+    },
+    "Łodzi": {
+      "ids": [
+        13867
+      ],
+      "tokens": [
+        "Łodzi"
+      ],
+      "unknown": false
+    },
+    "łodzi": {
+      "ids": [
+        137,
+        16197
+      ],
+      "tokens": [
+        "ł",
+        "##odzi"
+      ],
+      "unknown": false
+    },
+    "Malina": {
+      "ids": [
+        6011,
+        348
+      ],
+      "tokens": [
+        "Mali",
+        "##na"
+      ],
+      "unknown": false
+    },
+    "malina": {
+      "ids": [
+        10023,
+        348
+      ],
+      "tokens": [
+        "mali",
+        "##na"
+      ],
+      "unknown": false
+    },
+    "Warszawska": {
+      "ids": [
+        4342,
+        650,
+        9413
+      ],
+      "tokens": [
+        "Wars",
+        "##za",
+        "##wska"
+      ],
+      "unknown": false
+    },
+    "warszawska": {
+      "ids": [
+        16441,
+        650,
+        9413
+      ],
+      "tokens": [
+        "wars",
+        "##za",
+        "##wska"
+      ],
+      "unknown": false
+    },
+    "Ale": {
+      "ids": [
+        14630
+      ],
+      "tokens": [
+        "Ale"
+      ],
+      "unknown": false
+    },
+    "ale": {
+      "ids": [
+        1094
+      ],
+      "tokens": [
+        "ale"
+      ],
+      "unknown": false
+    },
+    "Lub": {
+      "ids": [
+        5830,
+        539
+      ],
+      "tokens": [
+        "Lu",
+        "##b"
+      ],
+      "unknown": false
+    },
+    "lub": {
+      "ids": [
+        2122
+      ],
+      "tokens": [
+        "lub"
+      ],
+      "unknown": false
+    },
+    "Tutaj": {
+      "ids": [
+        4658,
+        343,
+        507
+      ],
+      "tokens": [
+        "Tu",
+        "##ta",
+        "##j"
+      ],
+      "unknown": false
+    },
+    "tutaj": {
+      "ids": [
+        18953
+      ],
+      "tokens": [
+        "tutaj"
+      ],
+      "unknown": false
+    },
+    "ą": {
+      "ids": [
+        10
+      ],
+      "tokens": [
+        "[UNK]"
+      ],
+      "unknown": true
+    },
+    "ć": {
+      "ids": [
+        131
+      ],
+      "tokens": [
+        "ć"
+      ],
+      "unknown": false
+    },
+    "ę": {
+      "ids": [
+        10
+      ],
+      "tokens": [
+        "[UNK]"
+      ],
+      "unknown": true
+    },
+    "ł": {
+      "ids": [
+        137
+      ],
+      "tokens": [
+        "ł"
+      ],
+      "unknown": false
+    },
+    "ń": {
+      "ids": [
+        10
+      ],
+      "tokens": [
+        "[UNK]"
+      ],
+      "unknown": true
+    },
+    "ó": {
+      "ids": [
+        129
+      ],
+      "tokens": [
+        "ó"
+      ],
+      "unknown": false
+    },
+    "ś": {
+      "ids": [
+        142
+      ],
+      "tokens": [
+        "ś"
+      ],
+      "unknown": false
+    },
+    "ź": {
+      "ids": [
+        147
+      ],
+      "tokens": [
+        "ź"
+      ],
+      "unknown": false
+    },
+    "ż": {
+      "ids": [
+        149
+      ],
+      "tokens": [
+        "ż"
+      ],
+      "unknown": false
+    },
+    "Ą": {
+      "ids": [
+        10
+      ],
+      "tokens": [
+        "[UNK]"
+      ],
+      "unknown": true
+    },
+    "Ć": {
+      "ids": [
+        130
+      ],
+      "tokens": [
+        "Ć"
+      ],
+      "unknown": false
+    },
+    "Ę": {
+      "ids": [
+        10
+      ],
+      "tokens": [
+        "[UNK]"
+      ],
+      "unknown": true
+    },
+    "Ł": {
+      "ids": [
+        136
+      ],
+      "tokens": [
+        "Ł"
+      ],
+      "unknown": false
+    },
+    "Ń": {
+      "ids": [
+        10
+      ],
+      "tokens": [
+        "[UNK]"
+      ],
+      "unknown": true
+    },
+    "Ó": {
+      "ids": [
+        119
+      ],
+      "tokens": [
+        "Ó"
+      ],
+      "unknown": false
+    },
+    "Ś": {
+      "ids": [
+        141
+      ],
+      "tokens": [
+        "Ś"
+      ],
+      "unknown": false
+    },
+    "Ź": {
+      "ids": [
+        146
+      ],
+      "tokens": [
+        "Ź"
+      ],
+      "unknown": false
+    },
+    "Ż": {
+      "ids": [
+        148
+      ],
+      "tokens": [
+        "Ż"
+      ],
+      "unknown": false
+    }
+  },
+  "frozenRequestGatePass": true,
+  "fullSourceCoveragePass": false,
+  "weightsLoaded": false,
+  "qualityMeasured": false,
+  "phoneMeasured": false,
+  "environment": {
+    "transformers": "4.57.6",
+    "tokenizers": "0.22.2",
+    "huggingface-hub": "0.36.2",
+    "numpy": "2.5.3",
+    "regex": "2026.9.29",
+    "safetensors": "0.8.0"
+  },
+  "packSha256": "aa27d8fdcf8fad698491127de68dc1ebd31a5f9f687621429b25435ba16904cb",
+  "sidecarSha256": "5e0eac9b056861903d33664c6ba3d4a9d895044530e78be72ff0ad1596ba884d",
+  "dictionarySha256": "a32f6a55bce7375e744d3d261d6ec9aad96dc64725ac429d4cb1d7225aed3c2a",
+  "requestsSha256": "a859aac5acf8dc950c07df415873aced44a46f9a4585818504e3f2af6377449b",
+  "tokenizerPipeline": {
+    "normalizer": {
+      "type": "BertNormalizer",
+      "clean_text": true,
+      "handle_chinese_chars": true,
+      "strip_accents": null,
+      "lowercase": false
+    },
+    "pre_tokenizer": {
+      "type": "BertPreTokenizer"
+    },
+    "post_processor": {
+      "type": "TemplateProcessing",
+      "single": [
+        {
+          "SpecialToken": {
+            "id": "[CLS]",
+            "type_id": 0
+          }
+        },
+        {
+          "Sequence": {
+            "id": "A",
+            "type_id": 0
+          }
+        },
+        {
+          "SpecialToken": {
+            "id": "[SEP]",
+            "type_id": 0
+          }
+        }
+      ],
+      "pair": [
+        {
+          "SpecialToken": {
+            "id": "[CLS]",
+            "type_id": 0
+          }
+        },
+        {
+          "Sequence": {
+            "id": "A",
+            "type_id": 0
+          }
+        },
+        {
+          "SpecialToken": {
+            "id": "[SEP]",
+            "type_id": 0
+          }
+        },
+        {
+          "Sequence": {
+            "id": "B",
+            "type_id": 1
+          }
+        },
+        {
+          "SpecialToken": {
+            "id": "[SEP]",
+            "type_id": 1
+          }
+        }
+      ],
+      "special_tokens": {
+        "[CLS]": {
+          "id": "[CLS]",
+          "ids": [
+            11
+          ],
+          "tokens": [
+            "[CLS]"
+          ]
+        },
+        "[SEP]": {
+          "id": "[SEP]",
+          "ids": [
+            12
+          ],
+          "tokens": [
+            "[SEP]"
+          ]
+        }
+      }
+    },
+    "decoder": {
+      "type": "WordPiece",
+      "prefix": "##",
+      "cleanup": true
+    }
+  }
+}

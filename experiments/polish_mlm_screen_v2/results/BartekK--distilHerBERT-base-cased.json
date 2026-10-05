@@ -1,0 +1,444 @@
+{
+  "id": "BartekK/distilHerBERT-base-cased",
+  "revision": "7276461b7a8fd668aaf30313c03a68bd11aad642",
+  "metadata": {
+    "id": "BartekK/distilHerBERT-base-cased",
+    "revision": "7276461b7a8fd668aaf30313c03a68bd11aad642",
+    "gated": false,
+    "files": [
+      ".gitattributes",
+      "README.md",
+      "config.json",
+      "merges.txt",
+      "pytorch_model.bin",
+      "special_tokens_map.json",
+      "tokenizer.json",
+      "tokenizer_config.json",
+      "vocab.json"
+    ],
+    "safetensors": null,
+    "cardData": {
+      "language": "pl",
+      "tags": [
+        "distilherbert"
+      ]
+    },
+    "downloaded": [
+      {
+        "path": "config.json",
+        "bytes": 694,
+        "sha256": "c248da133792d015031400811bebce1e1b3f5d22c770a5def13e5f2bee1d8695"
+      },
+      {
+        "path": "tokenizer_config.json",
+        "bytes": 584,
+        "sha256": "03fd560a15c4c7499f8f7d2b0f0f05c80847dec2695c06acf9f7868623501dbc"
+      },
+      {
+        "path": "tokenizer.json",
+        "bytes": 2296263,
+        "sha256": "9605a7fca5966588a63511105ee3d30f9f2ba1b8cfe833c09d44b77889bb863a"
+      },
+      {
+        "path": "special_tokens_map.json",
+        "bytes": 144,
+        "sha256": "72dd7357a4df84178478721d281129b0a1866318d4d895fee86e98171bb1c2e7"
+      },
+      {
+        "path": "vocab.json",
+        "bytes": 906984,
+        "sha256": "f0897d91af9accfefba115495cdaed9989d48934be7cf3112684c4c6e08cc8e5"
+      },
+      {
+        "path": "merges.txt",
+        "bytes": 555571,
+        "sha256": "253da072cdf23394c350ebdc5a1558135bad034fccfa38cdf86b31c2776f5913"
+      },
+      {
+        "path": "README.md",
+        "bytes": 2661,
+        "sha256": "3663d73a53f3594bfff222d226952f54b6ab911839719852b4c66b8bd2b52c1e"
+      }
+    ]
+  },
+  "originalConfig": {
+    "_name_or_path": "models/checkpoints/last_checkpoint_s3/",
+    "architectures": [
+      "BertForMaskedLM"
+    ],
+    "attention_probs_dropout_prob": 0.1,
+    "classifier_dropout": null,
+    "hidden_act": "gelu",
+    "hidden_dropout_prob": 0.1,
+    "hidden_size": 768,
+    "initializer_range": 0.02,
+    "intermediate_size": 3072,
+    "layer_norm_eps": 1e-12,
+    "max_position_embeddings": 514,
+    "model_type": "bert",
+    "num_attention_heads": 12,
+    "num_hidden_layers": 6,
+    "pad_token_id": 1,
+    "position_embedding_type": "absolute",
+    "tokenizer_class": "HerbertTokenizerFast",
+    "torch_dtype": "float32",
+    "transformers_version": "4.20.1",
+    "type_vocab_size": 2,
+    "use_cache": true,
+    "vocab_size": 50000
+  },
+  "tokenizerClass": "HerbertTokenizerFast",
+  "backendSha256": "94193cdc17926964a0946b7b2c3a2bb80f48080c7c2620b5499475dcc65c2dc1",
+  "dictionaryKeys": 106363,
+  "sourceSurfaces": 122480,
+  "multiVariantKeys": 16117,
+  "unknownSourceSurfaces": [],
+  "emptySourceSurfaces": [],
+  "collapsedSourcePairs": [],
+  "unknownSourcePairs": [],
+  "requests": 384,
+  "candidateSpans": 836,
+  "requestFailures": [],
+  "maxInputTokens": 43,
+  "unknownContextRequests": 0,
+  "probes": {
+    "Łódź": {
+      "ids": [
+        9601
+      ],
+      "tokens": [
+        "Łódź</w>"
+      ],
+      "unknown": false
+    },
+    "łódź": {
+      "ids": [
+        39976
+      ],
+      "tokens": [
+        "łódź</w>"
+      ],
+      "unknown": false
+    },
+    "Łodzi": {
+      "ids": [
+        6112
+      ],
+      "tokens": [
+        "Łodzi</w>"
+      ],
+      "unknown": false
+    },
+    "łodzi": {
+      "ids": [
+        30865
+      ],
+      "tokens": [
+        "łodzi</w>"
+      ],
+      "unknown": false
+    },
+    "Malina": {
+      "ids": [
+        2306,
+        5061
+      ],
+      "tokens": [
+        "Ma",
+        "lina</w>"
+      ],
+      "unknown": false
+    },
+    "malina": {
+      "ids": [
+        2042,
+        5061
+      ],
+      "tokens": [
+        "ma",
+        "lina</w>"
+      ],
+      "unknown": false
+    },
+    "Warszawska": {
+      "ids": [
+        37016
+      ],
+      "tokens": [
+        "Warszawska</w>"
+      ],
+      "unknown": false
+    },
+    "warszawska": {
+      "ids": [
+        43121
+      ],
+      "tokens": [
+        "warszawska</w>"
+      ],
+      "unknown": false
+    },
+    "Ale": {
+      "ids": [
+        2894
+      ],
+      "tokens": [
+        "Ale</w>"
+      ],
+      "unknown": false
+    },
+    "ale": {
+      "ids": [
+        2199
+      ],
+      "tokens": [
+        "ale</w>"
+      ],
+      "unknown": false
+    },
+    "Lub": {
+      "ids": [
+        2864,
+        1076
+      ],
+      "tokens": [
+        "Lu",
+        "b</w>"
+      ],
+      "unknown": false
+    },
+    "lub": {
+      "ids": [
+        2491
+      ],
+      "tokens": [
+        "lub</w>"
+      ],
+      "unknown": false
+    },
+    "Tutaj": {
+      "ids": [
+        11338
+      ],
+      "tokens": [
+        "Tutaj</w>"
+      ],
+      "unknown": false
+    },
+    "tutaj": {
+      "ids": [
+        4372
+      ],
+      "tokens": [
+        "tutaj</w>"
+      ],
+      "unknown": false
+    },
+    "ą": {
+      "ids": [
+        1014
+      ],
+      "tokens": [
+        "ą</w>"
+      ],
+      "unknown": false
+    },
+    "ć": {
+      "ids": [
+        1048
+      ],
+      "tokens": [
+        "ć</w>"
+      ],
+      "unknown": false
+    },
+    "ę": {
+      "ids": [
+        1028
+      ],
+      "tokens": [
+        "ę</w>"
+      ],
+      "unknown": false
+    },
+    "ł": {
+      "ids": [
+        1032
+      ],
+      "tokens": [
+        "ł</w>"
+      ],
+      "unknown": false
+    },
+    "ń": {
+      "ids": [
+        1059
+      ],
+      "tokens": [
+        "ń</w>"
+      ],
+      "unknown": false
+    },
+    "ó": {
+      "ids": [
+        1060
+      ],
+      "tokens": [
+        "ó</w>"
+      ],
+      "unknown": false
+    },
+    "ś": {
+      "ids": [
+        1062
+      ],
+      "tokens": [
+        "ś</w>"
+      ],
+      "unknown": false
+    },
+    "ź": {
+      "ids": [
+        1070
+      ],
+      "tokens": [
+        "ź</w>"
+      ],
+      "unknown": false
+    },
+    "ż": {
+      "ids": [
+        1072
+      ],
+      "tokens": [
+        "ż</w>"
+      ],
+      "unknown": false
+    },
+    "Ą": {
+      "ids": [
+        1075
+      ],
+      "tokens": [
+        "Ą</w>"
+      ],
+      "unknown": false
+    },
+    "Ć": {
+      "ids": [
+        1054
+      ],
+      "tokens": [
+        "Ć</w>"
+      ],
+      "unknown": false
+    },
+    "Ę": {
+      "ids": [
+        1082
+      ],
+      "tokens": [
+        "Ę</w>"
+      ],
+      "unknown": false
+    },
+    "Ł": {
+      "ids": [
+        1098
+      ],
+      "tokens": [
+        "Ł</w>"
+      ],
+      "unknown": false
+    },
+    "Ń": {
+      "ids": [
+        1094
+      ],
+      "tokens": [
+        "Ń</w>"
+      ],
+      "unknown": false
+    },
+    "Ó": {
+      "ids": [
+        1286
+      ],
+      "tokens": [
+        "Ó</w>"
+      ],
+      "unknown": false
+    },
+    "Ś": {
+      "ids": [
+        1120
+      ],
+      "tokens": [
+        "Ś</w>"
+      ],
+      "unknown": false
+    },
+    "Ź": {
+      "ids": [
+        1122
+      ],
+      "tokens": [
+        "Ź</w>"
+      ],
+      "unknown": false
+    },
+    "Ż": {
+      "ids": [
+        1146
+      ],
+      "tokens": [
+        "Ż</w>"
+      ],
+      "unknown": false
+    }
+  },
+  "frozenRequestGatePass": true,
+  "fullSourceCoveragePass": true,
+  "weightsLoaded": false,
+  "qualityMeasured": false,
+  "phoneMeasured": false,
+  "environment": {
+    "transformers": "4.57.6",
+    "tokenizers": "0.22.2",
+    "huggingface-hub": "0.36.2",
+    "numpy": "2.5.3",
+    "regex": "2026.9.29",
+    "safetensors": "0.8.0"
+  },
+  "packSha256": "aa27d8fdcf8fad698491127de68dc1ebd31a5f9f687621429b25435ba16904cb",
+  "sidecarSha256": "5e0eac9b056861903d33664c6ba3d4a9d895044530e78be72ff0ad1596ba884d",
+  "dictionarySha256": "a32f6a55bce7375e744d3d261d6ec9aad96dc64725ac429d4cb1d7225aed3c2a",
+  "requestsSha256": "a859aac5acf8dc950c07df415873aced44a46f9a4585818504e3f2af6377449b",
+  "tokenizerPipeline": {
+    "normalizer": {
+      "type": "BertNormalizer",
+      "clean_text": true,
+      "handle_chinese_chars": true,
+      "strip_accents": false,
+      "lowercase": false
+    },
+    "pre_tokenizer": {
+      "type": "BertPreTokenizer"
+    },
+    "post_processor": {
+      "type": "BertProcessing",
+      "sep": [
+        "</s>",
+        2
+      ],
+      "cls": [
+        "<s>",
+        0
+      ]
+    },
+    "decoder": {
+      "type": "BPEDecoder",
+      "suffix": "</w>"
+    }
+  }
+}

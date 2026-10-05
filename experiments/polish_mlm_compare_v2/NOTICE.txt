@@ -1,0 +1,21 @@
+Polish MLM comparison v2: diagnostic inference only; no pretrained weights redistributed.
+
+Geotrend/distilbert-base-pl-cased, revision 9002d311e35aac14575bf53ad4fa3d8f8b853c2b.
+Authors Amine Abdaoui, Camille Pradel, Gregoire Sigel; model card declares Apache-2.0.
+https://huggingface.co/Geotrend/distilbert-base-pl-cased
+https://aclanthology.org/2020.sustainlp-1.16/
+
+BartekK/distilHerBERT-base-cased, revision 7276461b7a8fd668aaf30313c03a68bd11aad642.
+Authors Bartlomiej Krzepkowski, Dominika Bankiewicz, Rafal Michaluk, Jacek Ciszewski.
+https://huggingface.co/BartekK/distilHerBERT-base-cased
+https://github.com/BartekKrzepkowski/DistilHerBERT-base_vol2
+No license declaration was found in the pinned model file list/card; repository root also
+did not list a license. License unresolved; no redistribution/deployment approval inferred.
+Historical HerBERT license is not assumed to grant rights to these distilled weights.
+
+Historical reference: allegro/herbert-base-cased, CC-BY-4.0.
+https://huggingface.co/allegro/herbert-base-cased
+Existing v1 result/source NOTICE remains applicable; original scores and source metadata unchanged.
+
+Only model IDs, hashes, shape metadata and diagnostic results accompany this code.
+No model weights, complete third-party tokenizer vocabulary, editor text or user history included.
