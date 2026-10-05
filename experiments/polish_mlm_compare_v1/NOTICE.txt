@@ -1,0 +1,26 @@
+Prepared-model comparison; no weights are committed, uploaded or bundled in APK.
+
+sdadas/polish-distilroberta
+Revision 849b664fa3134beae84095d28a184c145c6a3aa5
+Model card declares Apache-2.0. Author repository:
+https://github.com/sdadas/polish-roberta
+https://huggingface.co/sdadas/polish-distilroberta
+Authors Sławomir Dadas, Michał Perełkiewicz, Rafał Poświata.
+See Dadas et al., Pre-training Polish Transformer-Based Language Models at Scale.
+Inference must record actual files, SHA256, full-head loading and tokenizer checks.
+
+allegro/herbert-base-cased
+Revision 50e33e0567be0c0b313832314c586e3df0dc2297
+Model card declares CC BY 4.0; authors Allegro team.
+https://huggingface.co/allegro/herbert-base-cased
+See Mroczkowski et al., HerBERT: Efficiently Pretrained Transformer-based Language
+Model for Polish (2021). Original model has no modifications in this comparison.
+
+Source snapshot and original authored v5 diagnostics remain unchanged at
+experiments/ai_compare_v5. Their provenance and SGJP/Morfeusz attribution are
+preserved in that experiment's NOTICE.txt and snapshot. Source metadata is not
+supplemented with hand-written word descriptions. New texts and gold labels are
+test annotations, not dictionary meanings or private phone/editor data.
+
+The downloaded model files' licenses apply to their later distribution; this
+experiment distributes only code, prepared texts, hashes and numeric predictions.

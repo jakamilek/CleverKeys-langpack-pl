@@ -1,0 +1,713 @@
+{
+  "model": "sdadas/polish-distilroberta",
+  "revision": "849b664fa3134beae84095d28a184c145c6a3aa5",
+  "tokenizers": "0.22.2",
+  "tokenizerSha256": "108af881c403092a16ee515c2ad4a9a72122a3846cfd5c9f2bb860a3fd2bdafa",
+  "requestsSha256": "a859aac5acf8dc950c07df415873aced44a46f9a4585818504e3f2af6377449b",
+  "requests": 384,
+  "candidateSpans": 836,
+  "affectedRequests": 22,
+  "affectedSurfaces": [
+    "Łotysz",
+    "Łódź"
+  ],
+  "failures": [
+    {
+      "requestId": "regression/form-łódź-1/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            42,
+            43
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/form-łódź-1/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            42,
+            43
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/form-łódź-2/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            92,
+            93
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/form-łódź-2/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            92,
+            93
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/form-łódź-3/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            85,
+            86
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/form-łódź-3/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            85,
+            86
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/form-łódź-4/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            64,
+            65
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/form-łódź-4/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            64,
+            65
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/replay-7/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            28,
+            29
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/replay-7/16",
+      "surface": "Łotysz",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            28,
+            29
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        6287,
+        201
+      ]
+    },
+    {
+      "requestId": "regression/replay-7/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            28,
+            29
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/replay-7/32",
+      "surface": "Łotysz",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            28,
+            29
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        6287,
+        201
+      ]
+    },
+    {
+      "requestId": "regression/replay-8/16",
+      "surface": "Łotysz",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            22,
+            23
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        6287,
+        201
+      ]
+    },
+    {
+      "requestId": "regression/replay-8/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            22,
+            23
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/replay-8/32",
+      "surface": "Łotysz",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            22,
+            23
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        6287,
+        201
+      ]
+    },
+    {
+      "requestId": "regression/replay-8/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            22,
+            23
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/ambiguous-łódź/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            15,
+            16
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "regression/ambiguous-łódź/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            15,
+            16
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "new_natural-łódź-0/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            87,
+            88
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "new_natural-łódź-0/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            87,
+            88
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "new_natural-łódź-1/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            97,
+            98
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "new_natural-łódź-1/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            97,
+            98
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "new_distance_control-łódź-0/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            122,
+            123
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "new_distance_control-łódź-0/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            192,
+            193
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "new_distance_control-łódź-1/16",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            122,
+            123
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    },
+    {
+      "requestId": "new_distance_control-łódź-1/32",
+      "surface": "Łódź",
+      "unknowns": [
+        {
+          "id": 3,
+          "token": "Ł",
+          "offset": [
+            196,
+            197
+          ],
+          "text": "Ł"
+        }
+      ],
+      "targetTokenIds": [
+        12,
+        3,
+        4584
+      ]
+    }
+  ],
+  "standaloneProbes": {
+    "Łódź": {
+      "ids": [
+        0,
+        12,
+        3,
+        4584,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ł",
+        "ódź",
+        "</s>"
+      ]
+    },
+    "łódź": {
+      "ids": [
+        0,
+        35612,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁łódź",
+        "</s>"
+      ]
+    },
+    "Łotysz": {
+      "ids": [
+        0,
+        12,
+        3,
+        6287,
+        201,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ł",
+        "oty",
+        "sz",
+        "</s>"
+      ]
+    },
+    "Ł": {
+      "ids": [
+        0,
+        12,
+        3,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ł",
+        "</s>"
+      ]
+    },
+    "Ą": {
+      "ids": [
+        0,
+        12,
+        3,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ą",
+        "</s>"
+      ]
+    },
+    "Ć": {
+      "ids": [
+        0,
+        12,
+        3,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ć",
+        "</s>"
+      ]
+    },
+    "Ę": {
+      "ids": [
+        0,
+        12,
+        3,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ę",
+        "</s>"
+      ]
+    },
+    "Ń": {
+      "ids": [
+        0,
+        12,
+        3,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ń",
+        "</s>"
+      ]
+    },
+    "Ó": {
+      "ids": [
+        0,
+        12,
+        3,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ó",
+        "</s>"
+      ]
+    },
+    "Ś": {
+      "ids": [
+        0,
+        5770,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁Ś",
+        "</s>"
+      ]
+    },
+    "Ź": {
+      "ids": [
+        0,
+        12,
+        3,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ź",
+        "</s>"
+      ]
+    },
+    "Ż": {
+      "ids": [
+        0,
+        12,
+        3,
+        2
+      ],
+      "tokens": [
+        "<s>",
+        "▁",
+        "Ż",
+        "</s>"
+      ]
+    }
+  },
+  "method": "Original tokenizer.json via tokenizers.Tokenizer; same target_positions as frozen v1; no model inference"
+}

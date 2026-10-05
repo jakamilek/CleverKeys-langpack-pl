@@ -1,0 +1,95 @@
+name: Polish MLM comparison 16-32 v1
+
+on:
+  push:
+    branches: ['experiment/polish-mlm-16-32-v1']
+    paths:
+      - 'experiments/polish_mlm_compare_v1/**'
+      - '.github/workflows/polish-mlm-compare-v1.yml'
+  pull_request:
+    paths:
+      - 'experiments/polish_mlm_compare_v1/**'
+      - '.github/workflows/polish-mlm-compare-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Validate frozen data, source variants and executable identity
+        run: |
+          python3 -m unittest discover -s experiments/polish_mlm_compare_v1 -p 'test_*.py' -v
+          python3 experiments/polish_mlm_compare_v1/contract.py
+
+  inference:
+    if: github.event_name != 'pull_request'
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        model: [herbert, distilroberta]
+    env:
+      HF_HUB_DISABLE_TELEMETRY: '1'
+      TOKENIZERS_PARALLELISM: 'false'
+      OMP_NUM_THREADS: '2'
+      MKL_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install pinned CPU inference dependencies
+        run: |
+          python3 -m pip install torch==2.8.0 --index-url https://download.pytorch.org/whl/cpu
+          python3 -m pip install -r experiments/polish_mlm_compare_v1/requirements.txt
+          mkdir -p build/polish-mlm-compare-v1
+          python3 -m pip freeze > build/polish-mlm-compare-v1/environment.txt
+      - name: Load complete pinned MLM, validate tokenizer and run actual inference
+        run: python3 experiments/polish_mlm_compare_v1/run_model.py --model ${{ matrix.model }} --out build/polish-mlm-compare-v1/${{ matrix.model }}
+      - name: Preserve diagnostics and predictions without model weights
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: polish-mlm-16-32-${{ matrix.model }}
+          path: build/polish-mlm-compare-v1/
+          retention-days: 30
+
+  comparison:
+    if: always() && github.event_name != 'pull_request'
+    needs: [contract, inference]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: polish-mlm-16-32-*
+          merge-multiple: false
+          path: build/polish-mlm-comparison
+      - name: Revalidate complete original predictions from both models
+        run: |
+          python3 experiments/polish_mlm_compare_v1/collect_results.py --root build/polish-mlm-comparison
+          cat build/polish-mlm-comparison/COMPARISON.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve comparison
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: polish-mlm-16-32-comparison
+          path: |
+            build/polish-mlm-comparison/COMPARISON.md
+            build/polish-mlm-comparison/comparison.json
+          retention-days: 30

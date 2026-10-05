@@ -1,0 +1,1126 @@
+{
+  "cases": [
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódź"
+        }
+      ],
+      "goldSurface": "łódź",
+      "id": "new_natural-łódź-0",
+      "leftContext": "Podczas postoju załoga zauważyła przeciek w kadłubie, dlatego do naprawy trafiła nasza",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódź"
+        }
+      ],
+      "goldSurface": "Łódź",
+      "id": "new_natural-łódź-1",
+      "leftContext": "Po przejrzeniu ofert muzeów i połączeń kolejowych uznaliśmy, że celem weekendowej podróży będzie",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "malina"
+        }
+      ],
+      "goldSurface": "malina",
+      "id": "new_natural-malina-0",
+      "leftContext": "Ogrodnik pokazał mi krzew owocowy, na którym po ostatnich deszczach dojrzała pierwsza",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "malina"
+        }
+      ],
+      "goldSurface": "Malina",
+      "id": "new_natural-malina-1",
+      "leftContext": "W przychodni poproszono mnie o nazwisko lekarza prowadzącego i odpowiedziałem doktor",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jagoda"
+        }
+      ],
+      "goldSurface": "jagoda",
+      "id": "new_natural-jagoda-0",
+      "leftContext": "Wśród owoców zerwanych podczas spaceru po lesie znalazła się jedna szczególnie słodka",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jagoda"
+        }
+      ],
+      "goldSurface": "Jagoda",
+      "id": "new_natural-jagoda-1",
+      "leftContext": "Koleżanka z kursu przedstawiła swoją córkę i powiedziała, że dziewczynka ma na imię",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "róża"
+        }
+      ],
+      "goldSurface": "róża",
+      "id": "new_natural-róża-0",
+      "leftContext": "Na konkursie ogrodniczym jury wyróżniło kwiat z naszej rabaty, którym była czerwona",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "róża"
+        }
+      ],
+      "goldSurface": "Róża",
+      "id": "new_natural-róża-1",
+      "leftContext": "W sekretariacie zapytałem o imię nowej nauczycielki, a pracownik odpowiedział pani",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "warszawska"
+        }
+      ],
+      "goldSurface": "warszawska",
+      "id": "new_natural-warszawska-0",
+      "leftContext": "Porównując transport w kilku polskich aglomeracjach, zauważyliśmy, że najlepiej rozbudowana jest sieć",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "warszawska"
+        }
+      ],
+      "goldSurface": "Warszawska",
+      "id": "new_natural-warszawska-1",
+      "leftContext": "Po zmianie numeracji sprawdziłem nazwę ulicy na tabliczce przy domu i odczytałem ulica",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "ale"
+        }
+      ],
+      "goldSurface": "ale",
+      "id": "new_natural-ale-0",
+      "leftContext": "Przygotowałem dokumenty i zarezerwowałem termin wizyty,",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "ale"
+        }
+      ],
+      "goldSurface": "Ale",
+      "id": "new_natural-ale-1",
+      "leftContext": "Dwie uczennice noszą imię Ala i obie dostały wyróżnienie, więc na scenę weszły dwie",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lub"
+        }
+      ],
+      "goldSurface": "lub",
+      "id": "new_natural-lub-0",
+      "leftContext": "W zależności od pogody pojedziemy na miejsce autobusem",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lub"
+        }
+      ],
+      "goldSurface": "Lub",
+      "id": "new_natural-lub-1",
+      "leftContext": "Dwie sąsiadki mają imię Luba, a zarządca nadal nie zna telefonów do obu",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "tutaj"
+        }
+      ],
+      "goldSurface": "tutaj",
+      "id": "new_natural-tutaj-0",
+      "leftContext": "Sprawdziłem wskazówki na mapie i poprosiłem kierowcę, aby zatrzymał samochód właśnie",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "tutaj"
+        }
+      ],
+      "goldSurface": "Tutaj",
+      "id": "new_natural-tutaj-1",
+      "leftContext": "W formularzu trzeba wpisać nazwisko właściciela lokalu, a w umowie widnieje pan",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lis"
+        }
+      ],
+      "goldSurface": "lis",
+      "id": "new_natural-lis-0",
+      "leftContext": "Przyrodnik ustawił kamerę obok nory i na pierwszym nagraniu pojawił się rudy",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lis"
+        }
+      ],
+      "goldSurface": "Lis",
+      "id": "new_natural-lis-1",
+      "leftContext": "Recepcjonistka sprawdziła rezerwację i potwierdziła, że gość ma na nazwisko",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "wilk"
+        }
+      ],
+      "goldSurface": "wilk",
+      "id": "new_natural-wilk-0",
+      "leftContext": "Po analizie tropów w śniegu leśnicy uznali, że nocą przeszedł tędy samotny",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "wilk"
+        }
+      ],
+      "goldSurface": "Wilk",
+      "id": "new_natural-wilk-1",
+      "leftContext": "Po odczytaniu listy kandydatów przewodnicząca ogłosiła nazwisko wybranego prezesa, którym został pan",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kruk"
+        }
+      ],
+      "goldSurface": "kruk",
+      "id": "new_natural-kruk-0",
+      "leftContext": "Ornitolog obserwował ptaki nad polaną, aż na wierzchołku sosny usiadł czarny",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kruk"
+        }
+      ],
+      "goldSurface": "Kruk",
+      "id": "new_natural-kruk-1",
+      "leftContext": "Na odwrocie obrazu znaleźliśmy podpis autora i ustaliliśmy, że jego nazwisko brzmi",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "sowa"
+        }
+      ],
+      "goldSurface": "sowa",
+      "id": "new_natural-sowa-0",
+      "leftContext": "Wolontariuszka ośrodka rehabilitacji ptaków pokazała nam nocnego drapieżnika, którym była młoda",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "sowa"
+        }
+      ],
+      "goldSurface": "Sowa",
+      "id": "new_natural-sowa-1",
+      "leftContext": "Po telefonie do kancelarii dowiedziałem się, że sprawę prowadzi mecenas",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "piła"
+        }
+      ],
+      "goldSurface": "piła",
+      "id": "new_natural-piła-0",
+      "leftContext": "Stolarz sprawdził wyposażenie warsztatu i uznał, że do cięcia desek potrzebna będzie ręczna",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "piła"
+        }
+      ],
+      "goldSurface": "Piła",
+      "id": "new_natural-piła-1",
+      "leftContext": "Patrząc na mapę północnej Wielkopolski, wybraliśmy miasto z dobrym połączeniem kolejowym, czyli",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "buk"
+        }
+      ],
+      "goldSurface": "buk",
+      "id": "new_natural-buk-0",
+      "leftContext": "Podczas spaceru dendrolog opisał korę i liście drzewa, po czym stwierdził, że to",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "buk"
+        }
+      ],
+      "goldSurface": "Buk",
+      "id": "new_natural-buk-1",
+      "leftContext": "Na umowie najmu widnieje podpis właściciela, którego nazwisko to",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "zając"
+        }
+      ],
+      "goldSurface": "zając",
+      "id": "new_natural-zając-0",
+      "leftContext": "W czasie liczenia zwierząt przy polu zauważyliśmy długie uszy, a potem wyskoczył szary",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "zając"
+        }
+      ],
+      "goldSurface": "Zając",
+      "id": "new_natural-zając-1",
+      "leftContext": "Na konferencji poprosiłem o nazwisko prelegenta i usłyszałem profesor",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kot"
+        }
+      ],
+      "goldSurface": "kot",
+      "id": "new_natural-kot-0",
+      "leftContext": "Po powrocie z zakupów usłyszałem miauczenie przy drzwiach, gdzie czekał nasz",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kot"
+        }
+      ],
+      "goldSurface": "Kot",
+      "id": "new_natural-kot-1",
+      "leftContext": "Kurier zapytał o nazwisko adresata przesyłki i na etykiecie znalazł pan",
+      "population": "new_natural",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódź"
+        }
+      ],
+      "goldSurface": "łódź",
+      "id": "new_distance_control-łódź-0",
+      "leftContext": "Załoga sprawdza sprzęt pływający przed rejsem. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "łódź"
+        }
+      ],
+      "goldSurface": "Łódź",
+      "id": "new_distance_control-łódź-1",
+      "leftContext": "Planujemy wycieczkę do miasta w centralnej Polsce. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "malina"
+        }
+      ],
+      "goldSurface": "malina",
+      "id": "new_distance_control-malina-0",
+      "leftContext": "Zbieramy dojrzałe owoce z krzewów na działce. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "malina"
+        }
+      ],
+      "goldSurface": "Malina",
+      "id": "new_distance_control-malina-1",
+      "leftContext": "Weryfikujemy nazwiska pracowników odpowiedzialnych za dokument. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jagoda"
+        }
+      ],
+      "goldSurface": "jagoda",
+      "id": "new_distance_control-jagoda-0",
+      "leftContext": "Oglądamy owoce zebrane na leśnej polanie. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "jagoda"
+        }
+      ],
+      "goldSurface": "Jagoda",
+      "id": "new_distance_control-jagoda-1",
+      "leftContext": "Rodzice uzgadniają imię nowo narodzonej córki. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "róża"
+        }
+      ],
+      "goldSurface": "róża",
+      "id": "new_distance_control-róża-0",
+      "leftContext": "Porównujemy kwiaty posadzone na słonecznej rabacie. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "róża"
+        }
+      ],
+      "goldSurface": "Róża",
+      "id": "new_distance_control-róża-1",
+      "leftContext": "Ustalamy imię nowej koleżanki z zespołu. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "warszawska"
+        }
+      ],
+      "goldSurface": "warszawska",
+      "id": "new_distance_control-warszawska-0",
+      "leftContext": "Porównujemy miejskie oferty, szczególnie te ze stolicy. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "warszawska"
+        }
+      ],
+      "goldSurface": "Warszawska",
+      "id": "new_distance_control-warszawska-1",
+      "leftContext": "Odczytujemy nazwę ulicy z miejskiego wykazu. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "ale"
+        }
+      ],
+      "goldSurface": "ale",
+      "id": "new_distance_control-ale-0",
+      "leftContext": "Wypowiedź przeciwstawia sobie dwa możliwe rezultaty. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "ale"
+        }
+      ],
+      "goldSurface": "Ale",
+      "id": "new_distance_control-ale-1",
+      "leftContext": "Obie uczestniczki mają na imię Ala. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lub"
+        }
+      ],
+      "goldSurface": "lub",
+      "id": "new_distance_control-lub-0",
+      "leftContext": "Zdanie daje wybór między dwiema możliwościami. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lub"
+        }
+      ],
+      "goldSurface": "Lub",
+      "id": "new_distance_control-lub-1",
+      "leftContext": "Obie właścicielki lokali mają imię Luba. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "tutaj"
+        }
+      ],
+      "goldSurface": "tutaj",
+      "id": "new_distance_control-tutaj-0",
+      "leftContext": "Wskazujemy miejsce, w którym właśnie stoimy. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "tutaj"
+        }
+      ],
+      "goldSurface": "Tutaj",
+      "id": "new_distance_control-tutaj-1",
+      "leftContext": "Sprawdzamy nazwiska osób zatrudnionych w urzędzie. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lis"
+        }
+      ],
+      "goldSurface": "lis",
+      "id": "new_distance_control-lis-0",
+      "leftContext": "Rozmowa dotyczy rudych zwierząt z pobliskiego lasu. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "lis"
+        }
+      ],
+      "goldSurface": "Lis",
+      "id": "new_distance_control-lis-1",
+      "leftContext": "Sprawdzamy nazwisko autora podpisanego protokołu. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "wilk"
+        }
+      ],
+      "goldSurface": "wilk",
+      "id": "new_distance_control-wilk-0",
+      "leftContext": "Opisujemy drapieżniki obserwowane przy granicy lasu. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "wilk"
+        }
+      ],
+      "goldSurface": "Wilk",
+      "id": "new_distance_control-wilk-1",
+      "leftContext": "Sprawdzamy nazwisko nowego kierownika placówki. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kruk"
+        }
+      ],
+      "goldSurface": "kruk",
+      "id": "new_distance_control-kruk-0",
+      "leftContext": "Liczymy czarne ptaki siedzące na drzewach. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kruk"
+        }
+      ],
+      "goldSurface": "Kruk",
+      "id": "new_distance_control-kruk-1",
+      "leftContext": "Rozmowa dotyczy nazwiska właściciela galerii. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "sowa"
+        }
+      ],
+      "goldSurface": "sowa",
+      "id": "new_distance_control-sowa-0",
+      "leftContext": "Omawiamy nocne ptaki przyjęte do ośrodka. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "sowa"
+        }
+      ],
+      "goldSurface": "Sowa",
+      "id": "new_distance_control-sowa-1",
+      "leftContext": "Weryfikujemy nazwisko kobiety prowadzącej naszą sprawę. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "piła"
+        }
+      ],
+      "goldSurface": "piła",
+      "id": "new_distance_control-piła-0",
+      "leftContext": "Opisujemy narzędzia służące do cięcia drewna. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "piła"
+        }
+      ],
+      "goldSurface": "Piła",
+      "id": "new_distance_control-piła-1",
+      "leftContext": "Przeglądamy miasta położone w północnej Wielkopolsce. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "buk"
+        }
+      ],
+      "goldSurface": "buk",
+      "id": "new_distance_control-buk-0",
+      "leftContext": "Opisujemy drzewa o gładkiej szarej korze. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "buk"
+        }
+      ],
+      "goldSurface": "Buk",
+      "id": "new_distance_control-buk-1",
+      "leftContext": "Ustalamy nazwisko osoby podpisującej nową umowę. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "zając"
+        }
+      ],
+      "goldSurface": "zając",
+      "id": "new_distance_control-zając-0",
+      "leftContext": "Obserwujemy zwierzęta o długich uszach na łące. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "zając"
+        }
+      ],
+      "goldSurface": "Zając",
+      "id": "new_distance_control-zając-1",
+      "leftContext": "Sprawdzamy nazwisko profesora prowadzącego badania. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kot"
+        }
+      ],
+      "goldSurface": "kot",
+      "id": "new_distance_control-kot-0",
+      "leftContext": "Rozmawiamy o domowych zwierzętach, które miauczą. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "candidates": [
+        {
+          "engineScore": 100,
+          "key": "kot"
+        }
+      ],
+      "goldSurface": "Kot",
+      "id": "new_distance_control-kot-1",
+      "leftContext": "Odczytujemy nazwisko adresata dostarczonej przesyłki. Informację sprawdzono, porównano wcześniejsze zapisy, omówiono wyniki podczas spotkania, a po zakończeniu rozmowy ustalono, że brakujący wpis to",
+      "population": "new_distance_control",
+      "suite": "forms"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-0",
+      "leftContext": "Sprawdziłem w wiadomości",
+      "nextWord": "czy",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-1",
+      "leftContext": "Nie wiedziałam jeszcze",
+      "nextWord": "kiedy",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-2",
+      "leftContext": "Prześlę dokumenty",
+      "nextWord": "jeżeli",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-3",
+      "leftContext": "Poprosił o pomoc",
+      "nextWord": "ponieważ",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-4",
+      "leftContext": "Zapisz godzinę",
+      "nextWord": "zanim",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-5",
+      "leftContext": "Wróciliśmy wcześniej",
+      "nextWord": "żeby",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-6",
+      "leftContext": "Próbowałem zadzwonić",
+      "nextWord": "ale",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-7",
+      "leftContext": "To jest adres",
+      "nextWord": "który",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-8",
+      "leftContext": "Nie kupili nowego",
+      "nextWord": "lecz",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-9",
+      "leftContext": "Nie miała czasu",
+      "nextWord": "więc",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-10",
+      "leftContext": "Zrobię to dziś",
+      "nextWord": "chociaż",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": ",",
+      "id": "new-punctuation-11",
+      "leftContext": "Zostałem na miejscu",
+      "nextWord": "bo",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-12",
+      "leftContext": "Zabierz zeszyt",
+      "nextWord": "i",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-13",
+      "leftContext": "Wybierz pociąg",
+      "nextWord": "albo",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-14",
+      "leftContext": "Możesz zamówić herbatę",
+      "nextWord": "lub",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-15",
+      "leftContext": "Nie zna adresu",
+      "nextWord": "ani",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-16",
+      "leftContext": "Spotkamy się",
+      "nextWord": "przy",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-17",
+      "leftContext": "Zostawiłem przesyłkę",
+      "nextWord": "obok",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-18",
+      "leftContext": "Potwierdzenie dostaniesz",
+      "nextWord": "jutro",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-19",
+      "leftContext": "Dokończymy rozmowę",
+      "nextWord": "później",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-20",
+      "leftContext": "Spójrz na ekran",
+      "nextWord": "telefonu",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-21",
+      "leftContext": "Wyślij wiadomość",
+      "nextWord": "teraz",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-22",
+      "leftContext": "Usiądź przy stole",
+      "nextWord": "tutaj",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    },
+    {
+      "goldPunctuation": "",
+      "id": "new-punctuation-23",
+      "leftContext": "Otwórz folder",
+      "nextWord": "ze",
+      "options": [
+        "",
+        ","
+      ],
+      "population": "new_punctuation",
+      "suite": "punctuation_before_word"
+    }
+  ],
+  "kind": "new-authored-known-lexemes-not-external-blind-test",
+  "schemaVersion": 1
+}

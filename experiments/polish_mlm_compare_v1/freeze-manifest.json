@@ -1,0 +1,39 @@
+{
+  "files": {
+    ".github/workflows/polish-mlm-compare-v1.yml": "e04fa4869bf1806e1141e90fededf1d9f16b90687d3c72b9bce055d843f5cc4c",
+    "experiments/ai_compare_v5/cases.json": "f1844a1d26abcf020713dfd86e038157974b7fa65aeffbc98e97cf27f7afa85b",
+    "experiments/ai_compare_v5/contract.py": "d29e6d2c6023a453c0c5619656dcd86c18982a8b4598c2c18e77f221fa624ecc",
+    "experiments/ai_compare_v5/source-snapshot.json": "05270f8ae2c6d88bb8209cb00c83ff3d66ba788544f524ed27fbb5e0b4666794",
+    "experiments/polish_mlm_compare_v1/NOTICE.txt": "c3d84bd6ebdf60d5284b5b4678d13a76085ff0036b3c8c61c9e9f7a7f188f874",
+    "experiments/polish_mlm_compare_v1/PROTOCOL.md": "208deb424968e9cefe11393e455d0042cdb26bb948ee4168bcad502d348da9ad",
+    "experiments/polish_mlm_compare_v1/collect_results.py": "f4b3f346eaf394398fb625a6240853e9866c315817db1acd5a4884dad44fcf1c",
+    "experiments/polish_mlm_compare_v1/contract.py": "c81eab79b66fad31313caa9b847574cfd0035b3a6e6fe8adbb7f1dcfc9aa0906",
+    "experiments/polish_mlm_compare_v1/freeze.py": "f57f332a8c4598dbb606adae7cce6831703d48e59d8c25a9345c6cd7cc39b71e",
+    "experiments/polish_mlm_compare_v1/make_cases.py": "cc3ee90497bacc1865e48d96dfa46e706c03eebbfde8484ac7ed79c12747e930",
+    "experiments/polish_mlm_compare_v1/mlm.py": "c6dcf5179220727dd69f1c2b87d9de957bf35b7c565ada84810ae70adefa7ef6",
+    "experiments/polish_mlm_compare_v1/new-cases.json": "0fe8c78d9c4a2032ccd93d431c68e6c7622679e99722361efa07af11354f5caa",
+    "experiments/polish_mlm_compare_v1/requirements.txt": "3db4420a7dcfe7fd85cb02cd5ff85bc1d74ec0fdf927b30e41a623cdc5dfbc15",
+    "experiments/polish_mlm_compare_v1/run_model.py": "b7fb4287ae0ddc5618590009e396123b9cdf42e093288bd255522fa2ca8e3dd5",
+    "experiments/polish_mlm_compare_v1/test_contract.py": "a746b681fc0938172d6f6d28b3011065df36a4d5f63ef0a81e9136534b1b6eee"
+  },
+  "models": {
+    "distilroberta": {
+      "architecture": "roberta",
+      "id": "sdadas/polish-distilroberta",
+      "layers": 6,
+      "license": "Apache-2.0",
+      "revision": "849b664fa3134beae84095d28a184c145c6a3aa5",
+      "safetensors": true
+    },
+    "herbert": {
+      "architecture": "bert",
+      "id": "allegro/herbert-base-cased",
+      "layers": 12,
+      "license": "CC-BY-4.0",
+      "revision": "50e33e0567be0c0b313832314c586e3df0dc2297",
+      "safetensors": false
+    }
+  },
+  "protocol": "polish-mlm-compare-v1",
+  "requestsSha256": "a859aac5acf8dc950c07df415873aced44a46f9a4585818504e3f2af6377449b"
+}
