@@ -1,9 +1,9 @@
 # Kamień milowy: naprawa importu ZIP FP32
-Data: 2026-10-05. Status: poprawka wysłana, CI i ponowna próba na telefonie oczekują.
+Data: 2026-10-05. Status: CI PASS i nowy APK dostępny; ponowna próba na telefonie oczekuje.
 
 ## 1. Wersje i zakres
 Runtime jakamilek/CleverKeysPL: trial/herbert-fp32-benchmark-v1, commit 884a29b72e8673ad57e506c3d3d2d174e5cd329f.
-Run naprawy: https://github.com/jakamilek/CleverKeysPL/actions/runs/37280833641 — podczas pojedynczego sprawdzenia in_progress, bez wyniku.
+Run naprawy: https://github.com/jakamilek/CleverKeysPL/actions/runs/37280833641 — completed / SUCCESS, przetestowany head 884a29b72e8673ad57e506c3d3d2d174e5cd329f.
 Producent jakamilek/CleverKeys-langpack-pl: zamrożone źródło d831e17b6cb99590d6ba036e92a72b6c3fd0cc7c i udany run 37230171787 pozostają bez zmian.
 Ten identyczny checkpoint w obu main zmienia wyłącznie dokumentację. Bez merge, wydania, tagu, podbicia wersji ani promocji kodu próbnego na main.
 
@@ -33,8 +33,10 @@ Raport używa wyłącznie stałych kodów, tłumaczenia i tożsamości telefonu/
 ## 7. Testy i ograniczenia sprawdzenia
 Dodano siedem testów do zarejestrowanego HerbertBundleImportTest: STORED+deskryptor, dotychczasowy DEFLATED, odmowa zmienionych sum/duplikatów/traversal/braku plików, manipulacja o stałym rozmiarze, ograniczenia katalogu i kontenera, anulowanie kopii, budżet miejsca.
 Małe pozytywne próbki badają czytnik kontenera i weryfikację SHA, nie uwierzytelniają fikcyjnego modelu. Zaufany hash pełnego FP32 pozostaje wymagany.
-Lokalnie: rzeczywista próba Java formatu PASS, struktura 27 zasobów base/Polish i zgodność formatów PASS, kolejka TODO <500 linii. Nie ma lokalnego Kotlin/Android SDK; kompilacja, testy Kotlin, lint i nowe APK oczekują CI.
+Lokalnie: rzeczywista próba Java formatu PASS, struktura 27 zasobów base/Polish i zgodność formatów PASS, kolejka TODO <500 linii. Nie ma lokalnego Kotlin/Android SDK. Run 37280833641 potwierdził rzeczywistą kompilację, testy Kotlin, lint i budowę APK.
 Zachowano obowiązkowe 2471 wektorów tokenizera /232 batche /532 kandydatów oraz istniejące testy edytora, lint i audyt APK.
+
+Wynik CI naprawy: JUnitCore OK(2842), siedem nowych regresji importu, obowiązkowa zgodność 2471 wektorów /232 batchy /532 kandydatów /pięć wejść, 83 testy edytora, debug/vital lint, assembleDebug oraz audyt i upload APK — PASS.
 
 ## 8. Tożsamość modelu i wcześniejszego APK
 Ten sam model ZIP:
@@ -42,7 +44,12 @@ https://github.com/jakamilek/CleverKeys-langpack-pl/actions/runs/37230171787/art
 657295441 bajtów; ZIP SHA-256 36c2183acca3ae6dca4afb54c28fe4d9d4cb37ec26f3230c94b4e007b494587f.
 model.onnx: 651798883 bajty, SHA-256 f851436ba9ca35d0c7313ff873cd869b744b295a8a16fc95b4571d5e11b299f2.
 Siedem przypiętych tożsamości w HerbertBenchmarkTrial bez zmian. Allegro/herbert-base-cased, rev 50e33e0567be0c0b313832314c586e3df0dc2297, CC BY 4.0.
-Starszy runtime run 37232458354 i APK artifact 11314463703 miały PASS wszystkich bramek CI, ale zawierają wadliwy czytnik. Nie są paczką z obecną naprawą. Nowego APK nie ogłaszamy przed udanym runem 37280833641.
+Starszy runtime run 37232458354 i APK artifact 11314463703 miały PASS wszystkich bramek CI, ale zawierają wadliwy czytnik. Nie są paczką z obecną naprawą. Run 37280833641 zakończył się sukcesem. Nowy APK ARM64:
+https://github.com/jakamilek/CleverKeysPL/actions/runs/37280833641/artifacts/11331993610
+CleverKeys-v2.0.0-arm64-v8a.apk: 35709678 bajtów; SHA-256 z CI ce65d548cd8b82fa5dd8d71f8b68cbf764ec0a48223a1e880b76ee913223e80b.
+ZIP: 35710698 bajtów; GitHub digest c4c528139523c0e27b326184829cf3a299990b87e80360c5da093da0f357befc.
+Raporty: 11331924004, 22313 bajtów, digest ab9b662d1e685a5b66eb779099c718ffe235812f1121ba02fd97f9aac5b563e6.
+Raw APK nie został pobrany ani zweryfikowany lokalnie; to dowody CI/katalogu GitHub, bez skanu antywirusowego. Dokumentacja runtime z poprawionymi linkami: fc0bbd7e8e58c3990457ce7bf3cb06619ed5dd69.
 
 ## 9. Rzeczy odłożone
 INT8 pozostaje FAIL (22 zmiany rankingu, 7 regresji top-1, 1 regresja top-3); nie osłabiono warunków.
@@ -52,10 +59,10 @@ Dla tych samych 18 innych języków zapisano siedem nowych brakujących kluczy o
 
 ## 10. Kolejny krok i monitoring
 Użytkownik zachowuje pobrany model ZIP; potrzebna jest tylko instalacja nowego zweryfikowanego APK.
-Po sukcesie CI: pobrać APK ARM64, zaktualizować aplikację, pozostawić >=1,4 GB wolnego miejsca i ponowić „Importuj ZIP z modelem”.
+Po potwierdzonym sukcesie CI: pobrać nowy APK ARM64, zaktualizować aplikację, pozostawić >=1,4 GB wolnego miejsca i ponowić „Importuj ZIP z modelem”.
 Jeżeli import się uda — uruchomić test i przekazać raport; jeżeli nie — skopiować nowy raport powodu importu.
 Sprawdzono stan runu raz. Zgodnie z ustaleniem nie czekamy na CI w pętli; maksymalnie 60 sekund łącznie monitorowania/build, następnie zakończenie zgłasza użytkownik.
 
 ## 11. Różnica względem poprzedniego checkpointu
 Poprzedni etap potwierdził dostępność APK i host/JVM conformance, lecz nie ćwiczył formatu pełnego ZIP-a upload-artifact przez importer na telefonie. Obecne zgłoszenie ujawniło tę lukę i brak diagnostyki.
-Naprawiono obsługę potwierdzonego problematycznego formatu, dodano regresje i bezpieczny raport błędów. Kod i model SI, identyfikatory źródła oraz zachowanie edytora pozostają bez zmian. Pełna próba urządzenia jest nadal warunkiem dalszej decyzji.
+Naprawiono obsługę potwierdzonego problematycznego formatu, dodano regresje i bezpieczny raport błędów. Kod i model SI, identyfikatory źródła oraz zachowanie edytora pozostają bez zmian. Nowy run potwierdził wszystkie wymagane bramki i udostępnił APK z naprawą. Pełna próba urządzenia jest nadal warunkiem dalszej decyzji.
