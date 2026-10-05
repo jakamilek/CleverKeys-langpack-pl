@@ -1,0 +1,9 @@
+Diagnostic comparison only. No pretrained weight distribution in this experiment.
+Original HerBERT: allegro/herbert-base-cased, pinned revision in contract.py; CC-BY-4.0.
+Original distilHerBERT: BartekK/distilHerBERT-base-cased, pinned revision in contract.py.
+Weight license unspecified; review deferred by maintainer, not a license grant.
+No teacher-license inheritance is assumed. Tokenizers/weights fetched at pinned revisions
+by the private technical run; outputs contain scores/provenance, no weight bundle.
+Source metadata: existing authenticated CleverKeys Polish v5 pack, SGJP/Morfeusz and
+source databases credited in that pack NOTICE.txt. No authored semantic dictionary entries.
+Authored diagnostic contexts created before inference. Not a blind independent benchmark.
