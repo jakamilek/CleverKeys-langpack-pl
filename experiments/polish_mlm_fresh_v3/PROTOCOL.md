@@ -40,7 +40,9 @@ HerBERT allegro/herbert-base-cased rev50e33e0567be0c0b313832314c586e3df0dc2297,
 rev7276461b7a8fd668aaf30313c03a68bd11aad642, 6 warstw. Oba oryginalne BERT MLM.
 PyTorch2.8.0 CPU FP32, Transformers4.57.6, wątki2/1, trzy rozgrzewki pierwszej pary.
 Tokenizer/source pairs i wszystkie targets sprawdzone przed ładowaniem wag.
-Strict loading_info bez missing/mismatch/unexpected/error; pinned config/layers768;
+Strict loading_info bez missing/mismatch/error oraz z dokładnym zbiorem nieużywanych
+kluczy checkpointu: cztery znane pooler/SSO HerBERT, zero dla distilHerBERT;
+pinned config/layers768;
 trzy full-forward parity probes allclose atol1e-4/rtol1e-5, maxabs <=0.001 w collectorze.
 Pełny trace mean/sum/target IDs/positions. Manifest wiąże dane, kod, workflow i stare
 zależności. Collector wymaga obu kompletnych modeli z tego samego bieżącego commitu,
@@ -67,3 +69,26 @@ Nie zmieniamy Androida/APK, default32/max64, live SI, interpunkcji i wcześniejs
 INT8 FAIL. Eksport/native fixtures/telefon dopiero po odczytaniu i ocenie tego wyniku.
 Sprawdzanie licencji odłożone na prośbę użytkownika; brak kontaktu z autorami.
 Monitorowanie Actions <=60 sekund TOTAL/run; potem użytkownik informuje o zakończeniu.
+
+## Korekta wykonania loading-fix-v1 — 2026-10-06
+
+Pierwotny zamrożony kod c1e9d3a7895f2a380bc75772985c88a53db32a4b i run
+37363474711 pozostają historyczne. HerBERT zatrzymał się przed oceną jakości:
+v3 odrzucał również znane nieużywane wagi pooler/SSO, które oryginalny test v1
+sprawdzał jawnie. DistilHerBERT ukończył część runa; starego wyniku nie mieszamy
+z nową referencją. Oba modele uruchamiane ponownie z nowego zamrożonego commitu.
+
+Branch experiment/polish-mlm-v3-loading-fix-v1. Wspólny loading.py sprawdza przed
+inferencją i w collectorze dokładnie bert.pooler.dense.bias/weight oraz
+cls.sso.sso_relationship.bias/weight dla przypiętego HerBERT. Dla distilHerBERT
+oczekuje pustego zbioru. Brakujące/mismatched/error, dodatkowe nieznane,
+niepełne/zdublowane klucze lub brak dowodów loading_info są odrzucane.
+Pełna głowica MLM i encoder nadal podlegają kontroli ładowania, hashom wag,
+tożsamości config/revision oraz trzem full-forward parity probes.
+
+Dane/gold/kandydaci/okna, metoda scoringu i bramki jakości są identyczne.
+Niezmieniony request SHA256:
+a20cad29b09554a9718f1d520d68c4e695c9274aac0b708801463f498097f53d.
+Nowy manifest wykonania wiąże poprawiony kod i testy przed inferencją.
+Protocol ID v3 opisuje te same dane; commit i SHA manifestu odróżniają rewizje.
+Nie jest to ponowienie starego commitu ani poprawa jakości na podstawie gold.

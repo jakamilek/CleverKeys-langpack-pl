@@ -1,8 +1,8 @@
-name: Fresh Polish case contexts 16-32 v3
+name: Fresh Polish case contexts 16-32 v3 loading fix
 
 on:
   push:
-    branches: ['experiment/polish-mlm-fresh-v3']
+    branches: ['experiment/polish-mlm-fresh-v3', 'experiment/polish-mlm-v3-loading-fix-v1']
     paths:
       - 'experiments/polish_mlm_fresh_v3/**'
       - '.github/workflows/polish-mlm-fresh-v3.yml'
@@ -63,7 +63,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: polish-mlm-fresh-v3-16-32-${{ matrix.model }}
+          name: polish-mlm-fresh-v3-loading-fix-v1-16-32-${{ matrix.model }}
           path: build/polish-mlm-fresh-v3/
           retention-days: 30
 
@@ -79,7 +79,7 @@ jobs:
           python-version: '3.12'
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
-          pattern: polish-mlm-fresh-v3-16-32-*
+          pattern: polish-mlm-fresh-v3-loading-fix-v1-16-32-*
           merge-multiple: false
           path: build/polish-mlm-comparison-fresh-v3
       - name: Revalidate complete original predictions from both models
@@ -90,7 +90,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: polish-mlm-fresh-v3-16-32-comparison
+          name: polish-mlm-fresh-v3-loading-fix-v1-16-32-comparison
           path: |
             build/polish-mlm-comparison-fresh-v3/COMPARISON.md
             build/polish-mlm-comparison-fresh-v3/comparison.json

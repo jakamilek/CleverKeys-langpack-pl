@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 import contract
 from collect_results import collect, paired
+from loading import expected_unused_keys, validate_loading_info
 
 
 def synthetic(name):
@@ -26,7 +27,7 @@ def synthetic(name):
             'codeCommit':'a'*40,'tokenizerBackendSha256':screen['backendSha256'],'predictions':rows,
             'phoneMeasured':False,'weightsPublished':False,'parameters':1,'peakHostRssMiB':1.,
             'modelFiles':[{'path':'pytorch_model.bin','bytes':10,'sha256':'b'*64}],
-            'loadingInfo':{'missing_keys':[],'mismatched_keys':[],'unexpected_keys':[],
+            'loadingInfo':{'missing_keys':[],'mismatched_keys':[],'unexpected_keys':sorted(expected_unused_keys(name)),
                            'error_msgs':[],'projectionMaxAbsErrors':[0.,0.,0.]}}
 
 
@@ -41,6 +42,46 @@ def write(root,name,result):
 
 
 class Gates(unittest.TestCase):
+    def test_exact_original_checkpoint_loading_contract(self):
+        for name in contract.MODELS:
+            info=synthetic(name)['loadingInfo']
+            validate_loading_info(name,info)
+            info['unexpected_keys'].reverse()
+            validate_loading_info(name,info)
+        self.assertEqual(len(expected_unused_keys('herbert')),4)
+        self.assertEqual(len(expected_unused_keys('distilherbert')),0)
+
+    def test_missing_mismatched_unknown_partial_duplicate_loading_evidence_rejected(self):
+        for name in contract.MODELS:
+            good=synthetic(name)['loadingInfo']
+            bad=[]
+            for field in ['missing_keys','mismatched_keys','error_msgs','unexpected_keys']:
+                absent=copy.deepcopy(good);absent.pop(field);bad.append(absent)
+                wrong=copy.deepcopy(good);wrong[field]=None;bad.append(wrong)
+            for field in ['missing_keys','mismatched_keys','error_msgs']:
+                wrong=copy.deepcopy(good);wrong[field]=['cls.predictions.bias'];bad.append(wrong)
+            unknown=copy.deepcopy(good);unknown['unexpected_keys'].append('cls.predictions.bias');bad.append(unknown)
+            if name=='herbert':
+                for n in range(4):
+                    partial=copy.deepcopy(good);partial['unexpected_keys']=partial['unexpected_keys'][:n];bad.append(partial)
+                duplicate=copy.deepcopy(good);duplicate['unexpected_keys'][0]=duplicate['unexpected_keys'][1];bad.append(duplicate)
+            else:
+                wrong=copy.deepcopy(good);wrong['unexpected_keys']=sorted(expected_unused_keys('herbert'));bad.append(wrong)
+            for info in bad:
+                with self.subTest(name=name,info=info),self.assertRaises(ValueError):
+                    validate_loading_info(name,info)
+
+    def test_collector_rejects_herbert_loading_changes_before_quality(self):
+        for keys in [[],sorted(expected_unused_keys('herbert'))[:-1],
+                     sorted(expected_unused_keys('herbert'))+['cls.predictions.bias']]:
+            with self.subTest(keys=keys),tempfile.TemporaryDirectory() as tmp,patch.dict(os.environ,{'GITHUB_SHA':'a'*40}):
+                root=Path(tmp)
+                for name in contract.MODELS:
+                    result=synthetic(name)
+                    if name=='herbert':result['loadingInfo']['unexpected_keys']=keys
+                    write(root,name,result)
+                with self.assertRaises(ValueError):collect(root)
+
     def test_fresh_contexts_are_disjoint_and_new_keys_are_not_old_gold(self):
         cases,entries,request=contract.prepare();old=contract.source_contract.cases_and_sources()[0]
         gold_keys={c['candidates'][0]['key'] for c in old if c['suite']=='forms'}

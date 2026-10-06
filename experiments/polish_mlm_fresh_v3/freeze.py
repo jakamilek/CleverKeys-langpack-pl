@@ -16,7 +16,9 @@ def freeze():
     frozen_v2=json.loads((ROOT.parent/'polish_mlm_compare_v2/freeze-manifest.json').read_text())
     files.extend(repo/p for p in frozen_v2['files'])
     files.append(repo/'.github/workflows/polish-mlm-fresh-v3.yml')
-    manifest={'protocol':VERSION,'models':MODELS,'requestsSha256':digest(prepare()[2]),
+    manifest={'protocol':VERSION,'executionRevision':'loading-fix-v1',
+              'previousFrozenCodeCommit':'c1e9d3a7895f2a380bc75772985c88a53db32a4b',
+              'previousRunId':37363474711,'models':MODELS,'requestsSha256':digest(prepare()[2]),
               'files':{str(p.relative_to(repo)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(set(files))}}
     (ROOT/'freeze-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,sort_keys=True,indent=2)+'\n')
 

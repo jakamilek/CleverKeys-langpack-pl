@@ -6,6 +6,7 @@ import os
 import re
 from pathlib import Path
 from contract import ROOT, MODELS, canonical, digest, prepare, verify_freeze, evaluate
+from loading import validate_loading_info
 
 
 def paired(a, b):
@@ -58,7 +59,7 @@ def collect(root):
             screen=json.loads((ROOT.parent/'polish_mlm_screen_v2/results/BartekK--distilHerBERT-base-cased.json').read_text())
             if r['tokenizerBackendSha256']!=screen['backendSha256']:raise ValueError('changed original tokenizer')
         info=r['loadingInfo'];errors=info['projectionMaxAbsErrors']
-        if any(info.get(k) for k in ['missing_keys','mismatched_keys','unexpected_keys','error_msgs']):raise ValueError('incomplete head')
+        validate_loading_info(name, info)
         if len(errors)!=3 or any(not math.isfinite(e) or not 0<=e<=.001 for e in errors):raise ValueError('bad original-forward parity')
         if (v['loadingInfo']!=info or v['modelFiles']!=r['modelFiles'] or v['sourceCasePreservation'] is not True or v['beforeLabelledInference'] is not True or p['beforeWeightsLoad'] is not True or any(d['requestsValidated']!=count for d in [v,p])):raise ValueError('mandatory preflight differs')
         if r['weightsPublished'] is not False or r['phoneMeasured'] is not False:raise ValueError('wrong experiment scope')
