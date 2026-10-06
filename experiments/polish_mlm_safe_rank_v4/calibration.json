@@ -1,0 +1,125 @@
+{
+  "calibratedProbability": false,
+  "developmentTable": [
+    {
+      "overrides": 104,
+      "regressions": 8,
+      "repairs": 96,
+      "requests": 256,
+      "threshold": 0.0,
+      "top1": 216,
+      "utility": 64
+    },
+    {
+      "overrides": 94,
+      "regressions": 4,
+      "repairs": 90,
+      "requests": 256,
+      "threshold": 0.25,
+      "top1": 214,
+      "utility": 74
+    },
+    {
+      "overrides": 89,
+      "regressions": 4,
+      "repairs": 85,
+      "requests": 256,
+      "threshold": 0.5,
+      "top1": 209,
+      "utility": 69
+    },
+    {
+      "overrides": 83,
+      "regressions": 2,
+      "repairs": 81,
+      "requests": 256,
+      "threshold": 1.0,
+      "top1": 207,
+      "utility": 73
+    },
+    {
+      "overrides": 68,
+      "regressions": 0,
+      "repairs": 68,
+      "requests": 256,
+      "threshold": 2.0,
+      "top1": 196,
+      "utility": 68
+    },
+    {
+      "overrides": 46,
+      "regressions": 0,
+      "repairs": 46,
+      "requests": 256,
+      "threshold": 3.0,
+      "top1": 174,
+      "utility": 46
+    },
+    {
+      "overrides": 30,
+      "regressions": 0,
+      "repairs": 30,
+      "requests": 256,
+      "threshold": 4.0,
+      "top1": 158,
+      "utility": 30
+    },
+    {
+      "overrides": 7,
+      "regressions": 0,
+      "repairs": 7,
+      "requests": 256,
+      "threshold": 6.0,
+      "top1": 135,
+      "utility": 7
+    },
+    {
+      "overrides": 4,
+      "regressions": 0,
+      "repairs": 4,
+      "requests": 256,
+      "threshold": 8.0,
+      "top1": 132,
+      "utility": 4
+    },
+    {
+      "overrides": 0,
+      "regressions": 0,
+      "repairs": 0,
+      "requests": 256,
+      "threshold": null,
+      "top1": 128,
+      "utility": 0
+    }
+  ],
+  "grid": [
+    0.0,
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    6.0,
+    8.0,
+    null
+  ],
+  "holdoutUsed": false,
+  "regressionCost": 4,
+  "selected": {
+    "overrides": 94,
+    "regressions": 4,
+    "repairs": 90,
+    "requests": 256,
+    "threshold": 0.25,
+    "top1": 214,
+    "utility": 74
+  },
+  "sourceCodeCommit": "83fa31fd6071ba48b8e7828c58bb28ff2d49f2f1",
+  "sourceFilesSha256": {
+    "experiments/polish_mlm_fresh_v3_loading_fix_v1_results/distilherbert/predictions.json": "72a31bd85cb4a071941ea16b31c13c36cf21d55fb9e2a5f473749b973fbda923",
+    "experiments/polish_mlm_fresh_v3_loading_fix_v1_results/distilherbert/report.json": "3ee69596a2e547e52cbcfa1cfc9e142d91d61c6c66fdf80a9eeb175a74cf4e4b"
+  },
+  "sourceRequestsSha256": "a20cad29b09554a9718f1d520d68c4e695c9274aac0b708801463f498097f53d",
+  "threshold": 0.25
+}
