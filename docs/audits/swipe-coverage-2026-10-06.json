@@ -1,0 +1,176 @@
+{
+  "base": {
+    "manifest": {
+      "code": "pl",
+      "name": "Polish",
+      "version": 2,
+      "author": "jakamilek/CleverKeys-langpack-pl",
+      "wordCount": 106363,
+      "hasPrefixBoost": false
+    },
+    "pack_sha256": "301b0b9c7c4c7b96ac7a2545bf27745b6ee38c87f5d04133ede490008d861945",
+    "dictionary_sha256": "087f99e39ccc9108d7bf5315c902ec5f6899620925e481cfb872d95e8df68e20",
+    "canonical_count": 106363,
+    "normalized_count": 100840,
+    "probes": {
+      "dodam": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "dodam",
+        "normalized_candidates": [],
+        "unigram_present": true
+      },
+      "grzeje": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "grzeje",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "kasami": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "kasami",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "nawilżane": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "nawilzane",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "odpowiadam": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "odpowiadam",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "patrzysz": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "patrzysz",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "poczekaj": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "poczekaj",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "podpowie": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "podpowie",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "pozdrawiam": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "pozdrawiam",
+        "normalized_candidates": [],
+        "unigram_present": true
+      }
+    }
+  },
+  "current": {
+    "manifest": {
+      "apiVersion": 1,
+      "attribution": "Original preview sources plus selected source casing evidence; see NOTICE.txt. Function-word default casing corrected from Morfeusz/SGJP. Global source-attested case-homonym audit.",
+      "author": "jakamilek/CleverKeys-langpack-pl",
+      "capabilities": [
+        "lexicon",
+        "frequency",
+        "capitalization",
+        "metadata"
+      ],
+      "code": "pl",
+      "hasPrefixBoost": false,
+      "languageIntelligence": {
+        "file": "language-intelligence.json",
+        "schemaVersion": 1,
+        "sha256": "5e0eac9b056861903d33664c6ba3d4a9d895044530e78be72ff0ad1596ba884d"
+      },
+      "name": "Polish",
+      "version": 5,
+      "wordCount": 106363
+    },
+    "pack_sha256": "aa27d8fdcf8fad698491127de68dc1ebd31a5f9f687621429b25435ba16904cb",
+    "dictionary_sha256": "a32f6a55bce7375e744d3d261d6ec9aad96dc64725ac429d4cb1d7225aed3c2a",
+    "canonical_count": 106363,
+    "normalized_count": 100840,
+    "probes": {
+      "dodam": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "dodam",
+        "normalized_candidates": [],
+        "unigram_present": true
+      },
+      "grzeje": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "grzeje",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "kasami": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "kasami",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "nawilżane": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "nawilzane",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "odpowiadam": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "odpowiadam",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "patrzysz": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "patrzysz",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "poczekaj": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "poczekaj",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "podpowie": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "podpowie",
+        "normalized_candidates": [],
+        "unigram_present": false
+      },
+      "pozdrawiam": {
+        "canonical_present": false,
+        "rank": null,
+        "normalized_key": "pozdrawiam",
+        "normalized_candidates": [],
+        "unigram_present": true
+      }
+    }
+  },
+  "removed_keys": [],
+  "added_keys": [],
+  "changed_ranks": {}
+}
