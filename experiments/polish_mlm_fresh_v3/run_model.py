@@ -11,6 +11,7 @@ from pathlib import Path
 from contract import ROOT, MODELS, canonical, digest, prepare, verify_freeze, evaluate
 from mlm import encode, score, check_projection
 from projection import scoring_model
+from loading import validate_loading_info
 
 
 def files_manifest(preset):
@@ -56,8 +57,7 @@ def load(name):
     model, info = AutoModelForMaskedLM.from_pretrained(
         preset['id'], revision=preset['revision'], trust_remote_code=False,
         use_safetensors=preset['safetensors'], torch_dtype=torch.float32, output_loading_info=True)
-    if any(info.get(field) for field in ['missing_keys', 'mismatched_keys', 'error_msgs', 'unexpected_keys']):
-        raise ValueError('incomplete/unexplained original pretrained MLM: ' + repr(info))
+    validate_loading_info(name, info)
     config = model.config
     layers = config.n_layers if preset['architecture'] == 'distilbert' else config.num_hidden_layers
     hidden = config.dim if preset['architecture'] == 'distilbert' else config.hidden_size

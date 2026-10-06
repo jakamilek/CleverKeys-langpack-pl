@@ -1,7 +1,8 @@
 {
+  "executionRevision": "loading-fix-v1",
   "files": {
     ".github/workflows/polish-mlm-compare-v2.yml": "7d5f8534852a19a981af9ae4ce4b8fab27ca6eb696b046ac79e02cc857830665",
-    ".github/workflows/polish-mlm-fresh-v3.yml": "039732301a4242fd1b38737234b4b0d98b054ab444205c391f2a1eb63119ee8e",
+    ".github/workflows/polish-mlm-fresh-v3.yml": "04d20551e721f731efe53d1bd89db92feaa1ad0429b87bcd01b1d8adb4a8ca9d",
     "experiments/ai_compare_v5/cases.json": "f1844a1d26abcf020713dfd86e038157974b7fa65aeffbc98e97cf27f7afa85b",
     "experiments/ai_compare_v5/contract.py": "d29e6d2c6023a453c0c5619656dcd86c18982a8b4598c2c18e77f221fa624ecc",
     "experiments/ai_compare_v5/source-snapshot.json": "05270f8ae2c6d88bb8209cb00c83ff3d66ba788544f524ed27fbb5e0b4666794",
@@ -34,19 +35,20 @@
     "experiments/polish_mlm_compare_v2/run_model.py": "34d08c94a06431f8a7f4821ddaa16e47520294cf07f649c6d103831f4b64bd09",
     "experiments/polish_mlm_compare_v2/test_contract.py": "274e7b73364e734fc41803b36de9f87aae0b877d8b1a6a4a6f07ad8b71519d30",
     "experiments/polish_mlm_fresh_v3/NOTICE.txt": "3a8a1109d70b65a0b9e4d0017e34e5ee490f46b001cbb8eba4e56dc75716aff2",
-    "experiments/polish_mlm_fresh_v3/PROTOCOL.md": "76fffb05f6456478d307bd4f267cbe62a13bc223e23bb5fc783d95aa7a9f3a7b",
+    "experiments/polish_mlm_fresh_v3/PROTOCOL.md": "3a89f4e5045dcf364782a1a54ba7919d884310a36c18a5d978565debd0dc14ae",
     "experiments/polish_mlm_fresh_v3/build_cases.py": "4219c6f05a2fb5cd4c19566e0734c39a729f694a69be1496b0306582d9541da5",
     "experiments/polish_mlm_fresh_v3/cases.json": "d23c7ca6b2199299a8d4271a550cc643814d0040628c4f749448c4aeb68f329e",
-    "experiments/polish_mlm_fresh_v3/collect_results.py": "5fa2a5303d704e6c320b744b4a4e25bbf511fe3e76f6f71e655044077fda5e14",
+    "experiments/polish_mlm_fresh_v3/collect_results.py": "38a04b10b64bf6103028195e29bf80d36ba599936082e62cde249a40899c910c",
     "experiments/polish_mlm_fresh_v3/contract.py": "ef4575a79fc33e86de28eb9549119e2c3fffd0b7cbbd90fee812fe757e05935e",
-    "experiments/polish_mlm_fresh_v3/freeze.py": "49cbd29df8d82367cbfc9ace4fa4cc7b4a6951e7df4c3e03f08a4ad2520a6cc4",
+    "experiments/polish_mlm_fresh_v3/freeze.py": "db62b808fc7e9dadaac5ebca054ec2583f732c5abdf82a066d68af24b437fe62",
+    "experiments/polish_mlm_fresh_v3/loading.py": "1327f1d802197c5f31b5c66a93875ef35b5b0cbff10f52507e31ab9683ab98bc",
     "experiments/polish_mlm_fresh_v3/local-tokenizer-preflight.json": "3bdde250ba7429b181d12e732853b70817676cc74dea77dfadec25fe96bd900d",
     "experiments/polish_mlm_fresh_v3/mlm.py": "c6dcf5179220727dd69f1c2b87d9de957bf35b7c565ada84810ae70adefa7ef6",
     "experiments/polish_mlm_fresh_v3/projection.py": "ccc7a17c9147ac526b55435945c2fb32b7c3799307e812eecd5dc27acfca8533",
     "experiments/polish_mlm_fresh_v3/requirements.txt": "3db4420a7dcfe7fd85cb02cd5ff85bc1d74ec0fdf927b30e41a623cdc5dfbc15",
-    "experiments/polish_mlm_fresh_v3/run_model.py": "aa2964192d68c1dbd990b4187b7a2092643e078f47c170d10a7a91aaa602e00e",
+    "experiments/polish_mlm_fresh_v3/run_model.py": "c3014595b5e4a8c579a4b7e23af13e6b088686f8066cb00efebdc3143b2de2e3",
     "experiments/polish_mlm_fresh_v3/source-snapshot.json": "42abadf9769c4a276b2eb847193972442b9169fa6a744e97bea7efb6be5e79c5",
-    "experiments/polish_mlm_fresh_v3/test_contract.py": "7e583aab79dca770c4f70270fd51464f788dc0ba56db2b9444e2ebc236b9383a",
+    "experiments/polish_mlm_fresh_v3/test_contract.py": "e8dc0ba4c4338c04c1c10cee6ed93aaa0bbab53b2d7217d6fb45a012091c15ee",
     "experiments/polish_mlm_screen_v2/README.md": "8cac1f5485841106a0f4c74b2325f39b05031c060ab12537bcb0b8cf81274d9c",
     "experiments/polish_mlm_screen_v2/results/BartekK--distilHerBERT-base-cased.json": "093bdba61d7ac5218f06d4786d27a8ceb21af7754b5545706b10f472552acc1e",
     "experiments/polish_mlm_screen_v2/results/Geotrend--bert-base-pl-cased-safetensors-header.json": "87a652dfbf4e4b1d8cbbfad4130028755994b9911f5550734a38d276ecd7a481",
@@ -73,6 +75,8 @@
       "safetensors": false
     }
   },
+  "previousFrozenCodeCommit": "c1e9d3a7895f2a380bc75772985c88a53db32a4b",
+  "previousRunId": 37363474711,
   "protocol": "polish-mlm-fresh-v3",
   "requestsSha256": "a20cad29b09554a9718f1d520d68c4e695c9274aac0b708801463f498097f53d"
 }
