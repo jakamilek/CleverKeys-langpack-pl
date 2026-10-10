@@ -1,0 +1,5136 @@
+{
+  "protocol": "herbert-form-diagnostic-v1",
+  "codeCommit": "91a5986ee51d000107841bf5b1e0c32f5dc8bef3",
+  "modelSha256": "f851436ba9ca35d0c7313ff873cd869b744b295a8a16fc95b4571d5e11b299f2",
+  "frozenInputs": {
+    "protocol": "herbert-form-diagnostic-v1",
+    "createdBeforeInference": true,
+    "sourceRuntimeCommit": "3f48e456f0d8f411e80be3857f1846e4b2cd139e",
+    "modelProducerCommit": "d831e17b6cb99590d6ba036e92a72b6c3fd0cc7c",
+    "modelArtifactId": 11312693984,
+    "modelRunId": 37230171787,
+    "artifactZipApiSha256": "36c2183acca3ae6dca4afb54c28fe4d9d4cb37ec26f3230c94b4e007b494587f",
+    "files": {
+      "PROTOCOL.md": "1b1535e13834809d3c49020af6c04f369c7332eb0c35074f09ce2f4a16e27441",
+      "cases.json": "ffcae81d508d14720511a47e97eb2780da967c51afa967109f453551900a27f3",
+      "source-fixture.json": "9d3b13daee6be7373d583a12f26f6694cc610b3fcd3852a47fb4fdc9830f09b1",
+      "diagnose.py": "9f296f7d87d5c89bc382955c982534b437231ed1395107fb01e1266c69ac5562",
+      "requirements.txt": "6743a20e4ec46d3f09c8e8be121c34759f2ea1bf5738cf47c1838708be50ca60",
+      "test_diagnostic.py": "6b39cc3d1cea6d32ae343ac58cea326f8698874c7283bfc1bb5423141a80006c",
+      "../herbert_fp32_benchmark_v1/portable.py": "54e54372b56f1b314a73376d256f448c5e1d364099baa4865d6da1f41f2235f4",
+      "../../.github/workflows/herbert-form-diagnostic-v1.yml": "bd5986b7f72d523ebae3bf2dba1d6de4890c7c3fd61e22bce8d5ae6ef534e631"
+    }
+  },
+  "originalParity": {
+    "tokenVectors": 2471,
+    "batches": 232,
+    "candidates": 532,
+    "maxAbsScoreError": 4.482269287109375e-05
+  },
+  "newCases": 24,
+  "top1": 18,
+  "top3": 23,
+  "endingTop1": 20,
+  "capitalizationTop1": 22,
+  "maxSingleBatchScoreError": 0.0,
+  "predictions": [
+    {
+      "id": "form-01",
+      "group": "work",
+      "context": "Gdzie leży wieś ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "Praca",
+      "origin": "reported",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "Pracą",
+        "Praca",
+        "praca",
+        "pracą"
+      ],
+      "goldRank": 2,
+      "scores": {
+        "praca": -13.408706665039062,
+        "Praca": -12.620338439941406,
+        "pracą": -17.69024658203125,
+        "Pracą": -8.603775978088379
+      },
+      "sumScores": {
+        "praca": -13.408706665039062,
+        "Praca": -12.620338439941406,
+        "pracą": -17.69024658203125,
+        "Pracą": -17.207551956176758
+      },
+      "topGapMean": 4.016562461853027,
+      "goldGapMean": -4.016562461853027,
+      "sumOrderDiagnosticOnly": [
+        "Praca",
+        "praca",
+        "Pracą",
+        "pracą"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracą": [
+          12290
+        ],
+        "Pracą": [
+          2819,
+          2845
+        ]
+      },
+      "inputShape": [
+        4,
+        7,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            9915,
+            5794,
+            6907,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            9915,
+            5794,
+            6907,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            9915,
+            5794,
+            6907,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            9915,
+            5794,
+            6907,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "target_ids": [
+          [
+            5594,
+            0
+          ],
+          [
+            13567,
+            0
+          ],
+          [
+            12290,
+            0
+          ],
+          [
+            2819,
+            2845
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": false,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "baselineGoldRank": 2
+    },
+    {
+      "id": "form-02",
+      "group": "work",
+      "context": "Ta wieś nazywa się ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "Praca",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "Pracą",
+        "Praca",
+        "praca",
+        "pracą"
+      ],
+      "goldRank": 2,
+      "scores": {
+        "praca": -10.901759147644043,
+        "Praca": -10.851374626159668,
+        "pracą": -12.81067943572998,
+        "Pracą": -7.000030517578125
+      },
+      "sumScores": {
+        "praca": -10.901759147644043,
+        "Praca": -10.851374626159668,
+        "pracą": -12.81067943572998,
+        "Pracą": -14.00006103515625
+      },
+      "topGapMean": 3.851344108581543,
+      "goldGapMean": -3.851344108581543,
+      "sumOrderDiagnosticOnly": [
+        "Praca",
+        "praca",
+        "pracą",
+        "Pracą"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracą": [
+          12290
+        ],
+        "Pracą": [
+          2819,
+          2845
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            5539,
+            6907,
+            13026,
+            2022,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            5539,
+            6907,
+            13026,
+            2022,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            5539,
+            6907,
+            13026,
+            2022,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            5539,
+            6907,
+            13026,
+            2022,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            5594,
+            0
+          ],
+          [
+            13567,
+            0
+          ],
+          [
+            12290,
+            0
+          ],
+          [
+            2819,
+            2845
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": false,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "baselineGoldRank": 2
+    },
+    {
+      "id": "form-03",
+      "group": "work",
+      "context": "Na mapie widnieje wieś ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "Praca",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "Pracą",
+        "Praca",
+        "praca",
+        "pracą"
+      ],
+      "goldRank": 2,
+      "scores": {
+        "praca": -12.778881072998047,
+        "Praca": -12.13107681274414,
+        "pracą": -17.035045623779297,
+        "Pracą": -8.894564628601074
+      },
+      "sumScores": {
+        "praca": -12.778881072998047,
+        "Praca": -12.13107681274414,
+        "pracą": -17.035045623779297,
+        "Pracą": -17.78912925720215
+      },
+      "topGapMean": 3.2365121841430664,
+      "goldGapMean": -3.2365121841430664,
+      "sumOrderDiagnosticOnly": [
+        "Praca",
+        "praca",
+        "pracą",
+        "Pracą"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracą": [
+          12290
+        ],
+        "Pracą": [
+          2819,
+          2845
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2359,
+            26346,
+            30047,
+            6907,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            2359,
+            26346,
+            30047,
+            6907,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            2359,
+            26346,
+            30047,
+            6907,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            2359,
+            26346,
+            30047,
+            6907,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            5594,
+            0
+          ],
+          [
+            13567,
+            0
+          ],
+          [
+            12290,
+            0
+          ],
+          [
+            2819,
+            2845
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": false,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "baselineGoldRank": 2
+    },
+    {
+      "id": "form-04",
+      "group": "work",
+      "context": "Pytam o wieś o nazwie ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "Praca",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "Pracą",
+        "Praca",
+        "praca",
+        "pracą"
+      ],
+      "goldRank": 2,
+      "scores": {
+        "praca": -11.346563339233398,
+        "Praca": -9.039731979370117,
+        "pracą": -14.788351058959961,
+        "Pracą": -8.534234046936035
+      },
+      "sumScores": {
+        "praca": -11.346563339233398,
+        "Praca": -9.039731979370117,
+        "pracą": -14.788351058959961,
+        "Pracą": -17.06846809387207
+      },
+      "topGapMean": 0.505497932434082,
+      "goldGapMean": -0.505497932434082,
+      "sumOrderDiagnosticOnly": [
+        "Praca",
+        "praca",
+        "pracą",
+        "Pracą"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracą": [
+          12290
+        ],
+        "Pracą": [
+          2819,
+          2845
+        ]
+      },
+      "inputShape": [
+        4,
+        9,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            30366,
+            1007,
+            6907,
+            1007,
+            12589,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            30366,
+            1007,
+            6907,
+            1007,
+            12589,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            30366,
+            1007,
+            6907,
+            1007,
+            12589,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            30366,
+            1007,
+            6907,
+            1007,
+            12589,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            6,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            6,
+            7
+          ]
+        ],
+        "target_ids": [
+          [
+            5594,
+            0
+          ],
+          [
+            13567,
+            0
+          ],
+          [
+            12290,
+            0
+          ],
+          [
+            2819,
+            2845
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": false,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "baselineGoldRank": 2
+    },
+    {
+      "id": "form-05",
+      "group": "work",
+      "context": "To jest bardzo ważna ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "praca",
+      "origin": "previous-context",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "praca",
+        "Praca",
+        "Pracą",
+        "pracą"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "praca": -5.950545787811279,
+        "Praca": -11.5133056640625,
+        "pracą": -14.237998962402344,
+        "Pracą": -12.679006576538086
+      },
+      "sumScores": {
+        "praca": -5.950545787811279,
+        "Praca": -11.5133056640625,
+        "pracą": -14.237998962402344,
+        "Pracą": -25.358013153076172
+      },
+      "topGapMean": 5.562759876251221,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracą": [
+          12290
+        ],
+        "Pracą": [
+          2819,
+          2845
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2498,
+            2092,
+            2450,
+            10831,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            2498,
+            2092,
+            2450,
+            10831,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            2498,
+            2092,
+            2450,
+            10831,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            2498,
+            2092,
+            2450,
+            10831,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            5594,
+            0
+          ],
+          [
+            13567,
+            0
+          ],
+          [
+            12290,
+            0
+          ],
+          [
+            2819,
+            2845
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "baselineGoldRank": 1
+    },
+    {
+      "id": "form-06",
+      "group": "work",
+      "context": "Czeka na mnie trudna ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "praca",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "praca",
+        "Praca",
+        "Pracą",
+        "pracą"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "praca": -2.910970687866211,
+        "Praca": -8.502950668334961,
+        "pracą": -12.776983261108398,
+        "Pracą": -12.543905258178711
+      },
+      "sumScores": {
+        "praca": -2.910970687866211,
+        "Praca": -8.502950668334961,
+        "pracą": -12.776983261108398,
+        "Pracą": -25.087810516357422
+      },
+      "topGapMean": 5.59197998046875,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracą": [
+          12290
+        ],
+        "Pracą": [
+          2819,
+          2845
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            30012,
+            1998,
+            2767,
+            15232,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            30012,
+            1998,
+            2767,
+            15232,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            30012,
+            1998,
+            2767,
+            15232,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            30012,
+            1998,
+            2767,
+            15232,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            5594,
+            0
+          ],
+          [
+            13567,
+            0
+          ],
+          [
+            12290,
+            0
+          ],
+          [
+            2819,
+            2845
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "baselineGoldRank": 1
+    },
+    {
+      "id": "form-07",
+      "group": "work",
+      "context": "Jestem zmęczony tą ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "pracą",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "pracą",
+        "Pracą",
+        "praca",
+        "Praca"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "praca": -7.248680114746094,
+        "Praca": -11.694099426269531,
+        "pracą": -2.5735092163085938,
+        "Pracą": -6.257534980773926
+      },
+      "sumScores": {
+        "praca": -7.248680114746094,
+        "Praca": -11.694099426269531,
+        "pracą": -2.5735092163085938,
+        "Pracą": -12.515069961547852
+      },
+      "topGapMean": 3.684025764465332,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "pracą",
+        "praca",
+        "Praca",
+        "Pracą"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracą": [
+          12290
+        ],
+        "Pracą": [
+          2819,
+          2845
+        ]
+      },
+      "inputShape": [
+        4,
+        7,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            5969,
+            32994,
+            2862,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            5969,
+            32994,
+            2862,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            5969,
+            32994,
+            2862,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            5969,
+            32994,
+            2862,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "target_ids": [
+          [
+            5594,
+            0
+          ],
+          [
+            13567,
+            0
+          ],
+          [
+            12290,
+            0
+          ],
+          [
+            2819,
+            2845
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "baselineGoldRank": 3
+    },
+    {
+      "id": "form-08",
+      "group": "work",
+      "context": "Zachwycam się jego ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "pracą",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "pracą",
+        "Pracą",
+        "praca",
+        "Praca"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "praca": -11.097562789916992,
+        "Praca": -14.618947982788086,
+        "pracą": -4.732473373413086,
+        "Pracą": -9.077824592590332
+      },
+      "sumScores": {
+        "praca": -11.097562789916992,
+        "Praca": -14.618947982788086,
+        "pracą": -4.732473373413086,
+        "Pracą": -18.155649185180664
+      },
+      "topGapMean": 4.345351219177246,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "pracą",
+        "praca",
+        "Praca",
+        "Pracą"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracą": [
+          12290
+        ],
+        "Pracą": [
+          2819,
+          2845
+        ]
+      },
+      "inputShape": [
+        4,
+        9,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2237,
+            10287,
+            15297,
+            2022,
+            2376,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            2237,
+            10287,
+            15297,
+            2022,
+            2376,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            2237,
+            10287,
+            15297,
+            2022,
+            2376,
+            4,
+            2,
+            1
+          ],
+          [
+            0,
+            2237,
+            10287,
+            15297,
+            2022,
+            2376,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            6,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            6,
+            7
+          ]
+        ],
+        "target_ids": [
+          [
+            5594,
+            0
+          ],
+          [
+            13567,
+            0
+          ],
+          [
+            12290,
+            0
+          ],
+          [
+            2819,
+            2845
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            0.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "baselineGoldRank": 3
+    },
+    {
+      "id": "form-09",
+      "group": "work-genitive",
+      "context": "Szukam nowej ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "gold": "pracy",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "pracy",
+        "praca",
+        "Pracy",
+        "Praca"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "praca": -9.08102798461914,
+        "Praca": -11.95223617553711,
+        "pracy": -0.7996180057525635,
+        "Pracy": -10.783679962158203
+      },
+      "sumScores": {
+        "praca": -9.08102798461914,
+        "Praca": -11.95223617553711,
+        "pracy": -0.7996180057525635,
+        "Pracy": -10.783679962158203
+      },
+      "topGapMean": 8.281409978866577,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "pracy",
+        "praca",
+        "Pracy",
+        "Praca"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracy": [
+          2631
+        ],
+        "Pracy": [
+          6459
+        ]
+      },
+      "inputShape": [
+        4,
+        5,
+        1
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            31755,
+            4917,
+            4,
+            2
+          ],
+          [
+            0,
+            31755,
+            4917,
+            4,
+            2
+          ],
+          [
+            0,
+            31755,
+            4917,
+            4,
+            2
+          ],
+          [
+            0,
+            31755,
+            4917,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ],
+          [
+            3
+          ]
+        ],
+        "target_ids": [
+          [
+            5594
+          ],
+          [
+            13567
+          ],
+          [
+            2631
+          ],
+          [
+            6459
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0
+          ],
+          [
+            1.0
+          ],
+          [
+            1.0
+          ],
+          [
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "baselineGoldRank": 3
+    },
+    {
+      "id": "form-10",
+      "group": "work-genitive",
+      "context": "Nie ma dziś żadnej ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "gold": "pracy",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "pracy",
+        "Pracy",
+        "praca",
+        "Praca"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "praca": -13.21681022644043,
+        "Praca": -15.477872848510742,
+        "pracy": -3.4559004306793213,
+        "Pracy": -9.907445907592773
+      },
+      "sumScores": {
+        "praca": -13.21681022644043,
+        "Praca": -15.477872848510742,
+        "pracy": -3.4559004306793213,
+        "Pracy": -9.907445907592773
+      },
+      "topGapMean": 6.451545476913452,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "pracy",
+        "Pracy",
+        "praca",
+        "Praca"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracy": [
+          2631
+        ],
+        "Pracy": [
+          6459
+        ]
+      },
+      "inputShape": [
+        4,
+        7,
+        1
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2351,
+            2185,
+            3598,
+            7515,
+            4,
+            2
+          ],
+          [
+            0,
+            2351,
+            2185,
+            3598,
+            7515,
+            4,
+            2
+          ],
+          [
+            0,
+            2351,
+            2185,
+            3598,
+            7515,
+            4,
+            2
+          ],
+          [
+            0,
+            2351,
+            2185,
+            3598,
+            7515,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5
+          ],
+          [
+            5
+          ],
+          [
+            5
+          ],
+          [
+            5
+          ]
+        ],
+        "target_ids": [
+          [
+            5594
+          ],
+          [
+            13567
+          ],
+          [
+            2631
+          ],
+          [
+            6459
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0
+          ],
+          [
+            1.0
+          ],
+          [
+            1.0
+          ],
+          [
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "baselineGoldRank": 3
+    },
+    {
+      "id": "form-11",
+      "group": "work-genitive",
+      "context": "Spotkamy się obok wsi ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "gold": "Pracy",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "pracy",
+        "Praca",
+        "praca",
+        "Pracy"
+      ],
+      "goldRank": 4,
+      "scores": {
+        "praca": -15.851083755493164,
+        "Praca": -15.180139541625977,
+        "pracy": -14.201990127563477,
+        "Pracy": -15.994081497192383
+      },
+      "sumScores": {
+        "praca": -15.851083755493164,
+        "Praca": -15.180139541625977,
+        "pracy": -14.201990127563477,
+        "Pracy": -15.994081497192383
+      },
+      "topGapMean": 0.9781494140625,
+      "goldGapMean": -1.7920913696289062,
+      "sumOrderDiagnosticOnly": [
+        "pracy",
+        "Praca",
+        "praca",
+        "Pracy"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracy": [
+          2631
+        ],
+        "Pracy": [
+          6459
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        1
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            7121,
+            2084,
+            2022,
+            5136,
+            4805,
+            4,
+            2
+          ],
+          [
+            0,
+            7121,
+            2084,
+            2022,
+            5136,
+            4805,
+            4,
+            2
+          ],
+          [
+            0,
+            7121,
+            2084,
+            2022,
+            5136,
+            4805,
+            4,
+            2
+          ],
+          [
+            0,
+            7121,
+            2084,
+            2022,
+            5136,
+            4805,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            6
+          ],
+          [
+            6
+          ],
+          [
+            6
+          ],
+          [
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            5594
+          ],
+          [
+            13567
+          ],
+          [
+            2631
+          ],
+          [
+            6459
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0
+          ],
+          [
+            1.0
+          ],
+          [
+            1.0
+          ],
+          [
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": false,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "baselineGoldRank": 4
+    },
+    {
+      "id": "form-12",
+      "group": "work-genitive",
+      "context": "Podróż zaczniemy od wsi ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "gold": "Pracy",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "pracy",
+        "Pracy",
+        "Praca",
+        "praca"
+      ],
+      "goldRank": 2,
+      "scores": {
+        "praca": -17.47994041442871,
+        "Praca": -17.274526596069336,
+        "pracy": -12.875272750854492,
+        "Pracy": -16.979040145874023
+      },
+      "sumScores": {
+        "praca": -17.47994041442871,
+        "Praca": -17.274526596069336,
+        "pracy": -12.875272750854492,
+        "Pracy": -16.979040145874023
+      },
+      "topGapMean": 4.103767395019531,
+      "goldGapMean": -4.103767395019531,
+      "sumOrderDiagnosticOnly": [
+        "pracy",
+        "Pracy",
+        "Praca",
+        "praca"
+      ],
+      "targetTokenIds": {
+        "praca": [
+          5594
+        ],
+        "Praca": [
+          13567
+        ],
+        "pracy": [
+          2631
+        ],
+        "Pracy": [
+          6459
+        ]
+      },
+      "inputShape": [
+        4,
+        7,
+        1
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            37780,
+            37668,
+            2173,
+            4805,
+            4,
+            2
+          ],
+          [
+            0,
+            37780,
+            37668,
+            2173,
+            4805,
+            4,
+            2
+          ],
+          [
+            0,
+            37780,
+            37668,
+            2173,
+            4805,
+            4,
+            2
+          ],
+          [
+            0,
+            37780,
+            37668,
+            2173,
+            4805,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5
+          ],
+          [
+            5
+          ],
+          [
+            5
+          ],
+          [
+            5
+          ]
+        ],
+        "target_ids": [
+          [
+            5594
+          ],
+          [
+            13567
+          ],
+          [
+            2631
+          ],
+          [
+            6459
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0
+          ],
+          [
+            1.0
+          ],
+          [
+            1.0
+          ],
+          [
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": false,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "baselineGoldRank": 4
+    },
+    {
+      "id": "form-13",
+      "group": "raspberry",
+      "context": "Odwiedzi nas pani ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "Malina",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "Malina",
+        "malina",
+        "Maliną",
+        "maliną"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "malina": -6.114358901977539,
+        "Malina": -5.13178825378418,
+        "maliną": -9.250871658325195,
+        "Maliną": -8.285249710083008
+      },
+      "sumScores": {
+        "malina": -12.228717803955078,
+        "Malina": -10.26357650756836,
+        "maliną": -18.50174331665039,
+        "Maliną": -16.570499420166016
+      },
+      "topGapMean": 0.9825706481933594,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "Malina",
+        "malina",
+        "Maliną",
+        "maliną"
+      ],
+      "targetTokenIds": {
+        "malina": [
+          2042,
+          5061
+        ],
+        "Malina": [
+          2306,
+          5061
+        ],
+        "maliną": [
+          2042,
+          28180
+        ],
+        "Maliną": [
+          11584,
+          2190
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            25379,
+            2253,
+            2755,
+            3617,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            25379,
+            2253,
+            2755,
+            3617,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            25379,
+            2253,
+            2755,
+            3617,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            25379,
+            2253,
+            2755,
+            3617,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            2042,
+            5061
+          ],
+          [
+            2306,
+            5061
+          ],
+          [
+            2042,
+            28180
+          ],
+          [
+            11584,
+            2190
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "baselineGoldRank": 2
+    },
+    {
+      "id": "form-14",
+      "group": "raspberry",
+      "context": "Rozmawiam z panią ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "Maliną",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "Maliną",
+        "maliną",
+        "Malina",
+        "malina"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "malina": -8.404191970825195,
+        "Malina": -7.156251907348633,
+        "maliną": -7.093808650970459,
+        "Maliną": -4.872079372406006
+      },
+      "sumScores": {
+        "malina": -16.80838394165039,
+        "Malina": -14.312503814697266,
+        "maliną": -14.187617301940918,
+        "Maliną": -9.744158744812012
+      },
+      "topGapMean": 2.221729278564453,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "Maliną",
+        "maliną",
+        "Malina",
+        "malina"
+      ],
+      "targetTokenIds": {
+        "malina": [
+          2042,
+          5061
+        ],
+        "Malina": [
+          2306,
+          5061
+        ],
+        "maliną": [
+          2042,
+          28180
+        ],
+        "Maliną": [
+          11584,
+          2190
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            10414,
+            2530,
+            1046,
+            9667,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            10414,
+            2530,
+            1046,
+            9667,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            10414,
+            2530,
+            1046,
+            9667,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            10414,
+            2530,
+            1046,
+            9667,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            2042,
+            5061
+          ],
+          [
+            2306,
+            5061
+          ],
+          [
+            2042,
+            28180
+          ],
+          [
+            11584,
+            2190
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "baselineGoldRank": 4
+    },
+    {
+      "id": "form-15",
+      "group": "raspberry",
+      "context": "Spotkam się z panią ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "Maliną",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "Maliną",
+        "maliną",
+        "Malina",
+        "malina"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "malina": -8.062610626220703,
+        "Malina": -6.814407825469971,
+        "maliną": -6.548454761505127,
+        "Maliną": -5.222462177276611
+      },
+      "sumScores": {
+        "malina": -16.125221252441406,
+        "Malina": -13.628815650939941,
+        "maliną": -13.096909523010254,
+        "Maliną": -10.444924354553223
+      },
+      "topGapMean": 1.3259925842285156,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "Maliną",
+        "maliną",
+        "Malina",
+        "malina"
+      ],
+      "targetTokenIds": {
+        "malina": [
+          2042,
+          5061
+        ],
+        "Malina": [
+          2306,
+          5061
+        ],
+        "maliną": [
+          2042,
+          28180
+        ],
+        "Maliną": [
+          11584,
+          2190
+        ]
+      },
+      "inputShape": [
+        4,
+        9,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            7121,
+            1027,
+            2022,
+            1046,
+            9667,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            7121,
+            1027,
+            2022,
+            1046,
+            9667,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            7121,
+            1027,
+            2022,
+            1046,
+            9667,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            7121,
+            1027,
+            2022,
+            1046,
+            9667,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            6,
+            7
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            6,
+            7
+          ]
+        ],
+        "target_ids": [
+          [
+            2042,
+            5061
+          ],
+          [
+            2306,
+            5061
+          ],
+          [
+            2042,
+            28180
+          ],
+          [
+            11584,
+            2190
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "baselineGoldRank": 4
+    },
+    {
+      "id": "form-16",
+      "group": "raspberry",
+      "context": "To jest dojrzała ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "malina",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "malina": -6.3195600509643555,
+        "Malina": -8.501677513122559,
+        "maliną": -10.026568412780762,
+        "Maliną": -13.297533988952637
+      },
+      "sumScores": {
+        "malina": -12.639120101928711,
+        "Malina": -17.003355026245117,
+        "maliną": -20.053136825561523,
+        "Maliną": -26.595067977905273
+      },
+      "topGapMean": 2.182117462158203,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "targetTokenIds": {
+        "malina": [
+          2042,
+          5061
+        ],
+        "Malina": [
+          2306,
+          5061
+        ],
+        "maliną": [
+          2042,
+          28180
+        ],
+        "Maliną": [
+          11584,
+          2190
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2498,
+            2092,
+            12161,
+            2158,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2498,
+            2092,
+            12161,
+            2158,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2498,
+            2092,
+            12161,
+            2158,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2498,
+            2092,
+            12161,
+            2158,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            2042,
+            5061
+          ],
+          [
+            2306,
+            5061
+          ],
+          [
+            2042,
+            28180
+          ],
+          [
+            11584,
+            2190
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "baselineGoldRank": 1
+    },
+    {
+      "id": "form-17",
+      "group": "raspberry",
+      "context": "Napój pachnie świeżą ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "maliną",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "maliną",
+        "malina",
+        "Maliną",
+        "Malina"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "malina": -6.902657508850098,
+        "Malina": -9.950525283813477,
+        "maliną": -4.248223781585693,
+        "Maliną": -7.822290420532227
+      },
+      "sumScores": {
+        "malina": -13.805315017700195,
+        "Malina": -19.901050567626953,
+        "maliną": -8.496447563171387,
+        "Maliną": -15.644580841064453
+      },
+      "topGapMean": 2.6544337272644043,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "maliną",
+        "malina",
+        "Maliną",
+        "Malina"
+      ],
+      "targetTokenIds": {
+        "malina": [
+          2042,
+          5061
+        ],
+        "Malina": [
+          2306,
+          5061
+        ],
+        "maliną": [
+          2042,
+          28180
+        ],
+        "Maliną": [
+          11584,
+          2190
+        ]
+      },
+      "inputShape": [
+        4,
+        10,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2381,
+            47783,
+            20162,
+            1997,
+            3003,
+            5216,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2381,
+            47783,
+            20162,
+            1997,
+            3003,
+            5216,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2381,
+            47783,
+            20162,
+            1997,
+            3003,
+            5216,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2381,
+            47783,
+            20162,
+            1997,
+            3003,
+            5216,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            7,
+            8
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            7,
+            8
+          ]
+        ],
+        "target_ids": [
+          [
+            2042,
+            5061
+          ],
+          [
+            2306,
+            5061
+          ],
+          [
+            2042,
+            28180
+          ],
+          [
+            11584,
+            2190
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "baselineGoldRank": 3
+    },
+    {
+      "id": "form-18",
+      "group": "raspberry",
+      "context": "Na krzaku rośnie czerwona ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "malina",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "malina": -3.866387367248535,
+        "Malina": -7.202652931213379,
+        "maliną": -7.36055850982666,
+        "Maliną": -12.428521156311035
+      },
+      "sumScores": {
+        "malina": -7.73277473449707,
+        "Malina": -14.405305862426758,
+        "maliną": -14.72111701965332,
+        "Maliną": -24.85704231262207
+      },
+      "topGapMean": 3.3362655639648438,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "targetTokenIds": {
+        "malina": [
+          2042,
+          5061
+        ],
+        "Malina": [
+          2306,
+          5061
+        ],
+        "maliną": [
+          2042,
+          28180
+        ],
+        "Maliną": [
+          11584,
+          2190
+        ]
+      },
+      "inputShape": [
+        4,
+        9,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2359,
+            24586,
+            2068,
+            11568,
+            24999,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2359,
+            24586,
+            2068,
+            11568,
+            24999,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2359,
+            24586,
+            2068,
+            11568,
+            24999,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2359,
+            24586,
+            2068,
+            11568,
+            24999,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            6,
+            7
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            6,
+            7
+          ]
+        ],
+        "target_ids": [
+          [
+            2042,
+            5061
+          ],
+          [
+            2306,
+            5061
+          ],
+          [
+            2042,
+            28180
+          ],
+          [
+            11584,
+            2190
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "baselineGoldRank": 1
+    },
+    {
+      "id": "form-19",
+      "group": "stick",
+      "context": "Ta wieś nazywa się ",
+      "surfaces": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "gold": "Laska",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "Laska",
+        "laska",
+        "Laską",
+        "laską"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "laska": -6.349697113037109,
+        "Laska": -5.247669219970703,
+        "laską": -7.926475524902344,
+        "Laską": -6.8244476318359375
+      },
+      "sumScores": {
+        "laska": -12.699394226074219,
+        "Laska": -10.495338439941406,
+        "laską": -15.852951049804688,
+        "Laską": -13.648895263671875
+      },
+      "topGapMean": 1.1020278930664062,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "Laska",
+        "laska",
+        "Laską",
+        "laską"
+      ],
+      "targetTokenIds": {
+        "laska": [
+          2050,
+          2209
+        ],
+        "Laska": [
+          4071,
+          2209
+        ],
+        "laską": [
+          2050,
+          2969
+        ],
+        "Laską": [
+          4071,
+          2969
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            5539,
+            6907,
+            13026,
+            2022,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            5539,
+            6907,
+            13026,
+            2022,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            5539,
+            6907,
+            13026,
+            2022,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            5539,
+            6907,
+            13026,
+            2022,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            2050,
+            2209
+          ],
+          [
+            4071,
+            2209
+          ],
+          [
+            2050,
+            2969
+          ],
+          [
+            4071,
+            2969
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "baselineGoldRank": 2
+    },
+    {
+      "id": "form-20",
+      "group": "stick",
+      "context": "Podpieram się drewnianą ",
+      "surfaces": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "gold": "laską",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "laską",
+        "laska",
+        "Laską",
+        "Laska"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "laska": -7.550264358520508,
+        "Laska": -10.590097427368164,
+        "laską": -5.109365463256836,
+        "Laską": -8.149198532104492
+      },
+      "sumScores": {
+        "laska": -15.100528717041016,
+        "Laska": -21.180194854736328,
+        "laską": -10.218730926513672,
+        "Laską": -16.298397064208984
+      },
+      "topGapMean": 2.440898895263672,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "laską",
+        "laska",
+        "Laską",
+        "Laska"
+      ],
+      "targetTokenIds": {
+        "laska": [
+          2050,
+          2209
+        ],
+        "Laska": [
+          4071,
+          2209
+        ],
+        "laską": [
+          2050,
+          2969
+        ],
+        "Laską": [
+          4071,
+          2969
+        ]
+      },
+      "inputShape": [
+        4,
+        9,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2579,
+            5010,
+            1027,
+            2022,
+            42116,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2579,
+            5010,
+            1027,
+            2022,
+            42116,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2579,
+            5010,
+            1027,
+            2022,
+            42116,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2579,
+            5010,
+            1027,
+            2022,
+            42116,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            6,
+            7
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            6,
+            7
+          ]
+        ],
+        "target_ids": [
+          [
+            2050,
+            2209
+          ],
+          [
+            4071,
+            2209
+          ],
+          [
+            2050,
+            2969
+          ],
+          [
+            4071,
+            2969
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "baselineGoldRank": 3
+    },
+    {
+      "id": "form-21",
+      "group": "stick",
+      "context": "Na stole leży drewniana ",
+      "surfaces": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "gold": "laska",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "laska": -3.934980869293213,
+        "Laska": -7.300943851470947,
+        "laską": -8.848310470581055,
+        "Laską": -12.214273452758789
+      },
+      "sumScores": {
+        "laska": -7.869961738586426,
+        "Laska": -14.601887702941895,
+        "laską": -17.69662094116211,
+        "Laską": -24.428546905517578
+      },
+      "topGapMean": 3.3659629821777344,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "targetTokenIds": {
+        "laska": [
+          2050,
+          2209
+        ],
+        "Laska": [
+          4071,
+          2209
+        ],
+        "laską": [
+          2050,
+          2969
+        ],
+        "Laską": [
+          4071,
+          2969
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2359,
+            13642,
+            5794,
+            41766,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2359,
+            13642,
+            5794,
+            41766,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2359,
+            13642,
+            5794,
+            41766,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2359,
+            13642,
+            5794,
+            41766,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            2050,
+            2209
+          ],
+          [
+            4071,
+            2209
+          ],
+          [
+            2050,
+            2969
+          ],
+          [
+            4071,
+            2969
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "baselineGoldRank": 1
+    },
+    {
+      "id": "form-22",
+      "group": "stick",
+      "context": "Rozmawiam z panem ",
+      "surfaces": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "gold": "Laską",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "Laską",
+        "laską",
+        "Laska",
+        "laska"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "laska": -9.778148651123047,
+        "Laska": -8.478984832763672,
+        "laską": -8.32980728149414,
+        "Laską": -7.030643463134766
+      },
+      "sumScores": {
+        "laska": -19.556297302246094,
+        "Laska": -16.957969665527344,
+        "laską": -16.65961456298828,
+        "Laską": -14.061286926269531
+      },
+      "topGapMean": 1.299163818359375,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "Laską",
+        "laską",
+        "Laska",
+        "laska"
+      ],
+      "targetTokenIds": {
+        "laska": [
+          2050,
+          2209
+        ],
+        "Laska": [
+          4071,
+          2209
+        ],
+        "laską": [
+          2050,
+          2969
+        ],
+        "Laską": [
+          4071,
+          2969
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            10414,
+            2530,
+            1046,
+            13422,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            10414,
+            2530,
+            1046,
+            13422,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            10414,
+            2530,
+            1046,
+            13422,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            10414,
+            2530,
+            1046,
+            13422,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            2050,
+            2209
+          ],
+          [
+            4071,
+            2209
+          ],
+          [
+            2050,
+            2969
+          ],
+          [
+            4071,
+            2969
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "baselineGoldRank": 4
+    },
+    {
+      "id": "form-23",
+      "group": "grace",
+      "context": "To jest wielka ",
+      "surfaces": [
+        "łaska",
+        "Łaska",
+        "łaską",
+        "Łaską"
+      ],
+      "gold": "łaska",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "łaska",
+        "Łaska",
+        "łaską",
+        "Łaską"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "łaska": -4.939108848571777,
+        "Łaska": -7.088648796081543,
+        "łaską": -9.401419639587402,
+        "Łaską": -11.550959587097168
+      },
+      "sumScores": {
+        "łaska": -9.878217697143555,
+        "Łaska": -14.177297592163086,
+        "łaską": -18.802839279174805,
+        "Łaską": -23.101919174194336
+      },
+      "topGapMean": 2.1495399475097656,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "łaska",
+        "Łaska",
+        "łaską",
+        "Łaską"
+      ],
+      "targetTokenIds": {
+        "łaska": [
+          2051,
+          2209
+        ],
+        "Łaska": [
+          4976,
+          2209
+        ],
+        "łaską": [
+          2051,
+          2969
+        ],
+        "Łaską": [
+          4976,
+          2969
+        ]
+      },
+      "inputShape": [
+        4,
+        7,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            2498,
+            2092,
+            10763,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2498,
+            2092,
+            10763,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2498,
+            2092,
+            10763,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            2498,
+            2092,
+            10763,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            5
+          ]
+        ],
+        "target_ids": [
+          [
+            2051,
+            2209
+          ],
+          [
+            4976,
+            2209
+          ],
+          [
+            2051,
+            2969
+          ],
+          [
+            4976,
+            2969
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "łaska",
+        "Łaska",
+        "łaską",
+        "Łaską"
+      ],
+      "baselineGoldRank": 1
+    },
+    {
+      "id": "form-24",
+      "group": "grace",
+      "context": "Takie przebaczenie jest ",
+      "surfaces": [
+        "łaska",
+        "Łaska",
+        "łaską",
+        "Łaską"
+      ],
+      "gold": "łaską",
+      "origin": "new",
+      "route": "DIRECT_HOST_ONNX_NO_IME_FALLBACK",
+      "modelOrder": [
+        "łaską",
+        "łaska",
+        "Łaską",
+        "Łaska"
+      ],
+      "goldRank": 1,
+      "scores": {
+        "łaska": -8.89691162109375,
+        "Łaska": -11.789783477783203,
+        "łaską": -7.473987579345703,
+        "Łaską": -10.366859436035156
+      },
+      "sumScores": {
+        "łaska": -17.7938232421875,
+        "Łaska": -23.579566955566406,
+        "łaską": -14.947975158691406,
+        "Łaską": -20.733718872070312
+      },
+      "topGapMean": 1.4229240417480469,
+      "goldGapMean": 0.0,
+      "sumOrderDiagnosticOnly": [
+        "łaską",
+        "łaska",
+        "Łaską",
+        "Łaska"
+      ],
+      "targetTokenIds": {
+        "łaska": [
+          2051,
+          2209
+        ],
+        "Łaska": [
+          4976,
+          2209
+        ],
+        "łaską": [
+          2051,
+          2969
+        ],
+        "Łaską": [
+          4976,
+          2969
+        ]
+      },
+      "inputShape": [
+        4,
+        8,
+        2
+      ],
+      "inputs": {
+        "input_ids": [
+          [
+            0,
+            7048,
+            32356,
+            2824,
+            2092,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            7048,
+            32356,
+            2824,
+            2092,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            7048,
+            32356,
+            2824,
+            2092,
+            4,
+            4,
+            2
+          ],
+          [
+            0,
+            7048,
+            32356,
+            2824,
+            2092,
+            4,
+            4,
+            2
+          ]
+        ],
+        "attention_mask": [
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "target_positions": [
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            5,
+            6
+          ]
+        ],
+        "target_ids": [
+          [
+            2051,
+            2209
+          ],
+          [
+            4976,
+            2209
+          ],
+          [
+            2051,
+            2969
+          ],
+          [
+            4976,
+            2969
+          ]
+        ],
+        "target_mask": [
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0
+          ]
+        ]
+      },
+      "top1EndingCorrect": true,
+      "top1CapitalizationCorrect": true,
+      "baselineKind": "SYNTHETIC_SOURCE_ORDER_NOT_PHONE_GEOMETRY",
+      "baselineOrder": [
+        "łaska",
+        "Łaska",
+        "łaską",
+        "Łaską"
+      ],
+      "baselineGoldRank": 3
+    }
+  ],
+  "strata": {
+    "work/reported": {
+      "cases": 1,
+      "top1": 0,
+      "rawTop3": 1,
+      "endingTop1": 0,
+      "capitalizationTop1": 1
+    },
+    "work/new": {
+      "cases": 6,
+      "top1": 3,
+      "rawTop3": 6,
+      "endingTop1": 3,
+      "capitalizationTop1": 6
+    },
+    "work/previous-context": {
+      "cases": 1,
+      "top1": 1,
+      "rawTop3": 1,
+      "endingTop1": 1,
+      "capitalizationTop1": 1
+    },
+    "work-genitive/new": {
+      "cases": 4,
+      "top1": 2,
+      "rawTop3": 3,
+      "endingTop1": 4,
+      "capitalizationTop1": 2
+    },
+    "raspberry/new": {
+      "cases": 6,
+      "top1": 6,
+      "rawTop3": 6,
+      "endingTop1": 6,
+      "capitalizationTop1": 6
+    },
+    "stick/new": {
+      "cases": 4,
+      "top1": 4,
+      "rawTop3": 4,
+      "endingTop1": 4,
+      "capitalizationTop1": 4
+    },
+    "grace/new": {
+      "cases": 2,
+      "top1": 2,
+      "rawTop3": 2,
+      "endingTop1": 2,
+      "capitalizationTop1": 2
+    }
+  },
+  "limitations": [
+    "Authored diagnostic labels, not blinded external gold",
+    "No phone swipe geometry or captured editor state",
+    "Host direct inference cannot establish whether reported phone swipe used SI or fallback",
+    "Mean score is live contract; sum is diagnostic only; no changes to live ranks",
+    "No phone timing, confidence threshold or production acceptance claim"
+  ]
+}

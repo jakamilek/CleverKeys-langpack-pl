@@ -1,0 +1,66 @@
+name: HerBERT form diagnostic v1
+on:
+  push:
+    branches: ['experiment/herbert-form-diagnostic-v1']
+    paths:
+      - 'experiments/herbert_form_diagnostic_v1/**'
+      - '.github/workflows/herbert-form-diagnostic-v1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Preserve original contracts and verify frozen diagnostic
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -s experiments/herbert_mobile_v1 -p 'test_*.py' -v
+          python3 -m unittest discover -s experiments/herbert_fp32_benchmark_v1 -p 'test_*.py' -v
+          python3 -m unittest discover -s experiments/herbert_form_diagnostic_v1 -p 'test_*.py' -v
+          python3 experiments/herbert_form_diagnostic_v1/diagnose.py --contract-only
+  measure:
+    needs: contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TOKENIZERS_PARALLELISM: 'false'
+      OMP_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Retrieve exact original FP32 phone bundle
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: '11312693984'
+          run-id: 37230171787
+          github-token: ${{ github.token }}
+          merge-multiple: true
+          path: build/herbert-original
+      - name: Install pinned inference runtime
+        run: |
+          set -euo pipefail
+          python3 -m pip install -r experiments/herbert_form_diagnostic_v1/requirements.txt
+          python3 -m pip freeze > build/herbert-form-environment.txt
+      - name: Real FP32 conformance and independent form probes
+        run: |
+          set -euo pipefail
+          python3 experiments/herbert_form_diagnostic_v1/diagnose.py --bundle build/herbert-original --out build/herbert-form-diagnostic-v1
+          cat build/herbert-form-diagnostic-v1/SUMMARY.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve reports only
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: herbert-form-diagnostic-v1-reports
+          path: |
+            build/herbert-form-diagnostic-v1/
+            build/herbert-form-environment.txt
+          retention-days: 30

@@ -1,0 +1,18 @@
+{
+  "protocol": "herbert-context-gain-v3",
+  "createdBeforeInference": true,
+  "parentCommit": "e57f1585dd10124237299f1cee0e23cba0ed2046",
+  "previousRun": 38045114375,
+  "formula": "sum(context, same surface) - sum(empty context, same surface)",
+  "files": {
+    "PROTOCOL.md": "8c53c53ea7503238d3190c0de38529d6f61e39894ff7f1ff56e850bb5ca05da1",
+    "policy.py": "4dde926a95aebd8e6860a66e0f5b455188dbdd3fff1c21a72a0541282903cf74",
+    "measure.py": "e34f82e78878f898d5bd89c9a962e90bcf21379eda61044b6e5f134bc557ec4a",
+    "test_gain.py": "db472129cea1ee7744758192fdfe6630f98d75aba6cbe0ad85aa0fb327eb9b50",
+    "new-cases.json": "8e5dd58d8e11ed39b05a12ee8024b0b0d3910646e603cc5bc53cbf42dce7e941",
+    "../../.github/workflows/herbert-context-gain-v3.yml": "45de0fdaf4e96a42a98f8a627e92473bb2ccbea98a04d353779bf74eb10138ea",
+    "../herbert_form_diagnostic_v2/freeze-manifest.json": "1b908c2e1871eb426185385b150f177f44342b9f3535ebe302c7501b131f91c7",
+    "../herbert_form_diagnostic_results/2026-10-10-v2/scores.json": "daeba444338ea0e6ffd012f1a28e29a016d6fdd639b5cb6347c769f5f5034443",
+    "../ai_compare_v5/source-snapshot.json": "05270f8ae2c6d88bb8209cb00c83ff3d66ba788544f524ed27fbb5e0b4666794"
+  }
+}

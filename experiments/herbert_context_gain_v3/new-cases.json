@@ -1,0 +1,246 @@
+{
+  "schemaVersion": 1,
+  "contextWords": 32,
+  "cases": [
+    {
+      "id": "gain-case-01",
+      "candidateKey": "jagoda",
+      "context": "Ten mały owoc to dojrzała ",
+      "gold": "jagoda",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ]
+    },
+    {
+      "id": "gain-case-02",
+      "candidateKey": "jagoda",
+      "context": "Wśród liści została jeszcze jedna ",
+      "gold": "jagoda",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ]
+    },
+    {
+      "id": "gain-case-03",
+      "candidateKey": "jagoda",
+      "context": "Moja młodsza siostra ma na imię ",
+      "gold": "Jagoda",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ]
+    },
+    {
+      "id": "gain-case-04",
+      "candidateKey": "jagoda",
+      "context": "Jutro odwiedzi nas kuzynka ",
+      "gold": "Jagoda",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ]
+    },
+    {
+      "id": "gain-case-05",
+      "candidateKey": "róża",
+      "context": "Na rabacie zakwitła czerwona ",
+      "gold": "róża",
+      "surfaces": [
+        "róża",
+        "Róża"
+      ]
+    },
+    {
+      "id": "gain-case-06",
+      "candidateKey": "róża",
+      "context": "Wazon zdobi pachnąca ",
+      "gold": "róża",
+      "surfaces": [
+        "róża",
+        "Róża"
+      ]
+    },
+    {
+      "id": "gain-case-07",
+      "candidateKey": "róża",
+      "context": "Nasza nowa sąsiadka ma na imię ",
+      "gold": "Róża",
+      "surfaces": [
+        "róża",
+        "Róża"
+      ]
+    },
+    {
+      "id": "gain-case-08",
+      "candidateKey": "róża",
+      "context": "Zadzwoniła do mnie ciocia ",
+      "gold": "Róża",
+      "surfaces": [
+        "róża",
+        "Róża"
+      ]
+    },
+    {
+      "id": "gain-case-09",
+      "candidateKey": "kruk",
+      "context": "Nad polem przeleciał wielki czarny ",
+      "gold": "kruk",
+      "surfaces": [
+        "kruk",
+        "Kruk"
+      ]
+    },
+    {
+      "id": "gain-case-10",
+      "candidateKey": "kruk",
+      "context": "Ten ptak o czarnym dziobie to ",
+      "gold": "kruk",
+      "surfaces": [
+        "kruk",
+        "Kruk"
+      ]
+    },
+    {
+      "id": "gain-case-11",
+      "candidateKey": "kruk",
+      "context": "List podpisał dyrektor ",
+      "gold": "Kruk",
+      "surfaces": [
+        "kruk",
+        "Kruk"
+      ]
+    },
+    {
+      "id": "gain-case-12",
+      "candidateKey": "kruk",
+      "context": "Na konferencji wystąpił doktor ",
+      "gold": "Kruk",
+      "surfaces": [
+        "kruk",
+        "Kruk"
+      ]
+    },
+    {
+      "id": "gain-case-13",
+      "candidateKey": "piła",
+      "context": "Na stole stolarskim leży ostra ",
+      "gold": "piła",
+      "surfaces": [
+        "piła",
+        "Piła"
+      ]
+    },
+    {
+      "id": "gain-case-14",
+      "candidateKey": "piła",
+      "context": "Do cięcia desek służy ręczna ",
+      "gold": "piła",
+      "surfaces": [
+        "piła",
+        "Piła"
+      ]
+    },
+    {
+      "id": "gain-case-15",
+      "candidateKey": "piła",
+      "context": "To miasto w Wielkopolsce nazywa się ",
+      "gold": "Piła",
+      "surfaces": [
+        "piła",
+        "Piła"
+      ]
+    },
+    {
+      "id": "gain-case-16",
+      "candidateKey": "piła",
+      "context": "Na mapie widnieje miasto ",
+      "gold": "Piła",
+      "surfaces": [
+        "piła",
+        "Piła"
+      ]
+    },
+    {
+      "id": "gain-case-17",
+      "candidateKey": "buk",
+      "context": "Przy starym dębie wyrósł młody ",
+      "gold": "buk",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ]
+    },
+    {
+      "id": "gain-case-18",
+      "candidateKey": "buk",
+      "context": "To drzewo o gładkiej korze to ",
+      "gold": "buk",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ]
+    },
+    {
+      "id": "gain-case-19",
+      "candidateKey": "buk",
+      "context": "Do gabinetu wszedł doktor ",
+      "gold": "Buk",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ]
+    },
+    {
+      "id": "gain-case-20",
+      "candidateKey": "buk",
+      "context": "Wyniki przedstawił profesor ",
+      "gold": "Buk",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ]
+    },
+    {
+      "id": "gain-case-21",
+      "candidateKey": "kot",
+      "context": "Na parapecie śpi rudy ",
+      "gold": "kot",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ]
+    },
+    {
+      "id": "gain-case-22",
+      "candidateKey": "kot",
+      "context": "Mleko wypił nasz mały ",
+      "gold": "kot",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ]
+    },
+    {
+      "id": "gain-case-23",
+      "candidateKey": "kot",
+      "context": "Zebranie poprowadził doktor ",
+      "gold": "Kot",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ]
+    },
+    {
+      "id": "gain-case-24",
+      "candidateKey": "kot",
+      "context": "Wyniki ogłosił profesor ",
+      "gold": "Kot",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ]
+    }
+  ]
+}

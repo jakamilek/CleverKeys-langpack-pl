@@ -1,0 +1,8091 @@
+{
+  "protocol": "herbert-form-diagnostic-v2-history",
+  "codeCommit": "90a8398495cd119afce9038f5f55c454db2d6960",
+  "frozenInputs": {
+    "protocol": "herbert-form-diagnostic-v2-history",
+    "createdBeforeInference": true,
+    "previousCodeCommit": "91a5986ee51d000107841bf5b1e0c32f5dc8bef3",
+    "previousRun": 38043798307,
+    "files": {
+      "PROTOCOL.md": "16d19aa2c4bb062c3ee45d1fcfd02a222ebda193e16ff4beb500dfdade5e9586",
+      "replay.py": "48cddae46b6237c98f3a39def417f0957399a8d4361c045b9033c3e93a3690a9",
+      "test_replay.py": "50afb7641996a1b261ea12e79b7ca9b7964bc49047a427da9f6a30ec362c294b",
+      "../herbert_form_diagnostic_v1/freeze-manifest.json": "6ef9004293cf46c76435419ef7cb714114565add4ed6ae7224b794ff8131e6db",
+      "../herbert_mobile_v1/freeze-manifest.json": "ae6d982a1974f196b35aa9a0b08d827b4d47c37425ccd353d88f55f4631e0eca",
+      "../herbert_form_diagnostic_results/2026-10-10-v1/scores.json": "966e957589e6fa244a9fa3adc247df37a77ccfdab1c8c467121ad3c434db1124",
+      "../../.github/workflows/herbert-form-diagnostic-v2.yml": "09b6d6f146c1f601713321d5f3188bd0e9f4b178a30c070f4185dc7c927bb0eb"
+    }
+  },
+  "originalModelSha256": "f851436ba9ca35d0c7313ff873cd869b744b295a8a16fc95b4571d5e11b299f2",
+  "historicalRequests": 232,
+  "historicalCases": 116,
+  "historical": {
+    "groups": {
+      "forms/reused/short": {
+        "requests": 64,
+        "labelled": 64,
+        "missingGold": 0,
+        "meanTop1": 41,
+        "sumTop1": 40,
+        "meanTop3": 64,
+        "sumTop3": 64,
+        "repairs": 6,
+        "regressions": 7,
+        "top3Regressions": 0,
+        "rankChanges": 13
+      },
+      "forms/reused/long": {
+        "requests": 64,
+        "labelled": 64,
+        "missingGold": 0,
+        "meanTop1": 50,
+        "sumTop1": 46,
+        "meanTop3": 64,
+        "sumTop3": 64,
+        "repairs": 4,
+        "regressions": 8,
+        "top3Regressions": 0,
+        "rankChanges": 12
+      },
+      "recorded_replay/reused/short": {
+        "requests": 8,
+        "labelled": 8,
+        "missingGold": 0,
+        "meanTop1": 2,
+        "sumTop1": 6,
+        "meanTop3": 6,
+        "sumTop3": 7,
+        "repairs": 4,
+        "regressions": 0,
+        "top3Regressions": 1,
+        "rankChanges": 6
+      },
+      "recorded_replay/reused/long": {
+        "requests": 8,
+        "labelled": 8,
+        "missingGold": 0,
+        "meanTop1": 7,
+        "sumTop1": 8,
+        "meanTop3": 8,
+        "sumTop3": 8,
+        "repairs": 1,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 5
+      },
+      "single_variant/reused/short": {
+        "requests": 6,
+        "labelled": 6,
+        "missingGold": 0,
+        "meanTop1": 6,
+        "sumTop1": 6,
+        "meanTop3": 6,
+        "sumTop3": 6,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 0
+      },
+      "single_variant/reused/long": {
+        "requests": 6,
+        "labelled": 6,
+        "missingGold": 0,
+        "meanTop1": 6,
+        "sumTop1": 6,
+        "meanTop3": 6,
+        "sumTop3": 6,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 0
+      },
+      "ambiguous/reused/short": {
+        "requests": 4,
+        "labelled": 0,
+        "missingGold": 0,
+        "meanTop1": 0,
+        "sumTop1": 0,
+        "meanTop3": 0,
+        "sumTop3": 0,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 0
+      },
+      "ambiguous/reused/long": {
+        "requests": 4,
+        "labelled": 0,
+        "missingGold": 0,
+        "meanTop1": 0,
+        "sumTop1": 0,
+        "meanTop3": 0,
+        "sumTop3": 0,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 0
+      },
+      "missing_key/reused/short": {
+        "requests": 2,
+        "labelled": 2,
+        "missingGold": 2,
+        "meanTop1": 0,
+        "sumTop1": 0,
+        "meanTop3": 0,
+        "sumTop3": 0,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 2
+      },
+      "missing_key/reused/long": {
+        "requests": 2,
+        "labelled": 2,
+        "missingGold": 2,
+        "meanTop1": 0,
+        "sumTop1": 0,
+        "meanTop3": 0,
+        "sumTop3": 0,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 2
+      },
+      "forms/new/short": {
+        "requests": 32,
+        "labelled": 32,
+        "missingGold": 0,
+        "meanTop1": 20,
+        "sumTop1": 20,
+        "meanTop3": 32,
+        "sumTop3": 32,
+        "repairs": 5,
+        "regressions": 5,
+        "top3Regressions": 0,
+        "rankChanges": 10
+      },
+      "forms/new/long": {
+        "requests": 32,
+        "labelled": 32,
+        "missingGold": 0,
+        "meanTop1": 25,
+        "sumTop1": 25,
+        "meanTop3": 32,
+        "sumTop3": 32,
+        "repairs": 5,
+        "regressions": 5,
+        "top3Regressions": 0,
+        "rankChanges": 10
+      }
+    },
+    "changes": [
+      {
+        "id": "form-jagoda-1/short/plain",
+        "gold": "jagoda",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "jagoda": -5.799121856689453,
+          "Jagoda": -8.830428123474121
+        },
+        "sumScores": {
+          "jagoda": -11.598243713378906,
+          "Jagoda": -8.830428123474121
+        }
+      },
+      {
+        "id": "form-jagoda-1/long/plain",
+        "gold": "jagoda",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "jagoda": -6.15684175491333,
+          "Jagoda": -9.79189395904541
+        },
+        "sumScores": {
+          "jagoda": -12.31368350982666,
+          "Jagoda": -9.79189395904541
+        }
+      },
+      {
+        "id": "form-jagoda-2/long/plain",
+        "gold": "Jagoda",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "Jagoda": -9.943151473999023,
+          "jagoda": -8.34865951538086
+        },
+        "sumScores": {
+          "Jagoda": -9.943151473999023,
+          "jagoda": -16.69731903076172
+        }
+      },
+      {
+        "id": "form-jagoda-3/short/plain",
+        "gold": "jagoda",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "jagoda": -7.942190647125244,
+          "Jagoda": -11.664722442626953
+        },
+        "sumScores": {
+          "jagoda": -15.884381294250488,
+          "Jagoda": -11.664722442626953
+        }
+      },
+      {
+        "id": "form-jagoda-3/long/plain",
+        "gold": "jagoda",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "jagoda": -8.533685684204102,
+          "Jagoda": -11.342734336853027
+        },
+        "sumScores": {
+          "jagoda": -17.067371368408203,
+          "Jagoda": -11.342734336853027
+        }
+      },
+      {
+        "id": "form-jagoda-4/short/plain",
+        "gold": "Jagoda",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "Jagoda": -11.294249534606934,
+          "jagoda": -8.24032211303711
+        },
+        "sumScores": {
+          "Jagoda": -11.294249534606934,
+          "jagoda": -16.48064422607422
+        }
+      },
+      {
+        "id": "form-róża-1/long/plain",
+        "gold": "róża",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "róża",
+          "Róża"
+        ],
+        "sumOrder": [
+          "Róża",
+          "róża"
+        ],
+        "meanScores": {
+          "Róża": -7.01528263092041,
+          "róża": -3.9196367263793945
+        },
+        "sumScores": {
+          "Róża": -7.01528263092041,
+          "róża": -7.839273452758789
+        }
+      },
+      {
+        "id": "form-róża-2/short/plain",
+        "gold": "Róża",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "róża",
+          "Róża"
+        ],
+        "sumOrder": [
+          "Róża",
+          "róża"
+        ],
+        "meanScores": {
+          "Róża": -7.549707412719727,
+          "róża": -7.365363121032715
+        },
+        "sumScores": {
+          "Róża": -7.549707412719727,
+          "róża": -14.73072624206543
+        }
+      },
+      {
+        "id": "form-róża-3/long/plain",
+        "gold": "róża",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "róża",
+          "Róża"
+        ],
+        "sumOrder": [
+          "Róża",
+          "róża"
+        ],
+        "meanScores": {
+          "Róża": -7.106089115142822,
+          "róża": -4.037348747253418
+        },
+        "sumScores": {
+          "Róża": -7.106089115142822,
+          "róża": -8.074697494506836
+        }
+      },
+      {
+        "id": "form-róża-4/short/plain",
+        "gold": "Róża",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "róża",
+          "Róża"
+        ],
+        "sumOrder": [
+          "Róża",
+          "róża"
+        ],
+        "meanScores": {
+          "róża": -6.972892761230469,
+          "Róża": -9.265396118164062
+        },
+        "sumScores": {
+          "róża": -13.945785522460938,
+          "Róża": -9.265396118164062
+        }
+      },
+      {
+        "id": "form-róża-4/long/plain",
+        "gold": "Róża",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "róża",
+          "Róża"
+        ],
+        "sumOrder": [
+          "Róża",
+          "róża"
+        ],
+        "meanScores": {
+          "róża": -8.957462310791016,
+          "Róża": -9.937949180603027
+        },
+        "sumScores": {
+          "róża": -17.91492462158203,
+          "Róża": -9.937949180603027
+        }
+      },
+      {
+        "id": "form-lub-2/short/plain",
+        "gold": "Lub",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "Lub",
+          "lub"
+        ],
+        "sumOrder": [
+          "lub",
+          "Lub"
+        ],
+        "meanScores": {
+          "lub": -8.724029541015625,
+          "Lub": -8.299453735351562
+        },
+        "sumScores": {
+          "lub": -8.724029541015625,
+          "Lub": -16.598907470703125
+        }
+      },
+      {
+        "id": "form-lub-2/long/plain",
+        "gold": "Lub",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "Lub",
+          "lub"
+        ],
+        "sumOrder": [
+          "lub",
+          "Lub"
+        ],
+        "meanScores": {
+          "lub": -13.446924209594727,
+          "Lub": -9.926559448242188
+        },
+        "sumScores": {
+          "lub": -13.446924209594727,
+          "Lub": -19.853118896484375
+        }
+      },
+      {
+        "id": "form-lub-3/long/plain",
+        "gold": "lub",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "Lub",
+          "lub"
+        ],
+        "sumOrder": [
+          "lub",
+          "Lub"
+        ],
+        "meanScores": {
+          "Lub": -8.142742156982422,
+          "lub": -12.05276870727539
+        },
+        "sumScores": {
+          "Lub": -16.285484313964844,
+          "lub": -12.05276870727539
+        }
+      },
+      {
+        "id": "form-lub-4/short/plain",
+        "gold": "Lub",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "Lub",
+          "lub"
+        ],
+        "sumOrder": [
+          "lub",
+          "Lub"
+        ],
+        "meanScores": {
+          "lub": -9.646370887756348,
+          "Lub": -9.41798210144043
+        },
+        "sumScores": {
+          "lub": -9.646370887756348,
+          "Lub": -18.83596420288086
+        }
+      },
+      {
+        "id": "form-lub-4/long/plain",
+        "gold": "Lub",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "Lub",
+          "lub"
+        ],
+        "sumOrder": [
+          "lub",
+          "Lub"
+        ],
+        "meanScores": {
+          "lub": -11.923235893249512,
+          "Lub": -10.138933181762695
+        },
+        "sumScores": {
+          "lub": -11.923235893249512,
+          "Lub": -20.27786636352539
+        }
+      },
+      {
+        "id": "form-kruk-1/short/plain",
+        "gold": "kruk",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "kruk",
+          "Kruk"
+        ],
+        "sumOrder": [
+          "Kruk",
+          "kruk"
+        ],
+        "meanScores": {
+          "kruk": -5.5562744140625,
+          "Kruk": -9.759588241577148
+        },
+        "sumScores": {
+          "kruk": -11.112548828125,
+          "Kruk": -9.759588241577148
+        }
+      },
+      {
+        "id": "form-kruk-2/short/plain",
+        "gold": "Kruk",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "kruk",
+          "Kruk"
+        ],
+        "sumOrder": [
+          "Kruk",
+          "kruk"
+        ],
+        "meanScores": {
+          "Kruk": -9.494897842407227,
+          "kruk": -7.408005714416504
+        },
+        "sumScores": {
+          "Kruk": -9.494897842407227,
+          "kruk": -14.816011428833008
+        }
+      },
+      {
+        "id": "form-kruk-2/long/plain",
+        "gold": "Kruk",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "kruk",
+          "Kruk"
+        ],
+        "sumOrder": [
+          "Kruk",
+          "kruk"
+        ],
+        "meanScores": {
+          "Kruk": -9.87389850616455,
+          "kruk": -7.364516258239746
+        },
+        "sumScores": {
+          "Kruk": -9.87389850616455,
+          "kruk": -14.729032516479492
+        }
+      },
+      {
+        "id": "form-kruk-3/long/plain",
+        "gold": "kruk",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "kruk",
+          "Kruk"
+        ],
+        "sumOrder": [
+          "Kruk",
+          "kruk"
+        ],
+        "meanScores": {
+          "Kruk": -11.239420890808105,
+          "kruk": -6.246303558349609
+        },
+        "sumScores": {
+          "Kruk": -11.239420890808105,
+          "kruk": -12.492607116699219
+        }
+      },
+      {
+        "id": "form-kruk-4/short/plain",
+        "gold": "Kruk",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "kruk",
+          "Kruk"
+        ],
+        "sumOrder": [
+          "Kruk",
+          "kruk"
+        ],
+        "meanScores": {
+          "Kruk": -9.851449966430664,
+          "kruk": -6.5929155349731445
+        },
+        "sumScores": {
+          "Kruk": -9.851449966430664,
+          "kruk": -13.185831069946289
+        }
+      },
+      {
+        "id": "form-zając-1/short/plain",
+        "gold": "zając",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "zając",
+          "Zając"
+        ],
+        "sumOrder": [
+          "Zając",
+          "zając"
+        ],
+        "meanScores": {
+          "zając": -7.992292404174805,
+          "Zając": -13.273065567016602
+        },
+        "sumScores": {
+          "zając": -15.98458480834961,
+          "Zając": -13.273065567016602
+        }
+      },
+      {
+        "id": "form-zając-1/long/plain",
+        "gold": "zając",
+        "group": "forms/reused/long",
+        "meanOrder": [
+          "zając",
+          "Zając"
+        ],
+        "sumOrder": [
+          "Zając",
+          "zając"
+        ],
+        "meanScores": {
+          "zając": -7.913534164428711,
+          "Zając": -10.98897647857666
+        },
+        "sumScores": {
+          "zając": -15.827068328857422,
+          "Zając": -10.98897647857666
+        }
+      },
+      {
+        "id": "form-zając-3/short/plain",
+        "gold": "zając",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "zając",
+          "Zając"
+        ],
+        "sumOrder": [
+          "Zając",
+          "zając"
+        ],
+        "meanScores": {
+          "zając": -7.037742614746094,
+          "Zając": -11.83458423614502
+        },
+        "sumScores": {
+          "zając": -14.075485229492188,
+          "Zając": -11.83458423614502
+        }
+      },
+      {
+        "id": "form-zając-4/short/plain",
+        "gold": "Zając",
+        "group": "forms/reused/short",
+        "meanOrder": [
+          "zając",
+          "Zając"
+        ],
+        "sumOrder": [
+          "Zając",
+          "zając"
+        ],
+        "meanScores": {
+          "zając": -6.164649963378906,
+          "Zając": -11.30322265625
+        },
+        "sumScores": {
+          "zając": -12.329299926757812,
+          "Zając": -11.30322265625
+        }
+      },
+      {
+        "id": "replay-1/short/plain",
+        "gold": "olej",
+        "group": "recorded_replay/reused/short",
+        "meanOrder": [
+          "oliwek",
+          "olej",
+          "Olej",
+          "ołówek",
+          "Ołówek",
+          "Olek",
+          "innej"
+        ],
+        "sumOrder": [
+          "olej",
+          "oliwek",
+          "innej",
+          "Olej",
+          "ołówek",
+          "Olek",
+          "Ołówek"
+        ],
+        "meanScores": {
+          "innej": -13.054731369018555,
+          "Ołówek": -8.07435131072998,
+          "ołówek": -7.290533065795898,
+          "oliwek": -5.364561080932617,
+          "Olek": -8.559808731079102,
+          "Olej": -6.605283737182617,
+          "olej": -5.732991695404053
+        },
+        "sumScores": {
+          "innej": -13.054731369018555,
+          "Ołówek": -24.223054885864258,
+          "ołówek": -14.581066131591797,
+          "oliwek": -10.729122161865234,
+          "Olek": -17.119617462158203,
+          "Olej": -13.210567474365234,
+          "olej": -5.732991695404053
+        }
+      },
+      {
+        "id": "replay-1/long/plain",
+        "gold": "olej",
+        "group": "recorded_replay/reused/long",
+        "meanOrder": [
+          "olej",
+          "oliwek",
+          "Olej",
+          "ołówek",
+          "Ołówek",
+          "Olek",
+          "innej"
+        ],
+        "sumOrder": [
+          "olej",
+          "oliwek",
+          "Olej",
+          "innej",
+          "ołówek",
+          "Olek",
+          "Ołówek"
+        ],
+        "meanScores": {
+          "innej": -15.754220008850098,
+          "Ołówek": -8.471332550048828,
+          "ołówek": -7.900925159454346,
+          "oliwek": -6.136562824249268,
+          "Olek": -8.614582061767578,
+          "Olej": -6.997555255889893,
+          "olej": -2.97091007232666
+        },
+        "sumScores": {
+          "innej": -15.754220008850098,
+          "Ołówek": -25.413997650146484,
+          "ołówek": -15.801850318908691,
+          "oliwek": -12.273125648498535,
+          "Olek": -17.229164123535156,
+          "Olej": -13.995110511779785,
+          "olej": -2.97091007232666
+        }
+      },
+      {
+        "id": "replay-2/short/plain",
+        "gold": "Olek",
+        "group": "recorded_replay/reused/short",
+        "meanOrder": [
+          "Olek",
+          "Ołówek",
+          "Olej",
+          "oliwek",
+          "ołówek",
+          "olej",
+          "innej"
+        ],
+        "sumOrder": [
+          "Olek",
+          "olej",
+          "innej",
+          "Olej",
+          "oliwek",
+          "ołówek",
+          "Ołówek"
+        ],
+        "meanScores": {
+          "innej": -14.535858154296875,
+          "Ołówek": -7.563875675201416,
+          "ołówek": -9.952628135681152,
+          "oliwek": -7.949206352233887,
+          "Olek": -5.665923118591309,
+          "Olej": -7.894232749938965,
+          "olej": -13.904525756835938
+        },
+        "sumScores": {
+          "innej": -14.535858154296875,
+          "Ołówek": -22.691627502441406,
+          "ołówek": -19.905256271362305,
+          "oliwek": -15.898412704467773,
+          "Olek": -11.331846237182617,
+          "Olej": -15.78846549987793,
+          "olej": -13.904525756835938
+        }
+      },
+      {
+        "id": "replay-2/long/plain",
+        "gold": "Olek",
+        "group": "recorded_replay/reused/long",
+        "meanOrder": [
+          "Olek",
+          "Olej",
+          "Ołówek",
+          "oliwek",
+          "ołówek",
+          "innej",
+          "olej"
+        ],
+        "sumOrder": [
+          "Olek",
+          "Olej",
+          "oliwek",
+          "innej",
+          "olej",
+          "ołówek",
+          "Ołówek"
+        ],
+        "meanScores": {
+          "innej": -16.86920166015625,
+          "Ołówek": -7.247888088226318,
+          "ołówek": -10.781747817993164,
+          "oliwek": -8.410734176635742,
+          "Olek": -5.077618598937988,
+          "Olej": -7.1691179275512695,
+          "olej": -17.959022521972656
+        },
+        "sumScores": {
+          "innej": -16.86920166015625,
+          "Ołówek": -21.743663787841797,
+          "ołówek": -21.563495635986328,
+          "oliwek": -16.821468353271484,
+          "Olek": -10.155237197875977,
+          "Olej": -14.338235855102539,
+          "olej": -17.959022521972656
+        }
+      },
+      {
+        "id": "replay-3/short/plain",
+        "gold": "mleko",
+        "group": "recorded_replay/reused/short",
+        "meanOrder": [
+          "miękki",
+          "miękko",
+          "mięli",
+          "mleko",
+          "Mleko",
+          "mieli",
+          "Mieli"
+        ],
+        "sumOrder": [
+          "mleko",
+          "miękki",
+          "miękko",
+          "mieli",
+          "mięli",
+          "Mleko",
+          "Mieli"
+        ],
+        "meanScores": {
+          "mleko": -7.351657390594482,
+          "Mleko": -7.578262805938721,
+          "mieli": -13.329723358154297,
+          "Mieli": -17.724437713623047,
+          "miękko": -5.936539173126221,
+          "miękki": -5.108299732208252,
+          "mięli": -7.261776447296143
+        },
+        "sumScores": {
+          "mleko": -7.351657390594482,
+          "Mleko": -15.156525611877441,
+          "mieli": -13.329723358154297,
+          "Mieli": -17.724437713623047,
+          "miękko": -11.873078346252441,
+          "miękki": -10.216599464416504,
+          "mięli": -14.523552894592285
+        }
+      },
+      {
+        "id": "replay-4/short/plain",
+        "gold": "miękko",
+        "group": "recorded_replay/reused/short",
+        "meanOrder": [
+          "mięli",
+          "miękko",
+          "miękki",
+          "mieli",
+          "Mleko",
+          "Mieli",
+          "mleko"
+        ],
+        "sumOrder": [
+          "mieli",
+          "Mieli",
+          "mleko",
+          "mięli",
+          "miękko",
+          "miękki",
+          "Mleko"
+        ],
+        "meanScores": {
+          "mleko": -14.888459205627441,
+          "Mleko": -11.608448028564453,
+          "mieli": -11.033310890197754,
+          "Mieli": -13.872994422912598,
+          "miękko": -9.630451202392578,
+          "miękki": -10.160247802734375,
+          "mięli": -8.305641174316406
+        },
+        "sumScores": {
+          "mleko": -14.888459205627441,
+          "Mleko": -23.216896057128906,
+          "mieli": -11.033310890197754,
+          "Mieli": -13.872994422912598,
+          "miękko": -19.260902404785156,
+          "miękki": -20.32049560546875,
+          "mięli": -16.611282348632812
+        }
+      },
+      {
+        "id": "replay-4/long/plain",
+        "gold": "miękko",
+        "group": "recorded_replay/reused/long",
+        "meanOrder": [
+          "miękko",
+          "miękki",
+          "mięli",
+          "Mleko",
+          "mieli",
+          "mleko",
+          "Mieli"
+        ],
+        "sumOrder": [
+          "miękko",
+          "miękki",
+          "mięli",
+          "mieli",
+          "mleko",
+          "Mleko",
+          "Mieli"
+        ],
+        "meanScores": {
+          "mleko": -17.698917388916016,
+          "Mleko": -9.006465911865234,
+          "mieli": -17.357288360595703,
+          "Mieli": -20.817089080810547,
+          "miękko": -1.986133337020874,
+          "miękki": -4.800243377685547,
+          "mięli": -8.042369842529297
+        },
+        "sumScores": {
+          "mleko": -17.698917388916016,
+          "Mleko": -18.01293182373047,
+          "mieli": -17.357288360595703,
+          "Mieli": -20.817089080810547,
+          "miękko": -3.972266674041748,
+          "miękki": -9.600486755371094,
+          "mięli": -16.084739685058594
+        }
+      },
+      {
+        "id": "replay-7/short/plain",
+        "gold": "Łódź",
+        "group": "recorded_replay/reused/short",
+        "meanOrder": [
+          "łudź",
+          "Łotysz",
+          "klisz",
+          "Łódź",
+          "Kosz",
+          "Klisz",
+          "łódź",
+          "kosz"
+        ],
+        "sumOrder": [
+          "Łódź",
+          "łódź",
+          "łudź",
+          "klisz",
+          "kosz",
+          "Kosz",
+          "Klisz",
+          "Łotysz"
+        ],
+        "meanScores": {
+          "łudź": -5.9208292961120605,
+          "Klisz": -7.407500743865967,
+          "klisz": -6.812789440155029,
+          "Łotysz": -5.9468560218811035,
+          "Kosz": -7.025332927703857,
+          "kosz": -13.711235046386719,
+          "Łódź": -7.023193836212158,
+          "łódź": -9.607955932617188
+        },
+        "sumScores": {
+          "łudź": -11.841658592224121,
+          "Klisz": -14.815001487731934,
+          "klisz": -13.625578880310059,
+          "Łotysz": -17.84056854248047,
+          "Kosz": -14.050665855407715,
+          "kosz": -13.711235046386719,
+          "Łódź": -7.023193836212158,
+          "łódź": -9.607955932617188
+        }
+      },
+      {
+        "id": "replay-7/long/plain",
+        "gold": "Łódź",
+        "group": "recorded_replay/reused/long",
+        "meanOrder": [
+          "Łódź",
+          "Łotysz",
+          "Klisz",
+          "Kosz",
+          "łudź",
+          "klisz",
+          "łódź",
+          "kosz"
+        ],
+        "sumOrder": [
+          "Łódź",
+          "łódź",
+          "Klisz",
+          "Kosz",
+          "łudź",
+          "kosz",
+          "klisz",
+          "Łotysz"
+        ],
+        "meanScores": {
+          "łudź": -7.152470588684082,
+          "Klisz": -6.540905952453613,
+          "klisz": -7.766037940979004,
+          "Łotysz": -6.021076202392578,
+          "Kosz": -6.638474464416504,
+          "kosz": -14.955620765686035,
+          "Łódź": -5.008133888244629,
+          "łódź": -10.271561622619629
+        },
+        "sumScores": {
+          "łudź": -14.304941177368164,
+          "Klisz": -13.081811904907227,
+          "klisz": -15.532075881958008,
+          "Łotysz": -18.063228607177734,
+          "Kosz": -13.276948928833008,
+          "kosz": -14.955620765686035,
+          "Łódź": -5.008133888244629,
+          "łódź": -10.271561622619629
+        }
+      },
+      {
+        "id": "replay-8/short/plain",
+        "gold": "kosz",
+        "group": "recorded_replay/reused/short",
+        "meanOrder": [
+          "klisz",
+          "kosz",
+          "Łotysz",
+          "łudź",
+          "Kosz",
+          "Klisz",
+          "łódź",
+          "Łódź"
+        ],
+        "sumOrder": [
+          "kosz",
+          "łódź",
+          "Łódź",
+          "klisz",
+          "łudź",
+          "Kosz",
+          "Klisz",
+          "Łotysz"
+        ],
+        "meanScores": {
+          "łódź": -10.12272834777832,
+          "Łódź": -12.079256057739258,
+          "kosz": -7.805421352386475,
+          "Kosz": -8.611546516418457,
+          "Łotysz": -8.012194633483887,
+          "klisz": -7.156430244445801,
+          "Klisz": -9.40471363067627,
+          "łudź": -8.293980598449707
+        },
+        "sumScores": {
+          "łódź": -10.12272834777832,
+          "Łódź": -12.079256057739258,
+          "kosz": -7.805421352386475,
+          "Kosz": -17.223093032836914,
+          "Łotysz": -24.036582946777344,
+          "klisz": -14.312860488891602,
+          "Klisz": -18.80942726135254,
+          "łudź": -16.587961196899414
+        }
+      },
+      {
+        "id": "replay-8/long/plain",
+        "gold": "kosz",
+        "group": "recorded_replay/reused/long",
+        "meanOrder": [
+          "klisz",
+          "kosz",
+          "Łotysz",
+          "łudź",
+          "Kosz",
+          "Klisz",
+          "łódź",
+          "Łódź"
+        ],
+        "sumOrder": [
+          "kosz",
+          "łódź",
+          "Łódź",
+          "klisz",
+          "łudź",
+          "Kosz",
+          "Klisz",
+          "Łotysz"
+        ],
+        "meanScores": {
+          "łódź": -10.988896369934082,
+          "Łódź": -13.539944648742676,
+          "kosz": -7.678227424621582,
+          "Kosz": -8.286483764648438,
+          "Łotysz": -8.23925495147705,
+          "klisz": -7.244533538818359,
+          "Klisz": -9.867294311523438,
+          "łudź": -8.25802230834961
+        },
+        "sumScores": {
+          "łódź": -10.988896369934082,
+          "Łódź": -13.539944648742676,
+          "kosz": -7.678227424621582,
+          "Kosz": -16.572967529296875,
+          "Łotysz": -24.71776580810547,
+          "klisz": -14.489067077636719,
+          "Klisz": -19.734588623046875,
+          "łudź": -16.51604461669922
+        }
+      },
+      {
+        "id": "missing-łódź/short/plain",
+        "gold": "Łódź",
+        "group": "missing_key/reused/short",
+        "meanOrder": [
+          "Mleko",
+          "mleko"
+        ],
+        "sumOrder": [
+          "mleko",
+          "Mleko"
+        ],
+        "meanScores": {
+          "Mleko": -10.64266586303711,
+          "mleko": -11.994797706604004
+        },
+        "sumScores": {
+          "Mleko": -21.28533172607422,
+          "mleko": -11.994797706604004
+        }
+      },
+      {
+        "id": "missing-łódź/long/plain",
+        "gold": "Łódź",
+        "group": "missing_key/reused/long",
+        "meanOrder": [
+          "Mleko",
+          "mleko"
+        ],
+        "sumOrder": [
+          "mleko",
+          "Mleko"
+        ],
+        "meanScores": {
+          "Mleko": -7.889204025268555,
+          "mleko": -11.855331420898438
+        },
+        "sumScores": {
+          "Mleko": -15.77840805053711,
+          "mleko": -11.855331420898438
+        }
+      },
+      {
+        "id": "missing-malina/short/plain",
+        "gold": "Malina",
+        "group": "missing_key/reused/short",
+        "meanOrder": [
+          "Mleko",
+          "mleko"
+        ],
+        "sumOrder": [
+          "mleko",
+          "Mleko"
+        ],
+        "meanScores": {
+          "mleko": -11.994797706604004,
+          "Mleko": -10.64266586303711
+        },
+        "sumScores": {
+          "mleko": -11.994797706604004,
+          "Mleko": -21.28533172607422
+        }
+      },
+      {
+        "id": "missing-malina/long/plain",
+        "gold": "Malina",
+        "group": "missing_key/reused/long",
+        "meanOrder": [
+          "Mleko",
+          "mleko"
+        ],
+        "sumOrder": [
+          "mleko",
+          "Mleko"
+        ],
+        "meanScores": {
+          "mleko": -11.855331420898438,
+          "Mleko": -7.889204025268555
+        },
+        "sumScores": {
+          "mleko": -11.855331420898438,
+          "Mleko": -15.77840805053711
+        }
+      },
+      {
+        "id": "newform-jagoda-1/short/plain",
+        "gold": "jagoda",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "Jagoda": -9.554986000061035,
+          "jagoda": -5.1261420249938965
+        },
+        "sumScores": {
+          "Jagoda": -9.554986000061035,
+          "jagoda": -10.252284049987793
+        }
+      },
+      {
+        "id": "newform-jagoda-1/long/plain",
+        "gold": "jagoda",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "Jagoda": -8.795439720153809,
+          "jagoda": -5.805493354797363
+        },
+        "sumScores": {
+          "Jagoda": -8.795439720153809,
+          "jagoda": -11.610986709594727
+        }
+      },
+      {
+        "id": "newform-jagoda-2/short/plain",
+        "gold": "Jagoda",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "jagoda": -8.47807788848877,
+          "Jagoda": -11.340753555297852
+        },
+        "sumScores": {
+          "jagoda": -16.95615577697754,
+          "Jagoda": -11.340753555297852
+        }
+      },
+      {
+        "id": "newform-jagoda-2/long/plain",
+        "gold": "Jagoda",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "jagoda",
+          "Jagoda"
+        ],
+        "sumOrder": [
+          "Jagoda",
+          "jagoda"
+        ],
+        "meanScores": {
+          "jagoda": -10.652242660522461,
+          "Jagoda": -12.704201698303223
+        },
+        "sumScores": {
+          "jagoda": -21.304485321044922,
+          "Jagoda": -12.704201698303223
+        }
+      },
+      {
+        "id": "newform-róża-1/short/plain",
+        "gold": "róża",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "róża",
+          "Róża"
+        ],
+        "sumOrder": [
+          "Róża",
+          "róża"
+        ],
+        "meanScores": {
+          "Róża": -8.334485054016113,
+          "róża": -4.408694744110107
+        },
+        "sumScores": {
+          "Róża": -8.334485054016113,
+          "róża": -8.817389488220215
+        }
+      },
+      {
+        "id": "newform-róża-1/long/plain",
+        "gold": "róża",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "róża",
+          "Róża"
+        ],
+        "sumOrder": [
+          "Róża",
+          "róża"
+        ],
+        "meanScores": {
+          "Róża": -9.98868465423584,
+          "róża": -5.033078670501709
+        },
+        "sumScores": {
+          "Róża": -9.98868465423584,
+          "róża": -10.066157341003418
+        }
+      },
+      {
+        "id": "newform-róża-2/short/plain",
+        "gold": "Róża",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "róża",
+          "Róża"
+        ],
+        "sumOrder": [
+          "Róża",
+          "róża"
+        ],
+        "meanScores": {
+          "Róża": -8.17269229888916,
+          "róża": -7.999819755554199
+        },
+        "sumScores": {
+          "Róża": -8.17269229888916,
+          "róża": -15.999639511108398
+        }
+      },
+      {
+        "id": "newform-róża-2/long/plain",
+        "gold": "Róża",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "róża",
+          "Róża"
+        ],
+        "sumOrder": [
+          "Róża",
+          "róża"
+        ],
+        "meanScores": {
+          "Róża": -9.19979476928711,
+          "róża": -9.108833312988281
+        },
+        "sumScores": {
+          "Róża": -9.19979476928711,
+          "róża": -18.217666625976562
+        }
+      },
+      {
+        "id": "newform-lub-1/short/plain",
+        "gold": "lub",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "Lub",
+          "lub"
+        ],
+        "sumOrder": [
+          "lub",
+          "Lub"
+        ],
+        "meanScores": {
+          "lub": -8.48519229888916,
+          "Lub": -7.1309814453125
+        },
+        "sumScores": {
+          "lub": -8.48519229888916,
+          "Lub": -14.261962890625
+        }
+      },
+      {
+        "id": "newform-lub-1/long/plain",
+        "gold": "lub",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "Lub",
+          "lub"
+        ],
+        "sumOrder": [
+          "lub",
+          "Lub"
+        ],
+        "meanScores": {
+          "lub": -10.763832092285156,
+          "Lub": -5.897408485412598
+        },
+        "sumScores": {
+          "lub": -10.763832092285156,
+          "Lub": -11.794816970825195
+        }
+      },
+      {
+        "id": "newform-lub-2/short/plain",
+        "gold": "Lub",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "Lub",
+          "lub"
+        ],
+        "sumOrder": [
+          "lub",
+          "Lub"
+        ],
+        "meanScores": {
+          "lub": -11.294803619384766,
+          "Lub": -7.840127468109131
+        },
+        "sumScores": {
+          "lub": -11.294803619384766,
+          "Lub": -15.680254936218262
+        }
+      },
+      {
+        "id": "newform-lub-2/long/plain",
+        "gold": "Lub",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "Lub",
+          "lub"
+        ],
+        "sumOrder": [
+          "lub",
+          "Lub"
+        ],
+        "meanScores": {
+          "lub": -13.165079116821289,
+          "Lub": -11.219182014465332
+        },
+        "sumScores": {
+          "lub": -13.165079116821289,
+          "Lub": -22.438364028930664
+        }
+      },
+      {
+        "id": "newform-kruk-1/short/plain",
+        "gold": "kruk",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "kruk",
+          "Kruk"
+        ],
+        "sumOrder": [
+          "Kruk",
+          "kruk"
+        ],
+        "meanScores": {
+          "Kruk": -9.544519424438477,
+          "kruk": -6.0506792068481445
+        },
+        "sumScores": {
+          "Kruk": -9.544519424438477,
+          "kruk": -12.101358413696289
+        }
+      },
+      {
+        "id": "newform-kruk-1/long/plain",
+        "gold": "kruk",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "kruk",
+          "Kruk"
+        ],
+        "sumOrder": [
+          "Kruk",
+          "kruk"
+        ],
+        "meanScores": {
+          "Kruk": -9.494501113891602,
+          "kruk": -4.989218711853027
+        },
+        "sumScores": {
+          "Kruk": -9.494501113891602,
+          "kruk": -9.978437423706055
+        }
+      },
+      {
+        "id": "newform-kruk-2/short/plain",
+        "gold": "Kruk",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "kruk",
+          "Kruk"
+        ],
+        "sumOrder": [
+          "Kruk",
+          "kruk"
+        ],
+        "meanScores": {
+          "kruk": -6.675314903259277,
+          "Kruk": -10.021644592285156
+        },
+        "sumScores": {
+          "kruk": -13.350629806518555,
+          "Kruk": -10.021644592285156
+        }
+      },
+      {
+        "id": "newform-kruk-2/long/plain",
+        "gold": "Kruk",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "kruk",
+          "Kruk"
+        ],
+        "sumOrder": [
+          "Kruk",
+          "kruk"
+        ],
+        "meanScores": {
+          "kruk": -9.475141525268555,
+          "Kruk": -13.76673698425293
+        },
+        "sumScores": {
+          "kruk": -18.95028305053711,
+          "Kruk": -13.76673698425293
+        }
+      },
+      {
+        "id": "newform-zając-1/short/plain",
+        "gold": "zając",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "zając",
+          "Zając"
+        ],
+        "sumOrder": [
+          "Zając",
+          "zając"
+        ],
+        "meanScores": {
+          "Zając": -9.32017993927002,
+          "zając": -7.41070032119751
+        },
+        "sumScores": {
+          "Zając": -9.32017993927002,
+          "zając": -14.82140064239502
+        }
+      },
+      {
+        "id": "newform-zając-1/long/plain",
+        "gold": "zając",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "zając",
+          "Zając"
+        ],
+        "sumOrder": [
+          "Zając",
+          "zając"
+        ],
+        "meanScores": {
+          "Zając": -9.151660919189453,
+          "zając": -9.022599220275879
+        },
+        "sumScores": {
+          "Zając": -9.151660919189453,
+          "zając": -18.045198440551758
+        }
+      },
+      {
+        "id": "newform-zając-2/short/plain",
+        "gold": "Zając",
+        "group": "forms/new/short",
+        "meanOrder": [
+          "zając",
+          "Zając"
+        ],
+        "sumOrder": [
+          "Zając",
+          "zając"
+        ],
+        "meanScores": {
+          "Zając": -11.30322265625,
+          "zając": -6.164649963378906
+        },
+        "sumScores": {
+          "Zając": -11.30322265625,
+          "zając": -12.329299926757812
+        }
+      },
+      {
+        "id": "newform-zając-2/long/plain",
+        "gold": "Zając",
+        "group": "forms/new/long",
+        "meanOrder": [
+          "zając",
+          "Zając"
+        ],
+        "sumOrder": [
+          "Zając",
+          "zając"
+        ],
+        "meanScores": {
+          "Zając": -9.189417839050293,
+          "zając": -7.900269508361816
+        },
+        "sumScores": {
+          "Zając": -9.189417839050293,
+          "zając": -15.800539016723633
+        }
+      }
+    ],
+    "preservationPassed": false
+  },
+  "fresh24": {
+    "groups": {
+      "authored24/reported/work": {
+        "requests": 1,
+        "labelled": 1,
+        "missingGold": 0,
+        "meanTop1": 0,
+        "sumTop1": 1,
+        "meanTop3": 1,
+        "sumTop3": 1,
+        "repairs": 1,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 1
+      },
+      "authored24/new/work": {
+        "requests": 6,
+        "labelled": 6,
+        "missingGold": 0,
+        "meanTop1": 3,
+        "sumTop1": 6,
+        "meanTop3": 6,
+        "sumTop3": 6,
+        "repairs": 3,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 6
+      },
+      "authored24/previous-context/work": {
+        "requests": 1,
+        "labelled": 1,
+        "missingGold": 0,
+        "meanTop1": 1,
+        "sumTop1": 1,
+        "meanTop3": 1,
+        "sumTop3": 1,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 1
+      },
+      "authored24/new/work-genitive": {
+        "requests": 4,
+        "labelled": 4,
+        "missingGold": 0,
+        "meanTop1": 2,
+        "sumTop1": 2,
+        "meanTop3": 3,
+        "sumTop3": 3,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 0
+      },
+      "authored24/new/raspberry": {
+        "requests": 6,
+        "labelled": 6,
+        "missingGold": 0,
+        "meanTop1": 6,
+        "sumTop1": 6,
+        "meanTop3": 6,
+        "sumTop3": 6,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 0
+      },
+      "authored24/new/stick": {
+        "requests": 4,
+        "labelled": 4,
+        "missingGold": 0,
+        "meanTop1": 4,
+        "sumTop1": 4,
+        "meanTop3": 4,
+        "sumTop3": 4,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 0
+      },
+      "authored24/new/grace": {
+        "requests": 2,
+        "labelled": 2,
+        "missingGold": 0,
+        "meanTop1": 2,
+        "sumTop1": 2,
+        "meanTop3": 2,
+        "sumTop3": 2,
+        "repairs": 0,
+        "regressions": 0,
+        "top3Regressions": 0,
+        "rankChanges": 0
+      }
+    },
+    "changes": [
+      {
+        "id": "form-01",
+        "gold": "Praca",
+        "group": "authored24/reported/work",
+        "meanOrder": [
+          "Pracą",
+          "Praca",
+          "praca",
+          "pracą"
+        ],
+        "sumOrder": [
+          "Praca",
+          "praca",
+          "Pracą",
+          "pracą"
+        ],
+        "meanScores": {
+          "praca": -13.408706665039062,
+          "Praca": -12.620338439941406,
+          "pracą": -17.69024658203125,
+          "Pracą": -8.603775978088379
+        },
+        "sumScores": {
+          "praca": -13.408706665039062,
+          "Praca": -12.620338439941406,
+          "pracą": -17.69024658203125,
+          "Pracą": -17.207551956176758
+        }
+      },
+      {
+        "id": "form-02",
+        "gold": "Praca",
+        "group": "authored24/new/work",
+        "meanOrder": [
+          "Pracą",
+          "Praca",
+          "praca",
+          "pracą"
+        ],
+        "sumOrder": [
+          "Praca",
+          "praca",
+          "pracą",
+          "Pracą"
+        ],
+        "meanScores": {
+          "praca": -10.901759147644043,
+          "Praca": -10.851374626159668,
+          "pracą": -12.81067943572998,
+          "Pracą": -7.000030517578125
+        },
+        "sumScores": {
+          "praca": -10.901759147644043,
+          "Praca": -10.851374626159668,
+          "pracą": -12.81067943572998,
+          "Pracą": -14.00006103515625
+        }
+      },
+      {
+        "id": "form-03",
+        "gold": "Praca",
+        "group": "authored24/new/work",
+        "meanOrder": [
+          "Pracą",
+          "Praca",
+          "praca",
+          "pracą"
+        ],
+        "sumOrder": [
+          "Praca",
+          "praca",
+          "pracą",
+          "Pracą"
+        ],
+        "meanScores": {
+          "praca": -12.778881072998047,
+          "Praca": -12.13107681274414,
+          "pracą": -17.035045623779297,
+          "Pracą": -8.894564628601074
+        },
+        "sumScores": {
+          "praca": -12.778881072998047,
+          "Praca": -12.13107681274414,
+          "pracą": -17.035045623779297,
+          "Pracą": -17.78912925720215
+        }
+      },
+      {
+        "id": "form-04",
+        "gold": "Praca",
+        "group": "authored24/new/work",
+        "meanOrder": [
+          "Pracą",
+          "Praca",
+          "praca",
+          "pracą"
+        ],
+        "sumOrder": [
+          "Praca",
+          "praca",
+          "pracą",
+          "Pracą"
+        ],
+        "meanScores": {
+          "praca": -11.346563339233398,
+          "Praca": -9.039731979370117,
+          "pracą": -14.788351058959961,
+          "Pracą": -8.534234046936035
+        },
+        "sumScores": {
+          "praca": -11.346563339233398,
+          "Praca": -9.039731979370117,
+          "pracą": -14.788351058959961,
+          "Pracą": -17.06846809387207
+        }
+      },
+      {
+        "id": "form-05",
+        "gold": "praca",
+        "group": "authored24/previous-context/work",
+        "meanOrder": [
+          "praca",
+          "Praca",
+          "Pracą",
+          "pracą"
+        ],
+        "sumOrder": [
+          "praca",
+          "Praca",
+          "pracą",
+          "Pracą"
+        ],
+        "meanScores": {
+          "praca": -5.950545787811279,
+          "Praca": -11.5133056640625,
+          "pracą": -14.237998962402344,
+          "Pracą": -12.679006576538086
+        },
+        "sumScores": {
+          "praca": -5.950545787811279,
+          "Praca": -11.5133056640625,
+          "pracą": -14.237998962402344,
+          "Pracą": -25.358013153076172
+        }
+      },
+      {
+        "id": "form-06",
+        "gold": "praca",
+        "group": "authored24/new/work",
+        "meanOrder": [
+          "praca",
+          "Praca",
+          "Pracą",
+          "pracą"
+        ],
+        "sumOrder": [
+          "praca",
+          "Praca",
+          "pracą",
+          "Pracą"
+        ],
+        "meanScores": {
+          "praca": -2.910970687866211,
+          "Praca": -8.502950668334961,
+          "pracą": -12.776983261108398,
+          "Pracą": -12.543905258178711
+        },
+        "sumScores": {
+          "praca": -2.910970687866211,
+          "Praca": -8.502950668334961,
+          "pracą": -12.776983261108398,
+          "Pracą": -25.087810516357422
+        }
+      },
+      {
+        "id": "form-07",
+        "gold": "pracą",
+        "group": "authored24/new/work",
+        "meanOrder": [
+          "pracą",
+          "Pracą",
+          "praca",
+          "Praca"
+        ],
+        "sumOrder": [
+          "pracą",
+          "praca",
+          "Praca",
+          "Pracą"
+        ],
+        "meanScores": {
+          "praca": -7.248680114746094,
+          "Praca": -11.694099426269531,
+          "pracą": -2.5735092163085938,
+          "Pracą": -6.257534980773926
+        },
+        "sumScores": {
+          "praca": -7.248680114746094,
+          "Praca": -11.694099426269531,
+          "pracą": -2.5735092163085938,
+          "Pracą": -12.515069961547852
+        }
+      },
+      {
+        "id": "form-08",
+        "gold": "pracą",
+        "group": "authored24/new/work",
+        "meanOrder": [
+          "pracą",
+          "Pracą",
+          "praca",
+          "Praca"
+        ],
+        "sumOrder": [
+          "pracą",
+          "praca",
+          "Praca",
+          "Pracą"
+        ],
+        "meanScores": {
+          "praca": -11.097562789916992,
+          "Praca": -14.618947982788086,
+          "pracą": -4.732473373413086,
+          "Pracą": -9.077824592590332
+        },
+        "sumScores": {
+          "praca": -11.097562789916992,
+          "Praca": -14.618947982788086,
+          "pracą": -4.732473373413086,
+          "Pracą": -18.155649185180664
+        }
+      }
+    ],
+    "preservationPassed": true
+  },
+  "predictions": [
+    {
+      "id": "form-łódź-1/short/plain",
+      "caseId": "form-łódź-1",
+      "context": "wróciła nasza",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Łódź",
+        "łódź"
+      ],
+      "gold": "łódź",
+      "meanScores": {
+        "Łódź": -5.793878078460693,
+        "łódź": -5.505242824554443
+      },
+      "sumScores": {
+        "Łódź": -5.793878078460693,
+        "łódź": -5.505242824554443
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-łódź-1/long/plain",
+      "caseId": "form-łódź-1",
+      "context": "Po remoncie silnika na wodę wróciła nasza",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Łódź",
+        "łódź"
+      ],
+      "gold": "łódź",
+      "meanScores": {
+        "Łódź": -7.07511043548584,
+        "łódź": -3.5616140365600586
+      },
+      "sumScores": {
+        "Łódź": -7.07511043548584,
+        "łódź": -3.5616140365600586
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-łódź-2/short/plain",
+      "caseId": "form-łódź-2",
+      "context": "podróży jest",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Łódź",
+        "łódź"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "Łódź": -11.243051528930664,
+        "łódź": -10.393259048461914
+      },
+      "sumScores": {
+        "Łódź": -11.243051528930664,
+        "łódź": -10.393259048461914
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-łódź-2/long/plain",
+      "caseId": "form-łódź-2",
+      "context": "Nie wybieramy się nad jezioro. Planujemy zwiedzanie miasta, a kolejnym punktem podróży jest",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Łódź",
+        "łódź"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "Łódź": -9.34325122833252,
+        "łódź": -9.153363227844238
+      },
+      "sumScores": {
+        "Łódź": -9.34325122833252,
+        "łódź": -9.153363227844238
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-łódź-3/short/plain",
+      "caseId": "form-łódź-3",
+      "context": "była gotowa",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "łódź",
+        "Łódź"
+      ],
+      "gold": "łódź",
+      "meanScores": {
+        "łódź": -9.366720199584961,
+        "Łódź": -8.512884140014648
+      },
+      "sumScores": {
+        "łódź": -9.366720199584961,
+        "Łódź": -8.512884140014648
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-łódź-3/long/plain",
+      "caseId": "form-łódź-3",
+      "context": "Przewoźnik ma nowy sprzęt pływający. Po sprawdzeniu wyposażenia do rejsu była gotowa",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "łódź",
+        "Łódź"
+      ],
+      "gold": "łódź",
+      "meanScores": {
+        "łódź": -3.953721761703491,
+        "Łódź": -7.958131790161133
+      },
+      "sumScores": {
+        "łódź": -3.953721761703491,
+        "Łódź": -7.958131790161133
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-łódź-4/short/plain",
+      "caseId": "form-łódź-4",
+      "context": "pozostała jeszcze",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "łódź",
+        "Łódź"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "łódź": -9.134713172912598,
+        "Łódź": -9.905816078186035
+      },
+      "sumScores": {
+        "łódź": -9.134713172912598,
+        "Łódź": -9.905816078186035
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-łódź-4/long/plain",
+      "caseId": "form-łódź-4",
+      "context": "Rozmawiamy o miastach wojewódzkich. Na liście pozostała jeszcze",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "łódź",
+        "Łódź"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "łódź": -8.508490562438965,
+        "Łódź": -5.151977062225342
+      },
+      "sumScores": {
+        "łódź": -8.508490562438965,
+        "Łódź": -5.151977062225342
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-malina-1/short/plain",
+      "caseId": "form-malina-1",
+      "context": "będzie jedna",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Malina",
+        "malina"
+      ],
+      "gold": "malina",
+      "meanScores": {
+        "Malina": -7.9805121421813965,
+        "malina": -6.570672512054443
+      },
+      "sumScores": {
+        "Malina": -15.961024284362793,
+        "malina": -13.141345024108887
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-malina-1/long/plain",
+      "caseId": "form-malina-1",
+      "context": "Do deseru dodaję owoce, a na samym wierzchu będzie jedna",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Malina",
+        "malina"
+      ],
+      "gold": "malina",
+      "meanScores": {
+        "Malina": -9.932493209838867,
+        "malina": -7.38356876373291
+      },
+      "sumScores": {
+        "Malina": -19.864986419677734,
+        "malina": -14.76713752746582
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-malina-2/short/plain",
+      "caseId": "form-malina-2",
+      "context": "dokument nazwiskiem",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "malina",
+        "Malina"
+      ],
+      "gold": "Malina",
+      "meanScores": {
+        "malina": -8.400046348571777,
+        "Malina": -8.541132926940918
+      },
+      "sumScores": {
+        "malina": -16.800092697143555,
+        "Malina": -17.082265853881836
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-malina-2/long/plain",
+      "caseId": "form-malina-2",
+      "context": "Nowy kierownik podpisał dokument nazwiskiem",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "malina",
+        "Malina"
+      ],
+      "gold": "Malina",
+      "meanScores": {
+        "malina": -7.657244682312012,
+        "Malina": -6.804671287536621
+      },
+      "sumScores": {
+        "malina": -15.314489364624023,
+        "Malina": -13.609342575073242
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-malina-3/short/plain",
+      "caseId": "form-malina-3",
+      "context": "tylko jedna",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Malina",
+        "malina"
+      ],
+      "gold": "malina",
+      "meanScores": {
+        "Malina": -8.945842742919922,
+        "malina": -7.134380340576172
+      },
+      "sumScores": {
+        "Malina": -17.891685485839844,
+        "malina": -14.268760681152344
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-malina-3/long/plain",
+      "caseId": "form-malina-3",
+      "context": "Zbieraliśmy owoce z krzewów. W koszyku została tylko jedna",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Malina",
+        "malina"
+      ],
+      "gold": "malina",
+      "meanScores": {
+        "Malina": -9.115550994873047,
+        "malina": -7.090457916259766
+      },
+      "sumScores": {
+        "Malina": -18.231101989746094,
+        "malina": -14.180915832519531
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-malina-4/short/plain",
+      "caseId": "form-malina-4",
+      "context": "jest pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "malina",
+        "Malina"
+      ],
+      "gold": "Malina",
+      "meanScores": {
+        "malina": -9.478364944458008,
+        "Malina": -10.616804122924805
+      },
+      "sumScores": {
+        "malina": -18.956729888916016,
+        "Malina": -21.23360824584961
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-malina-4/long/plain",
+      "caseId": "form-malina-4",
+      "context": "To zebranie pracowników, a nie rozmowa o roślinach. Odpowiedzialny za projekt jest pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "malina",
+        "Malina"
+      ],
+      "gold": "Malina",
+      "meanScores": {
+        "malina": -10.54667854309082,
+        "Malina": -8.575540542602539
+      },
+      "sumScores": {
+        "malina": -21.09335708618164,
+        "Malina": -17.151081085205078
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-jagoda-1/short/plain",
+      "caseId": "form-jagoda-1",
+      "context": "pękła dojrzała",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ],
+      "gold": "jagoda",
+      "meanScores": {
+        "jagoda": -5.799121856689453,
+        "Jagoda": -8.830428123474121
+      },
+      "sumScores": {
+        "jagoda": -11.598243713378906,
+        "Jagoda": -8.830428123474121
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-jagoda-1/long/plain",
+      "caseId": "form-jagoda-1",
+      "context": "Na palcu został mi sok z owocu, bo pękła dojrzała",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ],
+      "gold": "jagoda",
+      "meanScores": {
+        "jagoda": -6.15684175491333,
+        "Jagoda": -9.79189395904541
+      },
+      "sumScores": {
+        "jagoda": -12.31368350982666,
+        "Jagoda": -9.79189395904541
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-jagoda-2/short/plain",
+      "caseId": "form-jagoda-2",
+      "context": "córce imię",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Jagoda",
+        "jagoda"
+      ],
+      "gold": "Jagoda",
+      "meanScores": {
+        "Jagoda": -7.808549880981445,
+        "jagoda": -7.941347122192383
+      },
+      "sumScores": {
+        "Jagoda": -7.808549880981445,
+        "jagoda": -15.882694244384766
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-jagoda-2/long/plain",
+      "caseId": "form-jagoda-2",
+      "context": "Rodzice wybrali córce imię",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Jagoda",
+        "jagoda"
+      ],
+      "gold": "Jagoda",
+      "meanScores": {
+        "Jagoda": -9.943151473999023,
+        "jagoda": -8.34865951538086
+      },
+      "sumScores": {
+        "Jagoda": -9.943151473999023,
+        "jagoda": -16.69731903076172
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-jagoda-3/short/plain",
+      "caseId": "form-jagoda-3",
+      "context": "jeszcze jedna",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ],
+      "gold": "jagoda",
+      "meanScores": {
+        "jagoda": -7.942190647125244,
+        "Jagoda": -11.664722442626953
+      },
+      "sumScores": {
+        "jagoda": -15.884381294250488,
+        "Jagoda": -11.664722442626953
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-jagoda-3/long/plain",
+      "caseId": "form-jagoda-3",
+      "context": "Jesteśmy w lesie i zbieramy owoce. Na dnie naczynia została jeszcze jedna",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ],
+      "gold": "jagoda",
+      "meanScores": {
+        "jagoda": -8.533685684204102,
+        "Jagoda": -11.342734336853027
+      },
+      "sumScores": {
+        "jagoda": -17.067371368408203,
+        "Jagoda": -11.342734336853027
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-jagoda-4/short/plain",
+      "caseId": "form-jagoda-4",
+      "context": "zgłosiła się",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Jagoda",
+        "jagoda"
+      ],
+      "gold": "Jagoda",
+      "meanScores": {
+        "Jagoda": -11.294249534606934,
+        "jagoda": -8.24032211303711
+      },
+      "sumScores": {
+        "Jagoda": -11.294249534606934,
+        "jagoda": -16.48064422607422
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-jagoda-4/long/plain",
+      "caseId": "form-jagoda-4",
+      "context": "Ustalamy listę uczestniczek szkolenia. Jako pierwsza zgłosiła się",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Jagoda",
+        "jagoda"
+      ],
+      "gold": "Jagoda",
+      "meanScores": {
+        "Jagoda": -8.602822303771973,
+        "jagoda": -9.622049331665039
+      },
+      "sumScores": {
+        "Jagoda": -8.602822303771973,
+        "jagoda": -19.244098663330078
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-róża-1/short/plain",
+      "caseId": "form-róża-1",
+      "context": "się biała",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "róża",
+      "meanScores": {
+        "Róża": -9.945634841918945,
+        "róża": -4.872145652770996
+      },
+      "sumScores": {
+        "Róża": -9.945634841918945,
+        "róża": -9.744291305541992
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-róża-1/long/plain",
+      "caseId": "form-róża-1",
+      "context": "W bukiecie obok tulipanów znalazła się biała",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "róża",
+      "meanScores": {
+        "Róża": -7.01528263092041,
+        "róża": -3.9196367263793945
+      },
+      "sumScores": {
+        "Róża": -7.01528263092041,
+        "róża": -7.839273452758789
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-róża-2/short/plain",
+      "caseId": "form-róża-2",
+      "context": "na imię",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "Róża",
+      "meanScores": {
+        "Róża": -7.549707412719727,
+        "róża": -7.365363121032715
+      },
+      "sumScores": {
+        "Róża": -7.549707412719727,
+        "róża": -14.73072624206543
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-róża-2/long/plain",
+      "caseId": "form-róża-2",
+      "context": "Nasza sąsiadka ma na imię",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "Róża",
+      "meanScores": {
+        "Róża": -6.59754753112793,
+        "róża": -7.208436965942383
+      },
+      "sumScores": {
+        "Róża": -6.59754753112793,
+        "róża": -14.416873931884766
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-róża-3/short/plain",
+      "caseId": "form-róża-3",
+      "context": "przyjęła się",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "róża",
+      "meanScores": {
+        "Róża": -12.556062698364258,
+        "róża": -6.199900150299072
+      },
+      "sumScores": {
+        "Róża": -12.556062698364258,
+        "róża": -12.399800300598145
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-róża-3/long/plain",
+      "caseId": "form-róża-3",
+      "context": "Pielęgnuję kwiaty na rabacie. W tym miejscu najlepiej przyjęła się",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "róża",
+      "meanScores": {
+        "Róża": -7.106089115142822,
+        "róża": -4.037348747253418
+      },
+      "sumScores": {
+        "Róża": -7.106089115142822,
+        "róża": -8.074697494506836
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-róża-4/short/plain",
+      "caseId": "form-róża-4",
+      "context": "widnieje imię",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "róża",
+        "Róża"
+      ],
+      "gold": "Róża",
+      "meanScores": {
+        "róża": -6.972892761230469,
+        "Róża": -9.265396118164062
+      },
+      "sumScores": {
+        "róża": -13.945785522460938,
+        "Róża": -9.265396118164062
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-róża-4/long/plain",
+      "caseId": "form-róża-4",
+      "context": "To spotkanie z nową koleżanką. Na zaproszeniu widnieje imię",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "róża",
+        "Róża"
+      ],
+      "gold": "Róża",
+      "meanScores": {
+        "róża": -8.957462310791016,
+        "Róża": -9.937949180603027
+      },
+      "sumScores": {
+        "róża": -17.91492462158203,
+        "Róża": -9.937949180603027
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-warszawska-1/short/plain",
+      "caseId": "form-warszawska-1",
+      "context": "się średnia",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "warszawska",
+        "Warszawska"
+      ],
+      "gold": "warszawska",
+      "meanScores": {
+        "warszawska": -12.355375289916992,
+        "Warszawska": -13.288595199584961
+      },
+      "sumScores": {
+        "warszawska": -12.355375289916992,
+        "Warszawska": -13.288595199584961
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-warszawska-1/long/plain",
+      "caseId": "form-warszawska-1",
+      "context": "W zestawieniu cen wyróżnia się średnia",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "warszawska",
+        "Warszawska"
+      ],
+      "gold": "warszawska",
+      "meanScores": {
+        "warszawska": -9.501443862915039,
+        "Warszawska": -10.324228286743164
+      },
+      "sumScores": {
+        "warszawska": -9.501443862915039,
+        "Warszawska": -10.324228286743164
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-warszawska-2/short/plain",
+      "caseId": "form-warszawska-2",
+      "context": "podpisała pani",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Warszawska",
+        "warszawska"
+      ],
+      "gold": "Warszawska",
+      "meanScores": {
+        "Warszawska": -10.782489776611328,
+        "warszawska": -10.617206573486328
+      },
+      "sumScores": {
+        "Warszawska": -10.782489776611328,
+        "warszawska": -10.617206573486328
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-warszawska-2/long/plain",
+      "caseId": "form-warszawska-2",
+      "context": "Protokół podpisała pani",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Warszawska",
+        "warszawska"
+      ],
+      "gold": "Warszawska",
+      "meanScores": {
+        "Warszawska": -13.923050880432129,
+        "warszawska": -14.175240516662598
+      },
+      "sumScores": {
+        "Warszawska": -13.923050880432129,
+        "warszawska": -14.175240516662598
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-warszawska-3/short/plain",
+      "caseId": "form-warszawska-3",
+      "context": "się propozycja",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "warszawska",
+        "Warszawska"
+      ],
+      "gold": "warszawska",
+      "meanScores": {
+        "warszawska": -12.520899772644043,
+        "Warszawska": -14.000422477722168
+      },
+      "sumScores": {
+        "warszawska": -12.520899772644043,
+        "Warszawska": -14.000422477722168
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-warszawska-3/long/plain",
+      "caseId": "form-warszawska-3",
+      "context": "Porównujemy oferty z różnych miast. Najdroższa okazała się propozycja",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "warszawska",
+        "Warszawska"
+      ],
+      "gold": "warszawska",
+      "meanScores": {
+        "warszawska": -7.479874610900879,
+        "Warszawska": -8.542611122131348
+      },
+      "sumScores": {
+        "warszawska": -7.479874610900879,
+        "Warszawska": -8.542611122131348
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-warszawska-4/short/plain",
+      "caseId": "form-warszawska-4",
+      "context": "jest pani",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "warszawska",
+        "Warszawska"
+      ],
+      "gold": "Warszawska",
+      "meanScores": {
+        "warszawska": -10.786438941955566,
+        "Warszawska": -11.523125648498535
+      },
+      "sumScores": {
+        "warszawska": -10.786438941955566,
+        "Warszawska": -11.523125648498535
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-warszawska-4/long/plain",
+      "caseId": "form-warszawska-4",
+      "context": "Chodzi o nazwisko osoby prowadzącej spotkanie. W dokumentach zapisana jest pani",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "warszawska",
+        "Warszawska"
+      ],
+      "gold": "Warszawska",
+      "meanScores": {
+        "warszawska": -12.700709342956543,
+        "Warszawska": -13.329257011413574
+      },
+      "sumScores": {
+        "warszawska": -12.700709342956543,
+        "Warszawska": -13.329257011413574
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-ale-1/short/plain",
+      "caseId": "form-ale-1",
+      "context": "przyjechać wcześniej,",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "ale",
+        "Ale"
+      ],
+      "gold": "ale",
+      "meanScores": {
+        "ale": -4.237178325653076,
+        "Ale": -11.807208061218262
+      },
+      "sumScores": {
+        "ale": -4.237178325653076,
+        "Ale": -11.807208061218262
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-ale-1/long/plain",
+      "caseId": "form-ale-1",
+      "context": "Chciałem przyjechać wcześniej,",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "ale",
+        "Ale"
+      ],
+      "gold": "ale",
+      "meanScores": {
+        "ale": -1.0104093551635742,
+        "Ale": -8.365191459655762
+      },
+      "sumScores": {
+        "ale": -1.0104093551635742,
+        "Ale": -8.365191459655762
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-ale-2/short/plain",
+      "caseId": "form-ale-2",
+      "context": "się obie",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "ale",
+        "Ale"
+      ],
+      "gold": "Ale",
+      "meanScores": {
+        "ale": -11.217350006103516,
+        "Ale": -13.603900909423828
+      },
+      "sumScores": {
+        "ale": -11.217350006103516,
+        "Ale": -13.603900909423828
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-ale-2/long/plain",
+      "caseId": "form-ale-2",
+      "context": "W grupie są dwie dziewczyny o imieniu Ala. Do konkursu zgłosiły się obie",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "ale",
+        "Ale"
+      ],
+      "gold": "Ale",
+      "meanScores": {
+        "ale": -12.178585052490234,
+        "Ale": -14.247257232666016
+      },
+      "sumScores": {
+        "ale": -12.178585052490234,
+        "Ale": -14.247257232666016
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-ale-3/short/plain",
+      "caseId": "form-ale-3",
+      "context": "pójdzie sprawnie,",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Ale",
+        "ale"
+      ],
+      "gold": "ale",
+      "meanScores": {
+        "Ale": -8.654632568359375,
+        "ale": -3.9612348079681396
+      },
+      "sumScores": {
+        "Ale": -8.654632568359375,
+        "ale": -3.9612348079681396
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-ale-3/long/plain",
+      "caseId": "form-ale-3",
+      "context": "Plan był już gotowy. Wydawało się, że wszystko pójdzie sprawnie,",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Ale",
+        "ale"
+      ],
+      "gold": "ale",
+      "meanScores": {
+        "Ale": -7.709606170654297,
+        "ale": -1.1592446565628052
+      },
+      "sumScores": {
+        "Ale": -7.709606170654297,
+        "ale": -1.1592446565628052
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-ale-4/short/plain",
+      "caseId": "form-ale-4",
+      "context": "te dwie",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "ale",
+        "Ale"
+      ],
+      "gold": "Ale",
+      "meanScores": {
+        "ale": -7.418701648712158,
+        "Ale": -10.596099853515625
+      },
+      "sumScores": {
+        "ale": -7.418701648712158,
+        "Ale": -10.596099853515625
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-ale-4/long/plain",
+      "caseId": "form-ale-4",
+      "context": "Dwie uczestniczki noszą imię Ala. Z całej listy zaproszeń odpowiedziały właśnie te dwie",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "ale",
+        "Ale"
+      ],
+      "gold": "Ale",
+      "meanScores": {
+        "ale": -14.285457611083984,
+        "Ale": -15.926685333251953
+      },
+      "sumScores": {
+        "ale": -14.285457611083984,
+        "Ale": -15.926685333251953
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-lub-1/short/plain",
+      "caseId": "form-lub-1",
+      "context": "wybrać kaszę",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "lub",
+      "meanScores": {
+        "lub": -5.7295026779174805,
+        "Lub": -8.616567611694336
+      },
+      "sumScores": {
+        "lub": -5.7295026779174805,
+        "Lub": -17.233135223388672
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-lub-1/long/plain",
+      "caseId": "form-lub-1",
+      "context": "Na śniadanie możesz wybrać kaszę",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "lub",
+      "meanScores": {
+        "lub": -7.911698818206787,
+        "Lub": -10.377857208251953
+      },
+      "sumScores": {
+        "lub": -7.911698818206787,
+        "Lub": -20.755714416503906
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-lub-2/short/plain",
+      "caseId": "form-lub-2",
+      "context": "adresów obu",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "Lub",
+      "meanScores": {
+        "lub": -8.724029541015625,
+        "Lub": -8.299453735351562
+      },
+      "sumScores": {
+        "lub": -8.724029541015625,
+        "Lub": -16.598907470703125
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-lub-2/long/plain",
+      "caseId": "form-lub-2",
+      "context": "Znam dwie kobiety o imieniu Luba. Nie pamiętam adresów obu",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "Lub",
+      "meanScores": {
+        "lub": -13.446924209594727,
+        "Lub": -9.926559448242188
+      },
+      "sumScores": {
+        "lub": -13.446924209594727,
+        "Lub": -19.853118896484375
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-lub-3/short/plain",
+      "caseId": "form-lub-3",
+      "context": "zamówimy kawę",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Lub",
+        "lub"
+      ],
+      "gold": "lub",
+      "meanScores": {
+        "Lub": -7.656729221343994,
+        "lub": -2.8581175804138184
+      },
+      "sumScores": {
+        "Lub": -15.313458442687988,
+        "lub": -2.8581175804138184
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-lub-3/long/plain",
+      "caseId": "form-lub-3",
+      "context": "W menu są dwie propozycje. Kelner zapytał, czy zamówimy kawę",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Lub",
+        "lub"
+      ],
+      "gold": "lub",
+      "meanScores": {
+        "Lub": -8.142742156982422,
+        "lub": -12.05276870727539
+      },
+      "sumScores": {
+        "Lub": -16.285484313964844,
+        "lub": -12.05276870727539
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-lub-4/short/plain",
+      "caseId": "form-lub-4",
+      "context": "akt obu",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "Lub",
+      "meanScores": {
+        "lub": -9.646370887756348,
+        "Lub": -9.41798210144043
+      },
+      "sumScores": {
+        "lub": -9.646370887756348,
+        "Lub": -18.83596420288086
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-lub-4/long/plain",
+      "caseId": "form-lub-4",
+      "context": "W archiwum są dwie osoby o imieniu Luba. Brakuje akt obu",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "Lub",
+      "meanScores": {
+        "lub": -11.923235893249512,
+        "Lub": -10.138933181762695
+      },
+      "sumScores": {
+        "lub": -11.923235893249512,
+        "Lub": -20.27786636352539
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-tutaj-1/short/plain",
+      "caseId": "form-tutaj-1",
+      "context": "zostaw to",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": "tutaj",
+      "meanScores": {
+        "Tutaj": -10.827733993530273,
+        "tutaj": -4.490697383880615
+      },
+      "sumScores": {
+        "Tutaj": -10.827733993530273,
+        "tutaj": -4.490697383880615
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-tutaj-1/long/plain",
+      "caseId": "form-tutaj-1",
+      "context": "Nie odkładaj tego na półkę, zostaw to",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": "tutaj",
+      "meanScores": {
+        "Tutaj": -10.836457252502441,
+        "tutaj": -4.774270057678223
+      },
+      "sumScores": {
+        "Tutaj": -10.836457252502441,
+        "tutaj": -4.774270057678223
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-tutaj-2/short/plain",
+      "caseId": "form-tutaj-2",
+      "context": "komisji to",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": "Tutaj",
+      "meanScores": {
+        "Tutaj": -14.25761890411377,
+        "tutaj": -8.096074104309082
+      },
+      "sumScores": {
+        "Tutaj": -14.25761890411377,
+        "tutaj": -8.096074104309082
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-tutaj-2/long/plain",
+      "caseId": "form-tutaj-2",
+      "context": "Nazwisko nowego członka komisji to",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": "Tutaj",
+      "meanScores": {
+        "Tutaj": -12.792083740234375,
+        "tutaj": -10.143318176269531
+      },
+      "sumScores": {
+        "Tutaj": -12.792083740234375,
+        "tutaj": -10.143318176269531
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-tutaj-3/short/plain",
+      "caseId": "form-tutaj-3",
+      "context": "postawić właśnie",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "tutaj",
+        "Tutaj"
+      ],
+      "gold": "tutaj",
+      "meanScores": {
+        "tutaj": -1.9333667755126953,
+        "Tutaj": -7.903657913208008
+      },
+      "sumScores": {
+        "tutaj": -1.9333667755126953,
+        "Tutaj": -7.903657913208008
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-tutaj-3/long/plain",
+      "caseId": "form-tutaj-3",
+      "context": "Pokazuję miejsce na mapie. Przygotowany znacznik należy postawić właśnie",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "tutaj",
+        "Tutaj"
+      ],
+      "gold": "tutaj",
+      "meanScores": {
+        "tutaj": -1.2156147956848145,
+        "Tutaj": -7.691055774688721
+      },
+      "sumScores": {
+        "tutaj": -1.2156147956848145,
+        "Tutaj": -7.691055774688721
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-tutaj-4/short/plain",
+      "caseId": "form-tutaj-4",
+      "context": "nazwisko widnieje",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "tutaj",
+        "Tutaj"
+      ],
+      "gold": "Tutaj",
+      "meanScores": {
+        "tutaj": -3.2341995239257812,
+        "Tutaj": -6.59625244140625
+      },
+      "sumScores": {
+        "tutaj": -3.2341995239257812,
+        "Tutaj": -6.59625244140625
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-tutaj-4/long/plain",
+      "caseId": "form-tutaj-4",
+      "context": "Rozmawiamy o osobie podpisującej umowę. W rubryce nazwisko widnieje",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "tutaj",
+        "Tutaj"
+      ],
+      "gold": "Tutaj",
+      "meanScores": {
+        "tutaj": -8.90817928314209,
+        "Tutaj": -13.536910057067871
+      },
+      "sumScores": {
+        "tutaj": -8.90817928314209,
+        "Tutaj": -13.536910057067871
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-lis-1/short/plain",
+      "caseId": "form-lis-1",
+      "context": "wyszedł rudy",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Lis",
+        "lis"
+      ],
+      "gold": "lis",
+      "meanScores": {
+        "Lis": -12.038457870483398,
+        "lis": -9.527677536010742
+      },
+      "sumScores": {
+        "Lis": -12.038457870483398,
+        "lis": -9.527677536010742
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-lis-1/long/plain",
+      "caseId": "form-lis-1",
+      "context": "Z lasu wyszedł rudy",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Lis",
+        "lis"
+      ],
+      "gold": "lis",
+      "meanScores": {
+        "Lis": -12.513422966003418,
+        "lis": -7.462542533874512
+      },
+      "sumScores": {
+        "Lis": -12.513422966003418,
+        "lis": -7.462542533874512
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-lis-2/short/plain",
+      "caseId": "form-lis-2",
+      "context": "podpisał pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "lis",
+        "Lis"
+      ],
+      "gold": "Lis",
+      "meanScores": {
+        "lis": -9.012395858764648,
+        "Lis": -8.217008590698242
+      },
+      "sumScores": {
+        "lis": -9.012395858764648,
+        "Lis": -8.217008590698242
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-lis-2/long/plain",
+      "caseId": "form-lis-2",
+      "context": "Umowę podpisał pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "lis",
+        "Lis"
+      ],
+      "gold": "Lis",
+      "meanScores": {
+        "lis": -10.575345993041992,
+        "Lis": -9.136930465698242
+      },
+      "sumScores": {
+        "lis": -10.575345993041992,
+        "Lis": -9.136930465698242
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-lis-3/short/plain",
+      "caseId": "form-lis-3",
+      "context": "zarośli wybiegł",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "lis",
+        "Lis"
+      ],
+      "gold": "lis",
+      "meanScores": {
+        "lis": -9.646549224853516,
+        "Lis": -11.74666976928711
+      },
+      "sumScores": {
+        "lis": -9.646549224853516,
+        "Lis": -11.74666976928711
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-lis-3/long/plain",
+      "caseId": "form-lis-3",
+      "context": "Obserwujemy dzikie zwierzęta. Po dłuższej chwili z zarośli wybiegł",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "lis",
+        "Lis"
+      ],
+      "gold": "lis",
+      "meanScores": {
+        "lis": -7.368932723999023,
+        "Lis": -9.520841598510742
+      },
+      "sumScores": {
+        "lis": -7.368932723999023,
+        "Lis": -9.520841598510742
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-lis-4/short/plain",
+      "caseId": "form-lis-4",
+      "context": "zapisano doktor",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Lis",
+        "lis"
+      ],
+      "gold": "Lis",
+      "meanScores": {
+        "Lis": -7.991497039794922,
+        "lis": -8.017513275146484
+      },
+      "sumScores": {
+        "Lis": -7.991497039794922,
+        "lis": -8.017513275146484
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-lis-4/long/plain",
+      "caseId": "form-lis-4",
+      "context": "To sprawa nazwiska autora raportu. Na okładce zapisano doktor",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Lis",
+        "lis"
+      ],
+      "gold": "Lis",
+      "meanScores": {
+        "Lis": -11.080241203308105,
+        "lis": -10.534319877624512
+      },
+      "sumScores": {
+        "Lis": -11.080241203308105,
+        "lis": -10.534319877624512
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-wilk-1/short/plain",
+      "caseId": "form-wilk-1",
+      "context": "się szary",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "wilk",
+      "meanScores": {
+        "wilk": -11.114801406860352,
+        "Wilk": -12.542245864868164
+      },
+      "sumScores": {
+        "wilk": -11.114801406860352,
+        "Wilk": -12.542245864868164
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-wilk-1/long/plain",
+      "caseId": "form-wilk-1",
+      "context": "Na skraju lasu pojawił się szary",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "wilk",
+      "meanScores": {
+        "wilk": -4.351292610168457,
+        "Wilk": -7.610112190246582
+      },
+      "sumScores": {
+        "wilk": -4.351292610168457,
+        "Wilk": -7.610112190246582
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-wilk-2/short/plain",
+      "caseId": "form-wilk-2",
+      "context": "jako pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "Wilk",
+      "meanScores": {
+        "wilk": -11.345077514648438,
+        "Wilk": -7.4071431159973145
+      },
+      "sumScores": {
+        "wilk": -11.345077514648438,
+        "Wilk": -7.4071431159973145
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-wilk-2/long/plain",
+      "caseId": "form-wilk-2",
+      "context": "Kierownik przedstawił się jako pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "Wilk",
+      "meanScores": {
+        "wilk": -12.569634437561035,
+        "Wilk": -9.122803688049316
+      },
+      "sumScores": {
+        "wilk": -12.569634437561035,
+        "Wilk": -9.122803688049316
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-wilk-3/short/plain",
+      "caseId": "form-wilk-3",
+      "context": "zatrzymał się",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "wilk",
+      "meanScores": {
+        "wilk": -14.011472702026367,
+        "Wilk": -13.36372184753418
+      },
+      "sumScores": {
+        "wilk": -14.011472702026367,
+        "Wilk": -13.36372184753418
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-wilk-3/long/plain",
+      "caseId": "form-wilk-3",
+      "context": "Rozmawiamy o drapieżnikach. Najbliżej kamery zatrzymał się",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "wilk",
+      "meanScores": {
+        "wilk": -6.014701843261719,
+        "Wilk": -7.573616027832031
+      },
+      "sumScores": {
+        "wilk": -6.014701843261719,
+        "Wilk": -7.573616027832031
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-wilk-4/short/plain",
+      "caseId": "form-wilk-4",
+      "context": "osoby to",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "Wilk",
+      "meanScores": {
+        "wilk": -13.59303092956543,
+        "Wilk": -13.725614547729492
+      },
+      "sumScores": {
+        "wilk": -13.59303092956543,
+        "Wilk": -13.725614547729492
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-wilk-4/long/plain",
+      "caseId": "form-wilk-4",
+      "context": "Ustalamy dane osoby upoważnionej do podpisu. Nazwisko tej osoby to",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "Wilk",
+      "meanScores": {
+        "wilk": -15.148744583129883,
+        "Wilk": -12.374956130981445
+      },
+      "sumScores": {
+        "wilk": -15.148744583129883,
+        "Wilk": -12.374956130981445
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-kruk-1/short/plain",
+      "caseId": "form-kruk-1",
+      "context": "usiadł czarny",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "kruk",
+        "Kruk"
+      ],
+      "gold": "kruk",
+      "meanScores": {
+        "kruk": -5.5562744140625,
+        "Kruk": -9.759588241577148
+      },
+      "sumScores": {
+        "kruk": -11.112548828125,
+        "Kruk": -9.759588241577148
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-kruk-1/long/plain",
+      "caseId": "form-kruk-1",
+      "context": "Na gałęzi usiadł czarny",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "kruk",
+        "Kruk"
+      ],
+      "gold": "kruk",
+      "meanScores": {
+        "kruk": -4.763755798339844,
+        "Kruk": -10.228067398071289
+      },
+      "sumScores": {
+        "kruk": -9.527511596679688,
+        "Kruk": -10.228067398071289
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-kruk-2/short/plain",
+      "caseId": "form-kruk-2",
+      "context": "nosi nazwisko",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Kruk",
+        "kruk"
+      ],
+      "gold": "Kruk",
+      "meanScores": {
+        "Kruk": -9.494897842407227,
+        "kruk": -7.408005714416504
+      },
+      "sumScores": {
+        "Kruk": -9.494897842407227,
+        "kruk": -14.816011428833008
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-kruk-2/long/plain",
+      "caseId": "form-kruk-2",
+      "context": "Nowy lekarz nosi nazwisko",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Kruk",
+        "kruk"
+      ],
+      "gold": "Kruk",
+      "meanScores": {
+        "Kruk": -9.87389850616455,
+        "kruk": -7.364516258239746
+      },
+      "sumScores": {
+        "Kruk": -9.87389850616455,
+        "kruk": -14.729032516479492
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-kruk-3/short/plain",
+      "caseId": "form-kruk-3",
+      "context": "ostatni przyleciał",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Kruk",
+        "kruk"
+      ],
+      "gold": "kruk",
+      "meanScores": {
+        "Kruk": -12.592290878295898,
+        "kruk": -6.026280403137207
+      },
+      "sumScores": {
+        "Kruk": -12.592290878295898,
+        "kruk": -12.052560806274414
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-kruk-3/long/plain",
+      "caseId": "form-kruk-3",
+      "context": "Obserwujemy ptaki przy karmniku. Jako ostatni przyleciał",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Kruk",
+        "kruk"
+      ],
+      "gold": "kruk",
+      "meanScores": {
+        "Kruk": -11.239420890808105,
+        "kruk": -6.246303558349609
+      },
+      "sumScores": {
+        "Kruk": -11.239420890808105,
+        "kruk": -12.492607116699219
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-kruk-4/short/plain",
+      "caseId": "form-kruk-4",
+      "context": "dziś doktor",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Kruk",
+        "kruk"
+      ],
+      "gold": "Kruk",
+      "meanScores": {
+        "Kruk": -9.851449966430664,
+        "kruk": -6.5929155349731445
+      },
+      "sumScores": {
+        "Kruk": -9.851449966430664,
+        "kruk": -13.185831069946289
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-kruk-4/long/plain",
+      "caseId": "form-kruk-4",
+      "context": "Przeglądamy listę pracowników. Dyżur pełni dziś doktor",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Kruk",
+        "kruk"
+      ],
+      "gold": "Kruk",
+      "meanScores": {
+        "Kruk": -7.447672367095947,
+        "kruk": -8.32721996307373
+      },
+      "sumScores": {
+        "Kruk": -7.447672367095947,
+        "kruk": -16.65443992614746
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-sowa-1/short/plain",
+      "caseId": "form-sowa-1",
+      "context": "wyglądała mała",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "sowa",
+      "meanScores": {
+        "Sowa": -11.259194374084473,
+        "sowa": -10.720269203186035
+      },
+      "sumScores": {
+        "Sowa": -11.259194374084473,
+        "sowa": -10.720269203186035
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-sowa-1/long/plain",
+      "caseId": "form-sowa-1",
+      "context": "Z dziupli wyglądała mała",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "sowa",
+      "meanScores": {
+        "Sowa": -8.39544677734375,
+        "sowa": -9.781646728515625
+      },
+      "sumScores": {
+        "Sowa": -8.39544677734375,
+        "sowa": -9.781646728515625
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-sowa-2/short/plain",
+      "caseId": "form-sowa-2",
+      "context": "do pana",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "Sowa",
+      "meanScores": {
+        "Sowa": -11.60181713104248,
+        "sowa": -16.71647834777832
+      },
+      "sumScores": {
+        "Sowa": -11.60181713104248,
+        "sowa": -16.71647834777832
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-sowa-2/long/plain",
+      "caseId": "form-sowa-2",
+      "context": "List zaadresowano do pana",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "Sowa",
+      "meanScores": {
+        "Sowa": -13.784537315368652,
+        "sowa": -18.12447166442871
+      },
+      "sumScores": {
+        "Sowa": -13.784537315368652,
+        "sowa": -18.12447166442871
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-sowa-3/short/plain",
+      "caseId": "form-sowa-3",
+      "context": "wyraźnie uchwycona",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "sowa",
+      "meanScores": {
+        "Sowa": -12.537643432617188,
+        "sowa": -12.983642578125
+      },
+      "sumScores": {
+        "Sowa": -12.537643432617188,
+        "sowa": -12.983642578125
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-sowa-3/long/plain",
+      "caseId": "form-sowa-3",
+      "context": "Badamy nocne ptaki. Na zdjęciu została wyraźnie uchwycona",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "sowa",
+      "meanScores": {
+        "Sowa": -9.162984848022461,
+        "sowa": -8.677907943725586
+      },
+      "sumScores": {
+        "Sowa": -9.162984848022461,
+        "sowa": -8.677907943725586
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-sowa-4/short/plain",
+      "caseId": "form-sowa-4",
+      "context": "odebrał pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "sowa",
+        "Sowa"
+      ],
+      "gold": "Sowa",
+      "meanScores": {
+        "sowa": -14.199319839477539,
+        "Sowa": -8.526399612426758
+      },
+      "sumScores": {
+        "sowa": -14.199319839477539,
+        "Sowa": -8.526399612426758
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-sowa-4/long/plain",
+      "caseId": "form-sowa-4",
+      "context": "Nie chodzi o ptaka, tylko o nazwisko rozmówcy. Telefon odebrał pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "sowa",
+        "Sowa"
+      ],
+      "gold": "Sowa",
+      "meanScores": {
+        "sowa": -16.856365203857422,
+        "Sowa": -11.513835906982422
+      },
+      "sumScores": {
+        "sowa": -16.856365203857422,
+        "Sowa": -11.513835906982422
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-piła-1/short/plain",
+      "caseId": "form-piła-1",
+      "context": "się ostra",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Piła",
+        "piła"
+      ],
+      "gold": "piła",
+      "meanScores": {
+        "Piła": -12.14636516571045,
+        "piła": -10.26893138885498
+      },
+      "sumScores": {
+        "Piła": -12.14636516571045,
+        "piła": -10.26893138885498
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-piła-1/long/plain",
+      "caseId": "form-piła-1",
+      "context": "Do cięcia drewna przyda się ostra",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Piła",
+        "piła"
+      ],
+      "gold": "piła",
+      "meanScores": {
+        "Piła": -7.696295261383057,
+        "piła": -2.536299228668213
+      },
+      "sumScores": {
+        "Piła": -7.696295261383057,
+        "piła": -2.536299228668213
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-piła-2/short/plain",
+      "caseId": "form-piła-2",
+      "context": "się miasto",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "piła",
+        "Piła"
+      ],
+      "gold": "Piła",
+      "meanScores": {
+        "piła": -16.34648323059082,
+        "Piła": -14.541070938110352
+      },
+      "sumScores": {
+        "piła": -16.34648323059082,
+        "Piła": -14.541070938110352
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-piła-2/long/plain",
+      "caseId": "form-piła-2",
+      "context": "Na trasie kolejowej znajduje się miasto",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "piła",
+        "Piła"
+      ],
+      "gold": "Piła",
+      "meanScores": {
+        "piła": -13.954397201538086,
+        "Piła": -7.658147811889648
+      },
+      "sumScores": {
+        "piła": -13.954397201538086,
+        "Piła": -7.658147811889648
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-piła-3/short/plain",
+      "caseId": "form-piła-3",
+      "context": "została uruchomiona",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "piła",
+        "Piła"
+      ],
+      "gold": "piła",
+      "meanScores": {
+        "piła": -12.756904602050781,
+        "Piła": -11.698944091796875
+      },
+      "sumScores": {
+        "piła": -12.756904602050781,
+        "Piła": -11.698944091796875
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-piła-3/long/plain",
+      "caseId": "form-piła-3",
+      "context": "Warsztat kupił nowe narzędzia. Jako pierwsza została uruchomiona",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "piła",
+        "Piła"
+      ],
+      "gold": "piła",
+      "meanScores": {
+        "piła": -8.027602195739746,
+        "Piła": -9.952818870544434
+      },
+      "sumScores": {
+        "piła": -8.027602195739746,
+        "Piła": -9.952818870544434
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-piła-4/short/plain",
+      "caseId": "form-piła-4",
+      "context": "liście jest",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Piła",
+        "piła"
+      ],
+      "gold": "Piła",
+      "meanScores": {
+        "Piła": -14.785134315490723,
+        "piła": -13.12850284576416
+      },
+      "sumScores": {
+        "Piła": -14.785134315490723,
+        "piła": -13.12850284576416
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-piła-4/long/plain",
+      "caseId": "form-piła-4",
+      "context": "Planujemy podróż po miastach. Kolejną miejscowością na liście jest",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Piła",
+        "piła"
+      ],
+      "gold": "Piła",
+      "meanScores": {
+        "Piła": -8.190047264099121,
+        "piła": -11.781561851501465
+      },
+      "sumScores": {
+        "Piła": -8.190047264099121,
+        "piła": -11.781561851501465
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-buk-1/short/plain",
+      "caseId": "form-buk-1",
+      "context": "rośnie stary",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ],
+      "gold": "buk",
+      "meanScores": {
+        "buk": -3.840623378753662,
+        "Buk": -6.895303249359131
+      },
+      "sumScores": {
+        "buk": -7.681246757507324,
+        "Buk": -13.790606498718262
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-buk-1/long/plain",
+      "caseId": "form-buk-1",
+      "context": "W parku rośnie stary",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ],
+      "gold": "buk",
+      "meanScores": {
+        "buk": -3.2351815700531006,
+        "Buk": -6.37590217590332
+      },
+      "sumScores": {
+        "buk": -6.470363140106201,
+        "Buk": -12.75180435180664
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-buk-2/short/plain",
+      "caseId": "form-buk-2",
+      "context": "podpisał pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Buk",
+        "buk"
+      ],
+      "gold": "Buk",
+      "meanScores": {
+        "Buk": -5.194256782531738,
+        "buk": -5.4565019607543945
+      },
+      "sumScores": {
+        "Buk": -10.388513565063477,
+        "buk": -10.913003921508789
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-buk-2/long/plain",
+      "caseId": "form-buk-2",
+      "context": "Pismo podpisał pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Buk",
+        "buk"
+      ],
+      "gold": "Buk",
+      "meanScores": {
+        "Buk": -5.272441864013672,
+        "buk": -7.105434417724609
+      },
+      "sumScores": {
+        "Buk": -10.544883728027344,
+        "buk": -14.210868835449219
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-buk-3/short/plain",
+      "caseId": "form-buk-3",
+      "context": "daje tam",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ],
+      "gold": "buk",
+      "meanScores": {
+        "buk": -6.17889404296875,
+        "Buk": -8.008647918701172
+      },
+      "sumScores": {
+        "buk": -12.3577880859375,
+        "Buk": -16.017295837402344
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-buk-3/long/plain",
+      "caseId": "form-buk-3",
+      "context": "Oglądamy drzewa w ogrodzie. Największy cień daje tam",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ],
+      "gold": "buk",
+      "meanScores": {
+        "buk": -7.423304557800293,
+        "Buk": -8.967001914978027
+      },
+      "sumScores": {
+        "buk": -14.846609115600586,
+        "Buk": -17.934003829956055
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-buk-4/short/plain",
+      "caseId": "form-buk-4",
+      "context": "nazwisko brzmi",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ],
+      "gold": "Buk",
+      "meanScores": {
+        "buk": -5.274760723114014,
+        "Buk": -5.552363872528076
+      },
+      "sumScores": {
+        "buk": -10.549521446228027,
+        "Buk": -11.104727745056152
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-buk-4/long/plain",
+      "caseId": "form-buk-4",
+      "context": "Rozmowa dotyczy autora dokumentu. Jego nazwisko brzmi",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ],
+      "gold": "Buk",
+      "meanScores": {
+        "buk": -6.770631790161133,
+        "Buk": -5.68576192855835
+      },
+      "sumScores": {
+        "buk": -13.541263580322266,
+        "Buk": -11.3715238571167
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "form-zając-1/short/plain",
+      "caseId": "form-zając-1",
+      "context": "przebiegł mały",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "zając",
+        "Zając"
+      ],
+      "gold": "zając",
+      "meanScores": {
+        "zając": -7.992292404174805,
+        "Zając": -13.273065567016602
+      },
+      "sumScores": {
+        "zając": -15.98458480834961,
+        "Zając": -13.273065567016602
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-zając-1/long/plain",
+      "caseId": "form-zając-1",
+      "context": "Przez łąkę przebiegł mały",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "zając",
+        "Zając"
+      ],
+      "gold": "zając",
+      "meanScores": {
+        "zając": -7.913534164428711,
+        "Zając": -10.98897647857666
+      },
+      "sumScores": {
+        "zając": -15.827068328857422,
+        "Zając": -10.98897647857666
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-zając-2/short/plain",
+      "caseId": "form-zając-2",
+      "context": "sporządził pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Zając",
+        "zając"
+      ],
+      "gold": "Zając",
+      "meanScores": {
+        "Zając": -7.606503009796143,
+        "zając": -8.862841606140137
+      },
+      "sumScores": {
+        "Zając": -7.606503009796143,
+        "zając": -17.725683212280273
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-zając-2/long/plain",
+      "caseId": "form-zając-2",
+      "context": "Protokół sporządził pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Zając",
+        "zając"
+      ],
+      "gold": "Zając",
+      "meanScores": {
+        "Zając": -7.4276299476623535,
+        "zając": -9.03830623626709
+      },
+      "sumScores": {
+        "Zając": -7.4276299476623535,
+        "zając": -18.07661247253418
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "form-zając-3/short/plain",
+      "caseId": "form-zając-3",
+      "context": "trawy wyskoczył",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "zając",
+        "Zając"
+      ],
+      "gold": "zając",
+      "meanScores": {
+        "zając": -7.037742614746094,
+        "Zając": -11.83458423614502
+      },
+      "sumScores": {
+        "zając": -14.075485229492188,
+        "Zając": -11.83458423614502
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-zając-3/long/plain",
+      "caseId": "form-zając-3",
+      "context": "Śledzimy zwierzęta przy polu. Po chwili z wysokiej trawy wyskoczył",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "zając",
+        "Zając"
+      ],
+      "gold": "zając",
+      "meanScores": {
+        "zając": -11.023640632629395,
+        "Zając": -9.32776927947998
+      },
+      "sumScores": {
+        "zając": -22.04728126525879,
+        "Zając": -9.32776927947998
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-zając-4/short/plain",
+      "caseId": "form-zając-4",
+      "context": "się pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "zając",
+        "Zając"
+      ],
+      "gold": "Zając",
+      "meanScores": {
+        "zając": -6.164649963378906,
+        "Zając": -11.30322265625
+      },
+      "sumScores": {
+        "zając": -12.329299926757812,
+        "Zając": -11.30322265625
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-zając-4/long/plain",
+      "caseId": "form-zając-4",
+      "context": "Sprawdzamy nazwiska świadków. Na końcu listy znajduje się pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "zając",
+        "Zając"
+      ],
+      "gold": "Zając",
+      "meanScores": {
+        "zając": -11.54459285736084,
+        "Zając": -8.592397689819336
+      },
+      "sumScores": {
+        "zając": -23.08918571472168,
+        "Zając": -8.592397689819336
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "form-kot-1/short/plain",
+      "caseId": "form-kot-1",
+      "context": "zasnął domowy",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Kot",
+        "kot"
+      ],
+      "gold": "kot",
+      "meanScores": {
+        "Kot": -11.239360809326172,
+        "kot": -5.913783550262451
+      },
+      "sumScores": {
+        "Kot": -11.239360809326172,
+        "kot": -5.913783550262451
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-kot-1/long/plain",
+      "caseId": "form-kot-1",
+      "context": "Na parapecie zasnął domowy",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Kot",
+        "kot"
+      ],
+      "gold": "kot",
+      "meanScores": {
+        "Kot": -8.025144577026367,
+        "kot": -2.8257884979248047
+      },
+      "sumScores": {
+        "Kot": -8.025144577026367,
+        "kot": -2.8257884979248047
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-kot-2/short/plain",
+      "caseId": "form-kot-2",
+      "context": "odebrał pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ],
+      "gold": "Kot",
+      "meanScores": {
+        "kot": -10.548440933227539,
+        "Kot": -9.052301406860352
+      },
+      "sumScores": {
+        "kot": -10.548440933227539,
+        "Kot": -9.052301406860352
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-kot-2/long/plain",
+      "caseId": "form-kot-2",
+      "context": "Zamówienie odebrał pan",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ],
+      "gold": "Kot",
+      "meanScores": {
+        "kot": -10.663034439086914,
+        "Kot": -9.199640274047852
+      },
+      "sumScores": {
+        "kot": -10.663034439086914,
+        "Kot": -9.199640274047852
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-kot-3/short/plain",
+      "caseId": "form-kot-3",
+      "context": "drzemie nasz",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ],
+      "gold": "kot",
+      "meanScores": {
+        "kot": -9.12481689453125,
+        "Kot": -12.573348999023438
+      },
+      "sumScores": {
+        "kot": -9.12481689453125,
+        "Kot": -12.573348999023438
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-kot-3/long/plain",
+      "caseId": "form-kot-3",
+      "context": "Opowiadamy o zwierzętach w domu. Na fotelu drzemie nasz",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ],
+      "gold": "kot",
+      "meanScores": {
+        "kot": -2.2178945541381836,
+        "Kot": -5.106192588806152
+      },
+      "sumScores": {
+        "kot": -2.2178945541381836,
+        "Kot": -5.106192588806152
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-kot-4/short/plain",
+      "caseId": "form-kot-4",
+      "context": "nazwisko wpisano",
+      "suite": "forms",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Kot",
+        "kot"
+      ],
+      "gold": "Kot",
+      "meanScores": {
+        "Kot": -12.21302318572998,
+        "kot": -13.354540824890137
+      },
+      "sumScores": {
+        "Kot": -12.21302318572998,
+        "kot": -13.354540824890137
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "form-kot-4/long/plain",
+      "caseId": "form-kot-4",
+      "context": "To dane osoby, a nie opis zwierzęcia. W rubryce nazwisko wpisano",
+      "suite": "forms",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Kot",
+        "kot"
+      ],
+      "gold": "Kot",
+      "meanScores": {
+        "Kot": -9.625889778137207,
+        "kot": -9.470112800598145
+      },
+      "sumScores": {
+        "Kot": -9.625889778137207,
+        "kot": -9.470112800598145
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "replay-1/short/plain",
+      "caseId": "replay-1",
+      "context": "patelni rozgrzałem",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "innej",
+        "Ołówek",
+        "ołówek",
+        "oliwek",
+        "Olek",
+        "Olej",
+        "olej"
+      ],
+      "gold": "olej",
+      "meanScores": {
+        "innej": -13.054731369018555,
+        "Ołówek": -8.07435131072998,
+        "ołówek": -7.290533065795898,
+        "oliwek": -5.364561080932617,
+        "Olek": -8.559808731079102,
+        "Olej": -6.605283737182617,
+        "olej": -5.732991695404053
+      },
+      "sumScores": {
+        "innej": -13.054731369018555,
+        "Ołówek": -24.223054885864258,
+        "ołówek": -14.581066131591797,
+        "oliwek": -10.729122161865234,
+        "Olek": -17.119617462158203,
+        "Olej": -13.210567474365234,
+        "olej": -5.732991695404053
+      },
+      "targetTokenCounts": [
+        1,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": "replay-1/long/plain",
+      "caseId": "replay-1",
+      "context": "Na patelni rozgrzałem",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "innej",
+        "Ołówek",
+        "ołówek",
+        "oliwek",
+        "Olek",
+        "Olej",
+        "olej"
+      ],
+      "gold": "olej",
+      "meanScores": {
+        "innej": -15.754220008850098,
+        "Ołówek": -8.471332550048828,
+        "ołówek": -7.900925159454346,
+        "oliwek": -6.136562824249268,
+        "Olek": -8.614582061767578,
+        "Olej": -6.997555255889893,
+        "olej": -2.97091007232666
+      },
+      "sumScores": {
+        "innej": -15.754220008850098,
+        "Ołówek": -25.413997650146484,
+        "ołówek": -15.801850318908691,
+        "oliwek": -12.273125648498535,
+        "Olek": -17.229164123535156,
+        "Olej": -13.995110511779785,
+        "olej": -2.97091007232666
+      },
+      "targetTokenCounts": [
+        1,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": "replay-2/short/plain",
+      "caseId": "replay-2",
+      "context": "mój kolega",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "innej",
+        "Ołówek",
+        "ołówek",
+        "oliwek",
+        "Olek",
+        "Olej",
+        "olej"
+      ],
+      "gold": "Olek",
+      "meanScores": {
+        "innej": -14.535858154296875,
+        "Ołówek": -7.563875675201416,
+        "ołówek": -9.952628135681152,
+        "oliwek": -7.949206352233887,
+        "Olek": -5.665923118591309,
+        "Olej": -7.894232749938965,
+        "olej": -13.904525756835938
+      },
+      "sumScores": {
+        "innej": -14.535858154296875,
+        "Ołówek": -22.691627502441406,
+        "ołówek": -19.905256271362305,
+        "oliwek": -15.898412704467773,
+        "Olek": -11.331846237182617,
+        "Olej": -15.78846549987793,
+        "olej": -13.904525756835938
+      },
+      "targetTokenCounts": [
+        1,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": "replay-2/long/plain",
+      "caseId": "replay-2",
+      "context": "Pod drzwiami czeka mój kolega",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "innej",
+        "Ołówek",
+        "ołówek",
+        "oliwek",
+        "Olek",
+        "Olej",
+        "olej"
+      ],
+      "gold": "Olek",
+      "meanScores": {
+        "innej": -16.86920166015625,
+        "Ołówek": -7.247888088226318,
+        "ołówek": -10.781747817993164,
+        "oliwek": -8.410734176635742,
+        "Olek": -5.077618598937988,
+        "Olej": -7.1691179275512695,
+        "olej": -17.959022521972656
+      },
+      "sumScores": {
+        "innej": -16.86920166015625,
+        "Ołówek": -21.743663787841797,
+        "ołówek": -21.563495635986328,
+        "oliwek": -16.821468353271484,
+        "Olek": -10.155237197875977,
+        "Olej": -14.338235855102539,
+        "olej": -17.959022521972656
+      },
+      "targetTokenCounts": [
+        1,
+        3,
+        2,
+        2,
+        2,
+        2,
+        1
+      ]
+    },
+    {
+      "id": "replay-3/short/plain",
+      "caseId": "replay-3",
+      "context": "ciasta dodaję",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "mleko",
+        "Mleko",
+        "mieli",
+        "Mieli",
+        "miękko",
+        "miękki",
+        "mięli"
+      ],
+      "gold": "mleko",
+      "meanScores": {
+        "mleko": -7.351657390594482,
+        "Mleko": -7.578262805938721,
+        "mieli": -13.329723358154297,
+        "Mieli": -17.724437713623047,
+        "miękko": -5.936539173126221,
+        "miękki": -5.108299732208252,
+        "mięli": -7.261776447296143
+      },
+      "sumScores": {
+        "mleko": -7.351657390594482,
+        "Mleko": -15.156525611877441,
+        "mieli": -13.329723358154297,
+        "Mieli": -17.724437713623047,
+        "miękko": -11.873078346252441,
+        "miękki": -10.216599464416504,
+        "mięli": -14.523552894592285
+      },
+      "targetTokenCounts": [
+        1,
+        2,
+        1,
+        1,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "replay-3/long/plain",
+      "caseId": "replay-3",
+      "context": "Do ciasta dodaję",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "mleko",
+        "Mleko",
+        "mieli",
+        "Mieli",
+        "miękko",
+        "miękki",
+        "mięli"
+      ],
+      "gold": "mleko",
+      "meanScores": {
+        "mleko": -3.334963321685791,
+        "Mleko": -5.997651100158691,
+        "mieli": -14.537256240844727,
+        "Mieli": -19.06235694885254,
+        "miękko": -5.630520820617676,
+        "miękki": -5.803463935852051,
+        "mięli": -5.375401496887207
+      },
+      "sumScores": {
+        "mleko": -3.334963321685791,
+        "Mleko": -11.995302200317383,
+        "mieli": -14.537256240844727,
+        "Mieli": -19.06235694885254,
+        "miękko": -11.261041641235352,
+        "miękki": -11.606927871704102,
+        "mięli": -10.750802993774414
+      },
+      "targetTokenCounts": [
+        1,
+        2,
+        1,
+        1,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "replay-4/short/plain",
+      "caseId": "replay-4",
+      "context": "się bardzo",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "mleko",
+        "Mleko",
+        "mieli",
+        "Mieli",
+        "miękko",
+        "miękki",
+        "mięli"
+      ],
+      "gold": "miękko",
+      "meanScores": {
+        "mleko": -14.888459205627441,
+        "Mleko": -11.608448028564453,
+        "mieli": -11.033310890197754,
+        "Mieli": -13.872994422912598,
+        "miękko": -9.630451202392578,
+        "miękki": -10.160247802734375,
+        "mięli": -8.305641174316406
+      },
+      "sumScores": {
+        "mleko": -14.888459205627441,
+        "Mleko": -23.216896057128906,
+        "mieli": -11.033310890197754,
+        "Mieli": -13.872994422912598,
+        "miękko": -19.260902404785156,
+        "miękki": -20.32049560546875,
+        "mięli": -16.611282348632812
+      },
+      "targetTokenCounts": [
+        1,
+        2,
+        1,
+        1,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "replay-4/long/plain",
+      "caseId": "replay-4",
+      "context": "Materac ugina się bardzo",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "mleko",
+        "Mleko",
+        "mieli",
+        "Mieli",
+        "miękko",
+        "miękki",
+        "mięli"
+      ],
+      "gold": "miękko",
+      "meanScores": {
+        "mleko": -17.698917388916016,
+        "Mleko": -9.006465911865234,
+        "mieli": -17.357288360595703,
+        "Mieli": -20.817089080810547,
+        "miękko": -1.986133337020874,
+        "miękki": -4.800243377685547,
+        "mięli": -8.042369842529297
+      },
+      "sumScores": {
+        "mleko": -17.698917388916016,
+        "Mleko": -18.01293182373047,
+        "mieli": -17.357288360595703,
+        "Mieli": -20.817089080810547,
+        "miękko": -3.972266674041748,
+        "miękki": -9.600486755371094,
+        "mięli": -16.084739685058594
+      },
+      "targetTokenCounts": [
+        1,
+        2,
+        1,
+        1,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "replay-5/short/plain",
+      "caseId": "replay-5",
+      "context": "spakowałem w",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Jesion",
+        "jesion",
+        "Kewin",
+        "Karsin",
+        "kwestiom",
+        "karton"
+      ],
+      "gold": "karton",
+      "meanScores": {
+        "Jesion": -14.86947250366211,
+        "jesion": -13.706363677978516,
+        "Kewin": -13.161579132080078,
+        "Karsin": -11.383414268493652,
+        "kwestiom": -13.029899597167969,
+        "karton": -3.7866051197052
+      },
+      "sumScores": {
+        "Jesion": -29.73894500732422,
+        "jesion": -27.41272735595703,
+        "Kewin": -26.323158264160156,
+        "Karsin": -22.766828536987305,
+        "kwestiom": -26.059799194335938,
+        "karton": -7.5732102394104
+      },
+      "targetTokenCounts": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "replay-5/long/plain",
+      "caseId": "replay-5",
+      "context": "Rzeczy spakowałem w",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Jesion",
+        "jesion",
+        "Kewin",
+        "Karsin",
+        "kwestiom",
+        "karton"
+      ],
+      "gold": "karton",
+      "meanScores": {
+        "Jesion": -13.58060359954834,
+        "jesion": -12.818350791931152,
+        "Kewin": -12.367892265319824,
+        "Karsin": -11.358569145202637,
+        "kwestiom": -11.98255443572998,
+        "karton": -4.450137138366699
+      },
+      "sumScores": {
+        "Jesion": -27.16120719909668,
+        "jesion": -25.636701583862305,
+        "Kewin": -24.73578453063965,
+        "Karsin": -22.717138290405273,
+        "kwestiom": -23.96510887145996,
+        "karton": -8.900274276733398
+      },
+      "targetTokenCounts": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "replay-6/short/plain",
+      "caseId": "replay-6",
+      "context": "nosi nazwę",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Jesion",
+        "jesion",
+        "Kewin",
+        "Karsin",
+        "kwestiom",
+        "karton"
+      ],
+      "gold": "Karsin",
+      "meanScores": {
+        "Jesion": -8.085466384887695,
+        "jesion": -8.579378128051758,
+        "Kewin": -8.698652267456055,
+        "Karsin": -7.761564254760742,
+        "kwestiom": -11.309671401977539,
+        "karton": -7.732194900512695
+      },
+      "sumScores": {
+        "Jesion": -16.17093276977539,
+        "jesion": -17.158756256103516,
+        "Kewin": -17.39730453491211,
+        "Karsin": -15.523128509521484,
+        "kwestiom": -22.619342803955078,
+        "karton": -15.46438980102539
+      },
+      "targetTokenCounts": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "replay-6/long/plain",
+      "caseId": "replay-6",
+      "context": "Miejscowość na trasie nosi nazwę",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Jesion",
+        "jesion",
+        "Kewin",
+        "Karsin",
+        "kwestiom",
+        "karton"
+      ],
+      "gold": "Karsin",
+      "meanScores": {
+        "Jesion": -8.350068092346191,
+        "jesion": -9.958596229553223,
+        "Kewin": -7.55379581451416,
+        "Karsin": -6.009404182434082,
+        "kwestiom": -12.514927864074707,
+        "karton": -9.92391300201416
+      },
+      "sumScores": {
+        "Jesion": -16.700136184692383,
+        "jesion": -19.917192459106445,
+        "Kewin": -15.10759162902832,
+        "Karsin": -12.018808364868164,
+        "kwestiom": -25.029855728149414,
+        "karton": -19.84782600402832
+      },
+      "targetTokenCounts": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "replay-7/short/plain",
+      "caseId": "replay-7",
+      "context": "zaznaczyłem miasto",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "łudź",
+        "Klisz",
+        "klisz",
+        "Łotysz",
+        "Kosz",
+        "kosz",
+        "Łódź",
+        "łódź"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "łudź": -5.9208292961120605,
+        "Klisz": -7.407500743865967,
+        "klisz": -6.812789440155029,
+        "Łotysz": -5.9468560218811035,
+        "Kosz": -7.025332927703857,
+        "kosz": -13.711235046386719,
+        "Łódź": -7.023193836212158,
+        "łódź": -9.607955932617188
+      },
+      "sumScores": {
+        "łudź": -11.841658592224121,
+        "Klisz": -14.815001487731934,
+        "klisz": -13.625578880310059,
+        "Łotysz": -17.84056854248047,
+        "Kosz": -14.050665855407715,
+        "kosz": -13.711235046386719,
+        "Łódź": -7.023193836212158,
+        "łódź": -9.607955932617188
+      },
+      "targetTokenCounts": [
+        2,
+        2,
+        2,
+        3,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "replay-7/long/plain",
+      "caseId": "replay-7",
+      "context": "Na mapie zaznaczyłem miasto",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "łudź",
+        "Klisz",
+        "klisz",
+        "Łotysz",
+        "Kosz",
+        "kosz",
+        "Łódź",
+        "łódź"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "łudź": -7.152470588684082,
+        "Klisz": -6.540905952453613,
+        "klisz": -7.766037940979004,
+        "Łotysz": -6.021076202392578,
+        "Kosz": -6.638474464416504,
+        "kosz": -14.955620765686035,
+        "Łódź": -5.008133888244629,
+        "łódź": -10.271561622619629
+      },
+      "sumScores": {
+        "łudź": -14.304941177368164,
+        "Klisz": -13.081811904907227,
+        "klisz": -15.532075881958008,
+        "Łotysz": -18.063228607177734,
+        "Kosz": -13.276948928833008,
+        "kosz": -14.955620765686035,
+        "Łódź": -5.008133888244629,
+        "łódź": -10.271561622619629
+      },
+      "targetTokenCounts": [
+        2,
+        2,
+        2,
+        3,
+        2,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "replay-8/short/plain",
+      "caseId": "replay-8",
+      "context": "stoi duży",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "łódź",
+        "Łódź",
+        "kosz",
+        "Kosz",
+        "Łotysz",
+        "klisz",
+        "Klisz",
+        "łudź"
+      ],
+      "gold": "kosz",
+      "meanScores": {
+        "łódź": -10.12272834777832,
+        "Łódź": -12.079256057739258,
+        "kosz": -7.805421352386475,
+        "Kosz": -8.611546516418457,
+        "Łotysz": -8.012194633483887,
+        "klisz": -7.156430244445801,
+        "Klisz": -9.40471363067627,
+        "łudź": -8.293980598449707
+      },
+      "sumScores": {
+        "łódź": -10.12272834777832,
+        "Łódź": -12.079256057739258,
+        "kosz": -7.805421352386475,
+        "Kosz": -17.223093032836914,
+        "Łotysz": -24.036582946777344,
+        "klisz": -14.312860488891602,
+        "Klisz": -18.80942726135254,
+        "łudź": -16.587961196899414
+      },
+      "targetTokenCounts": [
+        1,
+        1,
+        1,
+        2,
+        3,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "replay-8/long/plain",
+      "caseId": "replay-8",
+      "context": "Przy bramie stoi duży",
+      "suite": "recorded_replay",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "łódź",
+        "Łódź",
+        "kosz",
+        "Kosz",
+        "Łotysz",
+        "klisz",
+        "Klisz",
+        "łudź"
+      ],
+      "gold": "kosz",
+      "meanScores": {
+        "łódź": -10.988896369934082,
+        "Łódź": -13.539944648742676,
+        "kosz": -7.678227424621582,
+        "Kosz": -8.286483764648438,
+        "Łotysz": -8.23925495147705,
+        "klisz": -7.244533538818359,
+        "Klisz": -9.867294311523438,
+        "łudź": -8.25802230834961
+      },
+      "sumScores": {
+        "łódź": -10.988896369934082,
+        "Łódź": -13.539944648742676,
+        "kosz": -7.678227424621582,
+        "Kosz": -16.572967529296875,
+        "Łotysz": -24.71776580810547,
+        "klisz": -14.489067077636719,
+        "Klisz": -19.734588623046875,
+        "łudź": -16.51604461669922
+      },
+      "targetTokenCounts": [
+        1,
+        1,
+        1,
+        2,
+        3,
+        2,
+        2,
+        2
+      ]
+    },
+    {
+      "id": "single-jan-0/short/plain",
+      "caseId": "single-jan-0",
+      "context": "pojawia się",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Jan"
+      ],
+      "gold": "Jan",
+      "meanScores": {
+        "Jan": -10.403205871582031
+      },
+      "sumScores": {
+        "Jan": -10.403205871582031
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-jan-0/long/plain",
+      "caseId": "single-jan-0",
+      "context": "Na liście pojawia się",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Jan"
+      ],
+      "gold": "Jan",
+      "meanScores": {
+        "Jan": -9.204285621643066
+      },
+      "sumScores": {
+        "Jan": -9.204285621643066
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-jan-1/short/plain",
+      "caseId": "single-jan-1",
+      "context": "dokumencie widnieje",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Jan"
+      ],
+      "gold": "Jan",
+      "meanScores": {
+        "Jan": -10.351582527160645
+      },
+      "sumScores": {
+        "Jan": -10.351582527160645
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-jan-1/long/plain",
+      "caseId": "single-jan-1",
+      "context": "Rozmawialiśmy długo. W dokumencie widnieje",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Jan"
+      ],
+      "gold": "Jan",
+      "meanScores": {
+        "Jan": -10.501480102539062
+      },
+      "sumScores": {
+        "Jan": -10.501480102539062
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-maria-0/short/plain",
+      "caseId": "single-maria-0",
+      "context": "pojawia się",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Maria"
+      ],
+      "gold": "Maria",
+      "meanScores": {
+        "Maria": -11.760513305664062
+      },
+      "sumScores": {
+        "Maria": -11.760513305664062
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-maria-0/long/plain",
+      "caseId": "single-maria-0",
+      "context": "Na liście pojawia się",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Maria"
+      ],
+      "gold": "Maria",
+      "meanScores": {
+        "Maria": -10.298317909240723
+      },
+      "sumScores": {
+        "Maria": -10.298317909240723
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-maria-1/short/plain",
+      "caseId": "single-maria-1",
+      "context": "dokumencie widnieje",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Maria"
+      ],
+      "gold": "Maria",
+      "meanScores": {
+        "Maria": -12.551465034484863
+      },
+      "sumScores": {
+        "Maria": -12.551465034484863
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-maria-1/long/plain",
+      "caseId": "single-maria-1",
+      "context": "Rozmawialiśmy długo. W dokumencie widnieje",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Maria"
+      ],
+      "gold": "Maria",
+      "meanScores": {
+        "Maria": -11.870162963867188
+      },
+      "sumScores": {
+        "Maria": -11.870162963867188
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-łódzki-0/short/plain",
+      "caseId": "single-łódzki-0",
+      "context": "pojawia się",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "łódzki"
+      ],
+      "gold": "łódzki",
+      "meanScores": {
+        "łódzki": -15.223800659179688
+      },
+      "sumScores": {
+        "łódzki": -15.223800659179688
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-łódzki-0/long/plain",
+      "caseId": "single-łódzki-0",
+      "context": "Na liście pojawia się",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "łódzki"
+      ],
+      "gold": "łódzki",
+      "meanScores": {
+        "łódzki": -13.49233341217041
+      },
+      "sumScores": {
+        "łódzki": -13.49233341217041
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-łódzki-1/short/plain",
+      "caseId": "single-łódzki-1",
+      "context": "dokumencie widnieje",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "łódzki"
+      ],
+      "gold": "łódzki",
+      "meanScores": {
+        "łódzki": -14.76915454864502
+      },
+      "sumScores": {
+        "łódzki": -14.76915454864502
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "single-łódzki-1/long/plain",
+      "caseId": "single-łódzki-1",
+      "context": "Rozmawialiśmy długo. W dokumencie widnieje",
+      "suite": "single_variant",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "łódzki"
+      ],
+      "gold": "łódzki",
+      "meanScores": {
+        "łódzki": -15.357101440429688
+      },
+      "sumScores": {
+        "łódzki": -15.357101440429688
+      },
+      "targetTokenCounts": [
+        1
+      ]
+    },
+    {
+      "id": "ambiguous-łódź/short/plain",
+      "caseId": "ambiguous-łódź",
+      "context": "Zapisz jeszcze",
+      "suite": "ambiguous",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Łódź",
+        "łódź"
+      ],
+      "gold": null,
+      "meanScores": {
+        "Łódź": -16.45621109008789,
+        "łódź": -14.447102546691895
+      },
+      "sumScores": {
+        "Łódź": -16.45621109008789,
+        "łódź": -14.447102546691895
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "ambiguous-łódź/long/plain",
+      "caseId": "ambiguous-łódź",
+      "context": "Zapisz jeszcze",
+      "suite": "ambiguous",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Łódź",
+        "łódź"
+      ],
+      "gold": null,
+      "meanScores": {
+        "Łódź": -16.45621109008789,
+        "łódź": -14.447102546691895
+      },
+      "sumScores": {
+        "Łódź": -16.45621109008789,
+        "łódź": -14.447102546691895
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "ambiguous-malina/short/plain",
+      "caseId": "ambiguous-malina",
+      "context": "Zapisz jeszcze",
+      "suite": "ambiguous",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Malina",
+        "malina"
+      ],
+      "gold": null,
+      "meanScores": {
+        "Malina": -12.404119491577148,
+        "malina": -11.653387069702148
+      },
+      "sumScores": {
+        "Malina": -24.808238983154297,
+        "malina": -23.306774139404297
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "ambiguous-malina/long/plain",
+      "caseId": "ambiguous-malina",
+      "context": "Zapisz jeszcze",
+      "suite": "ambiguous",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Malina",
+        "malina"
+      ],
+      "gold": null,
+      "meanScores": {
+        "Malina": -12.404119491577148,
+        "malina": -11.653387069702148
+      },
+      "sumScores": {
+        "Malina": -24.808238983154297,
+        "malina": -23.306774139404297
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "ambiguous-tutaj/short/plain",
+      "caseId": "ambiguous-tutaj",
+      "context": "Zapisz jeszcze",
+      "suite": "ambiguous",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": null,
+      "meanScores": {
+        "Tutaj": -12.573124885559082,
+        "tutaj": -7.140561103820801
+      },
+      "sumScores": {
+        "Tutaj": -12.573124885559082,
+        "tutaj": -7.140561103820801
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "ambiguous-tutaj/long/plain",
+      "caseId": "ambiguous-tutaj",
+      "context": "Zapisz jeszcze",
+      "suite": "ambiguous",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": null,
+      "meanScores": {
+        "Tutaj": -12.573124885559082,
+        "tutaj": -7.140561103820801
+      },
+      "sumScores": {
+        "Tutaj": -12.573124885559082,
+        "tutaj": -7.140561103820801
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "ambiguous-lis/short/plain",
+      "caseId": "ambiguous-lis",
+      "context": "Zapisz jeszcze",
+      "suite": "ambiguous",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Lis",
+        "lis"
+      ],
+      "gold": null,
+      "meanScores": {
+        "Lis": -16.244335174560547,
+        "lis": -12.974064826965332
+      },
+      "sumScores": {
+        "Lis": -16.244335174560547,
+        "lis": -12.974064826965332
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "ambiguous-lis/long/plain",
+      "caseId": "ambiguous-lis",
+      "context": "Zapisz jeszcze",
+      "suite": "ambiguous",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Lis",
+        "lis"
+      ],
+      "gold": null,
+      "meanScores": {
+        "Lis": -16.244335174560547,
+        "lis": -12.974064826965332
+      },
+      "sumScores": {
+        "Lis": -16.244335174560547,
+        "lis": -12.974064826965332
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "missing-łódź/short/plain",
+      "caseId": "missing-łódź",
+      "context": "dokumentach to",
+      "suite": "missing_key",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "Mleko",
+        "mleko"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "Mleko": -10.64266586303711,
+        "mleko": -11.994797706604004
+      },
+      "sumScores": {
+        "Mleko": -21.28533172607422,
+        "mleko": -11.994797706604004
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "missing-łódź/long/plain",
+      "caseId": "missing-łódź",
+      "context": "Nazwa w dokumentach to",
+      "suite": "missing_key",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "Mleko",
+        "mleko"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "Mleko": -7.889204025268555,
+        "mleko": -11.855331420898438
+      },
+      "sumScores": {
+        "Mleko": -15.77840805053711,
+        "mleko": -11.855331420898438
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "missing-malina/short/plain",
+      "caseId": "missing-malina",
+      "context": "dokumentach to",
+      "suite": "missing_key",
+      "population": "reused",
+      "window": "short",
+      "surfaces": [
+        "mleko",
+        "Mleko"
+      ],
+      "gold": "Malina",
+      "meanScores": {
+        "mleko": -11.994797706604004,
+        "Mleko": -10.64266586303711
+      },
+      "sumScores": {
+        "mleko": -11.994797706604004,
+        "Mleko": -21.28533172607422
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "missing-malina/long/plain",
+      "caseId": "missing-malina",
+      "context": "Nazwa w dokumentach to",
+      "suite": "missing_key",
+      "population": "reused",
+      "window": "long",
+      "surfaces": [
+        "mleko",
+        "Mleko"
+      ],
+      "gold": "Malina",
+      "meanScores": {
+        "mleko": -11.855331420898438,
+        "Mleko": -7.889204025268555
+      },
+      "sumScores": {
+        "mleko": -11.855331420898438,
+        "Mleko": -15.77840805053711
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-łódź-1/short/plain",
+      "caseId": "newform-łódź-1",
+      "context": "się drewniana",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "łódź",
+        "Łódź"
+      ],
+      "gold": "łódź",
+      "meanScores": {
+        "łódź": -8.358026504516602,
+        "Łódź": -10.279474258422852
+      },
+      "sumScores": {
+        "łódź": -8.358026504516602,
+        "Łódź": -10.279474258422852
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-łódź-1/long/plain",
+      "caseId": "newform-łódź-1",
+      "context": "Cumę przywiązano do pomostu. Przy brzegu kołysała się drewniana",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "łódź",
+        "Łódź"
+      ],
+      "gold": "łódź",
+      "meanScores": {
+        "łódź": -2.127119302749634,
+        "Łódź": -8.256338119506836
+      },
+      "sumScores": {
+        "łódź": -2.127119302749634,
+        "Łódź": -8.256338119506836
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-łódź-2/short/plain",
+      "caseId": "newform-łódź-2",
+      "context": "miasto wpisano",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "łódź",
+        "Łódź"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "łódź": -10.462357521057129,
+        "Łódź": -7.636574745178223
+      },
+      "sumScores": {
+        "łódź": -10.462357521057129,
+        "Łódź": -7.636574745178223
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-łódź-2/long/plain",
+      "caseId": "newform-łódź-2",
+      "context": "W formularzu adresowym podano województwo łódzkie, a w polu miasto wpisano",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "łódź",
+        "Łódź"
+      ],
+      "gold": "Łódź",
+      "meanScores": {
+        "łódź": -6.856493949890137,
+        "Łódź": -2.5093562602996826
+      },
+      "sumScores": {
+        "łódź": -6.856493949890137,
+        "Łódź": -2.5093562602996826
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-malina-1/short/plain",
+      "caseId": "newform-malina-1",
+      "context": "jedna świeża",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "malina",
+        "Malina"
+      ],
+      "gold": "malina",
+      "meanScores": {
+        "malina": -6.893594741821289,
+        "Malina": -8.35399055480957
+      },
+      "sumScores": {
+        "malina": -13.787189483642578,
+        "Malina": -16.70798110961914
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "newform-malina-1/long/plain",
+      "caseId": "newform-malina-1",
+      "context": "Na talerzu z owocami leżała jeszcze jedna świeża",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "malina",
+        "Malina"
+      ],
+      "gold": "malina",
+      "meanScores": {
+        "malina": -6.271416187286377,
+        "Malina": -8.65924072265625
+      },
+      "sumScores": {
+        "malina": -12.542832374572754,
+        "Malina": -17.3184814453125
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "newform-malina-2/short/plain",
+      "caseId": "newform-malina-2",
+      "context": "się pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "malina",
+        "Malina"
+      ],
+      "gold": "Malina",
+      "meanScores": {
+        "malina": -9.056224822998047,
+        "Malina": -10.61669921875
+      },
+      "sumScores": {
+        "malina": -18.112449645996094,
+        "Malina": -21.2333984375
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "newform-malina-2/long/plain",
+      "caseId": "newform-malina-2",
+      "context": "Inspektor podał swoje dane osobowe. Nazywa się pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "malina",
+        "Malina"
+      ],
+      "gold": "Malina",
+      "meanScores": {
+        "malina": -10.326482772827148,
+        "Malina": -7.760351657867432
+      },
+      "sumScores": {
+        "malina": -20.652965545654297,
+        "Malina": -15.520703315734863
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "newform-jagoda-1/short/plain",
+      "caseId": "newform-jagoda-1",
+      "context": "to leśna",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Jagoda",
+        "jagoda"
+      ],
+      "gold": "jagoda",
+      "meanScores": {
+        "Jagoda": -9.554986000061035,
+        "jagoda": -5.1261420249938965
+      },
+      "sumScores": {
+        "Jagoda": -9.554986000061035,
+        "jagoda": -10.252284049987793
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-jagoda-1/long/plain",
+      "caseId": "newform-jagoda-1",
+      "context": "Z rozgniecionego owocu wypłynął sok. Była to leśna",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Jagoda",
+        "jagoda"
+      ],
+      "gold": "jagoda",
+      "meanScores": {
+        "Jagoda": -8.795439720153809,
+        "jagoda": -5.805493354797363
+      },
+      "sumScores": {
+        "Jagoda": -8.795439720153809,
+        "jagoda": -11.610986709594727
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-jagoda-2/short/plain",
+      "caseId": "newform-jagoda-2",
+      "context": "zapisano imię",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ],
+      "gold": "Jagoda",
+      "meanScores": {
+        "jagoda": -8.47807788848877,
+        "Jagoda": -11.340753555297852
+      },
+      "sumScores": {
+        "jagoda": -16.95615577697754,
+        "Jagoda": -11.340753555297852
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "newform-jagoda-2/long/plain",
+      "caseId": "newform-jagoda-2",
+      "context": "Sprawdzamy listę dziewcząt. Obok daty urodzenia zapisano imię",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "jagoda",
+        "Jagoda"
+      ],
+      "gold": "Jagoda",
+      "meanScores": {
+        "jagoda": -10.652242660522461,
+        "Jagoda": -12.704201698303223
+      },
+      "sumScores": {
+        "jagoda": -21.304485321044922,
+        "Jagoda": -12.704201698303223
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "newform-róża-1/short/plain",
+      "caseId": "newform-róża-1",
+      "context": "sadzonki widniała",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "róża",
+      "meanScores": {
+        "Róża": -8.334485054016113,
+        "róża": -4.408694744110107
+      },
+      "sumScores": {
+        "Róża": -8.334485054016113,
+        "róża": -8.817389488220215
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-róża-1/long/plain",
+      "caseId": "newform-róża-1",
+      "context": "Ogrodnik pokazał kwiat z kolcami. Na etykiecie sadzonki widniała",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "róża",
+      "meanScores": {
+        "Róża": -9.98868465423584,
+        "róża": -5.033078670501709
+      },
+      "sumScores": {
+        "Róża": -9.98868465423584,
+        "róża": -10.066157341003418
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-róża-2/short/plain",
+      "caseId": "newform-róża-2",
+      "context": "nadali imię",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "Róża",
+      "meanScores": {
+        "Róża": -8.17269229888916,
+        "róża": -7.999819755554199
+      },
+      "sumScores": {
+        "Róża": -8.17269229888916,
+        "róża": -15.999639511108398
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-róża-2/long/plain",
+      "caseId": "newform-róża-2",
+      "context": "W klasie pojawiła się uczennica, której rodzice nadali imię",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Róża",
+        "róża"
+      ],
+      "gold": "Róża",
+      "meanScores": {
+        "Róża": -9.19979476928711,
+        "róża": -9.108833312988281
+      },
+      "sumScores": {
+        "Róża": -9.19979476928711,
+        "róża": -18.217666625976562
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-warszawska-1/short/plain",
+      "caseId": "newform-warszawska-1",
+      "context": "zdobyła odmiana",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "warszawska",
+        "Warszawska"
+      ],
+      "gold": "warszawska",
+      "meanScores": {
+        "warszawska": -8.54794979095459,
+        "Warszawska": -9.814902305603027
+      },
+      "sumScores": {
+        "warszawska": -8.54794979095459,
+        "Warszawska": -9.814902305603027
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-warszawska-1/long/plain",
+      "caseId": "newform-warszawska-1",
+      "context": "Największą popularność zdobyła odmiana",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "warszawska",
+        "Warszawska"
+      ],
+      "gold": "warszawska",
+      "meanScores": {
+        "warszawska": -8.793563842773438,
+        "Warszawska": -11.10687255859375
+      },
+      "sumScores": {
+        "warszawska": -8.793563842773438,
+        "Warszawska": -11.10687255859375
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-warszawska-2/short/plain",
+      "caseId": "newform-warszawska-2",
+      "context": "została pani",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Warszawska",
+        "warszawska"
+      ],
+      "gold": "Warszawska",
+      "meanScores": {
+        "Warszawska": -12.77241325378418,
+        "warszawska": -13.884626388549805
+      },
+      "sumScores": {
+        "Warszawska": -12.77241325378418,
+        "warszawska": -13.884626388549805
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-warszawska-2/long/plain",
+      "caseId": "newform-warszawska-2",
+      "context": "To lista osób, nie ulic. Nową członkinią zespołu została pani",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Warszawska",
+        "warszawska"
+      ],
+      "gold": "Warszawska",
+      "meanScores": {
+        "Warszawska": -11.880532264709473,
+        "warszawska": -11.999527931213379
+      },
+      "sumScores": {
+        "Warszawska": -11.880532264709473,
+        "warszawska": -11.999527931213379
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-ale-1/short/plain",
+      "caseId": "newform-ale-1",
+      "context": "już wyjść,",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "ale",
+        "Ale"
+      ],
+      "gold": "ale",
+      "meanScores": {
+        "ale": -4.352653980255127,
+        "Ale": -9.651169776916504
+      },
+      "sumScores": {
+        "ale": -4.352653980255127,
+        "Ale": -9.651169776916504
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-ale-1/long/plain",
+      "caseId": "newform-ale-1",
+      "context": "Sprawdziłem wszystkie połączenia i chciałem już wyjść,",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "ale",
+        "Ale"
+      ],
+      "gold": "ale",
+      "meanScores": {
+        "ale": -1.1505244970321655,
+        "Ale": -8.298877716064453
+      },
+      "sumScores": {
+        "ale": -1.1505244970321655,
+        "Ale": -8.298877716064453
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-ale-2/short/plain",
+      "caseId": "newform-ale-2",
+      "context": "stoją obydwie",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Ale",
+        "ale"
+      ],
+      "gold": "Ale",
+      "meanScores": {
+        "Ale": -12.331443786621094,
+        "ale": -9.311424255371094
+      },
+      "sumScores": {
+        "Ale": -12.331443786621094,
+        "ale": -9.311424255371094
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-ale-2/long/plain",
+      "caseId": "newform-ale-2",
+      "context": "W obu rodzinach córki mają imię Ala. Na fotografii stoją obydwie",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Ale",
+        "ale"
+      ],
+      "gold": "Ale",
+      "meanScores": {
+        "Ale": -15.197032928466797,
+        "ale": -12.48123550415039
+      },
+      "sumScores": {
+        "Ale": -15.197032928466797,
+        "ale": -12.48123550415039
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-lub-1/short/plain",
+      "caseId": "newform-lub-1",
+      "context": "na poniedziałek",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "lub",
+      "meanScores": {
+        "lub": -8.48519229888916,
+        "Lub": -7.1309814453125
+      },
+      "sumScores": {
+        "lub": -8.48519229888916,
+        "Lub": -14.261962890625
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-lub-1/long/plain",
+      "caseId": "newform-lub-1",
+      "context": "Termin można przesunąć na poniedziałek",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "lub",
+      "meanScores": {
+        "lub": -10.763832092285156,
+        "Lub": -5.897408485412598
+      },
+      "sumScores": {
+        "lub": -10.763832092285156,
+        "Lub": -11.794816970825195
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-lub-2/short/plain",
+      "caseId": "newform-lub-2",
+      "context": "dotyczące obu",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "Lub",
+      "meanScores": {
+        "lub": -11.294803619384766,
+        "Lub": -7.840127468109131
+      },
+      "sumScores": {
+        "lub": -11.294803619384766,
+        "Lub": -15.680254936218262
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-lub-2/long/plain",
+      "caseId": "newform-lub-2",
+      "context": "Obie ciotki noszą imię Luba. Zaginęły zaświadczenia dotyczące obu",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "lub",
+        "Lub"
+      ],
+      "gold": "Lub",
+      "meanScores": {
+        "lub": -13.165079116821289,
+        "Lub": -11.219182014465332
+      },
+      "sumScores": {
+        "lub": -13.165079116821289,
+        "Lub": -22.438364028930664
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-tutaj-1/short/plain",
+      "caseId": "newform-tutaj-1",
+      "context": "postaw je",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": "tutaj",
+      "meanScores": {
+        "Tutaj": -9.354795455932617,
+        "tutaj": -4.8517889976501465
+      },
+      "sumScores": {
+        "Tutaj": -9.354795455932617,
+        "tutaj": -4.8517889976501465
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-tutaj-1/long/plain",
+      "caseId": "newform-tutaj-1",
+      "context": "Przesuń pudełko bliżej mnie i postaw je",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": "tutaj",
+      "meanScores": {
+        "Tutaj": -9.336810111999512,
+        "tutaj": -2.9706907272338867
+      },
+      "sumScores": {
+        "Tutaj": -9.336810111999512,
+        "tutaj": -2.9706907272338867
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-tutaj-2/short/plain",
+      "caseId": "newform-tutaj-2",
+      "context": "o nazwisku",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": "Tutaj",
+      "meanScores": {
+        "Tutaj": -12.000134468078613,
+        "tutaj": -10.605122566223145
+      },
+      "sumScores": {
+        "Tutaj": -12.000134468078613,
+        "tutaj": -10.605122566223145
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-tutaj-2/long/plain",
+      "caseId": "newform-tutaj-2",
+      "context": "W kartotece pacjentów zmieniono adres mężczyzny o nazwisku",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Tutaj",
+        "tutaj"
+      ],
+      "gold": "Tutaj",
+      "meanScores": {
+        "Tutaj": -11.2966947555542,
+        "tutaj": -10.522189140319824
+      },
+      "sumScores": {
+        "Tutaj": -11.2966947555542,
+        "tutaj": -10.522189140319824
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-lis-1/short/plain",
+      "caseId": "newform-lis-1",
+      "context": "przebiegł rudy",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Lis",
+        "lis"
+      ],
+      "gold": "lis",
+      "meanScores": {
+        "Lis": -13.274540901184082,
+        "lis": -10.303059577941895
+      },
+      "sumScores": {
+        "Lis": -13.274540901184082,
+        "lis": -10.303059577941895
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-lis-1/long/plain",
+      "caseId": "newform-lis-1",
+      "context": "Na śniegu zostały ślady dzikiego zwierzęcia. Tropem przebiegł rudy",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Lis",
+        "lis"
+      ],
+      "gold": "lis",
+      "meanScores": {
+        "Lis": -9.191289901733398,
+        "lis": -5.137350082397461
+      },
+      "sumScores": {
+        "Lis": -9.191289901733398,
+        "lis": -5.137350082397461
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-lis-2/short/plain",
+      "caseId": "newform-lis-2",
+      "context": "nim pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "lis",
+        "Lis"
+      ],
+      "gold": "Lis",
+      "meanScores": {
+        "lis": -12.005918502807617,
+        "Lis": -12.561742782592773
+      },
+      "sumScores": {
+        "lis": -12.005918502807617,
+        "Lis": -12.561742782592773
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-lis-2/long/plain",
+      "caseId": "newform-lis-2",
+      "context": "Szef podał nazwisko nowego księgowego. Jest nim pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "lis",
+        "Lis"
+      ],
+      "gold": "Lis",
+      "meanScores": {
+        "lis": -10.627691268920898,
+        "Lis": -7.784643650054932
+      },
+      "sumScores": {
+        "lis": -10.627691268920898,
+        "Lis": -7.784643650054932
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-wilk-1/short/plain",
+      "caseId": "newform-wilk-1",
+      "context": "był szary",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "wilk",
+      "meanScores": {
+        "wilk": -9.538419723510742,
+        "Wilk": -11.785917282104492
+      },
+      "sumScores": {
+        "wilk": -9.538419723510742,
+        "Wilk": -11.785917282104492
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-wilk-1/long/plain",
+      "caseId": "newform-wilk-1",
+      "context": "W stadzie drapieżników największy był szary",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "wilk",
+      "meanScores": {
+        "wilk": -6.6106767654418945,
+        "Wilk": -11.13305377960205
+      },
+      "sumScores": {
+        "wilk": -6.6106767654418945,
+        "Wilk": -11.13305377960205
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-wilk-2/short/plain",
+      "caseId": "newform-wilk-2",
+      "context": "To doktor",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "Wilk",
+      "meanScores": {
+        "wilk": -11.118987083435059,
+        "Wilk": -9.977957725524902
+      },
+      "sumScores": {
+        "wilk": -11.118987083435059,
+        "Wilk": -9.977957725524902
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-wilk-2/long/plain",
+      "caseId": "newform-wilk-2",
+      "context": "Podpis pod opinią należy do lekarza. To doktor",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "wilk",
+        "Wilk"
+      ],
+      "gold": "Wilk",
+      "meanScores": {
+        "wilk": -14.23677921295166,
+        "Wilk": -13.054352760314941
+      },
+      "sumScores": {
+        "wilk": -14.23677921295166,
+        "Wilk": -13.054352760314941
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-kruk-1/short/plain",
+      "caseId": "newform-kruk-1",
+      "context": "duży czarny",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Kruk",
+        "kruk"
+      ],
+      "gold": "kruk",
+      "meanScores": {
+        "Kruk": -9.544519424438477,
+        "kruk": -6.0506792068481445
+      },
+      "sumScores": {
+        "Kruk": -9.544519424438477,
+        "kruk": -12.101358413696289
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-kruk-1/long/plain",
+      "caseId": "newform-kruk-1",
+      "context": "Wśród ptaków nad polem krążył duży czarny",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Kruk",
+        "kruk"
+      ],
+      "gold": "kruk",
+      "meanScores": {
+        "Kruk": -9.494501113891602,
+        "kruk": -4.989218711853027
+      },
+      "sumScores": {
+        "Kruk": -9.494501113891602,
+        "kruk": -9.978437423706055
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-kruk-2/short/plain",
+      "caseId": "newform-kruk-2",
+      "context": "ma nazwisko",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "kruk",
+        "Kruk"
+      ],
+      "gold": "Kruk",
+      "meanScores": {
+        "kruk": -6.675314903259277,
+        "Kruk": -10.021644592285156
+      },
+      "sumScores": {
+        "kruk": -13.350629806518555,
+        "Kruk": -10.021644592285156
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "newform-kruk-2/long/plain",
+      "caseId": "newform-kruk-2",
+      "context": "Sprawdzono tożsamość świadka. W dowodzie ma nazwisko",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "kruk",
+        "Kruk"
+      ],
+      "gold": "Kruk",
+      "meanScores": {
+        "kruk": -9.475141525268555,
+        "Kruk": -13.76673698425293
+      },
+      "sumScores": {
+        "kruk": -18.95028305053711,
+        "Kruk": -13.76673698425293
+      },
+      "targetTokenCounts": [
+        2,
+        1
+      ]
+    },
+    {
+      "id": "newform-sowa-1/short/plain",
+      "caseId": "newform-sowa-1",
+      "context": "Była to",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "sowa",
+      "meanScores": {
+        "Sowa": -13.152206420898438,
+        "sowa": -10.607002258300781
+      },
+      "sumScores": {
+        "Sowa": -13.152206420898438,
+        "sowa": -10.607002258300781
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-sowa-1/long/plain",
+      "caseId": "newform-sowa-1",
+      "context": "Zwierzę aktywne nocą siedziało na gałęzi. Była to",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "sowa",
+      "meanScores": {
+        "Sowa": -11.17566967010498,
+        "sowa": -8.706660270690918
+      },
+      "sumScores": {
+        "Sowa": -11.17566967010498,
+        "sowa": -8.706660270690918
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-sowa-2/short/plain",
+      "caseId": "newform-sowa-2",
+      "context": "jest pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "Sowa",
+      "meanScores": {
+        "Sowa": -12.989579200744629,
+        "sowa": -17.80864715576172
+      },
+      "sumScores": {
+        "Sowa": -12.989579200744629,
+        "sowa": -17.80864715576172
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-sowa-2/long/plain",
+      "caseId": "newform-sowa-2",
+      "context": "Na kopercie wpisano nazwisko adresata. Odbiorcą jest pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Sowa",
+        "sowa"
+      ],
+      "gold": "Sowa",
+      "meanScores": {
+        "Sowa": -10.220335006713867,
+        "sowa": -17.740949630737305
+      },
+      "sumScores": {
+        "Sowa": -10.220335006713867,
+        "sowa": -17.740949630737305
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-piła-1/short/plain",
+      "caseId": "newform-piła-1",
+      "context": "Była to",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Piła",
+        "piła"
+      ],
+      "gold": "piła",
+      "meanScores": {
+        "Piła": -11.038856506347656,
+        "piła": -9.002098083496094
+      },
+      "sumScores": {
+        "Piła": -11.038856506347656,
+        "piła": -9.002098083496094
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-piła-1/long/plain",
+      "caseId": "newform-piła-1",
+      "context": "Mechanik wyjął narzędzie do przecinania desek. Była to",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Piła",
+        "piła"
+      ],
+      "gold": "piła",
+      "meanScores": {
+        "Piła": -8.030882835388184,
+        "piła": -5.29788875579834
+      },
+      "sumScores": {
+        "Piła": -8.030882835388184,
+        "piła": -5.29788875579834
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-piła-2/short/plain",
+      "caseId": "newform-piła-2",
+      "context": "znajduje się",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Piła",
+        "piła"
+      ],
+      "gold": "Piła",
+      "meanScores": {
+        "Piła": -14.395098686218262,
+        "piła": -13.880915641784668
+      },
+      "sumScores": {
+        "Piła": -14.395098686218262,
+        "piła": -13.880915641784668
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-piła-2/long/plain",
+      "caseId": "newform-piła-2",
+      "context": "W wykazie miejscowości w województwie wielkopolskim znajduje się",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Piła",
+        "piła"
+      ],
+      "gold": "Piła",
+      "meanScores": {
+        "Piła": -10.682900428771973,
+        "piła": -13.522202491760254
+      },
+      "sumScores": {
+        "Piła": -10.682900428771973,
+        "piła": -13.522202491760254
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-buk-1/short/plain",
+      "caseId": "newform-buk-1",
+      "context": "był stary",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Buk",
+        "buk"
+      ],
+      "gold": "buk",
+      "meanScores": {
+        "Buk": -6.532173156738281,
+        "buk": -4.666065216064453
+      },
+      "sumScores": {
+        "Buk": -13.064346313476562,
+        "buk": -9.332130432128906
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "newform-buk-1/long/plain",
+      "caseId": "newform-buk-1",
+      "context": "Leśnik mierzył obwody drzew. Najgrubszy był stary",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Buk",
+        "buk"
+      ],
+      "gold": "buk",
+      "meanScores": {
+        "Buk": -6.239864349365234,
+        "buk": -4.404605865478516
+      },
+      "sumScores": {
+        "Buk": -12.479728698730469,
+        "buk": -8.809211730957031
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "newform-buk-2/short/plain",
+      "caseId": "newform-buk-2",
+      "context": "zapisano pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ],
+      "gold": "Buk",
+      "meanScores": {
+        "buk": -4.608465194702148,
+        "Buk": -5.718549728393555
+      },
+      "sumScores": {
+        "buk": -9.216930389404297,
+        "Buk": -11.43709945678711
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "newform-buk-2/long/plain",
+      "caseId": "newform-buk-2",
+      "context": "Pracownik przedstawił się z nazwiska. W protokole zapisano pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "buk",
+        "Buk"
+      ],
+      "gold": "Buk",
+      "meanScores": {
+        "buk": -7.236225605010986,
+        "Buk": -6.0420613288879395
+      },
+      "sumScores": {
+        "buk": -14.472451210021973,
+        "Buk": -12.084122657775879
+      },
+      "targetTokenCounts": [
+        2,
+        2
+      ]
+    },
+    {
+      "id": "newform-zając-1/short/plain",
+      "caseId": "newform-zając-1",
+      "context": "trawy wybiegł",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Zając",
+        "zając"
+      ],
+      "gold": "zając",
+      "meanScores": {
+        "Zając": -9.32017993927002,
+        "zając": -7.41070032119751
+      },
+      "sumScores": {
+        "Zając": -9.32017993927002,
+        "zając": -14.82140064239502
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-zając-1/long/plain",
+      "caseId": "newform-zając-1",
+      "context": "Przy miedzy poruszyły się długie uszy. Z trawy wybiegł",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Zając",
+        "zając"
+      ],
+      "gold": "zając",
+      "meanScores": {
+        "Zając": -9.151660919189453,
+        "zając": -9.022599220275879
+      },
+      "sumScores": {
+        "Zając": -9.151660919189453,
+        "zając": -18.045198440551758
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-zając-2/short/plain",
+      "caseId": "newform-zając-2",
+      "context": "się pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "Zając",
+        "zając"
+      ],
+      "gold": "Zając",
+      "meanScores": {
+        "Zając": -11.30322265625,
+        "zając": -6.164649963378906
+      },
+      "sumScores": {
+        "Zając": -11.30322265625,
+        "zając": -12.329299926757812
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-zając-2/long/plain",
+      "caseId": "newform-zając-2",
+      "context": "Na liście nazwisk zawodników znalazł się pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "Zając",
+        "zając"
+      ],
+      "gold": "Zając",
+      "meanScores": {
+        "Zając": -9.189417839050293,
+        "zając": -7.900269508361816
+      },
+      "sumScores": {
+        "Zając": -9.189417839050293,
+        "zając": -15.800539016723633
+      },
+      "targetTokenCounts": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "newform-kot-1/short/plain",
+      "caseId": "newform-kot-1",
+      "context": "to nasz",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ],
+      "gold": "kot",
+      "meanScores": {
+        "kot": -5.77716588973999,
+        "Kot": -9.770116806030273
+      },
+      "sumScores": {
+        "kot": -5.77716588973999,
+        "Kot": -9.770116806030273
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-kot-1/long/plain",
+      "caseId": "newform-kot-1",
+      "context": "Zwierzę przeciągnęło się i zamiauczało. Był to nasz",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ],
+      "gold": "kot",
+      "meanScores": {
+        "kot": -6.241717338562012,
+        "Kot": -9.59241008758545
+      },
+      "sumScores": {
+        "kot": -6.241717338562012,
+        "Kot": -9.59241008758545
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-kot-2/short/plain",
+      "caseId": "newform-kot-2",
+      "context": "jest pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "short",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ],
+      "gold": "Kot",
+      "meanScores": {
+        "kot": -11.379319190979004,
+        "Kot": -12.681191444396973
+      },
+      "sumScores": {
+        "kot": -11.379319190979004,
+        "Kot": -12.681191444396973
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    },
+    {
+      "id": "newform-kot-2/long/plain",
+      "caseId": "newform-kot-2",
+      "context": "Rejestr dotyczy osób podpisujących umowę. Jedną z nich jest pan",
+      "suite": "forms",
+      "population": "new",
+      "window": "long",
+      "surfaces": [
+        "kot",
+        "Kot"
+      ],
+      "gold": "Kot",
+      "meanScores": {
+        "kot": -11.80506706237793,
+        "Kot": -10.864843368530273
+      },
+      "sumScores": {
+        "kot": -11.80506706237793,
+        "Kot": -10.864843368530273
+      },
+      "targetTokenCounts": [
+        1,
+        1
+      ]
+    }
+  ],
+  "limitations": [
+    "Frozen historical labels are not new blinded evaluation",
+    "Sum remains diagnostic only; no APK/live scorer change",
+    "Original short/long and suite/population metrics kept separate",
+    "No phone swipe geometry, route confirmation or latency claim"
+  ]
+}
