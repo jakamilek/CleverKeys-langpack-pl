@@ -1,0 +1,15 @@
+{
+  "protocol": "herbert-form-diagnostic-v2-history",
+  "createdBeforeInference": true,
+  "previousCodeCommit": "91a5986ee51d000107841bf5b1e0c32f5dc8bef3",
+  "previousRun": 38043798307,
+  "files": {
+    "PROTOCOL.md": "16d19aa2c4bb062c3ee45d1fcfd02a222ebda193e16ff4beb500dfdade5e9586",
+    "replay.py": "48cddae46b6237c98f3a39def417f0957399a8d4361c045b9033c3e93a3690a9",
+    "test_replay.py": "50afb7641996a1b261ea12e79b7ca9b7964bc49047a427da9f6a30ec362c294b",
+    "../herbert_form_diagnostic_v1/freeze-manifest.json": "6ef9004293cf46c76435419ef7cb714114565add4ed6ae7224b794ff8131e6db",
+    "../herbert_mobile_v1/freeze-manifest.json": "ae6d982a1974f196b35aa9a0b08d827b4d47c37425ccd353d88f55f4631e0eca",
+    "../herbert_form_diagnostic_results/2026-10-10-v1/scores.json": "966e957589e6fa244a9fa3adc247df37a77ccfdab1c8c467121ad3c434db1124",
+    "../../.github/workflows/herbert-form-diagnostic-v2.yml": "09b6d6f146c1f601713321d5f3188bd0e9f4b178a30c070f4185dc7c927bb0eb"
+  }
+}
