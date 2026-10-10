@@ -1,0 +1,390 @@
+{
+  "schemaVersion": 1,
+  "contextWords": 32,
+  "cases": [
+    {
+      "id": "agree-form-01",
+      "familyKey": "jagoda",
+      "keys": [
+        "jagoda",
+        "jagodą"
+      ],
+      "context": "Na gałązce dojrzewa jedna granatowa ",
+      "gold": "jagoda",
+      "surfaces": [
+        "jagoda",
+        "Jagoda",
+        "jagodą",
+        "Jagodą"
+      ]
+    },
+    {
+      "id": "agree-form-02",
+      "familyKey": "jagoda",
+      "keys": [
+        "jagoda",
+        "jagodą"
+      ],
+      "context": "Ten sok pachnie świeżą leśną ",
+      "gold": "jagodą",
+      "surfaces": [
+        "jagoda",
+        "Jagoda",
+        "jagodą",
+        "Jagodą"
+      ]
+    },
+    {
+      "id": "agree-form-03",
+      "familyKey": "jagoda",
+      "keys": [
+        "jagoda",
+        "jagodą"
+      ],
+      "context": "Do klasy dołączyła uczennica o imieniu ",
+      "gold": "Jagoda",
+      "surfaces": [
+        "jagoda",
+        "Jagoda",
+        "jagodą",
+        "Jagodą"
+      ]
+    },
+    {
+      "id": "agree-form-04",
+      "familyKey": "jagoda",
+      "keys": [
+        "jagoda",
+        "jagodą"
+      ],
+      "context": "Na obiad przyjdę razem z kuzynką ",
+      "gold": "Jagodą",
+      "surfaces": [
+        "jagoda",
+        "Jagoda",
+        "jagodą",
+        "Jagodą"
+      ]
+    },
+    {
+      "id": "agree-form-05",
+      "familyKey": "róża",
+      "keys": [
+        "róża",
+        "różą"
+      ],
+      "context": "Na środku bukietu znajduje się biała ",
+      "gold": "róża",
+      "surfaces": [
+        "róża",
+        "Róża",
+        "różą",
+        "Różą"
+      ]
+    },
+    {
+      "id": "agree-form-06",
+      "familyKey": "róża",
+      "keys": [
+        "róża",
+        "różą"
+      ],
+      "context": "Kompozycja zachwyca tą białą ",
+      "gold": "różą",
+      "surfaces": [
+        "róża",
+        "Róża",
+        "różą",
+        "Różą"
+      ]
+    },
+    {
+      "id": "agree-form-07",
+      "familyKey": "róża",
+      "keys": [
+        "róża",
+        "różą"
+      ],
+      "context": "W szkole uczy nas pani ",
+      "gold": "Róża",
+      "surfaces": [
+        "róża",
+        "Róża",
+        "różą",
+        "Różą"
+      ]
+    },
+    {
+      "id": "agree-form-08",
+      "familyKey": "róża",
+      "keys": [
+        "róża",
+        "różą"
+      ],
+      "context": "Będę jutro rozmawiał z panią ",
+      "gold": "Różą",
+      "surfaces": [
+        "róża",
+        "Róża",
+        "różą",
+        "Różą"
+      ]
+    },
+    {
+      "id": "agree-form-09",
+      "familyKey": "kruk",
+      "keys": [
+        "kruk",
+        "krukiem"
+      ],
+      "context": "Na suchym pniu usiadł stary ",
+      "gold": "kruk",
+      "surfaces": [
+        "kruk",
+        "Kruk",
+        "krukiem",
+        "Krukiem"
+      ]
+    },
+    {
+      "id": "agree-form-10",
+      "familyKey": "kruk",
+      "keys": [
+        "kruk",
+        "krukiem"
+      ],
+      "context": "Obserwator zachwyca się wielkim czarnym ",
+      "gold": "krukiem",
+      "surfaces": [
+        "kruk",
+        "Kruk",
+        "krukiem",
+        "Krukiem"
+      ]
+    },
+    {
+      "id": "agree-form-11",
+      "familyKey": "kruk",
+      "keys": [
+        "kruk",
+        "krukiem"
+      ],
+      "context": "Decyzję ogłosił sędzia ",
+      "gold": "Kruk",
+      "surfaces": [
+        "kruk",
+        "Kruk",
+        "krukiem",
+        "Krukiem"
+      ]
+    },
+    {
+      "id": "agree-form-12",
+      "familyKey": "kruk",
+      "keys": [
+        "kruk",
+        "krukiem"
+      ],
+      "context": "Spotkanie poprowadzę razem z doktorem ",
+      "gold": "Krukiem",
+      "surfaces": [
+        "kruk",
+        "Kruk",
+        "krukiem",
+        "Krukiem"
+      ]
+    },
+    {
+      "id": "agree-form-13",
+      "familyKey": "kot",
+      "keys": [
+        "kot",
+        "kotem"
+      ],
+      "context": "Przy kominku odpoczywa nasz czarny ",
+      "gold": "kot",
+      "surfaces": [
+        "kot",
+        "Kot",
+        "kotem",
+        "Kotem"
+      ]
+    },
+    {
+      "id": "agree-form-14",
+      "familyKey": "kot",
+      "keys": [
+        "kot",
+        "kotem"
+      ],
+      "context": "Dziecko bawi się puszystym ",
+      "gold": "kotem",
+      "surfaces": [
+        "kot",
+        "Kot",
+        "kotem",
+        "Kotem"
+      ]
+    },
+    {
+      "id": "agree-form-15",
+      "familyKey": "kot",
+      "keys": [
+        "kot",
+        "kotem"
+      ],
+      "context": "Nowym trenerem został pan ",
+      "gold": "Kot",
+      "surfaces": [
+        "kot",
+        "Kot",
+        "kotem",
+        "Kotem"
+      ]
+    },
+    {
+      "id": "agree-form-16",
+      "familyKey": "kot",
+      "keys": [
+        "kot",
+        "kotem"
+      ],
+      "context": "Sprawę omówię jutro z panem ",
+      "gold": "Kotem",
+      "surfaces": [
+        "kot",
+        "Kot",
+        "kotem",
+        "Kotem"
+      ]
+    },
+    {
+      "id": "agree-form-17",
+      "familyKey": "piła",
+      "keys": [
+        "piła",
+        "piłą"
+      ],
+      "context": "Obok młotka znajduje się ręczna ",
+      "gold": "piła",
+      "surfaces": [
+        "piła",
+        "Piła",
+        "piłą",
+        "Piłą"
+      ]
+    },
+    {
+      "id": "agree-form-18",
+      "familyKey": "piła",
+      "keys": [
+        "piła",
+        "piłą"
+      ],
+      "context": "Stolarz tnie deskę ostrą ręczną ",
+      "gold": "piłą",
+      "surfaces": [
+        "piła",
+        "Piła",
+        "piłą",
+        "Piłą"
+      ]
+    },
+    {
+      "id": "agree-form-19",
+      "familyKey": "piła",
+      "keys": [
+        "piła",
+        "piłą"
+      ],
+      "context": "W tym województwie znajduje się miasto ",
+      "gold": "Piła",
+      "surfaces": [
+        "piła",
+        "Piła",
+        "piłą",
+        "Piłą"
+      ]
+    },
+    {
+      "id": "agree-form-20",
+      "familyKey": "piła",
+      "keys": [
+        "piła",
+        "piłą"
+      ],
+      "context": "Trasa przebiega między Poznaniem a ",
+      "gold": "Piłą",
+      "surfaces": [
+        "piła",
+        "Piła",
+        "piłą",
+        "Piłą"
+      ]
+    },
+    {
+      "id": "agree-form-21",
+      "familyKey": "buk",
+      "keys": [
+        "buk",
+        "bukiem"
+      ],
+      "context": "Na skraju lasu rośnie potężny ",
+      "gold": "buk",
+      "surfaces": [
+        "buk",
+        "Buk",
+        "bukiem",
+        "Bukiem"
+      ]
+    },
+    {
+      "id": "agree-form-22",
+      "familyKey": "buk",
+      "keys": [
+        "buk",
+        "bukiem"
+      ],
+      "context": "Pod domem zachwycam się ogromnym ",
+      "gold": "bukiem",
+      "surfaces": [
+        "buk",
+        "Buk",
+        "bukiem",
+        "Bukiem"
+      ]
+    },
+    {
+      "id": "agree-form-23",
+      "familyKey": "buk",
+      "keys": [
+        "buk",
+        "bukiem"
+      ],
+      "context": "Wykład wygłosi dziś profesor ",
+      "gold": "Buk",
+      "surfaces": [
+        "buk",
+        "Buk",
+        "bukiem",
+        "Bukiem"
+      ]
+    },
+    {
+      "id": "agree-form-24",
+      "familyKey": "buk",
+      "keys": [
+        "buk",
+        "bukiem"
+      ],
+      "context": "Pracuję razem z profesorem ",
+      "gold": "Bukiem",
+      "surfaces": [
+        "buk",
+        "Buk",
+        "bukiem",
+        "Bukiem"
+      ]
+    }
+  ]
+}

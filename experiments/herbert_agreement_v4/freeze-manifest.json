@@ -1,0 +1,20 @@
+{
+  "protocol": "herbert-agreement-v4",
+  "createdBeforeInference": true,
+  "parentCommit": "186f116ff79c7317d3578dd40fd142114682357d",
+  "previousRun": 38046863143,
+  "stage1": "last two observed lexical words masked; visible candidates; case logmeanexp then probe arithmetic mean",
+  "stage2": "original candidate-masked mean on chosen key case variants",
+  "files": {
+    "PROTOCOL.md": "a9e1a0be29ee92c55b40e31a4dbdba48480245e5d9305ae57e8e8a60565e5084",
+    "agreement.py": "c2e6e20ed5578b0306ecb7fc985d6ac3ad6b8309a737fc27b47d6d61f9c3a29c",
+    "measure.py": "f8b8f4a71a5ac76d33cfdbd95fe0617e159eb78f6b5e847a0e9c98b9f74601d4",
+    "source.py": "4fe2e968b93bfc4ee1e13ca533419534c839eb530e5a37733a4a8b5c50b43d64",
+    "test_agreement.py": "91e3cc571ac36f2dc0a7cf5ada1ae8e0150ea870722beeab3856d02ecca525c3",
+    "new-forms.json": "4b1afd833a6768484679e9a4e2b48659ddd14e5243e0f37d513cd8de9414356b",
+    "source-fixture.json": "38936bd257fec441220b1c255ae154c1a0cd7f1b6635459129abd7391463a7eb",
+    "../../.github/workflows/herbert-agreement-v4.yml": "8bc04e3fad7227cfee2cfa4f3e76348109c610316b8dc5593cbe652d272cbb93",
+    "../herbert_context_gain_v3/freeze-manifest.json": "9106a3ce163ecddd47dcb43319d4714ed1b7964d25c3129af31cb3f9f7015d7c",
+    "../herbert_form_diagnostic_results/2026-10-10-v3/scores.json": "cd125b04f67a69aa0f185a9151e4448dc8f58c134cc40c7a30e5e9487b1f9b76"
+  }
+}
