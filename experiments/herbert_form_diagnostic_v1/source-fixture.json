@@ -1,0 +1,804 @@
+{
+  "entries": [
+    {
+      "canonicalForm": "laska",
+      "capitalization": {
+        "defaultSurface": "laska",
+        "variants": [
+          {
+            "casePolicy": "lowercase",
+            "surface": "laska"
+          },
+          {
+            "casePolicy": "capitalized",
+            "surface": "Laska"
+          }
+        ]
+      },
+      "metadata": {
+        "sourceEvidence": {
+          "lexicalReadings": [
+            {
+              "labels": [],
+              "lemma": "Lasek:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Laska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Laska:Sf",
+              "nameClasses": [
+                "nazwa_geograficzna",
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Laska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Laska:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Laska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "laska",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "laska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "laski",
+              "nameClasses": [],
+              "partOfSpeech": "adj",
+              "surfaces": [
+                "laska"
+              ]
+            }
+          ],
+          "variantCategoryIds": {
+            "Laska": [
+              "NAME:nazwa_geograficzna",
+              "NAME:nazwisko"
+            ],
+            "laska": [
+              "NAME:nazwa_pospolita",
+              "POS:adj"
+            ]
+          }
+        }
+      },
+      "surfaceKey": "laska"
+    },
+    {
+      "canonicalForm": "laską",
+      "capitalization": {
+        "defaultSurface": "laską",
+        "variants": [
+          {
+            "casePolicy": "lowercase",
+            "surface": "laską"
+          },
+          {
+            "casePolicy": "capitalized",
+            "surface": "Laską"
+          }
+        ]
+      },
+      "metadata": {
+        "sourceEvidence": {
+          "lexicalReadings": [
+            {
+              "labels": [],
+              "lemma": "Laska:Sf",
+              "nameClasses": [
+                "nazwa_geograficzna",
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Laską"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Laska:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Laską"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Lasko:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Laską"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "laska",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "laską"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "laski",
+              "nameClasses": [],
+              "partOfSpeech": "adj",
+              "surfaces": [
+                "laską"
+              ]
+            }
+          ],
+          "variantCategoryIds": {
+            "Laską": [
+              "NAME:nazwa_geograficzna",
+              "NAME:nazwisko"
+            ],
+            "laską": [
+              "NAME:nazwa_pospolita",
+              "POS:adj"
+            ]
+          }
+        }
+      },
+      "surfaceKey": "laską"
+    },
+    {
+      "canonicalForm": "malina",
+      "capitalization": {
+        "defaultSurface": "malina",
+        "variants": [
+          {
+            "casePolicy": "lowercase",
+            "surface": "malina"
+          },
+          {
+            "casePolicy": "capitalized",
+            "surface": "Malina"
+          }
+        ]
+      },
+      "metadata": {
+        "sourceEvidence": {
+          "categories": [
+            {
+              "id": "NAME:imię",
+              "sourceField": "NAME",
+              "sourceValue": "imię"
+            },
+            {
+              "id": "NAME:nazwa_geograficzna",
+              "sourceField": "NAME",
+              "sourceValue": "nazwa_geograficzna"
+            },
+            {
+              "id": "NAME:nazwa_pospolita",
+              "sourceField": "NAME",
+              "sourceValue": "nazwa_pospolita"
+            },
+            {
+              "id": "NAME:nazwisko",
+              "sourceField": "NAME",
+              "sourceValue": "nazwisko"
+            }
+          ],
+          "generatedFormProofs": [
+            {
+              "form": "Malina",
+              "interpretationId": "381dba72b44ce2f6",
+              "labels": [],
+              "lemma": "Malin",
+              "nameClasses": [
+                "nazwa_geograficzna"
+              ],
+              "tag": "subst:sg:gen:m3"
+            },
+            {
+              "form": "Malina",
+              "interpretationId": "a212454be4a45ba7",
+              "labels": [],
+              "lemma": "Malina:Sf",
+              "nameClasses": [
+                "imię",
+                "nazwa_geograficzna",
+                "nazwisko"
+              ],
+              "tag": "subst:sg:nom:f"
+            },
+            {
+              "form": "Malina",
+              "interpretationId": "f168ae9c29d773da",
+              "labels": [],
+              "lemma": "Malina:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "tag": "subst:sg:nom:m1"
+            },
+            {
+              "form": "malina",
+              "interpretationId": "168b42beeabdf98f",
+              "labels": [],
+              "lemma": "malina",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "tag": "subst:sg:nom:f"
+            }
+          ],
+          "interpretations": [
+            {
+              "id": "168b42beeabdf98f",
+              "labels": [],
+              "lemma": "malina",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "tag": "subst:sg:nom:f"
+            },
+            {
+              "id": "381dba72b44ce2f6",
+              "labels": [],
+              "lemma": "Malin",
+              "nameClasses": [
+                "nazwa_geograficzna"
+              ],
+              "tag": "subst:sg:gen:m3"
+            },
+            {
+              "id": "a212454be4a45ba7",
+              "labels": [],
+              "lemma": "Malina:Sf",
+              "nameClasses": [
+                "imię",
+                "nazwa_geograficzna",
+                "nazwisko"
+              ],
+              "tag": "subst:sg:nom:f"
+            },
+            {
+              "id": "f168ae9c29d773da",
+              "labels": [],
+              "lemma": "Malina:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "tag": "subst:sg:nom:m1"
+            }
+          ],
+          "sourceRecords": {
+            "pl-city-inflections.tsv": [],
+            "pl-city-source.tsv": [],
+            "pl-first-name-inflections.tsv": [
+              {
+                "case": "nom",
+                "form": "Malina",
+                "gender": "F",
+                "layer": "modern",
+                "morfeusz_version": "1.99.15",
+                "name": "Malina",
+                "source": "Morfeusz 2 / SGJP"
+              }
+            ]
+          }
+        }
+      },
+      "surfaceKey": "malina"
+    },
+    {
+      "canonicalForm": "maliną",
+      "capitalization": {
+        "defaultSurface": "maliną",
+        "variants": [
+          {
+            "casePolicy": "lowercase",
+            "surface": "maliną"
+          },
+          {
+            "casePolicy": "capitalized",
+            "surface": "Maliną"
+          }
+        ]
+      },
+      "metadata": {
+        "sourceEvidence": {
+          "lexicalReadings": [
+            {
+              "labels": [],
+              "lemma": "Malina:Sf",
+              "nameClasses": [
+                "imię",
+                "nazwa_geograficzna",
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Maliną"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Malina:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Maliną"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "malina",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "maliną"
+              ]
+            }
+          ],
+          "variantCategoryIds": {
+            "Maliną": [
+              "NAME:imię",
+              "NAME:nazwa_geograficzna",
+              "NAME:nazwisko"
+            ],
+            "maliną": [
+              "NAME:nazwa_pospolita"
+            ]
+          }
+        }
+      },
+      "surfaceKey": "maliną"
+    },
+    {
+      "canonicalForm": "praca",
+      "capitalization": {
+        "defaultSurface": "praca",
+        "variants": [
+          {
+            "casePolicy": "lowercase",
+            "surface": "praca"
+          },
+          {
+            "casePolicy": "capitalized",
+            "surface": "Praca"
+          }
+        ]
+      },
+      "metadata": {
+        "sourceEvidence": {
+          "lexicalReadings": [
+            {
+              "labels": [],
+              "lemma": "Praca",
+              "nameClasses": [
+                "nazwa_geograficzna"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Praca"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "praca",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "praca"
+              ]
+            }
+          ],
+          "variantCategoryIds": {
+            "Praca": [
+              "NAME:nazwa_geograficzna"
+            ],
+            "praca": [
+              "NAME:nazwa_pospolita"
+            ]
+          }
+        }
+      },
+      "surfaceKey": "praca"
+    },
+    {
+      "canonicalForm": "pracy",
+      "capitalization": {
+        "defaultSurface": "pracy",
+        "variants": [
+          {
+            "casePolicy": "lowercase",
+            "surface": "pracy"
+          },
+          {
+            "casePolicy": "capitalized",
+            "surface": "Pracy"
+          }
+        ]
+      },
+      "metadata": {
+        "sourceEvidence": {
+          "lexicalReadings": [
+            {
+              "labels": [],
+              "lemma": "Praca",
+              "nameClasses": [
+                "nazwa_geograficzna"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Pracy"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "praca",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "pracy"
+              ]
+            }
+          ],
+          "variantCategoryIds": {
+            "Pracy": [
+              "NAME:nazwa_geograficzna"
+            ],
+            "pracy": [
+              "NAME:nazwa_pospolita"
+            ]
+          }
+        }
+      },
+      "surfaceKey": "pracy"
+    },
+    {
+      "canonicalForm": "pracą",
+      "capitalization": {
+        "defaultSurface": "pracą",
+        "variants": [
+          {
+            "casePolicy": "lowercase",
+            "surface": "pracą"
+          },
+          {
+            "casePolicy": "capitalized",
+            "surface": "Pracą"
+          }
+        ]
+      },
+      "metadata": {
+        "sourceEvidence": {
+          "lexicalReadings": [
+            {
+              "labels": [],
+              "lemma": "Praca",
+              "nameClasses": [
+                "nazwa_geograficzna"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Pracą"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "praca",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "pracą"
+              ]
+            }
+          ],
+          "variantCategoryIds": {
+            "Pracą": [
+              "NAME:nazwa_geograficzna"
+            ],
+            "pracą": [
+              "NAME:nazwa_pospolita"
+            ]
+          }
+        }
+      },
+      "surfaceKey": "pracą"
+    },
+    {
+      "canonicalForm": "łaska",
+      "capitalization": {
+        "defaultSurface": "łaska",
+        "variants": [
+          {
+            "casePolicy": "lowercase",
+            "surface": "łaska"
+          },
+          {
+            "casePolicy": "capitalized",
+            "surface": "Łaska"
+          }
+        ]
+      },
+      "metadata": {
+        "sourceEvidence": {
+          "lexicalReadings": [
+            {
+              "labels": [],
+              "lemma": "Łasek:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Łaska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Łaska:Sf~ej",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Łaska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Łaska:Sf~i",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Łaska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Łaska:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Łaska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Łasko",
+              "nameClasses": [
+                "nazwa_geograficzna"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Łaska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "łaska",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "łaska"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "łaski",
+              "nameClasses": [],
+              "partOfSpeech": "adj",
+              "surfaces": [
+                "łaska"
+              ]
+            }
+          ],
+          "variantCategoryIds": {
+            "Łaska": [
+              "NAME:nazwa_geograficzna",
+              "NAME:nazwisko"
+            ],
+            "łaska": [
+              "NAME:nazwa_pospolita",
+              "POS:adj"
+            ]
+          }
+        }
+      },
+      "surfaceKey": "łaska"
+    },
+    {
+      "canonicalForm": "łaską",
+      "capitalization": {
+        "defaultSurface": "łaską",
+        "variants": [
+          {
+            "casePolicy": "lowercase",
+            "surface": "łaską"
+          },
+          {
+            "casePolicy": "capitalized",
+            "surface": "Łaską"
+          }
+        ]
+      },
+      "metadata": {
+        "sourceEvidence": {
+          "lexicalReadings": [
+            {
+              "labels": [],
+              "lemma": "Łaska:Sf~ej",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Łaską"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Łaska:Sf~i",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Łaską"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "Łaska:Sm1",
+              "nameClasses": [
+                "nazwisko"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "Łaską"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "łaska",
+              "nameClasses": [
+                "nazwa_pospolita"
+              ],
+              "partOfSpeech": "subst",
+              "surfaces": [
+                "łaską"
+              ]
+            },
+            {
+              "labels": [],
+              "lemma": "łaski",
+              "nameClasses": [],
+              "partOfSpeech": "adj",
+              "surfaces": [
+                "łaską"
+              ]
+            }
+          ],
+          "variantCategoryIds": {
+            "Łaską": [
+              "NAME:nazwisko"
+            ],
+            "łaską": [
+              "NAME:nazwa_pospolita",
+              "POS:adj"
+            ]
+          }
+        }
+      },
+      "surfaceKey": "łaską"
+    }
+  ],
+  "languageCode": "pl",
+  "provenance": {
+    "dictionarySha256": "a32f6a55bce7375e744d3d261d6ec9aad96dc64725ac429d4cb1d7225aed3c2a",
+    "fullAudit": {
+      "file": "global-casing-audit.jsonl",
+      "keyField": "surfaceKey",
+      "sha256": "06031fee57cc32b6c795cc36f0a728449e7bc7bd841b09bb23d0fb33012c7454"
+    },
+    "globalCasingAudit": {
+      "builderSha256": "1099efb0a694ba9db7cc07a639fedfdd0cf7fb67b2237dffe444cf4b07113bbb",
+      "caseHandling": "CONDITIONALLY_CASE_SENSITIVE",
+      "dictionaryId": "pl.sgjp.sgjp-2026.06.01",
+      "documentation": "https://morfeusz.sgjp.pl/doc/about/",
+      "program": "Morfeusz 2 / SGJP",
+      "version": "1.99.15"
+    },
+    "historicalNineEntryEvidence": {
+      "artifact": {
+        "artifactId": 11189614575,
+        "binarySurfaceSetVerified": true,
+        "dictionarySha256": "087f99e39ccc9108d7bf5315c902ec5f6899620925e481cfb872d95e8df68e20",
+        "manifest": {
+          "author": "jakamilek/CleverKeys-langpack-pl",
+          "code": "pl",
+          "hasPrefixBoost": false,
+          "name": "Polish",
+          "version": 2,
+          "wordCount": 106363
+        },
+        "packageMembers": [
+          "dictionary.bin",
+          "manifest.json",
+          "unigrams.txt"
+        ],
+        "packageSha256": "301b0b9c7c4c7b96ac7a2545bf27745b6ee38c87f5d04133ede490008d861945",
+        "runId": 36916501466,
+        "sha256": "827a20f8489fad51023e1c0d58319dca030d304f7e213ef4973141251c3ad9ff",
+        "sourceCommit": "a1fa0193fc504e5fe81d9d43c23fd9a1e52ad307",
+        "sourceFileHashes": {
+          "pl-city-inflections.tsv": "51ac50c8b115c41ee5a8c1997deb7f6d221f183ad103289b020644c3d43ea46b",
+          "pl-city-source.tsv": "9682a2d40eca06e40c1b73b33bd1eef1b375782d9a41f2960a52d5bb9b84a3d4",
+          "pl-first-name-inflections.tsv": "a7535d7b840ec4c11bcb39287a5eae2256fc36b79a9a0997db27240b57d4084e"
+        },
+        "wordlistSha256": "418428fc87bb5f7f0e0ee040a6de32f0e4642f29aa4e63eb7663d5470ecfc4e3"
+      },
+      "morfeusz": {
+        "caseHandling": "CONDITIONALLY_CASE_SENSITIVE",
+        "dictionaryId": "pl.sgjp.sgjp-2026.06.01",
+        "fields": [
+          "orth",
+          "lemma",
+          "tag",
+          "nameClasses",
+          "labels"
+        ],
+        "tagsetId": "pl.sgjp.morfeusz-0.8.0",
+        "version": "1.99.15"
+      },
+      "sourceAuditCommit": "cd03c3002e7164eac5d972a2a8b502873177ca09",
+      "sourceAuditSha256": "83ae7299c4781bd0cb731db6d5653cbc6f6b840c38d4b60a1797f40e894c6a4a"
+    },
+    "inputDictionarySha256": "868548d23415d22d04a6f0c5580e5c26ae1a72d64a68359288aa4a1d761b4bd9"
+  },
+  "schemaVersion": 1
+}

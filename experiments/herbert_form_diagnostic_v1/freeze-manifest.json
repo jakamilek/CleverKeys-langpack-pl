@@ -1,0 +1,19 @@
+{
+  "protocol": "herbert-form-diagnostic-v1",
+  "createdBeforeInference": true,
+  "sourceRuntimeCommit": "3f48e456f0d8f411e80be3857f1846e4b2cd139e",
+  "modelProducerCommit": "d831e17b6cb99590d6ba036e92a72b6c3fd0cc7c",
+  "modelArtifactId": 11312693984,
+  "modelRunId": 37230171787,
+  "artifactZipApiSha256": "36c2183acca3ae6dca4afb54c28fe4d9d4cb37ec26f3230c94b4e007b494587f",
+  "files": {
+    "PROTOCOL.md": "1b1535e13834809d3c49020af6c04f369c7332eb0c35074f09ce2f4a16e27441",
+    "cases.json": "ffcae81d508d14720511a47e97eb2780da967c51afa967109f453551900a27f3",
+    "source-fixture.json": "9d3b13daee6be7373d583a12f26f6694cc610b3fcd3852a47fb4fdc9830f09b1",
+    "diagnose.py": "9f296f7d87d5c89bc382955c982534b437231ed1395107fb01e1266c69ac5562",
+    "requirements.txt": "6743a20e4ec46d3f09c8e8be121c34759f2ea1bf5738cf47c1838708be50ca60",
+    "test_diagnostic.py": "6b39cc3d1cea6d32ae343ac58cea326f8698874c7283bfc1bb5423141a80006c",
+    "../herbert_fp32_benchmark_v1/portable.py": "54e54372b56f1b314a73376d256f448c5e1d364099baa4865d6da1f41f2235f4",
+    "../../.github/workflows/herbert-form-diagnostic-v1.yml": "bd5986b7f72d523ebae3bf2dba1d6de4890c7c3fd61e22bce8d5ae6ef534e631"
+  }
+}

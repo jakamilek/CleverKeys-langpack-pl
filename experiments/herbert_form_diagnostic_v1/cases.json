@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 1,
+  "contextWords": 32,
+  "labelProvenance": "authored diagnostic gold; not blinded/external corpus",
+  "cases": [
+    {
+      "id": "form-01",
+      "group": "work",
+      "context": "Gdzie leży wieś ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "Praca",
+      "origin": "reported"
+    },
+    {
+      "id": "form-02",
+      "group": "work",
+      "context": "Ta wieś nazywa się ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "Praca",
+      "origin": "new"
+    },
+    {
+      "id": "form-03",
+      "group": "work",
+      "context": "Na mapie widnieje wieś ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "Praca",
+      "origin": "new"
+    },
+    {
+      "id": "form-04",
+      "group": "work",
+      "context": "Pytam o wieś o nazwie ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "Praca",
+      "origin": "new"
+    },
+    {
+      "id": "form-05",
+      "group": "work",
+      "context": "To jest bardzo ważna ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "praca",
+      "origin": "previous-context"
+    },
+    {
+      "id": "form-06",
+      "group": "work",
+      "context": "Czeka na mnie trudna ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "praca",
+      "origin": "new"
+    },
+    {
+      "id": "form-07",
+      "group": "work",
+      "context": "Jestem zmęczony tą ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "pracą",
+      "origin": "new"
+    },
+    {
+      "id": "form-08",
+      "group": "work",
+      "context": "Zachwycam się jego ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracą",
+        "Pracą"
+      ],
+      "gold": "pracą",
+      "origin": "new"
+    },
+    {
+      "id": "form-09",
+      "group": "work-genitive",
+      "context": "Szukam nowej ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "gold": "pracy",
+      "origin": "new"
+    },
+    {
+      "id": "form-10",
+      "group": "work-genitive",
+      "context": "Nie ma dziś żadnej ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "gold": "pracy",
+      "origin": "new"
+    },
+    {
+      "id": "form-11",
+      "group": "work-genitive",
+      "context": "Spotkamy się obok wsi ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "gold": "Pracy",
+      "origin": "new"
+    },
+    {
+      "id": "form-12",
+      "group": "work-genitive",
+      "context": "Podróż zaczniemy od wsi ",
+      "surfaces": [
+        "praca",
+        "Praca",
+        "pracy",
+        "Pracy"
+      ],
+      "gold": "Pracy",
+      "origin": "new"
+    },
+    {
+      "id": "form-13",
+      "group": "raspberry",
+      "context": "Odwiedzi nas pani ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "Malina",
+      "origin": "new"
+    },
+    {
+      "id": "form-14",
+      "group": "raspberry",
+      "context": "Rozmawiam z panią ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "Maliną",
+      "origin": "new"
+    },
+    {
+      "id": "form-15",
+      "group": "raspberry",
+      "context": "Spotkam się z panią ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "Maliną",
+      "origin": "new"
+    },
+    {
+      "id": "form-16",
+      "group": "raspberry",
+      "context": "To jest dojrzała ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "malina",
+      "origin": "new"
+    },
+    {
+      "id": "form-17",
+      "group": "raspberry",
+      "context": "Napój pachnie świeżą ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "maliną",
+      "origin": "new"
+    },
+    {
+      "id": "form-18",
+      "group": "raspberry",
+      "context": "Na krzaku rośnie czerwona ",
+      "surfaces": [
+        "malina",
+        "Malina",
+        "maliną",
+        "Maliną"
+      ],
+      "gold": "malina",
+      "origin": "new"
+    },
+    {
+      "id": "form-19",
+      "group": "stick",
+      "context": "Ta wieś nazywa się ",
+      "surfaces": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "gold": "Laska",
+      "origin": "new"
+    },
+    {
+      "id": "form-20",
+      "group": "stick",
+      "context": "Podpieram się drewnianą ",
+      "surfaces": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "gold": "laską",
+      "origin": "new"
+    },
+    {
+      "id": "form-21",
+      "group": "stick",
+      "context": "Na stole leży drewniana ",
+      "surfaces": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "gold": "laska",
+      "origin": "new"
+    },
+    {
+      "id": "form-22",
+      "group": "stick",
+      "context": "Rozmawiam z panem ",
+      "surfaces": [
+        "laska",
+        "Laska",
+        "laską",
+        "Laską"
+      ],
+      "gold": "Laską",
+      "origin": "new"
+    },
+    {
+      "id": "form-23",
+      "group": "grace",
+      "context": "To jest wielka ",
+      "surfaces": [
+        "łaska",
+        "Łaska",
+        "łaską",
+        "Łaską"
+      ],
+      "gold": "łaska",
+      "origin": "new"
+    },
+    {
+      "id": "form-24",
+      "group": "grace",
+      "context": "Takie przebaczenie jest ",
+      "surfaces": [
+        "łaska",
+        "Łaska",
+        "łaską",
+        "Łaską"
+      ],
+      "gold": "łaską",
+      "origin": "new"
+    }
+  ]
+}
