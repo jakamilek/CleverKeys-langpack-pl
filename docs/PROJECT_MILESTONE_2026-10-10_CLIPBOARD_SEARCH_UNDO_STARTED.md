@@ -1,0 +1,41 @@
+# Clipboard suggestion and space-free typed autocorrect undo — implementation started, 2026-10-10
+
+## 1. Checkpoint identity and base heads
+UTC date: 2026-10-10. Runtime main before this docs-only checkpoint: 73d06c081eac22915feae24c99e220ed99202b02. Producer main before checkpoint: bfd41532c07a88689eee646fb26d4d34cf7cfd51. Active runtime trial moved from 3f48e456f0d8f411e80be3857f1846e4b2cd139e to d1ccc7e61e95e0506cf85217e51a8d080bbe5395. This document is saved on both mains, with all previous documents and source blobs retained. Main code is not replaced by trial code.
+
+## 2. Current architecture
+Geometric swipe decoder supplies trusted dictionary candidates and per-candidate geometry. Optional HerBERT FP32 reranks bounded candidate forms/case before the existing single publish continuation; compact-case-v4 presentation preserves selectable alternatives without reserving four leading case positions. Original separately imported FP32 model, tokenizer, scoring normalization, 32-word default and 350ms deadline remain unchanged. Context is read from the active editor with existing privacy/staleness guards.
+
+## 3. Accepted scope
+The user requested app changes before further SI/dictionary work: show the current copied text as a paste suggestion before typing; immediate BS must undo typed autocorrection in a search field even when the editor does not retain a trailing space, and keep the restored original available for adding to the user dictionary. Preserve current BS drag/hold/haptics, spacing exceptions, settings, SI and dictionary behavior. Polish localization is the priority; other-language gaps go into the backlog. Do not monitor Actions completion; at most 60 seconds of monitoring per run, then user reports completion.
+
+## 4. Rejected or unapproved work
+The separate agreement-v4 host experiment remains rejected for linguistic regressions. Producer diagnostic branch experiment/herbert-form-diagnostic-v1 at 86ab57abecebcff3c290fc269fd78ab5e2a7cf60 contains result archives only; PR13 remains a draft. No agreement-v4 scorer, population/corpus priors, model replacement, new dictionary duplicate keys or invented metadata has been enabled. No main merge, release, tag, version/dependency/default change or new background CI monitoring.
+
+## 5. Implemented behavior
+Fifteen selected files in runtime trial d1ccc7e61e95e0506cf85217e51a8d080bbe5395 add ClipboardPasteSuggestions and a separate localized Wklej/Paste chip in SuggestionBar. It uses the current single plain-text clipboard item (1–65536 characters; preview limited to 64 Unicode code points), pastes the entire text through the existing direct paste path, and never becomes a decoder candidate or learning event. No URI coercion, history lookup, persistence or clipboard-content logging. Password, no-personalized-learning fields and platform-sensitive clips are excluded. First actual editor mutation, cursor move, hidden keyboard, session/editor replacement or invalid queued tap dismisses the offer; revision and editor identity are checked again at tap. Existing temporary/autofill UI has priority.
+
+Typed autocorrect bookmarks now verify either the actual corrected word plus a space or the actual corrected word with no separator. A nonpassword text-field guard is used independently of automatic-spacing policy, including search/URI editors. Connection/EditorInfo identity, collapsed caret, exact cursor, surrounding word boundaries and original corrected token remain required. Immediate BS restores the whole original typed token, preserves its actual separator and leaves the ExactAdd offer. Legacy explicit undo paths retain their original spacing eligibility. The central input-behavior spec, EN/PL labels, localization backlog and bounded memory/todo entry are updated.
+
+## 6. Evidence and pending checks
+Local selected-source review, XML and workflow YAML checks, locale placeholder checks, registered-suite checks and exact Git blob/tree preservation checks passed. Fifteen blobs match local Git hashes; recursive new-tree review confirms no other existing blob/mode changes. No local JDK/Kotlin/Android SDK exists, so no local Kotlin or Android execution is claimed.
+
+Added eight mock clipboard lifecycle/privacy/stale-tap tests and two production handler/editor typed-undo integration tests, including a search/URI editor dropping the correction space and invalidation after more typing/editor replacement. Two actual Android SuggestionBar tests were added. Live CI compiles the instrumented tests but does not execute them without an Android device. The mock suite and inherited editor/source/learning suites are registered. Required inherited tokenizer/feed/reference conformance, pure tests, lint, APK assembly and no-model/no-fixture audit remain. Current CI and phone outcomes are pending, not PASS.
+
+## 7. Branches, PRs and runs
+Runtime draft PR4: https://github.com/jakamilek/CleverKeysPL/pull/4 ; head trial/herbert-live-v1 = d1ccc7e61e95e0506cf85217e51a8d080bbe5395. PR description updated for both app changes while retaining prior SI scope and validation limits.
+Live APK/checks run: https://github.com/jakamilek/CleverKeysPL/actions/runs/38054047905 .
+Standard CI run: https://github.com/jakamilek/CleverKeysPL/actions/runs/38054050655 .
+Both were observed in_progress for the exact new commit; no completion wait or repeated polling. Producer draft PR13 remains https://github.com/jakamilek/CleverKeys-langpack-pl/pull/13 . Producer code/data is unchanged by this app task.
+
+## 8. Artifact and model identities
+No successful new APK or new APK digest exists yet for d1ccc7e61e95e0506cf85217e51a8d080bbe5395. Previous successful runtime baseline 3f48e456f0d8f411e80be3857f1846e4b2cd139e used live run38040432033, CI38040436247 and artifact11665712630. Previous CI-produced APK SHA-256 b9c063b3f6bea4c7549f2574e8841f4f0751ea751b291fa920074fafaeeb481f belongs only to that baseline; bytes were not downloaded/re-hashed locally. Original imported HerBERT FP32 model SHA-256 f851436ba9ca35d0c7313ff873cd869b744b295a8a16fc95b4571d5e11b299f2 is unchanged. Current live workflow records clipboardPasteSuggestion=true and spaceFreeTypedAutocorrectUndo=true in APK identity; it retains truthful compact-case-v4 SI identity.
+
+## 9. Limits and backlog
+Real clipboard permissions and editor-specific space handling require phone verification, especially browser/search fields on Nubia NX721J / Android15. Android View tests have not run. Other locales fall back to EN for the one new clipboard label; tracked separately, no broad locale suppression. Clipboard history/manual panel remains separate. Dictionary coverage audit remains deferred: dodam, grzeje, kasami, nawilżane, odpowiadam, patrzysz, poczekaj, podpowie, pozdrawiam and previously recorded missing forms. Evidence-based common/rare-place usage priors and configurable BS hold/delete timing remain backlog items.
+
+## 10. Next action after user reports run completion
+Read exact run conclusions, required jobs, test/lint reports, APK identity and artifact association; fix any gate failures before offering the new APK. Do not reuse the old APK as if it contains these changes. Then ask for phone tests: copied multiline/punctuation text offers Wklej before typing and pastes exactly; typing dismisses the offer; keyboard/field changes reject stale taps; password fields do not show it. In a search field, type an unknown token, space to trigger correction, immediately BS restores the full original with no extra space, first suggestion allows adding it without deleting field text; following BS should delete normally. Check normal text-field correction behavior remains intact. Native View tests need a device/separate instrumented run.
+
+## 11. Delta from preceding milestone
+Previous checkpoint PROJECT_MILESTONE_2026-10-10_HERBERT_AGREEMENT_V4_RESULTS_REJECTED.md remains preserved. This milestone changes only the runtime trial’s clipboard offer, verified space-free typed undo, supporting tests/resources/spec/backlog/workflow identity, plus this docs-only checkpoint on both mains. AI quality, dictionary coverage and prior experiment conclusions are unchanged. Implementation is published; CI/Android/phone validation is still pending.
