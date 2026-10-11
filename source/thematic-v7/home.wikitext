@@ -1,0 +1,458 @@
+{{dopracować|polski|poprawić linkowanie, poprawić wikiskładnię (tabele), przenieść nowe słówka do {{s|dom}} i wstawić tu wywołanie tegoż}}
+{{TOCright}}
+Pojęcia związane z domem/pomieszczeniami w domu.
+
+== Kuchnia ==
+{| class="wikitable sortable" style="text-align:center; width: 50%"
+!style="background-color: #98FB98; width: 40%"|polski a-z →
+|-
+|[[blacha do pieczenia]]
+|[[Plik:Baking tray.jpg|100px]]
+|-
+|[[chlebak]]
+|[[Plik:Breadbox1.jpg|100px]]
+|-
+|[[chochla]]
+|[[Plik:Set of serving ladles on stainless kitchen wall.jpg|100px]]
+|-
+|[[cukiernica]]
+|[[Plik:Sugar bowl MET DP207753.jpg|100px]]
+|-
+|[[czajnik]]
+|[[Plik:Kettle on a stove.jpg|100px]]
+|-
+|[[deska do krojenia]]
+|[[Plik:Wooden cutting board 2017.jpg|100px]]
+|-
+|[[durszlak]]
+|[[Plik:Kevgir.JPG|100px]]
+|-
+|[[dzbanek]] [[na]] [[herbata|herbatę]]
+|
+[[File:Teapot Featuring Pink and Diamond Patterns around the Base - DPLA - 141b7b5a2946243f20d9fa4b91942245.jpg|100px]]
+|-
+|[[ekspres]] [[do]] [[kawa|kawy]]
+|[[Plik:Keurig Coffee Machine.jpg|100px]]
+|-
+|[[filiżanka]]
+|[[Plik:Coffee cup kaffe - 3.JPG|100px]]
+|-
+|[[frytkownica]]
+|[[Plik:Namche Bazaar, Deep frying, Deep fryer, Nepal.jpg|100px]]
+|-
+|[[foremka|foremki]] [[do]] [[ciastko|ciastek]]
+|[[Plik:Backform Plätzchen.jpg|100px]]
+|-
+|[[garnek]]
+|[[Plik:Food-pot-kitchen-cooking (23957429659).jpg|100px]]
+|-
+|[[gofrownica]]
+|[[Plik:Waffle iron.JPG|100px]]
+|-
+|[[jajecznik]]
+|[[Plik:Egg Cup and egg.jpg|100px]]
+|-
+|[[jajowar]]
+|[[Plik:Bosch egg boiler.jpg|100px]]
+|-
+|[[karafka]]
+|[[Plik:Bleikristall Karaffe.jpg|100px]]
+|-
+|[[kieliszek]]
+|[[Plik:Offering a glass of red wine.jpg|100px]]
+|-
+|[[kostkarka]] [[do]] [[lód|lodu]]
+|[[Plik:Isbitmaskin.jpg|100px]]
+|-
+|[[kubek]]
+|[[Plik:Back view of a Carr Workplaces mug.jpg|100px]]
+|-
+|[[kuchenka]]
+|[[Plik:Gas Stove (two burners).jpg|100px]]
+|-
+|[[lodówka]]
+|[[Plik:LG refrigerator interior.jpg|100px]]
+|-
+|[[makinetka]]
+|[[Plik:Espresso 2012-by-RaBoe-01.jpg|100px]]
+|-
+|[[maszynka do mięsa]]
+|[[Plik:Meat-grinder-30701283801918LoLK.jpg|100px]]
+|-
+|[[mikrofalówka]]
+|[[Plik:TOSHIBA Microwave Oven ER-J3 .jpg|100px]]
+|-
+|[[mikser]] [[ręczny]]
+|[[Plik:Миксер ДОМОТЕК.jpg|100px]]
+|-
+|[[mikser]] [[stać|stojący]]
+|[[Plik:مخلوط کن.jpg|100px]]
+|-
+|[[minutnik]]
+|[[Plik:Lux Minute Minder timer.jpg|100px]]
+|-
+|[[miska]] 
+|[[Plik:Red apples in a silver bowl.jpg|100px]]
+|-
+|[[młynek]] [[kuchenny]]
+|[[Plik:Garbage disposal unit (01) (crop).JPG|100px]]
+|-
+|[[moździerz]] [[kuchenny]]
+|[[Plik:Mortar-and-pestle-301801 960 720.jpg|100px]]
+|-
+|[[naczynie|naczynia]]
+|[[Plik:Pair of small serving dishes side.jpg|100px]]
+|-
+|[[nóż]]
+|[[Plik:Morakniv Basic 511 Carbon Steel 5.jpg|100px]]
+|-
+|[[nóż]] [[do]] [[pizza|pizzy]]
+|[[Plik:Pizza-slicer.jpg|100px]]
+|-
+|[[obieraczka]]
+|[[Plik:Peeler 01 Pengo.jpg|100px]]
+|-
+|[[otwieracz]] [[do]] [[butelka|butelek]]
+|[[Plik:Fs beer bottle opener 20220421 144319.jpg|100px]]
+|-
+|[[otwieracz]] [[do]] [[puszek]]
+|[[Plik:Kitchen-Modern-Can-Opener.jpg|100px]]
+|-
+|[[patelnia]]
+|[[Plik:Frying pan pan.jpg|100px]]
+|-
+|[[patera]]
+|[[Plik:Epergne (AM 1965.78.897-9).jpg|100px]]
+|-
+|[[pałeczki]] [[do]] [[jedzenie|jedzenia]]
+|[[Plik:Tweezer chopsticks-Kwik Stix used as tweezers.jpg|100px]]
+|-
+|[[pędzel]] [[kuchenny]]
+|[[Plik:Kitchen-Silicone-Brush.jpg|100px]]
+|-
+|[[piekarnik]]
+|[[Plik:Kitchen island embedded microwave.jpg|100px]]
+|-
+|[[półmisek]]
+|[[Plik:Botanical oval platter with turnip leaf DP-1687-041.jpg|100px]]
+|-
+|[[puchar]]
+|[[Plik:Ice cream Cup.jpg|100px]]
+|-
+|[[rękaw]] [[cukierniczy]]
+|[[Plik:Vegan Meringue Pastry Bag (5457152741).jpg|100px]]
+|-
+|[[samowar]]
+|[[Plik:File by Alexander Baranov - . (10520699996).jpg|100px]]
+|-
+|[[sitko]]
+|[[Plik:Strainer, tea (AM 1991.286-2).jpg|100px]]
+|-
+|[[sokowirówka]]
+|[[Plik:Liquadora.JPG|100px]]
+|-
+|[[solniczka]]
+|[[Plik:Glass salt cellar 1720.jpg|100px]]
+|-
+|[[stolnica]]
+|[[Plik:Crackers fatti in casa in Italia in periodo di quarantena COVID-19.jpg|100px]]
+|-
+|[[szczypce]]
+|[[Plik:Kitchen-tongs.png|100px]]
+|-
+|[[szklanka]]
+|[[Plik:Glass of water ouside.jpg|100px]]
+|-
+|[[talerz]]
+|[[Plik:Decorative Painted Plate on a Monastery's Wall.jpg|100px]]
+|-
+|[[tarka]]
+|[[Plik:Cheese grater.png|100px]]
+|-
+|[[tasak]]
+|[[Plik:Foster Cleaver.jpg|100px]]
+|-
+|[[tłuczek]] [[do]] [[mięso|mięsa]]
+|[[Plik:Attendrisseur à viande - debout face 2.jpg|100px]]
+|-
+|[[tłuczek]] [[do]] [[ziemniak|ziemniaków]]
+|[[Plik:Kartoffelstampfer Metall.jpg|100px]]
+|-
+|[[toster]]
+|[[Plik:Stockholm - nordiska musset 20190818-26.jpg|100px]]
+|-
+|[[trzepaczka]] ''(do jaj)''
+|[[Plik:Whisk Ball 02.jpg|100px]]
+|-
+|[[wałek]] [[do]] [[ciasto|ciasta]]
+|[[Plik:Rolling pin 2017.jpg|100px]]
+|-
+|[[waza]] [[do]] [[zupa|zupy]]
+|[[Plik:Soup Tureen from Trehowell Farm, Fishguard. Used by General Tate in 1797.jpg|100px]]
+|-
+|[[widelec]]
+|[[Plik:Fork (AM 1991.288-1).jpg|100px]]
+|-
+|[[wypiekacz]]
+|[[Plik:Bread machine Gallet.jpg|100px]]
+|-
+|[[zamrażarka]]
+|[[Plik:201706 freezer.svg|100px]]
+|-
+|[[zlew]]
+|[[Plik:The Kitchen Sink.jpg|100px]]
+|-
+|[[zmywarka]]
+|[[Plik:Hotpoint Dishwasher Model HDA460-03AD, IMG01.jpg|100px]]
+|-
+|[[łyżka]]
+|[[Plik:Spoons, dessert (AM 1991.288-4).jpg|100px]]
+|}
+
+== Łazienka ==
+{| class="wikitable sortable" style="text-align:center; width: 50%"
+!style="background-color: #ADD8E6; width: 40%"|polski a-z →
+!! style="background-color: #ADD8E6; width: 20%" class="unsortable"|
+|-
+|[[bidet]]
+|[[Plik:Bidet 2.jpg|100px]]
+|-
+|[[brzytwa]]
+|[[Plik:Gillette Fusion Proglide razor with 5 blades.jpg|100px]]
+|-
+|[[dezodorant]]
+|[[Plik:Fa deodorant 2.JPG|100px]]
+|-
+|[[grzebień]]
+|[[Plik:Metal Comb Works Titanium Alloy Comb.jpg|100px]]
+|-
+|[[kabina]] [[prysznicowy|prysznicowa]]
+|[[Plik:1970's walk in shower.jpg|100px]]
+|-
+|[[kapsułka|kapsułki]] [[prać|piorące]]
+|[[Plik:Laundry detergent pods.jpg|100px]]
+|-
+|[[kosz]] [[na]] [[bielizna|bieliznę]]
+|[[Plik:Clothes in green laundry basket.jpg|100px]]
+|-
+|[[lustro]]
+|[[Plik:Kazbegi, Mirror, Georgia.jpg|100px]]
+|-
+|[[mydelniczka]]
+|[[Plik:Ceramic Soap Dish.jpg|100px]]
+|-
+|[[mydło]]
+|[[Plik:Sapoj.jpg|100px]]
+|-
+|[[nić]] [[dentystyczny|dentystyczna]]
+|[[Plik:Dental Floss.jpg|100px]]
+|-
+|[[obcinacz]] [[do]] [[paznokieć|paznokci]]
+|[[Plik:Nail clippers (compound lever).jpg|100px]]
+|-
+|[[papier toaletowy]]
+|[[Plik:Toilet paper mania.jpg|100px]]
+|-
+|[[pasta do zębów]]
+|[[Plik:Toothpaste.jpg|100px]]
+|-
+|[[perfumy]]
+|[[Plik:Perfume La Rive.jpg|100px]]
+|-
+|[[płyn]] [[do]] [[pranie|prania]]
+|[[Plik:Liquid detergent.JPG|100px]]
+|-
+|[[proszek]] [[do]] [[pranie|prania]]
+|[[Plik:Pralni prašek.JPG|100px]]
+|-
+|[[prysznic]]
+|[[Plik:High speed shower filtered.jpg|100px]]
+|-
+|[[ręcznik]]
+|[[Plik:Zusammengelegte Handtücher.jpg|100px]]
+|-
+|[[sedes]]
+|[[Plik:Toilet 1 2018-06-23.jpg|100px]]
+|-
+|[[suszarka]] [[do]] [[włos|włosów]]
+|[[Plik:Novars Relax Silent hair dryer.jpg|100px]]
+|-
+|[[suszarka]] [[do]] [[ubranie|ubrań]]
+|[[Plik:New Washer & Dryer!.jpg|100px]]
+|-
+|[[szampon]]
+|[[Plik:P&G REJOICE GREENTEA SHAMPOO.jpg|100px]]
+|-
+|[[szczoteczka do zębów]]
+|[[Plik:Metallic Toothbrush Holder.jpg|100px]]
+|-
+|[[szczotka do włosów]]
+|[[Plik:Retractable hairbrush, Winschoten (2022) 04.jpg|100px]]
+|-
+|[[umywalka]]
+|[[Plik:Bathroom sink Раковина в ванной.jpg|100px]]
+|-
+|[[wanna]]
+|[[Plik:Deep bath tub (2940557981).jpg|100px]]
+|-
+|[[woda kolońska]]
+|[[Plik:Krasnaya Moskva Eau de cologne.jpg|100px]]
+|-
+|[[wybielacz]]
+|[[Plik:HK Kao Bleaches 2.JPG|100px]]
+|-
+|[[zasłona]] [[łazienkowy|łazienkowa]]
+|[[Plik:IKEA shower curtain (45862859051).jpg|100px]]
+|-
+|[[żel]] [[pod]] [[prysznic]]
+|[[Plik:Warm Vanilla Sugar shower gel and lotion.jpg|100px]]
+|}
+
+== Pozostałe ==
+{| class="wikitable sortable" style="text-align:center; width: 50%"
+!style="background-color: #98FB98; width: 40%"|polski a-z →
+|-
+|[[amerykanka]]
+|[[Plik:Slaapbank2.JPG|100px]]
+|-
+|[[biblioteczka]]
+|[[Plik:Monticello Bookcase 2021.png|100px]]
+|-
+|[[biurko]]
+|[[Plik:Biurko-nowoczesne.jpg|100px]]
+|-
+|[[chodnik]]
+|[[Plik:Flatweave rug, Caucasus, 1875-1925.jpg|100px]]
+|-
+|[[drzwi]]
+|[[Plik:Green door, Bruges.jpg|100px]]
+|-
+|[[dywan]]
+|[[Plik:'Lotto' Carpet MET AD-08.167.1e.jpeg|100px]]
+|-
+|[[firanka]]
+|[[Plik:Violet sheer curtains (detail).JPG|100px]]
+|-
+|[[fotel]]
+|[[Plik:Mahogany Armchair-01 front.jpg|100px]]
+|-
+|[[hamak]]
+|[[Plik:DSC01432 Pier and hammock in Samoa.jpg|100px]]
+|-
+|[[kanapa]]
+|[[Plik:A brown sofa (2005-03-03).jpg|100px]]
+|-
+|[[klimatyzator]]
+|[[Plik:SAMSUNG AIR CONDITIONER OUTDOOR UNIT (2).jpg|100px]]
+|-
+|[[koc]]
+|[[Plik:Traditional blankets.png|100px]]
+|-
+|[[komoda]]
+|[[Plik:Irish dresser from County Carlow (1844) 08.jpg|100px]]
+|-
+|[[kołdra]] 
+|[[Plik:Dobbelt-dyne-Grythengen-Blå rommet.jpg|100px]]
+|-
+|[[kredens]]
+|[[Plik:Millars glass cupboard doors.jpg|100px]]
+|-
+|[[krzesło]]
+|[[Plik:Chair 2020 P01.jpg|100px]]
+|-
+|[[lada]]
+| 
+|-
+|[[lampa]]
+|[[Plik:Lamps-P7240120.JPG|100px]]
+|-
+|[[leżak]]
+|[[Plik:Deckchair 600.jpg|100px]]
+|-
+|[[leżanka]]
+|[[Plik:Di Lounger .jpg|100px]]
+|-
+|[[markiza]]
+|[[Plik:Hot Springs 061.jpg|100px]]
+|-
+|[[odkurzacz]]
+|[[Plik:Blue vacuum cleaner.svg|100px]]
+|-
+|[[parawan]]
+|[[Plik:Screen in the Tokyo National Museum 01.jpg|100px]]
+|-
+|[[plakat]]
+|[[Plik:Anarchist Poster on a wall in Salonik.jpg|100px]]
+|-
+|[[poduszka]]
+|[[Plik:Cushion Cover.jpg|100px]]
+|-
+|[[półka]]
+|[[Plik:Books, Book shelves, Rostov-on-Don, Russia.jpg|100px]]
+|-
+|[[pralka]]
+|[[Plik:Washing Machine Beko.jpg|100px]]
+|-
+|[[prześcieradło]]
+|[[Plik:Bedsheet s.jpg|100px]]
+|-
+|[[rama]]
+|[[Plik:Rahmen.jpg|100px]]
+|-
+|[[regał]]
+|[[Plik:Bookshelf Fortepan 75779.jpg|100px]]
+|-
+|[[sofa]]
+|[[Plik:19CentSofaMusDF.JPG|100px]]
+|-
+|[[stolik]] [[kawowy]]
+|[[Plik:Domestic coffee table in a residential setting.jpg|100px]]
+|-
+|[[stolik]] [[nocny]]
+|[[Plik:Nightstand 2184073576.jpg|100px]]
+|-
+|[[stół]]
+|[[Plik:Dining table 1 2021-08-27.jpeg|100px]]
+|-
+|[[szafa]]
+|[[Plik:Armoire à deux colonnes-Musée alsacien de Strasbourg.jpg|100px]]
+|-
+|[[szuflada]]
+|[[Plik:Tirkestoj b.jpg|100px]]
+|-
+|[[taboret]]
+|[[Plik:Tin City Cider - 2021-05-11 - Sarah Stierch 01.jpg|100px]]
+|-
+|[[telewizor]]
+|[[Plik:Philips Lenardo BW 1.jpg|100px]]
+|-
+|[[wazon]]
+|[[Plik:Vase Rostov Great Faience of the 20th century.jpg|100px]]
+|-
+|[[wersalka]]
+|[[Plik:Sofa, Couch, Studio, Rostov-on-Don, Russia.jpg|100px]]
+|-
+|[[wieszak]]
+|[[Plik:2008 Taipei In Style Outdoor Fashion Show Clothes Racks.jpg|100px]]
+|-
+|[[witryna]]
+|[[Plik:Glass case 21, colors of ancient glass 3750.jpg|100px]]
+|-
+|[[zasłona|zasłony]]
+|[[Plik:Gordijnen aan venster.JPG|100px]]
+|-
+|[[zegar]]
+|[[Plik:Grandfather Clock (7379657214).jpg|100px]]
+|-
+|[[łóżko]]
+|[[Plik:Imagerrrrrr.jpg|100px]]
+|-
+|[[żaluzja|żaluzje]]
+|[[Plik:Window blinds.jpg|100px]]
+|-
+|[[żelazko]]
+|[[Plik:Redhill - Jan 2010 - Ironing - There Is No Choice But To!.jpg|100px]]
+|}
+
+[[Kategoria:Polski (słowniki tematyczne)]]
+[[Kategoria:Dom]]

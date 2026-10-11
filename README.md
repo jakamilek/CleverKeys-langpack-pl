@@ -3,6 +3,9 @@
 Polski pakiet językowy dla klawiatury CleverKeys.
 
 Aktualna izolowana próba: [addytywne zwykłe formy v6](docs/common-forms-trial-v1/PROTOCOL.md).
+
+Kolejny etap: [addytywne grupy tematyczne v7](docs/thematic-forms-trial-v1/PROTOCOL.md)
+— słownictwo potoczne, komputerowe oraz dom, zakupy, technika i budownictwo.
 181 691 kluczy, bez usuwania starych wpisów. Wymaga kompatybilnego APK;
 lokalne testy producenta/konsumenta PASS, CI i telefon pozostają do sprawdzenia.
 

@@ -1,0 +1,3 @@
+# Byte-for-byte pinned upstream snapshots, including their original whitespace.
+source/thematic-v7/*.wikitext -text whitespace=-blank-at-eol,-blank-at-eof
+source/thematic-v7/intake-lock.json -text
