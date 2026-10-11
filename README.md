@@ -2,6 +2,10 @@
 
 Polski pakiet językowy dla klawiatury CleverKeys.
 
+Aktualna izolowana próba: [addytywne zwykłe formy v6](docs/common-forms-trial-v1/PROTOCOL.md).
+181 691 kluczy, bez usuwania starych wpisów. Wymaga kompatybilnego APK;
+lokalne testy producenta/konsumenta PASS, CI i telefon pozostają do sprawdzenia.
+
 ## Cel projektu
 
 Praktyczny polski słownik mobilny:
