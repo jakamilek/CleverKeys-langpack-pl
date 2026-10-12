@@ -2,16 +2,16 @@
 
 Polski pakiet językowy dla klawiatury CleverKeys.
 
-Sprawdzona na telefonie próba: [addytywne grupy tematyczne v7](docs/thematic-forms-trial-v1/PROTOCOL.md)
-— słownictwo potoczne, komputerowe oraz dom, zakupy, technika i budownictwo.
-188 302 klucze, bez usuwania starych wpisów. Import i wykrywanie słów
-zaakceptowane przez użytkownika z poprawionym APK (kod `141f27e7`).
+Zaakceptowane na telefonie: tematyczne v7, nazwy/marki/skróty v8 oraz
+[współdzielone metadane v9](docs/shared-metadata-trial-v1/PROTOCOL.md).
+V9 zachowuje 190 813 słów. Użytkownik potwierdził poprawny import i działanie;
+odczuwalne przyspieszenie jest obserwacją, bez pomiaru PSS Androida.
 
-Kolejny etap: [nazwy, marki i skrótowce v8](docs/names-forms-trial-v1/PROTOCOL.md).
-2511 dodatków potwierdzonych w SGJP, razem 190 813 kluczy; stare wpisy,
-ich wagi i metadane pozostają bez zmian. Lokalne testy producenta,
-rzeczywistych czytników i importu przy ograniczonej pamięci PASS.
-CI i test telefonu dla v8 pozostają do sprawdzenia.
+Kolejny etap: [odłożone nazwy i odmiany v10](docs/deferred-names-trial-v1/PROTOCOL.md).
+13 650 dodatków potwierdzonych w SGJP, razem 204 463 słowa. Wszystkie stare
+wpisy, wagi, metadane i tablice współdzielone pozostają bez zmian. Ta paczka
+używa obecnego APK schema-v2 (`64943d82`); nie zmienia SI ani aplikacji.
+Bieżące CI i próby telefonu dla v10 pozostają do potwierdzenia.
 
 ## Cel projektu
 
