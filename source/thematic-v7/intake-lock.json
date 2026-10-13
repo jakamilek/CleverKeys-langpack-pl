@@ -1,0 +1,79 @@
+[
+  {
+    "group": "colloquial",
+    "title": "Indeks:Polski - Słowa potoczne",
+    "pageId": 322092,
+    "revisionId": 8885757,
+    "revisionTimestamp": "2026-10-02T03:14:55Z",
+    "bytes": 127649,
+    "sha256": "ce90c83909c039e2c8e7bf34347aace5169eaadec5eb0740f1bf0cba34b93ef2",
+    "url": "https://pl.wiktionary.org/w/index.php?oldid=8885757",
+    "history": "https://pl.wiktionary.org/w/index.php?title=Indeks%3APolski%20-%20S%C5%82owa%20potoczne&action=history"
+  },
+  {
+    "group": "computing",
+    "title": "Indeks:Polski - Informatyka",
+    "pageId": 319852,
+    "revisionId": 8885714,
+    "revisionTimestamp": "2026-10-02T03:11:20Z",
+    "bytes": 16356,
+    "sha256": "7c9ed7e924e0d7287181f69f4e3155435966d095eec70facd9f0354476757646",
+    "url": "https://pl.wiktionary.org/w/index.php?oldid=8885714",
+    "history": "https://pl.wiktionary.org/w/index.php?title=Indeks%3APolski%20-%20Informatyka&action=history"
+  },
+  {
+    "group": "construction",
+    "title": "Indeks:Polski - Architektura",
+    "pageId": 485925,
+    "revisionId": 8869192,
+    "revisionTimestamp": "2026-09-02T03:08:35Z",
+    "bytes": 8805,
+    "sha256": "1f3e84244e7e276827efd34d8625ec7d94bb2f28f591325358f6a4392f9b5ef6",
+    "url": "https://pl.wiktionary.org/w/index.php?oldid=8869192",
+    "history": "https://pl.wiktionary.org/w/index.php?title=Indeks%3APolski%20-%20Architektura&action=history"
+  },
+  {
+    "group": "food",
+    "title": "Indeks:Polski - Jedzenie",
+    "pageId": 42598,
+    "revisionId": 8554319,
+    "revisionTimestamp": "2025-03-31T09:30:22Z",
+    "bytes": 36110,
+    "sha256": "958e17407c012b294ac08c116845edc56c66aa74f968d7f1450da03754d7a1f3",
+    "url": "https://pl.wiktionary.org/w/index.php?oldid=8554319",
+    "history": "https://pl.wiktionary.org/w/index.php?title=Indeks%3APolski%20-%20Jedzenie&action=history"
+  },
+  {
+    "group": "home",
+    "title": "Indeks:Polski - Dom",
+    "pageId": 895350,
+    "revisionId": 8842153,
+    "revisionTimestamp": "2026-07-21T17:08:54Z",
+    "bytes": 10839,
+    "sha256": "d9249f270e2b921c1480ca05b59a378aadc6612120f011a6411fa91ef6d4705d",
+    "url": "https://pl.wiktionary.org/w/index.php?oldid=8842153",
+    "history": "https://pl.wiktionary.org/w/index.php?title=Indeks%3APolski%20-%20Dom&action=history"
+  },
+  {
+    "group": "shopping",
+    "title": "Indeks:Polski - Sklepy",
+    "pageId": 903348,
+    "revisionId": 8886753,
+    "revisionTimestamp": "2026-10-03T17:24:38Z",
+    "bytes": 3420,
+    "sha256": "5c9deb38d483a84c0b84b01db9a9b2b8183e97bfd4a3bfef9d37e9f8535a059f",
+    "url": "https://pl.wiktionary.org/w/index.php?oldid=8886753",
+    "history": "https://pl.wiktionary.org/w/index.php?title=Indeks%3APolski%20-%20Sklepy&action=history"
+  },
+  {
+    "group": "tools",
+    "title": "Indeks:Polski - Technika",
+    "pageId": 933580,
+    "revisionId": 8885742,
+    "revisionTimestamp": "2026-10-02T03:13:40Z",
+    "bytes": 33925,
+    "sha256": "c51312caf89bc39512a4e322de38b79588524a5247ddfb56751e43d72412e82a",
+    "url": "https://pl.wiktionary.org/w/index.php?oldid=8885742",
+    "history": "https://pl.wiktionary.org/w/index.php?title=Indeks%3APolski%20-%20Technika&action=history"
+  }
+]

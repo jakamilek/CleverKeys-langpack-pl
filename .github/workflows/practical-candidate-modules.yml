@@ -1,0 +1,70 @@
+name: Practical Polish candidate modules (no langpack)
+
+on:
+  push:
+    branches: ['feature/additive-common-forms-v1']
+    paths:
+      - 'scripts/build_practical_candidate_modules.py'
+      - 'scripts/intake_practical_candidates.py'
+      - 'tests/test_practical_candidate_modules.py'
+      - 'source/practical-candidates-v1/**'
+      - 'docs/practical-candidates-v1/**'
+      - '.github/workflows/practical-candidate-modules.yml'
+  pull_request:
+    paths:
+      - 'scripts/build_practical_candidate_modules.py'
+      - 'scripts/intake_practical_candidates.py'
+      - 'tests/test_practical_candidate_modules.py'
+      - 'source/practical-candidates-v1/**'
+      - 'docs/practical-candidates-v1/**'
+      - '.github/workflows/practical-candidate-modules.yml'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned lexical snapshots
+        run: |
+          python -m pip install morfeusz2==1.99.15 requests \
+            'wordfreq @ git+https://github.com/rspeer/wordfreq@912caf64b657478d1dff1138efdc078947d54bb1'
+      - name: Verify all producer and candidate regressions
+        run: python -m unittest discover -s tests -v
+      - name: Retrieve accepted v11
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 38437507820
+          name: cleverkeys-pl-compact-source-trial
+          path: build/base-v11
+      - name: Retrieve pinned ordinary source audit
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 38121444186
+          name: cleverkeys-pl-common-forms-trial
+          path: build/source-v6
+      - name: Revalidate candidates and reproduce frozen report without a dictionary build
+        run: |
+          python scripts/build_practical_candidate_modules.py \
+            --base-pack build/base-v11/cleverkeys-pl-compact-source-trial.zip \
+            --ordinary-audit build/source-v6/common-forms-audit.jsonl \
+            --sources source/practical-candidates-v1 \
+            --out build/practical-candidates-v1
+          cmp build/practical-candidates-v1/candidate-bundle.json docs/practical-candidates-v1/reviewed-report.json
+      - name: Save candidate-only bundle and review report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cleverkeys-pl-practical-candidates
+          path: |
+            build/practical-candidates-v1/cleverkeys-pl-practical-candidates.zip
+            build/practical-candidates-v1/candidate-bundle.sha256
+            build/practical-candidates-v1/candidate-bundle.json
+            build/practical-candidates-v1/RAPORT.txt
+          retention-days: 30

@@ -1,0 +1,223 @@
+{
+  "retrievedAt": "2026-10-13T18:43:46.932723+00:00",
+  "categorySnapshotScope": "direct pages only; membership frozen by response SHA, not category-page revision",
+  "selection": {
+    "indexTitles": [
+      "Indeks:Polski - Informatyka",
+      "Indeks:Polski - Technika",
+      "Indeks:Polski - Slang"
+    ],
+    "categoryTitles": [
+      "Kategoria:Komunikatory internetowe",
+      "Kategoria:Serwisy społecznościowe",
+      "Kategoria:Chatboty",
+      "Kategoria:Usługi strumieniowania muzyki"
+    ],
+    "categoryRecursion": false,
+    "manualWordSeeds": false
+  },
+  "files": [
+    {
+      "path": "index-0.json",
+      "bytes": 16794,
+      "sha256": "d80565588b0279732d36fed41b35a338ba20946c1f4a127d72d7e2112c58552d",
+      "url": "https://pl.wiktionary.org/w/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&titles=Indeks%3APolski+-+Informatyka",
+      "kind": "wiktionary-index",
+      "title": "Indeks:Polski - Informatyka",
+      "revision": 8885714,
+      "revisionTimestamp": "2026-10-02T03:11:20Z"
+    },
+    {
+      "path": "index-1.json",
+      "bytes": 34327,
+      "sha256": "01c44456c5fbd3db1121f9eddbff5ebdc0738a5b8cf07186a18af83b8ee39efc",
+      "url": "https://pl.wiktionary.org/w/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&titles=Indeks%3APolski+-+Technika",
+      "kind": "wiktionary-index",
+      "title": "Indeks:Polski - Technika",
+      "revision": 8885742,
+      "revisionTimestamp": "2026-10-02T03:13:40Z"
+    },
+    {
+      "path": "index-2.json",
+      "bytes": 8752,
+      "sha256": "97faf99c2c10432e03a66af0e168efffd8582442c88052f63e5c3cec2d4102d2",
+      "url": "https://pl.wiktionary.org/w/api.php?format=json&formatversion=2&action=query&prop=revisions&rvprop=ids%7Ctimestamp%7Ccontent&rvslots=main&titles=Indeks%3APolski+-+Slang",
+      "kind": "wiktionary-index",
+      "title": "Indeks:Polski - Slang",
+      "revision": 8885715,
+      "revisionTimestamp": "2026-10-02T03:11:25Z"
+    },
+    {
+      "path": "category-0-0.json",
+      "bytes": 3624,
+      "sha256": "ee2c4cf7b4da036400eab305440bb0a052e6d63f0ee2865bbe8cbee0df629cfb",
+      "url": "https://pl.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&list=categorymembers&cmtitle=Kategoria%3AKomunikatory+internetowe&cmtype=page&cmlimit=max",
+      "kind": "wikipedia-category-membership",
+      "title": "Kategoria:Komunikatory internetowe"
+    },
+    {
+      "path": "category-1-0.json",
+      "bytes": 3583,
+      "sha256": "4269c76cdb078eff914f228e50dc7b48906e0916b4f6ae16b82810de45d7040a",
+      "url": "https://pl.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&list=categorymembers&cmtitle=Kategoria%3ASerwisy+spo%C5%82eczno%C5%9Bciowe&cmtype=page&cmlimit=max",
+      "kind": "wikipedia-category-membership",
+      "title": "Kategoria:Serwisy społecznościowe"
+    },
+    {
+      "path": "category-2-0.json",
+      "bytes": 1320,
+      "sha256": "6466ee02f8385c49c3772d01e5cc99f400d8fd4b9144f703318b55eae7dee6d8",
+      "url": "https://pl.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&list=categorymembers&cmtitle=Kategoria%3AChatboty&cmtype=page&cmlimit=max",
+      "kind": "wikipedia-category-membership",
+      "title": "Kategoria:Chatboty"
+    },
+    {
+      "path": "category-3-0.json",
+      "bytes": 900,
+      "sha256": "2ead3bbd71482b95609e3289723c07608094dadcf8e0a017d354c0b292c12f0b",
+      "url": "https://pl.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&list=categorymembers&cmtitle=Kategoria%3AUs%C5%82ugi+strumieniowania+muzyki&cmtype=page&cmlimit=max",
+      "kind": "wikipedia-category-membership",
+      "title": "Kategoria:Usługi strumieniowania muzyki"
+    },
+    {
+      "path": "articles-0.json",
+      "bytes": 8145,
+      "sha256": "23f98a87a8a25a242d3a0deb5b9e6df7bab63e2a3eb1e811a54d419771cf5550",
+      "url": "https://pl.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&prop=pageprops%7Crevisions&rvprop=ids%7Ctimestamp&pageids=414%7C1459%7C1462%7C2361%7C4197%7C14474%7C18107%7C18108%7C24705%7C37166%7C66225%7C66981%7C69751%7C87292%7C88361%7C89999%7C90148%7C96567%7C109094%7C113985%7C134005%7C178518%7C193561%7C207843%7C209089%7C275891%7C290268%7C291029%7C291191%7C296432%7C297442%7C297805%7C388051%7C391344%7C426197%7C463253%7C496033%7C514810%7C669314%7C691495",
+      "kind": "wikipedia-article-identities"
+    },
+    {
+      "path": "articles-1.json",
+      "bytes": 7797,
+      "sha256": "f90137029950e88fb09fe1d096152802f722b6d7f318005141b806e99ab7c2be",
+      "url": "https://pl.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&prop=pageprops%7Crevisions&rvprop=ids%7Ctimestamp&pageids=693887%7C717660%7C774659%7C774789%7C783215%7C891239%7C981682%7C982848%7C982850%7C1049430%7C1050132%7C1108790%7C1169651%7C1179045%7C1179235%7C1184051%7C1201367%7C1250187%7C1267032%7C1403982%7C1486685%7C1497622%7C1532191%7C1565541%7C1568326%7C1577352%7C1581971%7C1586819%7C1587292%7C1600130%7C1633390%7C1687235%7C1780769%7C1794803%7C1796649%7C1845263%7C1851405%7C1897771%7C1903274%7C1925889",
+      "kind": "wikipedia-article-identities"
+    },
+    {
+      "path": "articles-2.json",
+      "bytes": 7811,
+      "sha256": "3d46dc86bf4412c5fc4779112fd97bd666c4fcf97b7a3c7c81e7bf2bc064abe5",
+      "url": "https://pl.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&prop=pageprops%7Crevisions&rvprop=ids%7Ctimestamp&pageids=1994712%7C2003374%7C2067324%7C2118967%7C2136153%7C2240922%7C2272086%7C2300197%7C2337365%7C2374160%7C2378703%7C2465867%7C2783497%7C2857039%7C2877366%7C2949786%7C2953807%7C2984910%7C3022012%7C3102564%7C3125022%7C3156868%7C3165963%7C3173951%7C3175628%7C3329603%7C3454601%7C3455232%7C3500798%7C3552997%7C3553676%7C3579010%7C3688753%7C3713194%7C3861871%7C3898219%7C3899085%7C3930259%7C3961191%7C3967729",
+      "kind": "wikipedia-article-identities"
+    },
+    {
+      "path": "articles-3.json",
+      "bytes": 8122,
+      "sha256": "d95ae26a29374fa260ceff398162fe466366d04858c22361ee57c404a7a6fadb",
+      "url": "https://pl.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&prop=pageprops%7Crevisions&rvprop=ids%7Ctimestamp&pageids=4019119%7C4025881%7C4040255%7C4042066%7C4047814%7C4062316%7C4062487%7C4062530%7C4067100%7C4070237%7C4072483%7C4145135%7C4214723%7C4281769%7C4283827%7C4283837%7C4321078%7C4351254%7C4357187%7C4360680%7C4361800%7C4400336%7C4411719%7C4504486%7C4521571%7C4897861%7C4907211%7C4909423%7C4917683%7C4923653%7C4925492%7C4925597%7C4943858%7C4944051%7C4945694%7C4953279%7C4963016%7C4990994%7C4991089%7C4991094",
+      "kind": "wikipedia-article-identities"
+    },
+    {
+      "path": "articles-4.json",
+      "bytes": 5552,
+      "sha256": "6d59d88e3fd510e3993bbee243a64588b5097ce14aa72ec42cb6684a97e6cb77",
+      "url": "https://pl.wikipedia.org/w/api.php?format=json&formatversion=2&action=query&prop=pageprops%7Crevisions&rvprop=ids%7Ctimestamp&pageids=4991098%7C5081770%7C5284894%7C5315265%7C5364752%7C5399779%7C5487410%7C5508577%7C5650123%7C5697758%7C5728784%7C5781631%7C5808845%7C5814611%7C5824897%7C5827055%7C5871376%7C5871393%7C5872721%7C5893455%7C5895898%7C5911245%7C5913713%7C5913734%7C5968727%7C6054301%7C6064244",
+      "kind": "wikipedia-article-identities"
+    },
+    {
+      "path": "entities-0.json",
+      "bytes": 40108,
+      "sha256": "d4be398f9c972d0856983b307a709ffb449c9d546bccaeeaa5adbf40992f28d7",
+      "url": "https://www.wikidata.org/w/api.php?format=json&formatversion=2&action=wbgetentities&ids=Q936%7CQ28773%7CQ31963%7CQ32111%7CQ46523%7CQ51713%7CQ58055%7CQ58058%7CQ58061%7CQ58066%7CQ58069%7CQ58072%7CQ58089%7CQ58099%7CQ58105%7CQ58127%7CQ58144%7CQ58166%7CQ58189%7CQ58199%7CQ58379%7CQ58384%7CQ58427%7CQ58438%7CQ58443%7CQ58446%7CQ58455%7CQ58508%7CQ58518%7CQ58542&props=labels%7Cclaims%7Cinfo&languages=pl%7Cen",
+      "kind": "wikidata-entity-projection",
+      "originalResponseSha256": "9856c29d6d2f5e753998ba17630075c5cf0ecd40d8ea5d942dc10f4f93d1b56a",
+      "originalResponseBytes": 1180369,
+      "projectedFields": [
+        "identity",
+        "labels-pl-en",
+        "P31-mainsnaks",
+        "P856-mainsnaks"
+      ]
+    },
+    {
+      "path": "entities-1.json",
+      "bytes": 40540,
+      "sha256": "335d50ecc82a8b2b160d38fba0dc930aade5d5aa04ed18756b7400f2fd7c8618",
+      "url": "https://www.wikidata.org/w/api.php?format=json&formatversion=2&action=wbgetentities&ids=Q58551%7CQ58558%7CQ58561%7CQ63056%7CQ71370%7CQ71380%7CQ71393%7CQ71421%7CQ71475%7CQ71483%7CQ71493%7CQ71667%7CQ71681%7CQ71694%7CQ116947%7CQ187491%7CQ191370%7CQ255683%7CQ267114%7CQ275141%7CQ277421%7CQ278333%7CQ283233%7CQ285798%7CQ290267%7CQ292220%7CQ306956%7CQ309959%7CQ332707%7CQ333618&props=labels%7Cclaims%7Cinfo&languages=pl%7Cen",
+      "kind": "wikidata-entity-projection",
+      "originalResponseSha256": "4d6e9098284c2af568ffb7abcedc16a175b60354d600f2d810b6263ed8d7e882",
+      "originalResponseBytes": 1172813,
+      "projectedFields": [
+        "identity",
+        "labels-pl-en",
+        "P31-mainsnaks",
+        "P856-mainsnaks"
+      ]
+    },
+    {
+      "path": "entities-2.json",
+      "bytes": 39762,
+      "sha256": "eff8a9ac1c21ad54b584022006b58d7216a6ec2052c5e0166de596a9ed1f83c6",
+      "url": "https://www.wikidata.org/w/api.php?format=json&formatversion=2&action=wbgetentities&ids=Q430285%7CQ477459%7CQ528671%7CQ549037%7CQ568769%7CQ580318%7CQ589757%7CQ602243%7CQ602471%7CQ609524%7CQ612825%7CQ643420%7CQ648357%7CQ670286%7CQ689141%7CQ743920%7CQ754454%7CQ791095%7CQ799677%7CQ812810%7CQ813559%7CQ857640%7CQ870780%7CQ890255%7CQ902491%7CQ905767%7CQ1049294%7CQ1049511%7CQ1049664%7CQ1100860&props=labels%7Cclaims%7Cinfo&languages=pl%7Cen",
+      "kind": "wikidata-entity-projection",
+      "originalResponseSha256": "959a905f8ad21a994208635850fef7e0fab05c5c0dc9a890b577d5124648f389",
+      "originalResponseBytes": 1219891,
+      "projectedFields": [
+        "identity",
+        "labels-pl-en",
+        "P31-mainsnaks",
+        "P856-mainsnaks"
+      ]
+    },
+    {
+      "path": "entities-3.json",
+      "bytes": 34868,
+      "sha256": "2d44a07001a1692a83ae6ab0be392d59c8982d39b8f959c6b2426c031cc7c53b",
+      "url": "https://www.wikidata.org/w/api.php?format=json&formatversion=2&action=wbgetentities&ids=Q1132897%7CQ1138257%7CQ1139551%7CQ1464506%7CQ1473578%7CQ1676827%7CQ1754252%7CQ1763147%7CQ1863582%7CQ1967077%7CQ1973097%7CQ2098640%7CQ2263597%7CQ2296465%7CQ2302402%7CQ2377418%7CQ2602559%7CQ2618972%7CQ2744522%7CQ3048049%7CQ3066228%7CQ3110042%7CQ3115822%7CQ3220391%7CQ3238917%7CQ3259237%7CQ3353146%7CQ3412507%7CQ3459508%7CQ3922212&props=labels%7Cclaims%7Cinfo&languages=pl%7Cen",
+      "kind": "wikidata-entity-projection",
+      "originalResponseSha256": "fcb5f21f23ee08c6c9ef1a4189e9a4fd6000a6b468008509f496136786380327",
+      "originalResponseBytes": 885206,
+      "projectedFields": [
+        "identity",
+        "labels-pl-en",
+        "P31-mainsnaks",
+        "P856-mainsnaks"
+      ]
+    },
+    {
+      "path": "entities-4.json",
+      "bytes": 41539,
+      "sha256": "f7aaece0a29961c30a6504014d1f4e9083196dbd2a2b8db638cb48f7ce3e12f1",
+      "url": "https://www.wikidata.org/w/api.php?format=json&formatversion=2&action=wbgetentities&ids=Q4044680%7CQ4112078%7CQ4537983%7CQ4740860%7CQ4752572%7CQ6093545%7CQ6883832%7CQ7532624%7CQ7946904%7CQ8038620%7CQ9249858%7CQ9256942%7CQ9348501%7CQ9369434%7CQ9378056%7CQ10393281%7CQ10852229%7CQ11712447%7CQ11742628%7CQ13231451%7CQ15078152%7CQ15616276%7CQ15835307%7CQ15896237%7CQ16334358%7CQ16525784%7CQ16958215%7CQ19711013%7CQ19718090%7CQ20056642&props=labels%7Cclaims%7Cinfo&languages=pl%7Cen",
+      "kind": "wikidata-entity-projection",
+      "originalResponseSha256": "0bb7a9ebbc30a0228d4771f1bbf50202a03075e8c677f4be20c668f86f9428cd",
+      "originalResponseBytes": 4869577,
+      "projectedFields": [
+        "identity",
+        "labels-pl-en",
+        "P31-mainsnaks",
+        "P856-mainsnaks"
+      ]
+    },
+    {
+      "path": "entities-5.json",
+      "bytes": 40975,
+      "sha256": "c64a119002a6f8f3ffa3a3cd34294a1c9c4b529c36db9cb0080ce01cd92be67b",
+      "url": "https://www.wikidata.org/w/api.php?format=json&formatversion=2&action=wbgetentities&ids=Q20057209%7CQ22906785%7CQ22907849%7CQ23518144%7CQ24090743%7CQ24090749%7CQ27986619%7CQ28187024%7CQ28404534%7CQ28406404%7CQ29364728%7CQ30325419%7CQ42903699%7CQ47458384%7CQ48845094%7CQ60977492%7CQ61707579%7CQ78194383%7CQ84777032%7CQ85785022%7CQ94979732%7CQ110253942%7CQ113127602%7CQ115564437%7CQ116041659%7CQ116423243%7CQ116793893%7CQ116894099%7CQ117844434%7CQ118876059&props=labels%7Cclaims%7Cinfo&languages=pl%7Cen",
+      "kind": "wikidata-entity-projection",
+      "originalResponseSha256": "b409ba50746f690f5d4dbaa37b0f3d18611958479eaf81bc3ba3fe23eeae377e",
+      "originalResponseBytes": 1991208,
+      "projectedFields": [
+        "identity",
+        "labels-pl-en",
+        "P31-mainsnaks",
+        "P856-mainsnaks"
+      ]
+    },
+    {
+      "path": "entities-6.json",
+      "bytes": 7326,
+      "sha256": "c5ac339f178a273fee37b1ad0db9bf9c8537230e32c344d7efb5efa9b540a26a",
+      "url": "https://www.wikidata.org/w/api.php?format=json&formatversion=2&action=wbgetentities&ids=Q122663230%7CQ123361035%7CQ124333951%7CQ131577453%7CQ132158027&props=labels%7Cclaims%7Cinfo&languages=pl%7Cen",
+      "kind": "wikidata-entity-projection",
+      "originalResponseSha256": "6e3a89cb52db3d3c69c5f6e73d89a4d17a99a4c3d299b20dbbb5d4bf6d5ffb4a",
+      "originalResponseBytes": 144036,
+      "projectedFields": [
+        "identity",
+        "labels-pl-en",
+        "P31-mainsnaks",
+        "P856-mainsnaks"
+      ]
+    }
+  ]
+}

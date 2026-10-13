@@ -1,0 +1,83 @@
+{
+  "dodam": {
+    "wordfreqRank": 3596,
+    "zipf": 4.42,
+    "hunspell": true,
+    "aosp": false,
+    "reason": "ascii-without-dual-evidence",
+    "kept": false,
+    "preLimitKept": false
+  },
+  "grzeje": {
+    "wordfreqRank": 24825,
+    "zipf": 3.46,
+    "hunspell": true,
+    "aosp": false,
+    "reason": "ascii-without-dual-evidence",
+    "kept": false,
+    "preLimitKept": false
+  },
+  "kasami": {
+    "wordfreqRank": 136765,
+    "zipf": 2.16,
+    "hunspell": true,
+    "aosp": true,
+    "reason": "limit-cut",
+    "kept": false,
+    "preLimitKept": true
+  },
+  "nawilżane": {
+    "wordfreqRank": 296478,
+    "zipf": 1.4,
+    "hunspell": true,
+    "aosp": false,
+    "reason": "limit-cut",
+    "kept": false,
+    "preLimitKept": true
+  },
+  "odpowiadam": {
+    "wordfreqRank": 8979,
+    "zipf": 4.01,
+    "hunspell": true,
+    "aosp": false,
+    "reason": "ascii-without-dual-evidence",
+    "kept": false,
+    "preLimitKept": false
+  },
+  "patrzysz": {
+    "wordfreqRank": 6105,
+    "zipf": 4.19,
+    "hunspell": true,
+    "aosp": false,
+    "reason": "ascii-without-dual-evidence",
+    "kept": false,
+    "preLimitKept": false
+  },
+  "poczekaj": {
+    "wordfreqRank": 9510,
+    "zipf": 3.98,
+    "hunspell": true,
+    "aosp": false,
+    "reason": "ascii-without-dual-evidence",
+    "kept": false,
+    "preLimitKept": false
+  },
+  "podpowie": {
+    "wordfreqRank": 65352,
+    "zipf": 2.78,
+    "hunspell": true,
+    "aosp": false,
+    "reason": "ascii-without-dual-evidence",
+    "kept": false,
+    "preLimitKept": false
+  },
+  "pozdrawiam": {
+    "wordfreqRank": 1701,
+    "zipf": 4.73,
+    "hunspell": true,
+    "aosp": false,
+    "reason": "ascii-without-dual-evidence",
+    "kept": false,
+    "preLimitKept": false
+  }
+}
