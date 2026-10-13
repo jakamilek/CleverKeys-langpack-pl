@@ -1,5 +1,10 @@
 # Kolejna część odłożonych nazw — v12
 
+**Odłożone decyzją użytkownika 2026-10-13.** Bazą pozostaje zaakceptowana v11.
+Poniższy wynik zachowujemy jako audyt; zamiast dalszych nazw przygotowujemy
+moduły kandydatów codziennego słownictwa i współczesnych terminów.
+Nie przekazujemy tej paczki do instalacji.
+
 ## Baza i zakres
 
 V11 została zaakceptowana na telefonie: „działa dobrze”. Runtime CleverKeysPL

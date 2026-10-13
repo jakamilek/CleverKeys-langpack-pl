@@ -9,10 +9,11 @@ odczuwalne przyspieszenie jest obserwacją, bez pomiaru PSS Androida.
 
 V10 i bezstratne v11 zaakceptowano na telefonie: 204 463 słowa.
 CI v11, czytnik API/schema3 oraz APK również przeszły wymagane bramki.
-Następna paczka to [kolejna część odłożonych nazw v12](docs/compact-names-trial-v1/PROTOCOL.md):
-5701 nowych źródłowo potwierdzonych form, razem210 164 słowa. Lokalna zgodność
-wszystkich dawnych i nowych danych oraz192 MiB PASS; bieżące CI i telefon
-pozostają do sprawdzenia. Ten sam zainstalowany APK v11.
+Pozostajemy przy zaakceptowanej v11. Dodatkową partię rzadszych nazw v12
+odkładamy; nie została przekazana jako kolejny etap do instalacji.
+Aktualne zadanie to [moduły z kandydatami](docs/practical-candidates-v1/PROTOCOL.md):
+zwykłe formy, terminologia techniczna/internetowa i potoczna oraz aplikacje/usługi.
+To materiał do przeglądu i pomiaru, bez nowego langpacka lub APK.
 
 ## Cel projektu
 
