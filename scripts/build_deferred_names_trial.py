@@ -81,7 +81,7 @@ class ExistingPool:
         return result
 
 
-def read_base(raw, expected=BASE_SHA, expected_dictionary=BASE_DICTIONARY_SHA):
+def read_base(raw, expected=BASE_SHA, expected_dictionary=BASE_DICTIONARY_SHA, expected_version=9):
     if len(raw) > MAX_TOTAL_BYTES or sha256(raw) != expected: raise ValueError('base checksum/size')
     with zipfile.ZipFile(io.BytesIO(raw)) as z:
         names = z.namelist()
@@ -93,7 +93,7 @@ def read_base(raw, expected=BASE_SHA, expected_dictionary=BASE_DICTIONARY_SHA):
     if sha256(members['dictionary.bin']) != expected_dictionary: raise ValueError('base dictionary checksum')
     records, aliases, boundary = parse_dictionary(members['dictionary.bin'])
     manifest = read_json(members['manifest.json']); side = read_json(members['language-intelligence.json'])
-    if (manifest.get('code') != 'pl' or manifest.get('version') != 9 or manifest.get('apiVersion') != 2
+    if (manifest.get('code') != 'pl' or manifest.get('version') != expected_version or manifest.get('apiVersion') != 2
             or manifest.get('wordCount') != len(records) or side.get('languageCode') != 'pl'
             or side.get('schemaVersion') != 2 or manifest.get('languageIntelligence', {}).get('schemaVersion') != 2
             or manifest['languageIntelligence'].get('sha256') != sha256(members['language-intelligence.json'])):
