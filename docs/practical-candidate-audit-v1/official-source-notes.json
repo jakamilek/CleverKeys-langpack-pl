@@ -1,0 +1,10 @@
+{
+  "checkedDate": "2026-10-13",
+  "scope": "Supplementary spelling and Polish producer-use evidence; not an automatic acceptance rule",
+  "items": [
+    {"surface": "WhatsApp", "url": "https://www.whatsapp.com/?lang=pl", "evidence": "Official Polish product page uses exact mixed-case WhatsApp in prose and offers messaging/download functions.", "doesNotProve": ["corpus frequency", "complete inflection", "metadata schema mapping"]},
+    {"surface": "Discord", "url": "https://support.discord.com/hc/pl", "evidence": "Official Polish support center titled Discord uses Discorda in Polish prose and links product downloads.", "doesNotProve": ["corpus frequency", "complete inflection", "metadata schema mapping"]},
+    {"surface": "ChatGPT", "url": "https://help.openai.com/pl-pl/articles/12677804-what-is-chatgpt-faq", "evidence": "Official localized FAQ uses exact ChatGPT spelling and provides usage guidance; page explicitly says machine translated.", "doesNotProve": ["independent Polish usage", "corpus frequency", "complete inflection", "metadata schema mapping"]},
+    {"surface": "TikTok", "url": "https://www.tiktok.com/pl-PL/", "evidence": null, "result": "Page retrieval failed; no evidence claimed."}
+  ]
+}
