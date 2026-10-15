@@ -1,0 +1,785 @@
+[
+  {
+    "surfaceKey": "googlują",
+    "observedSurfaces": [
+      "googlują"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "googlować",
+    "senseId": "znaczenie-230389",
+    "selector": "#gramatyka-230389",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/googlowa%C4%87/220886/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "b0b10a5cba429682127d92352b5cec0fd1c6b1d994a076dae92b6ee5fa284ab0"
+    }
+  },
+  {
+    "surfaceKey": "googluję",
+    "observedSurfaces": [
+      "googluję"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "googlować",
+    "senseId": "znaczenie-230389",
+    "selector": "#gramatyka-230389",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/googlowa%C4%87/220886/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "b0b10a5cba429682127d92352b5cec0fd1c6b1d994a076dae92b6ee5fa284ab0"
+    }
+  },
+  {
+    "surfaceKey": "googluje",
+    "observedSurfaces": [
+      "googluje"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "googlować",
+    "senseId": "znaczenie-230389",
+    "selector": "#gramatyka-230389",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/googlowa%C4%87/220886/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "b0b10a5cba429682127d92352b5cec0fd1c6b1d994a076dae92b6ee5fa284ab0"
+    }
+  },
+  {
+    "surfaceKey": "googlujesz",
+    "observedSurfaces": [
+      "googlujesz"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "googlować",
+    "senseId": "znaczenie-230389",
+    "selector": "#gramatyka-230389",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/googlowa%C4%87/220886/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "b0b10a5cba429682127d92352b5cec0fd1c6b1d994a076dae92b6ee5fa284ab0"
+    }
+  },
+  {
+    "surfaceKey": "googlować",
+    "observedSurfaces": [
+      "googlować"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "googlować",
+    "senseId": "znaczenie-230389",
+    "selector": "#gramatyka-230389",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/googlowa%C4%87/220886/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "b0b10a5cba429682127d92352b5cec0fd1c6b1d994a076dae92b6ee5fa284ab0"
+    }
+  },
+  {
+    "surfaceKey": "hashtag",
+    "observedSurfaces": [
+      "hashtag"
+    ],
+    "kind": "variant-or-citation-only",
+    "lemma": null,
+    "senseId": "86506",
+    "selector": "p.cytat .forma; variant section",
+    "sourceEntry": "hasztag",
+    "sourceGrammar": null,
+    "caseNumberCells": null,
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/86506/hasztag",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "64f8d2163e942b36a2638c469d734a0713a3cc8c89034ffb8144f7034ace37b8"
+    }
+  },
+  {
+    "surfaceKey": "hashtaga",
+    "observedSurfaces": [
+      "hashtaga"
+    ],
+    "kind": "variant-or-citation-only",
+    "lemma": null,
+    "senseId": "86506",
+    "selector": "p.cytat .forma; variant section",
+    "sourceEntry": "hasztag",
+    "sourceGrammar": null,
+    "caseNumberCells": null,
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/86506/hasztag",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "64f8d2163e942b36a2638c469d734a0713a3cc8c89034ffb8144f7034ace37b8"
+    }
+  },
+  {
+    "surfaceKey": "powerbanki",
+    "observedSurfaces": [
+      "powerbanki"
+    ],
+    "kind": "explicit-case-number-table",
+    "lemma": "powerbank",
+    "senseId": "81432",
+    "selector": "table.fleksja-table",
+    "sourceGrammar": {
+      "partOfSpeech": "rzeczownik",
+      "gender": "m3"
+    },
+    "caseNumberCells": [
+      {
+        "case": "mianownik",
+        "number": "liczba mnoga"
+      },
+      {
+        "case": "biernik",
+        "number": "liczba mnoga"
+      },
+      {
+        "case": "wołacz",
+        "number": "liczba mnoga"
+      }
+    ],
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/81432/powerbank",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "771da591c0093a7e65de60fb4b911cf74764839dd512e7953c04d91cfeaf7458"
+    }
+  },
+  {
+    "surfaceKey": "powerbanków",
+    "observedSurfaces": [
+      "powerbanków"
+    ],
+    "kind": "explicit-case-number-table",
+    "lemma": "powerbank",
+    "senseId": "81432",
+    "selector": "table.fleksja-table",
+    "sourceGrammar": {
+      "partOfSpeech": "rzeczownik",
+      "gender": "m3"
+    },
+    "caseNumberCells": [
+      {
+        "case": "dopełniacz",
+        "number": "liczba mnoga"
+      }
+    ],
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/81432/powerbank",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "771da591c0093a7e65de60fb4b911cf74764839dd512e7953c04d91cfeaf7458"
+    }
+  },
+  {
+    "surfaceKey": "powerbankach",
+    "observedSurfaces": [
+      "powerbankach"
+    ],
+    "kind": "explicit-case-number-table",
+    "lemma": "powerbank",
+    "senseId": "81432",
+    "selector": "table.fleksja-table",
+    "sourceGrammar": {
+      "partOfSpeech": "rzeczownik",
+      "gender": "m3"
+    },
+    "caseNumberCells": [
+      {
+        "case": "miejscownik",
+        "number": "liczba mnoga"
+      }
+    ],
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/81432/powerbank",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "771da591c0093a7e65de60fb4b911cf74764839dd512e7953c04d91cfeaf7458"
+    }
+  },
+  {
+    "surfaceKey": "powerbankom",
+    "observedSurfaces": [
+      "powerbankom"
+    ],
+    "kind": "explicit-case-number-table",
+    "lemma": "powerbank",
+    "senseId": "81432",
+    "selector": "table.fleksja-table",
+    "sourceGrammar": {
+      "partOfSpeech": "rzeczownik",
+      "gender": "m3"
+    },
+    "caseNumberCells": [
+      {
+        "case": "celownik",
+        "number": "liczba mnoga"
+      }
+    ],
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/81432/powerbank",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "771da591c0093a7e65de60fb4b911cf74764839dd512e7953c04d91cfeaf7458"
+    }
+  },
+  {
+    "surfaceKey": "powerbankiem",
+    "observedSurfaces": [
+      "powerbankiem"
+    ],
+    "kind": "explicit-case-number-table",
+    "lemma": "powerbank",
+    "senseId": "81432",
+    "selector": "table.fleksja-table",
+    "sourceGrammar": {
+      "partOfSpeech": "rzeczownik",
+      "gender": "m3"
+    },
+    "caseNumberCells": [
+      {
+        "case": "narzędnik",
+        "number": "liczba pojedyncza"
+      }
+    ],
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/81432/powerbank",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "771da591c0093a7e65de60fb4b911cf74764839dd512e7953c04d91cfeaf7458"
+    }
+  },
+  {
+    "surfaceKey": "powerbankowi",
+    "observedSurfaces": [
+      "powerbankowi"
+    ],
+    "kind": "explicit-case-number-table",
+    "lemma": "powerbank",
+    "senseId": "81432",
+    "selector": "table.fleksja-table",
+    "sourceGrammar": {
+      "partOfSpeech": "rzeczownik",
+      "gender": "m3"
+    },
+    "caseNumberCells": [
+      {
+        "case": "celownik",
+        "number": "liczba pojedyncza"
+      }
+    ],
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/81432/powerbank",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "771da591c0093a7e65de60fb4b911cf74764839dd512e7953c04d91cfeaf7458"
+    }
+  },
+  {
+    "surfaceKey": "powerbankami",
+    "observedSurfaces": [
+      "powerbankami"
+    ],
+    "kind": "explicit-case-number-table",
+    "lemma": "powerbank",
+    "senseId": "81432",
+    "selector": "table.fleksja-table",
+    "sourceGrammar": {
+      "partOfSpeech": "rzeczownik",
+      "gender": "m3"
+    },
+    "caseNumberCells": [
+      {
+        "case": "narzędnik",
+        "number": "liczba mnoga"
+      }
+    ],
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/81432/powerbank",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "771da591c0093a7e65de60fb4b911cf74764839dd512e7953c04d91cfeaf7458"
+    }
+  },
+  {
+    "surfaceKey": "powerbanku",
+    "observedSurfaces": [
+      "powerbanku"
+    ],
+    "kind": "explicit-case-number-table",
+    "lemma": "powerbank",
+    "senseId": "81432",
+    "selector": "table.fleksja-table",
+    "sourceGrammar": {
+      "partOfSpeech": "rzeczownik",
+      "gender": "m3"
+    },
+    "caseNumberCells": [
+      {
+        "case": "dopełniacz",
+        "number": "liczba pojedyncza"
+      },
+      {
+        "case": "miejscownik",
+        "number": "liczba pojedyncza"
+      },
+      {
+        "case": "wołacz",
+        "number": "liczba pojedyncza"
+      }
+    ],
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/81432/powerbank",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "771da591c0093a7e65de60fb4b911cf74764839dd512e7953c04d91cfeaf7458"
+    }
+  },
+  {
+    "surfaceKey": "powerbank",
+    "observedSurfaces": [
+      "powerbank"
+    ],
+    "kind": "explicit-case-number-table",
+    "lemma": "powerbank",
+    "senseId": "81432",
+    "selector": "table.fleksja-table",
+    "sourceGrammar": {
+      "partOfSpeech": "rzeczownik",
+      "gender": "m3"
+    },
+    "caseNumberCells": [
+      {
+        "case": "mianownik",
+        "number": "liczba pojedyncza"
+      },
+      {
+        "case": "biernik",
+        "number": "liczba pojedyncza"
+      }
+    ],
+    "source": {
+      "source": "WSJP PAN",
+      "url": "https://wsjp.pl/haslo/podglad/81432/powerbank",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "771da591c0093a7e65de60fb4b911cf74764839dd512e7953c04d91cfeaf7458"
+    }
+  },
+  {
+    "surfaceKey": "scrolluję",
+    "observedSurfaces": [
+      "Scrolluję",
+      "scrolluję"
+    ],
+    "kind": "headword-or-citation-only",
+    "lemma": "scrollować",
+    "senseId": "scrollowac",
+    "selector": ".entry-row: Przykłady użycia strong / Hasło b",
+    "sourceGrammar": null,
+    "caseNumberCells": null,
+    "lowercaseDirectlyAttested": true,
+    "source": {
+      "source": "Obserwatorium Językowe UW",
+      "url": "https://obserwatoriumjezykowe.uw.edu.pl/hasla/scrollowac/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "82c79f5764498204df1ef67f0601d793ca97a9480bb620e1b866afba8af9f13d"
+    }
+  },
+  {
+    "surfaceKey": "scrollujesz",
+    "observedSurfaces": [
+      "Scrollujesz"
+    ],
+    "kind": "headword-or-citation-only",
+    "lemma": "scrollować",
+    "senseId": "scrollowac",
+    "selector": ".entry-row: Przykłady użycia strong / Hasło b",
+    "sourceGrammar": null,
+    "caseNumberCells": null,
+    "lowercaseDirectlyAttested": false,
+    "source": {
+      "source": "Obserwatorium Językowe UW",
+      "url": "https://obserwatoriumjezykowe.uw.edu.pl/hasla/scrollowac/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "82c79f5764498204df1ef67f0601d793ca97a9480bb620e1b866afba8af9f13d"
+    }
+  },
+  {
+    "surfaceKey": "scrollować",
+    "observedSurfaces": [
+      "scrollować"
+    ],
+    "kind": "headword-or-citation-only",
+    "lemma": "scrollować",
+    "senseId": "scrollowac",
+    "selector": ".entry-row: Przykłady użycia strong / Hasło b",
+    "sourceGrammar": null,
+    "caseNumberCells": null,
+    "lowercaseDirectlyAttested": true,
+    "source": {
+      "source": "Obserwatorium Językowe UW",
+      "url": "https://obserwatoriumjezykowe.uw.edu.pl/hasla/scrollowac/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "82c79f5764498204df1ef67f0601d793ca97a9480bb620e1b866afba8af9f13d"
+    }
+  },
+  {
+    "surfaceKey": "scrolluje",
+    "observedSurfaces": [
+      "scrolluje"
+    ],
+    "kind": "headword-or-citation-only",
+    "lemma": "scrollować",
+    "senseId": "scrollowac",
+    "selector": ".entry-row: Przykłady użycia strong / Hasło b",
+    "sourceGrammar": null,
+    "caseNumberCells": null,
+    "lowercaseDirectlyAttested": true,
+    "source": {
+      "source": "Obserwatorium Językowe UW",
+      "url": "https://obserwatoriumjezykowe.uw.edu.pl/hasla/scrollowac/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "82c79f5764498204df1ef67f0601d793ca97a9480bb620e1b866afba8af9f13d"
+    }
+  },
+  {
+    "surfaceKey": "streamingami",
+    "observedSurfaces": [
+      "streamingami"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streaming",
+    "senseId": "znaczenie-243065",
+    "selector": "#gramatyka-243065",
+    "sourceGrammarText": "rzeczownik rodzaj męskorzeczowy odmienny",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streaming/226209/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "ab9ddf835aa34a6ed48ad9438c729216d5e2255ee746c7a93749ddde70eca028"
+    }
+  },
+  {
+    "surfaceKey": "streamingów",
+    "observedSurfaces": [
+      "streamingów"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streaming",
+    "senseId": "znaczenie-243065",
+    "selector": "#gramatyka-243065",
+    "sourceGrammarText": "rzeczownik rodzaj męskorzeczowy odmienny",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streaming/226209/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "ab9ddf835aa34a6ed48ad9438c729216d5e2255ee746c7a93749ddde70eca028"
+    }
+  },
+  {
+    "surfaceKey": "streamingom",
+    "observedSurfaces": [
+      "streamingom"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streaming",
+    "senseId": "znaczenie-243065",
+    "selector": "#gramatyka-243065",
+    "sourceGrammarText": "rzeczownik rodzaj męskorzeczowy odmienny",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streaming/226209/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "ab9ddf835aa34a6ed48ad9438c729216d5e2255ee746c7a93749ddde70eca028"
+    }
+  },
+  {
+    "surfaceKey": "streaming",
+    "observedSurfaces": [
+      "streaming"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streaming",
+    "senseId": "znaczenie-243065",
+    "selector": "#gramatyka-243065",
+    "sourceGrammarText": "rzeczownik rodzaj męskorzeczowy odmienny",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streaming/226209/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "ab9ddf835aa34a6ed48ad9438c729216d5e2255ee746c7a93749ddde70eca028"
+    }
+  },
+  {
+    "surfaceKey": "streamingu",
+    "observedSurfaces": [
+      "streamingu"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streaming",
+    "senseId": "znaczenie-243065",
+    "selector": "#gramatyka-243065",
+    "sourceGrammarText": "rzeczownik rodzaj męskorzeczowy odmienny",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streaming/226209/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "ab9ddf835aa34a6ed48ad9438c729216d5e2255ee746c7a93749ddde70eca028"
+    }
+  },
+  {
+    "surfaceKey": "streamingach",
+    "observedSurfaces": [
+      "streamingach"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streaming",
+    "senseId": "znaczenie-243065",
+    "selector": "#gramatyka-243065",
+    "sourceGrammarText": "rzeczownik rodzaj męskorzeczowy odmienny",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streaming/226209/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "ab9ddf835aa34a6ed48ad9438c729216d5e2255ee746c7a93749ddde70eca028"
+    }
+  },
+  {
+    "surfaceKey": "streamingi",
+    "observedSurfaces": [
+      "streamingi"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streaming",
+    "senseId": "znaczenie-243065",
+    "selector": "#gramatyka-243065",
+    "sourceGrammarText": "rzeczownik rodzaj męskorzeczowy odmienny",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streaming/226209/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "ab9ddf835aa34a6ed48ad9438c729216d5e2255ee746c7a93749ddde70eca028"
+    }
+  },
+  {
+    "surfaceKey": "streamingiem",
+    "observedSurfaces": [
+      "streamingiem"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streaming",
+    "senseId": "znaczenie-243065",
+    "selector": "#gramatyka-243065",
+    "sourceGrammarText": "rzeczownik rodzaj męskorzeczowy odmienny",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streaming/226209/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "ab9ddf835aa34a6ed48ad9438c729216d5e2255ee746c7a93749ddde70eca028"
+    }
+  },
+  {
+    "surfaceKey": "streamować",
+    "observedSurfaces": [
+      "streamować"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245790",
+    "selector": "#gramatyka-245790",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  },
+  {
+    "surfaceKey": "streamuje",
+    "observedSurfaces": [
+      "streamuje"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245790",
+    "selector": "#gramatyka-245790",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  },
+  {
+    "surfaceKey": "streamujesz",
+    "observedSurfaces": [
+      "streamujesz"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245790",
+    "selector": "#gramatyka-245790",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  },
+  {
+    "surfaceKey": "streamuję",
+    "observedSurfaces": [
+      "streamuję"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245790",
+    "selector": "#gramatyka-245790",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  },
+  {
+    "surfaceKey": "streamują",
+    "observedSurfaces": [
+      "streamują"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245790",
+    "selector": "#gramatyka-245790",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  },
+  {
+    "surfaceKey": "streamować",
+    "observedSurfaces": [
+      "streamować"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245796",
+    "selector": "#gramatyka-245796",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  },
+  {
+    "surfaceKey": "streamuje",
+    "observedSurfaces": [
+      "streamuje"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245796",
+    "selector": "#gramatyka-245796",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  },
+  {
+    "surfaceKey": "streamujesz",
+    "observedSurfaces": [
+      "streamujesz"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245796",
+    "selector": "#gramatyka-245796",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  },
+  {
+    "surfaceKey": "streamuję",
+    "observedSurfaces": [
+      "streamuję"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245796",
+    "selector": "#gramatyka-245796",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  },
+  {
+    "surfaceKey": "streamują",
+    "observedSurfaces": [
+      "streamują"
+    ],
+    "kind": "explicit-form-list",
+    "lemma": "streamować",
+    "senseId": "znaczenie-245796",
+    "selector": "#gramatyka-245796",
+    "sourceGrammarText": "czasownik aspekt niedokonany przechodni",
+    "caseNumberCells": null,
+    "source": {
+      "source": "Dobry słownik",
+      "url": "https://dobryslownik.pl/slowo/streamowa%C4%87/227733/",
+      "retrievedDate": "2026-10-15",
+      "htmlSha256": "a4c1e9e336977ec6901797f0c0ecf341186a39eafb2134b0c9beb3f82dba9052"
+    }
+  }
+]
