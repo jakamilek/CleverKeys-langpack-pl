@@ -1,0 +1,4 @@
+PASS full: 204463 old words/ranks, 114299 old cold metadata and reused objects; 1087 additions; accepted v11 readers
+PASS cold: actual reader, 192 MiB heap and 16 MiB ballast; not phone RAM
+PASS replace: actual reader, 192 MiB heap and 16 MiB ballast; not phone RAM
+PASS repeat: actual reader, 192 MiB heap and 16 MiB ballast; not phone RAM
