@@ -1,0 +1,47 @@
+name: Approved practical Polish v13
+on:
+  push:
+    branches: ['audit/practical-candidates-v11']
+    paths:
+      - '.github/workflows/approved-practical-v13.yml'
+      - 'scripts/build_approved_practical_v13.py'
+      - 'scripts/check_approved_practical_consumer.py'
+      - 'source/approved-practical-v13/**'
+      - 'tests/ApprovedPracticalConsumerCheck.kt'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install pinned frequency data
+        run: python -m pip install 'wordfreq @ git+https://github.com/rspeer/wordfreq@912caf64b657478d1dff1138efdc078947d54bb1' morfeusz2==1.99.15 requests
+      - name: Retrieve accepted v11
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: 38437507820
+          name: cleverkeys-pl-compact-source-trial
+          path: build/base-v11
+      - name: Build exact approved selection and verify preservation
+        run: |
+          python scripts/build_approved_practical_v13.py --base-pack build/base-v11/cleverkeys-pl-compact-source-trial.zip --out-dir build/practical-v13
+          cmp build/practical-v13/build-report.json docs/practical-v13/reviewed-build-report.json
+      - name: Check accepted readers and restricted heaps
+        run: python scripts/check_approved_practical_consumer.py build/base-v11/cleverkeys-pl-compact-source-trial.zip build/practical-v13/cleverkeys-pl-practical-v13.zip build/practical-v13/approved-keys.txt build/jvm-v13
+      - name: Upload verified pack and reports
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: cleverkeys-pl-practical-v13
+          path: build/practical-v13/*
+          retention-days: 30
