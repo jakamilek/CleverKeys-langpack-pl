@@ -1,0 +1,72 @@
+[
+  {
+    "path": "kotlin-stdlib-2.0.21.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.0.21/kotlin-stdlib-2.0.21.jar",
+    "sha256": "f31cc53f105a7e48c093683bbd5437561d1233920513774b470805641bedbc09"
+  },
+  {
+    "path": "kotlin-script-runtime-2.0.21.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-script-runtime/2.0.21/kotlin-script-runtime-2.0.21.jar",
+    "sha256": "9c111f8d08ade455566272d561921adc2b2cb6b7a4ccee38d9829c5e3a1ca6a3"
+  },
+  {
+    "path": "kotlin-reflect-1.6.10.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-reflect/1.6.10/kotlin-reflect-1.6.10.jar",
+    "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+  },
+  {
+    "path": "kotlin-daemon-embeddable-2.0.21.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-embeddable/2.0.21/kotlin-daemon-embeddable-2.0.21.jar",
+    "sha256": "b1a0a73c5022f8dd05a638c6b76b2bd7361818a1f3860ff2644133b1dd2bdb03"
+  },
+  {
+    "path": "trove4j-1.0.20200330.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/intellij/deps/trove4j/1.0.20200330/trove4j-1.0.20200330.jar",
+    "sha256": "c5fd725bffab51846bf3c77db1383c60aaaebfe1b7fe2f00d23fe1b7df0a439d"
+  },
+  {
+    "path": "kotlinx-coroutines-core-jvm-1.6.4.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.6.4/kotlinx-coroutines-core-jvm-1.6.4.jar",
+    "sha256": "c24c8bb27bb320c4a93871501a7e5e0c61607638907b197aef675513d4c820be"
+  },
+  {
+    "path": "kotlin-compiler-embeddable-2.0.21.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/2.0.21/kotlin-compiler-embeddable-2.0.21.jar",
+    "sha256": "9fa8cdd1de0dccffe154c997d423ec6b5f53cd6d9177e3a77a9b0de03fb1bc81"
+  },
+  {
+    "path": "annotations-13.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/annotations/13.0/annotations-13.0.jar",
+    "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+  },
+  {
+    "path": "gson-2.11.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.11.0/gson-2.11.0.jar",
+    "sha256": "57928d6e5a6edeb2abd3770a8f95ba44dce45f3b23b7a9dc2b309c581552a78b"
+  },
+  {
+    "path": "LanguageIntelligence.kt",
+    "url": "https://raw.githubusercontent.com/jakamilek/CleverKeysPL/0b94e323789e96c44a77f762a6f83fa11e285699/src/main/kotlin/tribixbite/cleverkeys/langpack/LanguageIntelligence.kt",
+    "sha256": "fa676f7c508807e9befe03191898eb9cf60e775980f4a48e91faa08412c41c9e"
+  },
+  {
+    "path": "SharedSourceMetadata.kt",
+    "url": "https://raw.githubusercontent.com/jakamilek/CleverKeysPL/0b94e323789e96c44a77f762a6f83fa11e285699/src/main/kotlin/tribixbite/cleverkeys/langpack/SharedSourceMetadata.kt",
+    "sha256": "9f98c68b1d56617818340b67c5cb260f9f29c93dee3a363308c528f5a312c9ec"
+  },
+  {
+    "path": "CkdtDictionaryReader.kt",
+    "url": "https://raw.githubusercontent.com/jakamilek/CleverKeysPL/0b94e323789e96c44a77f762a6f83fa11e285699/src/main/kotlin/tribixbite/cleverkeys/swipe/geometric/CkdtDictionaryReader.kt",
+    "sha256": "c3aa2ef824f9fc4f498489ef169e689f0bf90b442cbb956e5c760011c2712d0d"
+  },
+  {
+    "path": "GeometricDictionary.kt",
+    "url": "https://raw.githubusercontent.com/jakamilek/CleverKeysPL/0b94e323789e96c44a77f762a6f83fa11e285699/src/main/kotlin/tribixbite/cleverkeys/swipe/geometric/GeometricDictionary.kt",
+    "sha256": "6144f09a1761060d54539ed080054138784e18cd05d4cd771ed262bd4e458cd4"
+  },
+  {
+    "path": "ArrayBackedDictionary.kt",
+    "url": "https://raw.githubusercontent.com/jakamilek/CleverKeysPL/0b94e323789e96c44a77f762a6f83fa11e285699/src/main/kotlin/tribixbite/cleverkeys/swipe/geometric/ArrayBackedDictionary.kt",
+    "sha256": "fab0f2c16d9065380c2f123c33211427cddbd91ddfa4e9c9ac4a75c680b8c08d"
+  }
+]
